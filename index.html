@@ -225,16 +225,155 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
     <div class="stat"><div class="stat-n">100%</div><div class="stat-l">3D printing audience</div></div>
   </div>
 
-  <div class="works-label">Got something worth showing?</div>
+  <div class="works-label">How it works</div>
 
-  <div class="tier-item vis" style="border-bottom:none;padding-bottom:52px">
-    <p class="tier-desc">I put it in front of 150K people who actually print.</p>
-    <div class="tier-bullets">
-      <div class="tier-bullet">designed your own 3D model?</div>
-      <div class="tier-bullet">got a filament worth testing?</div>
-      <div class="tier-bullet">built something people need to see?</div>
+  <div class="tier-item" data-delay="0">
+    <div class="tier-top">
+      <div class="tier-num">01</div>
+      <div style="flex:1">
+        <div class="tier-tag tier-tag-free">Free</div>
+        <div class="tier-title">Feature your 3D model</div>
+      </div>
+      <div class="tier-visual" style="flex-shrink:0;width:72px;height:72px;margin-top:4px">
+        <svg viewBox="0 0 72 72" style="width:72px;height:72px;overflow:visible">
+          <defs>
+            <linearGradient id="cubeTop" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#FF7733"/>
+              <stop offset="100%" stop-color="#FF5500"/>
+            </linearGradient>
+            <linearGradient id="cubeLeft" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#cc4400"/>
+              <stop offset="100%" stop-color="#aa3300"/>
+            </linearGradient>
+            <linearGradient id="cubeRight" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#e85500"/>
+              <stop offset="100%" stop-color="#cc4400"/>
+            </linearGradient>
+          </defs>
+          <g style="animation:cubeFloat 3s ease-in-out infinite;transform-origin:36px 36px">
+            <!-- top face -->
+            <polygon points="36,10 58,22 36,34 14,22" fill="url(#cubeTop)" stroke="rgba(255,255,255,.1)" stroke-width=".5"/>
+            <!-- left face -->
+            <polygon points="14,22 36,34 36,56 14,44" fill="url(#cubeLeft)" stroke="rgba(0,0,0,.15)" stroke-width=".5"/>
+            <!-- right face -->
+            <polygon points="58,22 36,34 36,56 58,44" fill="url(#cubeRight)" stroke="rgba(0,0,0,.1)" stroke-width=".5"/>
+            <!-- top face highlight -->
+            <polygon points="36,12 56,23 36,32 16,23" fill="rgba(255,255,255,.08)"/>
+            <!-- wireframe accent lines -->
+            <line x1="36" y1="34" x2="36" y2="56" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+          </g>
+          <!-- shadow -->
+          <ellipse cx="36" cy="64" rx="16" ry="4" fill="rgba(255,85,0,.2)" style="animation:cubeShadow 3s ease-in-out infinite"/>
+          <style>
+            @keyframes cubeFloat {{
+              0%,100%{{transform:translateY(0px)}}
+              50%{{transform:translateY(-6px)}}
+            }}
+            @keyframes cubeShadow {{
+              0%,100%{{rx:16;opacity:.2}}
+              50%{{rx:12;opacity:.12}}
+            }}
+          </style>
+        </svg>
+      </div>
     </div>
-    <button class="tier-cta" onclick="openPopup()">DM me to talk <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <p class="tier-desc">You made something cool — send me the link and I'll promote it. No strings, no follower minimum, no pitch needed.</p>
+    <div class="tier-bullets">
+      <div class="tier-bullet">Works with Printables, Makerworld, Thingiverse, anywhere</div>
+      <div class="tier-bullet">I pick what I genuinely find interesting or useful</div>
+      <div class="tier-bullet">No guarantee, but I feature stuff every single week</div>
+    </div>
+    <button class="tier-cta" onclick="openPopup('free')">Send me your link <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div class="tier-item" data-delay="80">
+    <div class="tier-top">
+      <div class="tier-num">02</div>
+      <div style="flex:1">
+        <div class="tier-tag tier-tag-paid">Paid</div>
+        <div class="tier-title">Promote your service</div>
+      </div>
+      <div class="tier-visual" style="flex-shrink:0;width:72px;height:72px;margin-top:4px;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 72 72" style="width:72px;height:72px">
+          <!-- Patreon-style card badge -->
+          <rect x="6" y="14" width="60" height="44" rx="10" fill="rgba(255,85,0,.12)" stroke="rgba(255,85,0,.3)" stroke-width="1.5"/>
+          <!-- top strip -->
+          <rect x="6" y="14" width="60" height="14" rx="10" fill="rgba(255,85,0,.22)"/>
+          <rect x="6" y="21" width="60" height="7" fill="rgba(255,85,0,.22)"/>
+          <!-- star/crown icon -->
+          <g transform="translate(36,22)">
+            <polygon points="0,-7 2,-2 7,-2 3,1 5,7 0,4 -5,7 -3,1 -7,-2 -2,-2" fill="#FF5500" opacity=".9"/>
+          </g>
+          <!-- member text lines -->
+          <rect x="16" y="38" width="24" height="3" rx="1.5" fill="rgba(255,255,255,.25)"/>
+          <rect x="16" y="44" width="16" height="3" rx="1.5" fill="rgba(255,255,255,.15)"/>
+          <!-- badge circle right -->
+          <circle cx="52" cy="44" r="8" fill="rgba(255,85,0,.3)" stroke="rgba(255,85,0,.5)" stroke-width="1.2"/>
+          <text x="52" y="48" text-anchor="middle" font-size="9" fill="#FF5500" font-weight="bold" font-family="sans-serif">PRO</text>
+          <!-- shine -->
+          <rect x="6" y="14" width="60" height="44" rx="10" fill="url(#cardShine)" opacity=".3"/>
+          <defs>
+            <linearGradient id="cardShine" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="white" stop-opacity=".15"/>
+              <stop offset="50%" stop-color="white" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <style>
+            @keyframes badgePulse{{0%,100%{{opacity:.9}}50%{{opacity:.6}}}}
+          </style>
+        </svg>
+      </div>
+    </div>
+    <p class="tier-desc">Got a paid STL membership, Patreon, or 3D printing community? Let's get it properly in front of my audience.</p>
+    <div class="tier-bullets">
+      <div class="tier-bullet">Dedicated carousel or reel built around your thing</div>
+      <div class="tier-bullet">More affordable than you probably expect</div>
+      <div class="tier-bullet">I only promote stuff I'd actually subscribe to myself</div>
+    </div>
+    <button class="tier-cta" onclick="openPopup('promo')">DM me to talk <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+
+  <div class="tier-item" data-delay="160">
+    <div class="tier-top">
+      <div class="tier-num">03</div>
+      <div style="flex:1">
+        <div class="tier-tag tier-tag-paid">Paid</div>
+        <div class="tier-title">Showcase your product</div>
+      </div>
+      <div class="tier-visual" style="flex-shrink:0;width:72px;height:72px;margin-top:4px;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 72 72" style="width:72px;height:72px">
+          <!-- Filament spool -->
+          <ellipse cx="24" cy="44" rx="16" ry="6" fill="rgba(255,85,0,.15)" stroke="rgba(255,85,0,.4)" stroke-width="1.5"/>
+          <rect x="8" y="28" width="32" height="16" rx="0" fill="rgba(255,85,0,.1)" stroke="rgba(255,85,0,.3)" stroke-width="1.5"/>
+          <ellipse cx="24" cy="28" rx="16" ry="6" fill="rgba(255,85,0,.2)" stroke="rgba(255,85,0,.45)" stroke-width="1.5"/>
+          <!-- spool hole -->
+          <ellipse cx="24" cy="36" rx="5" ry="5" fill="rgba(0,0,0,.3)" stroke="rgba(255,85,0,.3)" stroke-width="1"/>
+          <!-- filament strand going to hotend -->
+          <path d="M40,30 Q50,26 52,20" stroke="rgba(255,85,0,.6)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="3,3"/>
+          <!-- Hotend body -->
+          <rect x="46" y="8" width="16" height="24" rx="3" fill="rgba(255,85,0,.18)" stroke="rgba(255,85,0,.45)" stroke-width="1.5"/>
+          <!-- heating block -->
+          <rect x="48" y="22" width="12" height="8" rx="2" fill="rgba(255,85,0,.35)" stroke="rgba(255,85,0,.7)" stroke-width="1"/>
+          <!-- nozzle -->
+          <polygon points="52,30 60,30 57,38 55,38" fill="rgba(255,85,0,.5)" stroke="rgba(255,85,0,.8)" stroke-width="1"/>
+          <!-- nozzle tip glow -->
+          <ellipse cx="56" cy="39" rx="2" ry="1.5" fill="#FF5500" opacity=".8" style="animation:nozzleGlow 1.5s ease-in-out infinite"/>
+          <!-- heater lines on block -->
+          <line x1="50" y1="25" x2="58" y2="25" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+          <line x1="50" y1="27.5" x2="58" y2="27.5" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+          <style>
+            @keyframes nozzleGlow{{0%,100%{{opacity:.8;rx:2}}50%{{opacity:1;rx:3}}}}
+          </style>
+        </svg>
+      </div>
+    </div>
+    <p class="tier-desc">Filament, printers, accessories, software — if it's genuinely useful to makers, I'll talk about it to 150K people who care.</p>
+    <div class="tier-bullets">
+      <div class="tier-bullet">Full creative control on how it gets presented</div>
+      <div class="tier-bullet">Native-feeling content — not a generic ad read</div>
+      <div class="tier-bullet">Past features hit 40–70K impressions</div>
+    </div>
+    <button class="tier-cta" onclick="openPopup('product')">Get in touch <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 </div>
 
@@ -426,7 +565,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
     <strong>Want to get featured?</strong>
     150K 3D printing followers
   </div>
-  <button class="sticky-btn" onclick="openPopup()">Get featured ↗</button>
+  <button class="sticky-btn" onclick="openPopup(null)">Get featured ↗</button>
 </div>
 
 <!-- ══ POPUP OVERLAY ══ -->
@@ -434,36 +573,169 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
   <div class="popup" id="popup">
     <div class="popup-handle"></div>
 
-    <!-- UNIFIED APPLY VIEW -->
-    <div class="popup-header">
-      <div class="popup-title">Work with <em>me</em></div>
-      <p class="popup-sub">Whatever you're bringing — just DM me. I'll take a look and get back to you.</p>
-    </div>
-    <div class="popup-checklist">
-      <div class="popup-check"><div class="popup-check-icon">·</div><span>designed your own 3D model?</span></div>
-      <div class="popup-check"><div class="popup-check-icon">·</div><span>got a filament worth testing?</span></div>
-      <div class="popup-check"><div class="popup-check-icon">·</div><span>built something people need to see?</span></div>
-    </div>
-    <div class="popup-contact-box">
-      <div class="popup-contact-title">How to reach me</div>
-      <div class="popup-contact-row">
-        <div class="popup-contact-icon">📸</div>
-        <div>
-          <div class="popup-contact-label">Instagram DM (preferred)</div>
-          <div class="popup-contact-val">@meshminds3d</div>
+    <!-- MAIN VIEW -->
+    <div id="popup-main">
+      <div class="popup-header">
+        <div class="popup-title">Get <em>featured</em></div>
+        <p class="popup-sub">Pick what describes you best — I'll tell you exactly what to send me so we can get things moving.</p>
+      </div>
+      <div class="popup-tiers">
+        <div class="popup-tier" onclick="showDetail('free')">
+          <div class="popup-tier-icon pti-free">🧱</div>
+          <div style="flex:1">
+            <div class="popup-tier-tag ptag-free">Free</div>
+            <div class="popup-tier-title">Feature my 3D model</div>
+            <div class="popup-tier-desc">I made something and want it seen</div>
+          </div>
+          <div class="popup-tier-arrow">›</div>
+        </div>
+        <div class="popup-tier" onclick="showDetail('promo')">
+          <div class="popup-tier-icon pti-promo">🎯</div>
+          <div style="flex:1">
+            <div class="popup-tier-tag ptag-paid">Paid</div>
+            <div class="popup-tier-title">Promote my service</div>
+            <div class="popup-tier-desc">STL membership, Patreon, community</div>
+          </div>
+          <div class="popup-tier-arrow">›</div>
+        </div>
+        <div class="popup-tier" onclick="showDetail('product')">
+          <div class="popup-tier-icon pti-product">📦</div>
+          <div style="flex:1">
+            <div class="popup-tier-tag ptag-paid">Paid</div>
+            <div class="popup-tier-title">Showcase my product</div>
+            <div class="popup-tier-desc">Filament, hardware, accessories, software</div>
+          </div>
+          <div class="popup-tier-arrow">›</div>
         </div>
       </div>
-      <div class="popup-contact-row">
-        <div class="popup-contact-icon">✉️</div>
-        <div>
-          <div class="popup-contact-label">Email</div>
-          <div class="popup-contact-val">contact@meshminds.de</div>
+    </div>
+
+    <!-- DETAIL: FREE MODEL -->
+    <div class="popup-detail" id="detail-free">
+      <button class="popup-back" onclick="showMain()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <div class="popup-detail-header">
+        <div class="popup-detail-tag pdtag-free">Free feature</div>
+        <div class="popup-detail-title">Feature your 3D model</div>
+      </div>
+      <div class="popup-detail-body">
+        I feature cool models every week — free, no strings attached. Just send me your link and a bit of context so I know what I'm looking at.
+      </div>
+      <div class="popup-checklist">
+        <div class="popup-check"><div class="popup-check-icon">1</div><span><strong>Your model link</strong> — Printables, Makerworld, Thingiverse, or any public page</span></div>
+        <div class="popup-check"><div class="popup-check-icon">2</div><span><strong>What it does</strong> — one sentence on what it is and who it's for</span></div>
+        <div class="popup-check"><div class="popup-check-icon">3</div><span><strong>A good photo</strong> — a clean print photo helps a lot (optional but recommended)</span></div>
+        <div class="popup-check"><div class="popup-check-icon">4</div><span><strong>Your Instagram handle</strong> — so I can tag you when I post</span></div>
+      </div>
+      <div class="popup-contact-box">
+        <div class="popup-contact-title">How to reach me</div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">📸</div>
+          <div>
+            <div class="popup-contact-label">Instagram DM (preferred)</div>
+            <div class="popup-contact-val">@meshminds3d</div>
+          </div>
+        </div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">✉️</div>
+          <div>
+            <div class="popup-contact-label">Email</div>
+            <div class="popup-contact-val">contact@meshminds.de</div>
+          </div>
         </div>
       </div>
+      <div class="popup-cta-row">
+        <a href="https://instagram.com/meshminds3d" class="popup-cta-main">DM me on Instagram ↗</a>
+        <a href="mailto:contact@meshminds.de?subject=Free model feature" class="popup-cta-secondary">Send an email instead</a>
+      </div>
     </div>
-    <div class="popup-cta-row">
-      <a href="https://instagram.com/meshminds3d" class="popup-cta-main">DM me to talk ↗</a>
-      <a href="mailto:contact@meshminds.de?subject=Feature enquiry" class="popup-cta-secondary">Send an email instead</a>
+
+    <!-- DETAIL: PROMO SERVICE -->
+    <div class="popup-detail" id="detail-promo">
+      <button class="popup-back" onclick="showMain()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <div class="popup-detail-header">
+        <div class="popup-detail-tag pdtag-paid">Paid feature</div>
+        <div class="popup-detail-title">Promote your service</div>
+      </div>
+      <div class="popup-detail-body">
+        Paid STL memberships, Patreons, and 3D printing communities do really well with my audience. DM me with the details below and I'll come back with availability and pricing.
+      </div>
+      <div class="popup-checklist">
+        <div class="popup-check"><div class="popup-check-icon">1</div><span><strong>Your service link</strong> — Patreon, website, or membership page</span></div>
+        <div class="popup-check"><div class="popup-check-icon">2</div><span><strong>What you offer</strong> — what members get, how much it costs, niche/style</span></div>
+        <div class="popup-check"><div class="popup-check-icon">3</div><span><strong>Your goal</strong> — new subscribers, awareness, or both</span></div>
+        <div class="popup-check"><div class="popup-check-icon">4</div><span><strong>Preferred timing</strong> — any dates that work or ones to avoid</span></div>
+        <div class="popup-check"><div class="popup-check-icon">5</div><span><strong>Your budget range</strong> — optional, but helps me give you the right options</span></div>
+      </div>
+      <div class="popup-contact-box">
+        <div class="popup-contact-title">How to reach me</div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">📸</div>
+          <div>
+            <div class="popup-contact-label">Instagram DM (preferred)</div>
+            <div class="popup-contact-val">@meshminds3d</div>
+          </div>
+        </div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">✉️</div>
+          <div>
+            <div class="popup-contact-label">Email</div>
+            <div class="popup-contact-val">contact@meshminds.de</div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-cta-row">
+        <a href="https://instagram.com/meshminds3d" class="popup-cta-main">DM me on Instagram ↗</a>
+        <a href="mailto:contact@meshminds.de?subject=Service promotion enquiry" class="popup-cta-secondary">Send an email instead</a>
+      </div>
+    </div>
+
+    <!-- DETAIL: PRODUCT -->
+    <div class="popup-detail" id="detail-product">
+      <button class="popup-back" onclick="showMain()">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M19 12H5M5 12l7-7M5 12l7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <div class="popup-detail-header">
+        <div class="popup-detail-tag pdtag-paid">Paid feature</div>
+        <div class="popup-detail-title">Showcase your product</div>
+      </div>
+      <div class="popup-detail-body">
+        Filament, printers, accessories, software — products do really well here because my audience is actively buying gear. Send me the details below to check if we're a fit.
+      </div>
+      <div class="popup-checklist">
+        <div class="popup-check"><div class="popup-check-icon">1</div><span><strong>Your product link</strong> — website or shop page</span></div>
+        <div class="popup-check"><div class="popup-check-icon">2</div><span><strong>What it does</strong> — who it's for and what problem it solves</span></div>
+        <div class="popup-check"><div class="popup-check-icon">3</div><span><strong>What you want me to highlight</strong> — key selling points or a specific angle</span></div>
+        <div class="popup-check"><div class="popup-check-icon">4</div><span><strong>Can you send a sample?</strong> — I always prefer to test what I talk about</span></div>
+        <div class="popup-check"><div class="popup-check-icon">5</div><span><strong>Preferred timing & budget</strong> — helps me plan availability and the right format</span></div>
+      </div>
+      <div class="popup-contact-box">
+        <div class="popup-contact-title">How to reach me</div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">📸</div>
+          <div>
+            <div class="popup-contact-label">Instagram DM (preferred)</div>
+            <div class="popup-contact-val">@meshminds3d</div>
+          </div>
+        </div>
+        <div class="popup-contact-row">
+          <div class="popup-contact-icon">✉️</div>
+          <div>
+            <div class="popup-contact-label">Email</div>
+            <div class="popup-contact-val">contact@meshminds.de</div>
+          </div>
+        </div>
+      </div>
+      <div class="popup-cta-row">
+        <a href="https://instagram.com/meshminds3d" class="popup-cta-main">DM me on Instagram ↗</a>
+        <a href="mailto:contact@meshminds.de?subject=Product showcase enquiry" class="popup-cta-secondary">Send an email instead</a>
+      </div>
     </div>
 
   </div>
@@ -481,10 +753,15 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
       if (p < 1) requestAnimationFrame(run);
     });
   }
-  var el1 = document.getElementById('cnt1');
-  var el2 = document.getElementById('cnt2');
-  if (el1) animCount(el1, 150);
-  if (el2) animCount(el2, 80);
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (!e.isIntersecting) return;
+      if (e.target.id === 'cnt1') animCount(e.target, 150);
+      if (e.target.id === 'cnt2') animCount(e.target, 80);
+      io.unobserve(e.target);
+    });
+  }, { threshold: .5 });
+  ['cnt1','cnt2'].forEach(function(id){ var el=document.getElementById(id); if(el) io.observe(el); });
 })();
 
 // Scroll reveal
@@ -495,21 +772,20 @@ var revIO = new IntersectionObserver(function(entries) {
     setTimeout(function(){ el.classList.add('vis'); }, d);
     revIO.unobserve(el);
   });
-}, { threshold: 0 });
+}, { threshold: .05 });
 document.querySelectorAll('.feat-card,.tier-item,.aff-card').forEach(function(el){ revIO.observe(el); });
-// Fallback: ensure cards always become visible even if observer misfires
-setTimeout(function(){
-  document.querySelectorAll('.feat-card,.aff-card').forEach(function(el){ el.classList.add('vis'); });
-}, 1200);
 
 // Popup logic
 var overlay = document.getElementById('overlay');
 var popup = document.getElementById('popup');
 
-function openPopup() {
+function openPopup(tier) {
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
-  popup.scrollTop = 0;
+  showMain();
+  if (tier) {
+    setTimeout(function() { showDetail(tier); }, 50);
+  }
 }
 
 function closePopup() {
@@ -520,6 +796,18 @@ function closePopup() {
 function handleOverlayClick(e) {
   if (e.target === overlay) closePopup();
 }
+
+function showMain() {
+  document.getElementById('popup-main').style.display = 'block';
+  document.querySelectorAll('.popup-detail').forEach(function(d){ d.classList.remove('active'); });
+  popup.scrollTop = 0;
+}
+
+function showDetail(tier) {
+  document.getElementById('popup-main').style.display = 'none';
+  document.querySelectorAll('.popup-detail').forEach(function(d){ d.classList.remove('active'); });
+  var det = document.getElementById('detail-' + tier);
+  if (det) { det.classList.add('active'); }
   popup.scrollTop = 0;
 }
 

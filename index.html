@@ -110,6 +110,25 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
 .aff-cta-arrow svg{width:16px;height:16px}
 .aff-disclaimer{font-size:11px;color:rgba(255,255,255,.22);margin-top:13px;line-height:1.55}
 
+/* ── CUBEE PROMO ── */
+.section-cubee{background:var(--o);padding:48px 24px 52px;position:relative;overflow:hidden}
+.section-cubee::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,.06);border-radius:50%}
+.section-cubee::after{content:'';position:absolute;bottom:-40px;left:-40px;width:160px;height:160px;background:rgba(0,0,0,.06);border-radius:50%}
+.cubee-inner{position:relative;z-index:1;opacity:0}
+.cubee-inner.vis{animation:up .5s ease forwards}
+.cubee-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.7);background:rgba(0,0,0,.2);padding:5px 14px;border-radius:50px;margin-bottom:18px}
+.cubee-title{font-family:var(--D);font-size:48px;letter-spacing:2px;color:#fff;line-height:.92;margin-bottom:14px}
+.cubee-title em{color:var(--black);font-style:normal}
+.cubee-desc{font-size:17px;color:rgba(255,255,255,.75);line-height:1.65;margin-bottom:28px;max-width:380px}
+.cubee-features{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.cubee-feat{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:#fff}
+.cubee-feat-icon{width:28px;height:28px;background:rgba(0,0,0,.18);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+.cubee-cta{display:inline-flex;align-items:center;gap:10px;font-size:17px;font-weight:700;color:var(--o);background:#fff;border-radius:50px;padding:14px 28px;text-decoration:none;font-family:var(--B);transition:background .15s,transform .15s;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.cubee-cta:active{transform:scale(.97);background:#f5f5f5}
+@media(hover:hover){.cubee-cta:hover{background:#f0f0f0}}
+.cubee-cta svg{width:16px;height:16px}
+.cubee-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:14px;line-height:1.5}
+
 /* ── DM FOOTER ── */
 .section-dm{background:var(--black);padding:44px 24px 60px;text-align:center}
 .dm-handle{font-family:var(--D);font-size:52px;letter-spacing:3px;color:var(--o);margin-bottom:10px}
@@ -303,6 +322,26 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
   </div>
 </div>
 
+<!-- ══ CUBEE PROMO ══ -->
+<div class="section-cubee">
+  <div class="cubee-inner">
+    <div class="cubee-badge">Partner spotlight</div>
+    <div class="cubee-title">Sell your prints <em>legally</em></div>
+    <p class="cubee-desc">Cubee's commercial STL license lets you sell 3D-printed models without worrying about copyright. One license, unlimited prints.</p>
+    <div class="cubee-features">
+      <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>Commercial use rights included</div>
+      <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>Huge library of printable STLs</div>
+      <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>Print &amp; sell at markets or online</div>
+      <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>New models added regularly</div>
+    </div>
+    <a href="https://www.cubee3d.com/?code=vtMKNLHwY6z3" class="cubee-cta">
+      Browse Cubee licenses
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <p class="cubee-note">Affiliate link — I earn a small commission at no extra cost to you.</p>
+  </div>
+</div>
+
 <!-- ══ AFFILIATE ══ -->
 <div class="section-affiliate">
   <div class="s-label">Gear I actually use</div>
@@ -482,7 +521,7 @@ var revIO = new IntersectionObserver(function(entries) {
     revIO.unobserve(el);
   });
 }, { threshold: .05 });
-document.querySelectorAll('.feat-card,.aff-card').forEach(function(el){ revIO.observe(el); });
+document.querySelectorAll('.feat-card,.aff-card,.cubee-inner').forEach(function(el){ revIO.observe(el); });
 
 // Popup logic
 var overlay = document.getElementById('overlay');

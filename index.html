@@ -495,8 +495,12 @@ var revIO = new IntersectionObserver(function(entries) {
     setTimeout(function(){ el.classList.add('vis'); }, d);
     revIO.unobserve(el);
   });
-}, { threshold: .05 });
+}, { threshold: 0 });
 document.querySelectorAll('.feat-card,.tier-item,.aff-card').forEach(function(el){ revIO.observe(el); });
+// Fallback: ensure cards always become visible even if observer misfires
+setTimeout(function(){
+  document.querySelectorAll('.feat-card,.aff-card').forEach(function(el){ el.classList.add('vis'); });
+}, 1200);
 
 // Popup logic
 var overlay = document.getElementById('overlay');

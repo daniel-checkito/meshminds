@@ -481,15 +481,10 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
       if (p < 1) requestAnimationFrame(run);
     });
   }
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (!e.isIntersecting) return;
-      if (e.target.id === 'cnt1') animCount(e.target, 150);
-      if (e.target.id === 'cnt2') animCount(e.target, 80);
-      io.unobserve(e.target);
-    });
-  }, { threshold: .5 });
-  ['cnt1','cnt2'].forEach(function(id){ var el=document.getElementById(id); if(el) io.observe(el); });
+  var el1 = document.getElementById('cnt1');
+  var el2 = document.getElementById('cnt2');
+  if (el1) animCount(el1, 150);
+  if (el2) animCount(el2, 80);
 })();
 
 // Scroll reveal

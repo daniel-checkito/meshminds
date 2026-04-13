@@ -200,7 +200,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
 .admin-title{font-family:var(--D);font-size:42px;letter-spacing:2px;color:var(--o);line-height:1}
 .admin-close{background:none;border:1px solid rgba(255,255,255,.15);color:#fff;font-size:14px;font-family:var(--B);font-weight:600;padding:8px 18px;border-radius:50px;cursor:pointer;transition:border-color .15s}
 .admin-close:hover{border-color:var(--o)}
-.admin-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px}
+.admin-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px}
 .admin-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px 18px}
 .admin-card-label{font-size:12px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px}
 .admin-card-val{font-family:var(--D);font-size:42px;color:var(--o);line-height:1}
@@ -607,7 +607,7 @@ document.addEventListener('keydown', function(e) {
 // 2. In the sheet, go to Extensions > Apps Script
 // 3. Delete the default code and paste the following:
 //
-// ---- START OF GOOGLE APPS SCRIPT CODE (v2) ----
+// ---- START OF GOOGLE APPS SCRIPT CODE (v3) ----
 //
 // function doPost(e) {
 //   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
@@ -621,7 +621,13 @@ document.addEventListener('keydown', function(e) {
 //     data.userAgent || '',
 //     data.screenWidth || '',
 //     data.visitorId || '',
-//     data.scrollDepth || ''
+//     data.sessionId || '',
+//     data.scrollDepth || '',
+//     data.timeOnPage || '',
+//     data.language || '',
+//     data.timezone || '',
+//     data.deviceType || '',
+//     data.pageUrl || ''
 //   ]);
 //   return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
 //     .setMimeType(ContentService.MimeType.JSON);
@@ -641,14 +647,20 @@ document.addEventListener('keydown', function(e) {
 //       userAgent: data[i][5],
 //       screenWidth: data[i][6],
 //       visitorId: data[i][7] || '',
-//       scrollDepth: data[i][8] || ''
+//       sessionId: data[i][8] || '',
+//       scrollDepth: data[i][9] || '',
+//       timeOnPage: data[i][10] || '',
+//       language: data[i][11] || '',
+//       timezone: data[i][12] || '',
+//       deviceType: data[i][13] || '',
+//       pageUrl: data[i][14] || ''
 //     });
 //   }
 //   return ContentService.createTextOutput(JSON.stringify(rows))
 //     .setMimeType(ContentService.MimeType.JSON);
 // }
 //
-// ---- END OF GOOGLE APPS SCRIPT CODE (v2) ----
+// ---- END OF GOOGLE APPS SCRIPT CODE (v3) ----
 //
 // 4. Click Deploy > New deployment
 // 5. Select type: Web app
@@ -659,16 +671,40 @@ document.addEventListener('keydown', function(e) {
 
 var SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzWX_D9Z91k4t_8xNvhSTY7bmvHQpebtUCFOSR4bi958WjcTad-veTtichWa1ocKMkk/exec';
 
-// Unique visitor ID (persists across sessions)
+// ── Visitor ID (persists forever per browser) ──
 var VISITOR_ID = localStorage.getItem('mm_vid');
 if (!VISITOR_ID) {
   VISITOR_ID = 'v_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   localStorage.setItem('mm_vid', VISITOR_ID);
 }
 
+// ── Session ID (new session after 30 min inactivity) ──
+var SESSION_TIMEOUT = 30 * 60 * 1000;
+var now = Date.now();
+var lastActivity = parseInt(localStorage.getItem('mm_last') || '0');
+var SESSION_ID = localStorage.getItem('mm_sid');
+if (!SESSION_ID || (now - lastActivity) > SESSION_TIMEOUT) {
+  SESSION_ID = 's_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  localStorage.setItem('mm_sid', SESSION_ID);
+}
+localStorage.setItem('mm_last', String(now));
+
+// ── Device detection ──
+var ua = navigator.userAgent;
+var deviceType = /Mobi|Android/i.test(ua) ? (/Tablet|iPad/i.test(ua) ? 'tablet' : 'mobile') : 'desktop';
+
+// ── Page load timestamp (for time-on-page) ──
+var pageLoadTime = Date.now();
+
 function trackEvent(data) {
   if (!SHEET_WEBHOOK_URL) return;
   data.visitorId = VISITOR_ID;
+  data.sessionId = SESSION_ID;
+  data.language = data.language || navigator.language || '';
+  data.timezone = data.timezone || (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+  data.deviceType = data.deviceType || deviceType;
+  data.pageUrl = data.pageUrl || location.href;
+  localStorage.setItem('mm_last', String(Date.now()));
   try {
     fetch(SHEET_WEBHOOK_URL, {
       method: 'POST',
@@ -680,7 +716,7 @@ function trackEvent(data) {
   } catch(err) {}
 }
 
-// Track page view (every load) and first visit (once per visitor)
+// ── Track page view / new visitor ──
 var isNewVisitor = !localStorage.getItem('mm_visited');
 trackEvent({
   type: isNewVisitor ? 'new_visitor' : 'pageview',
@@ -690,20 +726,27 @@ trackEvent({
 });
 if (isNewVisitor) localStorage.setItem('mm_visited', '1');
 
-// Track max scroll depth when user leaves
+// ── Track scroll depth + time on page when leaving ──
 var maxScroll = 0;
 window.addEventListener('scroll', function() {
   var scrollTop = window.scrollY || document.documentElement.scrollTop;
   var docHeight = document.documentElement.scrollHeight - window.innerHeight;
   if (docHeight > 0) maxScroll = Math.max(maxScroll, Math.round((scrollTop / docHeight) * 100));
 });
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'hidden' && maxScroll > 0) {
-    trackEvent({ type: 'scroll_depth', scrollDepth: maxScroll });
-  }
-});
 
-// Track all button clicks via data-track attribute
+var exitSent = false;
+function sendExitData() {
+  if (exitSent) return;
+  exitSent = true;
+  var timeOnPage = Math.round((Date.now() - pageLoadTime) / 1000);
+  trackEvent({ type: 'exit', scrollDepth: maxScroll, timeOnPage: timeOnPage });
+}
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') sendExitData();
+});
+window.addEventListener('pagehide', sendExitData);
+
+// ── Track all button clicks ──
 document.querySelectorAll('[data-track]').forEach(function(el) {
   el.addEventListener('click', function() {
     trackEvent({
@@ -778,68 +821,118 @@ function isToday(ts) {
   } catch(e) { return false; }
 }
 
+function fmtDuration(secs) {
+  if (secs < 60) return secs + 's';
+  var m = Math.floor(secs / 60), s = secs % 60;
+  return m + 'm ' + s + 's';
+}
+
 function renderDashboard(container, rows, filter) {
   var filtered = filter === 'today' ? rows.filter(function(r) { return isToday(r.timestamp); }) : rows;
 
   var uniqueVisitors = {};
+  var sessions = {};
   var pageViews = 0, clicks = 0;
+  var clickerSessions = {};
   var buttonCounts = {};
   var buttonLast = {};
   var scrollDepths = [];
+  var timesOnPage = [];
+  var devices = { mobile: 0, desktop: 0, tablet: 0 };
 
   filtered.forEach(function(r) {
+    if (r.visitorId) uniqueVisitors[r.visitorId] = 1;
+    if (r.sessionId) sessions[r.sessionId] = 1;
+
     if (r.type === 'new_visitor' || r.type === 'visit' || r.type === 'pageview') {
       pageViews++;
-      if (r.visitorId) uniqueVisitors[r.visitorId] = 1;
+      var dev = (r.deviceType || '').toLowerCase();
+      if (dev === 'mobile') devices.mobile++;
+      else if (dev === 'tablet') devices.tablet++;
+      else devices.desktop++;
     }
     if (r.type === 'click') {
       clicks++;
-      if (r.visitorId) uniqueVisitors[r.visitorId] = 1;
+      if (r.sessionId) clickerSessions[r.sessionId] = 1;
       var btn = r.button || '(unknown)';
       buttonCounts[btn] = (buttonCounts[btn] || 0) + 1;
       var ts = r.timestamp;
       if (!buttonLast[btn] || ts > buttonLast[btn]) buttonLast[btn] = ts;
     }
+    if (r.type === 'exit') {
+      if (r.scrollDepth) scrollDepths.push(parseInt(r.scrollDepth) || 0);
+      if (r.timeOnPage) timesOnPage.push(parseInt(r.timeOnPage) || 0);
+    }
+    // Legacy support
     if (r.type === 'scroll_depth' && r.scrollDepth) {
       scrollDepths.push(parseInt(r.scrollDepth) || 0);
     }
   });
 
   var uniqueCount = Object.keys(uniqueVisitors).length;
+  var sessionCount = Object.keys(sessions).length;
   var avgScroll = scrollDepths.length ? Math.round(scrollDepths.reduce(function(a, b) { return a + b; }, 0) / scrollDepths.length) : 0;
+  var avgTime = timesOnPage.length ? Math.round(timesOnPage.reduce(function(a, b) { return a + b; }, 0) / timesOnPage.length) : 0;
 
-  // Toolbar: filter + refresh
+  // Click rate = sessions with at least 1 click / total sessions
+  var clickRate = sessionCount > 0 ? Math.round((Object.keys(clickerSessions).length / sessionCount) * 100) : 0;
+  // Conversion rate = sessions that clicked a CTA (popup-instagram-dm, popup-email, or hero-cta) / total sessions
+  var conversionButtons = ['popup-instagram-dm', 'popup-email', 'hero-cta', 'sticky-get-featured'];
+  var convertedSessions = {};
+  filtered.forEach(function(r) {
+    if (r.type === 'click' && r.sessionId && conversionButtons.indexOf(r.button) !== -1) {
+      convertedSessions[r.sessionId] = 1;
+    }
+  });
+  var conversionRate = sessionCount > 0 ? Math.round((Object.keys(convertedSessions).length / sessionCount) * 100) : 0;
+
+  // Toolbar
   var html = '<div class="admin-toolbar">';
   html += '<button class="admin-filter' + (filter === 'all' ? ' active' : '') + '" onclick="setFilter(\'all\')">All time</button>';
   html += '<button class="admin-filter' + (filter === 'today' ? ' active' : '') + '" onclick="setFilter(\'today\')">Today</button>';
   html += '<button class="admin-refresh" onclick="loadDashboard()">Refresh</button>';
   html += '</div>';
 
-  // Summary cards
+  // Row 1: Visitors, Sessions, Page Views
   html += '<div class="admin-cards">';
   html += '<div class="admin-card"><div class="admin-card-label">Unique Visitors</div><div class="admin-card-val">' + uniqueCount + '</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Sessions</div><div class="admin-card-val">' + sessionCount + '</div></div>';
   html += '<div class="admin-card"><div class="admin-card-label">Page Views</div><div class="admin-card-val">' + pageViews + '</div></div>';
-  html += '<div class="admin-card"><div class="admin-card-label">Total Clicks</div><div class="admin-card-val">' + clicks + '</div></div>';
   html += '</div>';
 
-  // Avg scroll depth
-  html += '<div class="admin-section-title">AVG SCROLL DEPTH</div>';
+  // Row 2: Clicks, Click Rate, Conversion Rate
+  html += '<div class="admin-cards">';
+  html += '<div class="admin-card"><div class="admin-card-label">Total Clicks</div><div class="admin-card-val">' + clicks + '</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Click Rate</div><div class="admin-card-val">' + clickRate + '%</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Conversion Rate</div><div class="admin-card-val">' + conversionRate + '%</div></div>';
+  html += '</div>';
+
+  // Row 3: Avg Time, Avg Scroll, Device split
+  html += '<div class="admin-cards">';
+  html += '<div class="admin-card"><div class="admin-card-label">Avg Time on Page</div><div class="admin-card-val" style="font-size:32px">' + fmtDuration(avgTime) + '</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Avg Scroll Depth</div><div class="admin-card-val">' + avgScroll + '%</div></div>';
+  var devTotal = devices.mobile + devices.desktop + devices.tablet;
+  var devStr = devTotal ? Math.round((devices.mobile / devTotal) * 100) + '% mob' : '—';
+  html += '<div class="admin-card"><div class="admin-card-label">Mobile Traffic</div><div class="admin-card-val">' + devStr + '</div></div>';
+  html += '</div>';
+
+  // Scroll depth bar
   html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:28px">';
   html += '<div style="flex:1"><div class="admin-scroll-bar"><div class="admin-scroll-fill" style="width:' + avgScroll + '%"></div></div></div>';
-  html += '<span style="font-family:var(--D);font-size:28px;color:var(--o)">' + avgScroll + '%</span>';
   html += '</div>';
 
   // Click breakdown table
   html += '<div class="admin-section-title">CLICKS BY BUTTON</div>';
-  html += '<table class="admin-table"><thead><tr><th>Button</th><th>Clicks</th><th>Last Click</th></tr></thead><tbody>';
+  html += '<table class="admin-table"><thead><tr><th>Button</th><th>Clicks</th><th>% of Clicks</th><th>Last Click</th></tr></thead><tbody>';
 
   var sorted = Object.keys(buttonCounts).sort(function(a, b) { return buttonCounts[b] - buttonCounts[a]; });
   if (!sorted.length) {
-    html += '<tr><td colspan="3" style="color:rgba(255,255,255,.25);text-align:center">No clicks yet</td></tr>';
+    html += '<tr><td colspan="4" style="color:rgba(255,255,255,.25);text-align:center">No clicks yet</td></tr>';
   }
   sorted.forEach(function(btn) {
     var last = buttonLast[btn] ? formatTime(buttonLast[btn]) : '—';
-    html += '<tr><td>' + escHtml(btn) + '</td><td class="num">' + buttonCounts[btn] + '</td><td>' + last + '</td></tr>';
+    var pct = clicks > 0 ? Math.round((buttonCounts[btn] / clicks) * 100) : 0;
+    html += '<tr><td>' + escHtml(btn) + '</td><td class="num">' + buttonCounts[btn] + '</td><td>' + pct + '%</td><td>' + last + '</td></tr>';
   });
   html += '</tbody></table>';
 
@@ -854,9 +947,10 @@ function renderDashboard(container, rows, filter) {
   recent.forEach(function(r) {
     var typeCls = (r.type === 'click') ? 'click' : 'visit';
     var detail = '';
-    if (r.type === 'new_visitor') detail = 'New visitor' + (r.referrer && r.referrer !== '(direct)' ? ' from ' + r.referrer : '');
+    if (r.type === 'new_visitor') detail = 'New visitor' + (r.referrer && r.referrer !== '(direct)' ? ' from ' + r.referrer : '') + (r.deviceType ? ' (' + r.deviceType + ')' : '');
     else if (r.type === 'visit' || r.type === 'pageview') detail = 'Page view' + (r.referrer && r.referrer !== '(direct)' ? ' from ' + r.referrer : '');
-    else if (r.type === 'scroll_depth') detail = 'Scrolled ' + (r.scrollDepth || '?') + '% of page';
+    else if (r.type === 'exit') detail = 'Left after ' + fmtDuration(parseInt(r.timeOnPage) || 0) + ', scrolled ' + (r.scrollDepth || '0') + '%';
+    else if (r.type === 'scroll_depth') detail = 'Scrolled ' + (r.scrollDepth || '?') + '%';
     else detail = escHtml(r.button || '(unknown)') + (r.href ? ' &rarr; ' + r.href : '');
     var time = r.timestamp ? formatTime(r.timestamp) : '';
     html += '<div class="admin-log-row">';

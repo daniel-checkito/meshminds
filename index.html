@@ -191,6 +191,36 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
 
 @keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 @media(max-width:360px){.hero-headline{font-size:60px}}
+
+/* ── ADMIN DASHBOARD ── */
+.admin-dash{display:none;position:fixed;inset:0;z-index:9999;background:var(--black);overflow-y:auto;color:#fff;font-family:var(--B)}
+.admin-dash.open{display:block}
+.admin-dash-inner{max-width:720px;margin:0 auto;padding:24px 20px 60px}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;border-bottom:1px solid rgba(255,255,255,.1);padding-bottom:20px}
+.admin-title{font-family:var(--D);font-size:42px;letter-spacing:2px;color:var(--o);line-height:1}
+.admin-close{background:none;border:1px solid rgba(255,255,255,.15);color:#fff;font-size:14px;font-family:var(--B);font-weight:600;padding:8px 18px;border-radius:50px;cursor:pointer;transition:border-color .15s}
+.admin-close:hover{border-color:var(--o)}
+.admin-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:32px}
+.admin-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px 18px}
+.admin-card-label{font-size:12px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;font-weight:600;margin-bottom:8px}
+.admin-card-val{font-family:var(--D);font-size:42px;color:var(--o);line-height:1}
+.admin-section-title{font-family:var(--D);font-size:24px;letter-spacing:1px;color:#fff;margin-bottom:16px}
+.admin-table{width:100%;border-collapse:collapse;margin-bottom:32px}
+.admin-table th{text-align:left;font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.8px;font-weight:600;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.1)}
+.admin-table td{font-size:14px;padding:12px;border-bottom:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.7)}
+.admin-table td:first-child{color:#fff;font-weight:600}
+.admin-table td.num{font-family:var(--D);font-size:22px;color:var(--o)}
+.admin-log{max-height:400px;overflow-y:auto;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:4px 0}
+.admin-log-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.admin-log-row:last-child{border-bottom:none}
+.admin-log-type{font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;flex-shrink:0}
+.admin-log-type.visit{background:rgba(59,130,246,.2);color:#60a5fa}
+.admin-log-type.click{background:rgba(255,85,0,.2);color:var(--o)}
+.admin-log-detail{color:rgba(255,255,255,.6);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-log-time{color:rgba(255,255,255,.25);font-size:11px;flex-shrink:0}
+.admin-loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,.3);font-size:16px}
+.admin-error{text-align:center;padding:40px 20px;color:#f87171;font-size:14px}
+@media(max-width:500px){.admin-cards{grid-template-columns:1fr}.admin-card-val{font-size:36px}}
 </style>
 </head>
 <body>
@@ -212,7 +242,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
       <div class="apply-bullet">got a filament worth testing?</div>
       <div class="apply-bullet">built something people need to see?</div>
     </div>
-    <button class="tier-cta" onclick="openPopup()" style="margin-top:10px">DM me to talk <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <button class="tier-cta" onclick="openPopup()" style="margin-top:10px" data-track="hero-cta">DM me to talk <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
 
 </div>
@@ -334,7 +364,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
       <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>Print &amp; sell at markets or online</div>
       <div class="cubee-feat"><div class="cubee-feat-icon">&#x2713;</div>New models added regularly</div>
     </div>
-    <a href="https://www.cubee3d.com/?code=vtMKNLHwY6z3" class="cubee-cta">
+    <a href="https://www.cubee3d.com/?code=vtMKNLHwY6z3" class="cubee-cta" data-track="cubee-cta">
       Browse Cubee licenses
       <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
@@ -362,7 +392,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
           <div class="aff-spec"><div class="aff-spec-label">Display</div><div class="aff-spec-val">HD + Wi-Fi</div></div>
           <div class="aff-spec"><div class="aff-spec-label">Fits</div><div class="aff-spec-val">X1 / P1 / A1</div></div>
         </div>
-        <a href="https://biqu.equipment/collections/for-bambu-lab-printers/products/biqu-panda-buildplate-cryogrip-pro-for-bambu" class="aff-cta">
+        <a href="https://biqu.equipment/collections/for-bambu-lab-printers/products/biqu-panda-buildplate-cryogrip-pro-for-bambu" class="aff-cta" data-track="affiliate-biqu-buildplate">
           <div><div class="aff-cta-text">Shop on BIQU</div><div class="aff-cta-sub">biqu.equipment</div></div>
           <div class="aff-cta-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
@@ -383,7 +413,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
           <div class="aff-spec"><div class="aff-spec-label">Display</div><div class="aff-spec-val">HD + Wi-Fi</div></div>
           <div class="aff-spec"><div class="aff-spec-label">Fits</div><div class="aff-spec-val">X1 / P1 / A1</div></div>
         </div>
-        <a href="https://biqu.equipment/products/panda-knomi" class="aff-cta">
+        <a href="https://biqu.equipment/products/panda-knomi" class="aff-cta" data-track="affiliate-biqu-knomi">
           <div><div class="aff-cta-text">Shop on BIQU</div><div class="aff-cta-sub">biqu.equipment</div></div>
           <div class="aff-cta-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
@@ -403,7 +433,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
           <div class="aff-spec"><div class="aff-spec-label">Material</div><div class="aff-spec-val">Soap-based</div></div>
           <div class="aff-spec"><div class="aff-spec-label">Type</div><div class="aff-spec-val">Compostable</div></div>
         </div>
-        <a href="https://timeplast-affiliates.peachs.co/a/daemien-haag" class="aff-cta">
+        <a href="https://timeplast-affiliates.peachs.co/a/daemien-haag" class="aff-cta" data-track="affiliate-timeplast">
           <div><div class="aff-cta-text">Shop Timeplast</div><div class="aff-cta-sub">timeplast.com</div></div>
           <div class="aff-cta-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
@@ -422,7 +452,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
           <div class="aff-spec"><div class="aff-spec-label">Print area</div><div class="aff-spec-val">58 × 116 mm</div></div>
           <div class="aff-spec"><div class="aff-spec-label">Material</div><div class="aff-spec-val">Carbon fiber</div></div>
         </div>
-        <a href="https://dhinotec.de?sca_ref=10947532.AJ6A5aFbwkU1i" class="aff-cta">
+        <a href="https://dhinotec.de?sca_ref=10947532.AJ6A5aFbwkU1i" class="aff-cta" data-track="affiliate-dhinotec">
           <div><div class="aff-cta-text">Shop on DhinoTec</div><div class="aff-cta-sub">dhinotec.de</div></div>
           <div class="aff-cta-arrow"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
@@ -444,7 +474,7 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
     <strong>Want to get featured?</strong>
     150K 3D printing followers
   </div>
-  <button class="sticky-btn" onclick="openPopup()">Get featured ↗</button>
+  <button class="sticky-btn" onclick="openPopup()" data-track="sticky-get-featured">Get featured ↗</button>
 </div>
 
 <!-- ══ POPUP OVERLAY ══ -->
@@ -481,11 +511,24 @@ body{background:var(--offwhite);color:var(--text);font-family:var(--B);min-heigh
         </div>
       </div>
       <div class="popup-cta-row">
-        <a href="https://instagram.com/meshminds3d" class="popup-cta-main">DM me on Instagram ↗</a>
-        <a href="mailto:meshminds3dd@gmail.coom?subject=Feature enquiry" class="popup-cta-secondary">Send an email instead</a>
+        <a href="https://instagram.com/meshminds3d" class="popup-cta-main" data-track="popup-instagram-dm">DM me on Instagram ↗</a>
+        <a href="mailto:meshminds3dd@gmail.coom?subject=Feature enquiry" class="popup-cta-secondary" data-track="popup-email">Send an email instead</a>
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- ══ ADMIN DASHBOARD (hidden, ?admin=true to show) ══ -->
+<div class="admin-dash" id="adminDash">
+  <div class="admin-dash-inner">
+    <div class="admin-header">
+      <div class="admin-title">ADMIN DASHBOARD</div>
+      <button class="admin-close" onclick="closeAdmin()">Close</button>
+    </div>
+    <div id="adminContent">
+      <div class="admin-loading">Loading analytics...</div>
+    </div>
   </div>
 </div>
 
@@ -544,8 +587,215 @@ function handleOverlayClick(e) {
 
 // Close on escape
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closePopup();
+  if (e.key === 'Escape') { closePopup(); closeAdmin(); }
 });
+
+// ═══════════════════════════════════════════════════════════
+// ANALYTICS TRACKING — logs visits & clicks to Google Sheets
+// ═══════════════════════════════════════════════════════════
+//
+// SETUP INSTRUCTIONS:
+// 1. Create a new Google Sheet (any name, e.g. "Meshminds Analytics")
+// 2. In the sheet, go to Extensions > Apps Script
+// 3. Delete the default code and paste the following:
+//
+// ---- START OF GOOGLE APPS SCRIPT CODE ----
+//
+// function doPost(e) {
+//   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+//   var data = JSON.parse(e.postData.contents);
+//   sheet.appendRow([
+//     new Date().toISOString(),
+//     data.type || '',
+//     data.button || '',
+//     data.href || '',
+//     data.referrer || '',
+//     data.userAgent || '',
+//     data.screenWidth || ''
+//   ]);
+//   return ContentService.createTextOutput(JSON.stringify({status:'ok'}))
+//     .setMimeType(ContentService.MimeType.JSON);
+// }
+//
+// function doGet(e) {
+//   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+//   var data = sheet.getDataRange().getValues();
+//   var rows = [];
+//   for (var i = 0; i < data.length; i++) {
+//     rows.push({
+//       timestamp: data[i][0],
+//       type: data[i][1],
+//       button: data[i][2],
+//       href: data[i][3],
+//       referrer: data[i][4],
+//       userAgent: data[i][5],
+//       screenWidth: data[i][6]
+//     });
+//   }
+//   return ContentService.createTextOutput(JSON.stringify(rows))
+//     .setMimeType(ContentService.MimeType.JSON);
+// }
+//
+// ---- END OF GOOGLE APPS SCRIPT CODE ----
+//
+// 4. Click Deploy > New deployment
+// 5. Select type: Web app
+// 6. Set "Execute as" to "Me" and "Who has access" to "Anyone"
+// 7. Click Deploy and authorize when prompted
+// 8. Copy the Web app URL and paste it below as SHEET_WEBHOOK_URL
+// ═══════════════════════════════════════════════════════════
+
+var SHEET_WEBHOOK_URL = ''; // <-- PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+
+function trackEvent(data) {
+  if (!SHEET_WEBHOOK_URL) return;
+  var payload = JSON.stringify(data);
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(SHEET_WEBHOOK_URL, payload);
+    } else {
+      fetch(SHEET_WEBHOOK_URL, { method: 'POST', body: payload, keepalive: true });
+    }
+  } catch(err) {}
+}
+
+// Track page visit
+trackEvent({
+  type: 'visit',
+  referrer: document.referrer || '(direct)',
+  userAgent: navigator.userAgent,
+  screenWidth: screen.width
+});
+
+// Track all button clicks via data-track attribute
+document.querySelectorAll('[data-track]').forEach(function(el) {
+  el.addEventListener('click', function() {
+    trackEvent({
+      type: 'click',
+      button: el.getAttribute('data-track'),
+      href: el.getAttribute('href') || ''
+    });
+  });
+});
+
+// ═══════════════════════════════════════════════
+// ADMIN DASHBOARD — access via ?admin=true
+// ═══════════════════════════════════════════════
+var adminDash = document.getElementById('adminDash');
+
+function openAdmin() {
+  adminDash.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  loadDashboard();
+}
+
+function closeAdmin() {
+  adminDash.classList.remove('open');
+  if (!overlay.classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+
+function loadDashboard() {
+  var container = document.getElementById('adminContent');
+
+  if (!SHEET_WEBHOOK_URL) {
+    container.innerHTML = '<div class="admin-error">No webhook URL configured.<br><br>Set the <code>SHEET_WEBHOOK_URL</code> variable in the script tag.<br>See setup instructions in the source code comments.</div>';
+    return;
+  }
+
+  container.innerHTML = '<div class="admin-loading">Loading analytics...</div>';
+
+  fetch(SHEET_WEBHOOK_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(rows) {
+      if (!rows || !rows.length) {
+        container.innerHTML = '<div class="admin-loading">No data yet. Visit the site and click some buttons first.</div>';
+        return;
+      }
+      renderDashboard(container, rows);
+    })
+    .catch(function(err) {
+      container.innerHTML = '<div class="admin-error">Failed to load data.<br>' + err.message + '</div>';
+    });
+}
+
+function renderDashboard(container, rows) {
+  var visits = 0, clicks = 0;
+  var buttonCounts = {};
+  var buttonLast = {};
+
+  rows.forEach(function(r) {
+    if (r.type === 'visit') visits++;
+    if (r.type === 'click') {
+      clicks++;
+      var btn = r.button || '(unknown)';
+      buttonCounts[btn] = (buttonCounts[btn] || 0) + 1;
+      var ts = r.timestamp;
+      if (!buttonLast[btn] || ts > buttonLast[btn]) buttonLast[btn] = ts;
+    }
+  });
+
+  var uniqueButtons = Object.keys(buttonCounts).length;
+
+  // Summary cards
+  var html = '<div class="admin-cards">';
+  html += '<div class="admin-card"><div class="admin-card-label">Total Visits</div><div class="admin-card-val">' + visits + '</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Total Clicks</div><div class="admin-card-val">' + clicks + '</div></div>';
+  html += '<div class="admin-card"><div class="admin-card-label">Buttons Tracked</div><div class="admin-card-val">' + uniqueButtons + '</div></div>';
+  html += '</div>';
+
+  // Click breakdown table
+  html += '<div class="admin-section-title">CLICKS BY BUTTON</div>';
+  html += '<table class="admin-table"><thead><tr><th>Button</th><th>Clicks</th><th>Last Click</th></tr></thead><tbody>';
+
+  var sorted = Object.keys(buttonCounts).sort(function(a, b) { return buttonCounts[b] - buttonCounts[a]; });
+  sorted.forEach(function(btn) {
+    var last = buttonLast[btn] ? formatTime(buttonLast[btn]) : '—';
+    html += '<tr><td>' + escHtml(btn) + '</td><td class="num">' + buttonCounts[btn] + '</td><td>' + last + '</td></tr>';
+  });
+  html += '</tbody></table>';
+
+  // Recent activity log
+  html += '<div class="admin-section-title">RECENT ACTIVITY</div>';
+  html += '<div class="admin-log">';
+
+  var recent = rows.slice().reverse().slice(0, 50);
+  recent.forEach(function(r) {
+    var typeCls = r.type === 'visit' ? 'visit' : 'click';
+    var detail = r.type === 'visit'
+      ? 'Page visit' + (r.referrer && r.referrer !== '(direct)' ? ' from ' + r.referrer : '')
+      : escHtml(r.button || '(unknown)') + (r.href ? ' → ' + r.href : '');
+    var time = r.timestamp ? formatTime(r.timestamp) : '';
+    html += '<div class="admin-log-row">';
+    html += '<span class="admin-log-type ' + typeCls + '">' + r.type + '</span>';
+    html += '<span class="admin-log-detail">' + detail + '</span>';
+    html += '<span class="admin-log-time">' + time + '</span>';
+    html += '</div>';
+  });
+
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function formatTime(ts) {
+  try {
+    var d = new Date(ts);
+    if (isNaN(d)) return String(ts);
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } catch(e) { return String(ts); }
+}
+
+function escHtml(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// Auto-open dashboard if ?admin=true
+if (new URLSearchParams(window.location.search).get('admin') === 'true') {
+  openAdmin();
+}
 </script>
 </body>
 </html>

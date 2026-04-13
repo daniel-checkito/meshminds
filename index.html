@@ -684,7 +684,11 @@ document.querySelectorAll('[data-track]').forEach(function(el) {
 // ═══════════════════════════════════════════════
 var adminDash = document.getElementById('adminDash');
 
+var ADMIN_PASS = 'mesh';
+
 function openAdmin() {
+  var pw = prompt('Enter admin password:');
+  if (pw !== ADMIN_PASS) return;
   adminDash.classList.add('open');
   document.body.style.overflow = 'hidden';
   loadDashboard();

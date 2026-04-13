@@ -645,17 +645,18 @@ document.addEventListener('keydown', function(e) {
 // 8. Copy the Web app URL and paste it below as SHEET_WEBHOOK_URL
 // ═══════════════════════════════════════════════════════════
 
-var SHEET_WEBHOOK_URL = ''; // <-- PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+var SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbzWX_D9Z91k4t_8xNvhSTY7bmvHQpebtUCFOSR4bi958WjcTad-veTtichWa1ocKMkk/exec';
 
 function trackEvent(data) {
   if (!SHEET_WEBHOOK_URL) return;
-  var payload = JSON.stringify(data);
   try {
-    if (navigator.sendBeacon) {
-      navigator.sendBeacon(SHEET_WEBHOOK_URL, payload);
-    } else {
-      fetch(SHEET_WEBHOOK_URL, { method: 'POST', body: payload, keepalive: true });
-    }
+    fetch(SHEET_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(data),
+      keepalive: true
+    });
   } catch(err) {}
 }
 
@@ -706,7 +707,7 @@ function loadDashboard() {
 
   container.innerHTML = '<div class="admin-loading">Loading analytics...</div>';
 
-  fetch(SHEET_WEBHOOK_URL)
+  fetch(SHEET_WEBHOOK_URL, { redirect: 'follow' })
     .then(function(r) { return r.json(); })
     .then(function(rows) {
       if (!rows || !rows.length) {

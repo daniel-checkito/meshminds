@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meshminds — Find Your 3D Printing Path</title>
+<style>
+body { background: #0a0a0a; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+.loader { text-align: center; }
+.dot { width: 8px; height: 8px; background: #FF5C00; border-radius: 50%; display: inline-block; animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:.3} 50%{opacity:1} }
+</style>
+</head>
+<body>
+<div class="loader"><div class="dot"></div></div>
+<script>
+(function(){
+  const N8N = 'https://meshminds.app.n8n.cloud/webhook/ab-track';
+  const VARIANTS = ['a','b','c'];
+  const PAGES = { a:'variant-a.html', b:'variant-b.html', c:'variant-c.html' };
+
+  // Get or assign variant — sticky per user
+  let variant = localStorage.getItem('mm_variant');
+  if(!variant || !VARIANTS.includes(variant)){
+    // Weighted split: 50% A (existing), 25% B, 25% C
+    const r = Math.random();
+    variant = r < 0.333 ? 'a' : r < 0.667 ? 'b' : 'c';
+    localStorage.setItem('mm_variant', variant);
+  }
+
+  // Assign user ID
+  let uid = localStorage.getItem('mm_uid');
+  if(!uid){ uid = 'u_' + Math.random().toString(36).slice(2,10); localStorage.setItem('mm_uid', uid); }
+
+  // Track page view
+  fetch(N8N, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      event: 'page_view',
+      variant,
+      uid,
+      ref: document.referrer || 'direct',
+      ts: new Date().toISOString()
+    })
+  }).catch(()=>{});
+
+  // Redirect to variant
+  window.location.replace(PAGES[variant] + '?v=' + variant + '&uid=' + uid);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meshminds A/B Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --o:#FF5C00;--bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;--s3:#222;
+  --b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);
+  --t:#f0f0f0;--t2:#aaa;--t3:#555;
+  --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);min-height:100vh;padding-bottom:60px}
+
+/* HEADER */
+.header{padding:20px 20px 16px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--bg);z-index:10}
+.logo{font-family:var(--fd);font-size:20px;letter-spacing:1px}
+.logo span{color:var(--o)}
+.logo-sub{font-size:11px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.last-update{font-size:12px;color:var(--t3)}
+.refresh-btn{background:var(--s2);border:1px solid var(--b2);color:var(--t2);font-family:var(--fb);font-size:13px;font-weight:600;padding:8px 14px;border-radius:var(--r);cursor:pointer;transition:all .15s}
+.refresh-btn:hover{border-color:var(--o);color:var(--o)}
+.refresh-btn.loading{opacity:.5;pointer-events:none}
+
+/* CONNECTION STATUS */
+.conn-bar{padding:10px 20px;font-size:13px;display:flex;align-items:center;gap:8px}
+.conn-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.conn-dot.live{background:var(--green);animation:blink 2s infinite}
+.conn-dot.mock{background:var(--yellow)}
+.conn-dot.error{background:var(--red)}
+@keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* CONFIG PANEL */
+.config{padding:12px 20px;background:var(--s1);border-bottom:1px solid var(--b);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.config label{font-size:12px;color:var(--t3)}
+.config input{background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 10px;color:var(--t);font-family:var(--fm);font-size:12px;width:260px}
+.config input:focus{outline:none;border-color:var(--o)}
+.config-btn{background:var(--o);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer}
+
+/* MAIN */
+.main{padding:20px;max-width:720px;margin:0 auto}
+
+/* VARIANT CARDS */
+.variant-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:520px){.variant-grid{grid-template-columns:1fr;gap:10px}}
+.variant-card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:16px}
+.vc-label{font-size:11px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.vc-name{font-size:14px;font-weight:600;margin-bottom:12px}
+.vc-stat-big{font-family:var(--fd);font-size:36px;line-height:1;color:var(--t);margin-bottom:2px}
+.vc-stat-label{font-size:12px;color:var(--t3);margin-bottom:12px}
+.vc-divider{height:1px;background:var(--b);margin:10px 0}
+.vc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.vc-row-label{font-size:12px;color:var(--t3)}
+.vc-row-val{font-family:var(--fm);font-size:13px;font-weight:500}
+.vc-bar{height:4px;background:var(--s3);border-radius:2px;margin-top:2px;overflow:hidden}
+.vc-bar-fill{height:100%;border-radius:2px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.winner-badge{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);font-size:11px;font-weight:700;padding:3px 8px;border-radius:100px;margin-top:8px;display:inline-block}
+.variant-card.winner{border-color:rgba(34,197,94,.3)}
+
+/* FUNNEL CHART */
+.section-title{font-family:var(--fd);font-size:22px;letter-spacing:.5px;margin-bottom:14px;color:var(--t)}
+.funnel{display:flex;flex-direction:column;gap:6px;margin-bottom:28px}
+.funnel-row{display:flex;align-items:center;gap:10px}
+.funnel-label{font-size:13px;color:var(--t2);width:130px;flex-shrink:0}
+.funnel-bars{flex:1;display:flex;flex-direction:column;gap:3px}
+.funnel-bar-row{display:flex;align-items:center;gap:6px}
+.funnel-bar-wrap{flex:1;height:20px;background:var(--s2);border-radius:4px;overflow:hidden}
+.funnel-bar-fill{height:100%;border-radius:4px;transition:width .7s cubic-bezier(.16,1,.3,1);display:flex;align-items:center;padding-left:6px}
+.funnel-bar-pct{font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.funnel-bar-label{font-size:11px;color:var(--t3);width:28px;text-align:right;flex-shrink:0}
+
+/* EVENTS TABLE */
+.events-table{width:100%;border-collapse:collapse;margin-bottom:28px}
+.events-table th{font-size:11px;color:var(--t3);text-align:left;padding:6px 10px;border-bottom:1px solid var(--b);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+.events-table td{padding:10px 10px;font-size:13px;border-bottom:1px solid var(--b)}
+.events-table td:first-child{color:var(--t2)}
+.events-table td.mono{font-family:var(--fm)}
+.v-badge{display:inline-block;padding:2px 8px;border-radius:100px;font-size:11px;font-weight:700}
+.v-a{background:rgba(255,92,0,.12);color:var(--o);border:1px solid rgba(255,92,0,.25)}
+.v-b{background:rgba(59,130,246,.12);color:var(--blue);border:1px solid rgba(59,130,246,.25)}
+.v-c{background:rgba(34,197,94,.12);color:var(--green);border:1px solid rgba(34,197,94,.25)}
+
+/* INSIGHT CARD */
+.insight{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:16px;margin-bottom:28px}
+.insight-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--t)}
+.insight-body{font-size:13px;color:var(--t2);line-height:1.55}
+.insight.positive{border-color:rgba(34,197,94,.25)}
+.insight.warning{border-color:rgba(245,158,11,.25)}
+.insight.neutral{border-color:var(--b2)}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:28px}
+.stat-box{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:14px}
+.sb-label{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.sb-value{font-family:var(--fd);font-size:32px;line-height:1;color:var(--t)}
+.sb-sub{font-size:12px;color:var(--t3);margin-top:3px}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 20px;color:var(--t3)}
+.empty h3{font-size:16px;font-weight:600;margin-bottom:8px;color:var(--t2)}
+.empty p{font-size:14px;line-height:1.5}
+
+/* MOCK DATA NOTICE */
+.mock-notice{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);border-radius:var(--r);padding:12px 16px;margin-bottom:20px;font-size:13px;color:var(--yellow);line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <div class="logo"><span>MESH</span>MINDS</div>
+    <div class="logo-sub">A/B Test Dashboard</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="last-update" id="last-update">—</span>
+    <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ Refresh</button>
+  </div>
+</div>
+
+<div class="conn-bar">
+  <div class="conn-dot mock" id="conn-dot"></div>
+  <span id="conn-label">Using demo data — configure your Google Sheets endpoint below</span>
+</div>
+
+<!-- CONFIG -->
+<div class="config">
+  <label>Google Sheets JSON URL:</label>
+  <input type="text" id="sheets-url" placeholder="https://docs.google.com/spreadsheets/d/.../gviz/tq?tqx=out:json&sheet=events" value="">
+  <button class="config-btn" onclick="saveConfig()">Connect</button>
+</div>
+
+<div class="main">
+  <div id="dashboard-content">
+    <!-- Populated by JS -->
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const N8N = 'https://meshminds.app.n8n.cloud/webhook/ab-track';
+let sheetsUrl = localStorage.getItem('mm_sheets_url') || '';
+let usingMock = true;
+
+if(sheetsUrl) document.getElementById('sheets-url').value = sheetsUrl;
+
+const VARIANT_META = {
+  a: { name: 'A — Quiz Funnel',    color: '#FF5C00', page: 'variant-a.html' },
+  b: { name: 'B — Direct Offers',  color: '#3b82f6', page: 'variant-b.html' },
+  c: { name: 'C — Freebie First',  color: '#22c55e', page: 'variant-c.html' },
+};
+
+const FUNNEL_STEPS = [
+  { key: 'variant_land',   label: 'Landed' },
+  { key: 'quiz_complete',  label: 'Quiz done' },
+  { key: 'email_capture',  label: 'Email captured' },
+  { key: 'offer_click',    label: 'Offer clicked' },
+  { key: 'toolkit_click',  label: 'Toolkit opened' },
+];
+
+// ── MOCK DATA ──
+function generateMockData(){
+  const now = Date.now();
+  const events = [];
+  const variants = ['a','a','a','a','b','b','c','c']; // 50/25/25 split
+  const uids = Array.from({length:120}, (_,i) => 'u_mock'+i);
+
+  uids.forEach((uid, i) => {
+    const v = variants[i % variants.length];
+    const ts = new Date(now - Math.random() * 7 * 24 * 3600000).toISOString();
+
+    events.push({event:'variant_land', variant:v, uid, ts});
+
+    // Quiz A: 65% complete quiz
+    if(v === 'a' && Math.random() < 0.65){
+      events.push({event:'quiz_complete', variant:v, uid, ts, path: ['commercial','content','fun','help'][Math.floor(Math.random()*4)]});
+    }
+    // B: 40% click offer
+    if(v === 'b' && Math.random() < 0.40){
+      events.push({event:'offer_click', variant:v, uid, ts, offer:'starter-pack'});
+    }
+    // Email captures
+    const emailP = v==='a' ? 0.28 : v==='b' ? 0.22 : 0.45;
+    if(Math.random() < emailP){
+      events.push({event:'email_capture', variant:v, uid, ts});
+    }
+    // Toolkit
+    const toolP = v==='a' ? 0.15 : v==='b' ? 0.18 : 0.35;
+    if(Math.random() < toolP){
+      events.push({event:'toolkit_click', variant:v, uid, ts});
+    }
+  });
+
+  return events;
+}
+
+// ── DATA PROCESSING ──
+function processEvents(events){
+  const stats = { a:{}, b:{}, c:{} };
+  const eventsByVariant = { a:[], b:[], c:[] };
+
+  // Init stats
+  ['a','b','c'].forEach(v => {
+    stats[v] = { variant_land:0, quiz_complete:0, email_capture:0, offer_click:0, toolkit_click:0, unique_uids: new Set() };
+    FUNNEL_STEPS.forEach(s => stats[v][s.key] = stats[v][s.key] || 0);
+  });
+
+  events.forEach(e => {
+    const v = e.variant;
+    if(!stats[v]) return;
+    stats[v].unique_uids.add(e.uid);
+    if(stats[v][e.event] !== undefined) stats[v][e.event]++;
+    eventsByVariant[v].push(e);
+  });
+
+  // Convert sets to counts
+  ['a','b','c'].forEach(v => stats[v].unique_users = stats[v].unique_uids.size);
+
+  return { stats, eventsByVariant, totalEvents: events.length };
+}
+
+// ── RENDER ──
+function renderDashboard(events){
+  const { stats, totalEvents } = processEvents(events);
+  const totalUsers = Object.values(stats).reduce((s,v)=>s+v.unique_users, 0);
+
+  let html = '';
+
+  if(usingMock){
+    html += `<div class="mock-notice">⚠️ Showing demo data. To connect live data: set up your n8n workflow to log events to Google Sheets, publish the sheet as JSON, and paste the URL above.</div>`;
+  }
+
+  // Top stats
+  html += `<div class="stat-row">
+    <div class="stat-box"><div class="sb-label">Total visitors</div><div class="sb-value">${totalUsers}</div><div class="sb-sub">Across all variants</div></div>
+    <div class="stat-box"><div class="sb-label">Total events</div><div class="sb-value">${totalEvents}</div><div class="sb-sub">Last 7 days</div></div>
+  </div>`;
+
+  // Variant cards
+  const maxLand = Math.max(...['a','b','c'].map(v=>stats[v].variant_land||1));
+  const emailRates = ['a','b','c'].map(v => (stats[v].email_capture||0) / Math.max(stats[v].variant_land,1));
+  const bestEmailRate = Math.max(...emailRates);
+  const bestVariant = ['a','b','c'][emailRates.indexOf(bestEmailRate)];
+
+  html += `<div class="section-title">VARIANT COMPARISON</div><div class="variant-grid">`;
+  ['a','b','c'].forEach((v, i) => {
+    const s = stats[v];
+    const meta = VARIANT_META[v];
+    const land = s.variant_land || 0;
+    const emailRate = land > 0 ? ((s.email_capture||0)/land*100).toFixed(1) : '0.0';
+    const offerRate = land > 0 ? ((s.offer_click||0)/land*100).toFixed(1) : '0.0';
+    const quizRate = land > 0 ? ((s.quiz_complete||0)/land*100).toFixed(1) : '0.0';
+    const isWinner = v === bestVariant && land > 5;
+
+    html += `<div class="variant-card ${isWinner?'winner':''}">
+      <div class="vc-label">Variant ${v.toUpperCase()}</div>
+      <div class="vc-name">${meta.name}</div>
+      <div class="vc-stat-big">${land}</div>
+      <div class="vc-stat-label">visitors</div>
+      <div class="vc-divider"></div>
+      <div class="vc-row"><span class="vc-row-label">Email rate</span><span class="vc-row-val" style="color:${meta.color}">${emailRate}%</span></div>
+      <div class="vc-bar"><div class="vc-bar-fill" style="width:${emailRate}%;background:${meta.color}"></div></div>
+      ${v==='a'?`<div class="vc-row" style="margin-top:6px"><span class="vc-row-label">Quiz done</span><span class="vc-row-val">${quizRate}%</span></div>`:''}
+      <div class="vc-row" style="margin-top:6px"><span class="vc-row-label">Offer click</span><span class="vc-row-val">${offerRate}%</span></div>
+      ${isWinner ? `<div class="winner-badge">🏆 Leading on email rate</div>` : ''}
+      <div style="margin-top:12px"><a href="${meta.page}" style="font-size:12px;color:var(--t3);text-decoration:none" target="_blank">View page →</a></div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Funnel
+  html += `<div class="section-title">CONVERSION FUNNEL</div><div class="funnel">`;
+  FUNNEL_STEPS.forEach(step => {
+    const max = Math.max(...['a','b','c'].map(v => stats[v][step.key]||0), 1);
+    const available = ['a','b','c'].filter(v => {
+      if(step.key==='quiz_complete') return v==='a';
+      return true;
+    });
+    html += `<div class="funnel-row">
+      <div class="funnel-label">${step.label}</div>
+      <div class="funnel-bars">`;
+    available.forEach(v => {
+      const val = stats[v][step.key] || 0;
+      const pct = Math.round((val/max)*100);
+      const land = stats[v].variant_land || 1;
+      const ratePct = Math.round((val/land)*100);
+      html += `<div class="funnel-bar-row">
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar-fill" style="width:${pct}%;background:${VARIANT_META[v].color}40">
+            <span class="funnel-bar-pct">${val}</span>
+          </div>
+        </div>
+        <div class="funnel-bar-label" style="color:${VARIANT_META[v].color}">${ratePct}%</div>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  html += `</div>`;
+
+  // Auto-insights
+  html += `<div class="section-title">INSIGHTS</div>`;
+  const aEmail = (stats.a.email_capture||0)/(stats.a.variant_land||1);
+  const cEmail = (stats.c.email_capture||0)/(stats.c.variant_land||1);
+  const bOffer = (stats.b.offer_click||0)/(stats.b.variant_land||1);
+  const aOffer = (stats.a.offer_click||0)/(stats.a.variant_land||1);
+  const aQuiz  = (stats.a.quiz_complete||0)/(stats.a.variant_land||1);
+
+  if(cEmail > aEmail * 1.2){
+    html += `<div class="insight positive"><div class="insight-title">📈 Variant C captures more emails</div><div class="insight-body">The freebie-first approach is converting ${(cEmail*100).toFixed(0)}% of visitors to emails vs ${(aEmail*100).toFixed(0)}% for the quiz. If email list growth is the priority, consider scaling C.</div></div>`;
+  }
+  if(bOffer > aOffer * 1.1){
+    html += `<div class="insight positive"><div class="insight-title">💶 Variant B drives more offer clicks</div><div class="insight-body">Showing offers directly is producing ${(bOffer*100).toFixed(0)}% offer click rate vs ${(aOffer*100).toFixed(0)}% for the quiz. People who want to buy may prefer less friction.</div></div>`;
+  }
+  if(aQuiz < 0.5){
+    html += `<div class="insight warning"><div class="insight-title">⚠️ Quiz completion below 50%</div><div class="insight-body">Only ${(aQuiz*100).toFixed(0)}% of Variant A visitors complete the quiz. Consider shortening it or improving Q1 to Q2 drop-off.</div></div>`;
+  }
+  if(stats.a.variant_land < 20){
+    html += `<div class="insight neutral"><div class="insight-title">ℹ️ Need more data</div><div class="insight-body">Results are not statistically meaningful yet with under 20 visitors per variant. Keep running the test until you have at least 100 per variant before drawing conclusions.</div></div>`;
+  }
+
+  // Path breakdown for A
+  html += `<div class="section-title">QUIZ PATHS (Variant A)</div>`;
+  const pathEvents = events.filter(e=>e.variant==='a'&&e.event==='quiz_complete'&&e.path);
+  if(pathEvents.length > 0){
+    const pathCounts = {};
+    pathEvents.forEach(e=>{ pathCounts[e.path]=(pathCounts[e.path]||0)+1; });
+    const maxPath = Math.max(...Object.values(pathCounts));
+    html += `<div class="funnel" style="margin-bottom:28px">`;
+    Object.entries(pathCounts).sort((a,b)=>b[1]-a[1]).forEach(([path,count])=>{
+      const pct = Math.round(count/pathEvents.length*100);
+      html += `<div class="funnel-row">
+        <div class="funnel-label" style="text-transform:capitalize">${path}</div>
+        <div class="funnel-bars"><div class="funnel-bar-row">
+          <div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:${Math.round(count/maxPath*100)}%;background:rgba(255,92,0,.4)"><span class="funnel-bar-pct">${count}</span></div></div>
+          <div class="funnel-bar-label">${pct}%</div>
+        </div></div>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="empty" style="padding:20px;text-align:left;margin-bottom:28px"><p style="font-size:13px;color:var(--t3)">No quiz completions yet. Path data will appear here.</p></div>`;
+  }
+
+  // Recent events
+  html += `<div class="section-title">RECENT EVENTS</div>`;
+  const recent = [...events].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);
+  if(recent.length > 0){
+    html += `<table class="events-table"><thead><tr><th>Time</th><th>Variant</th><th>Event</th><th>Detail</th></tr></thead><tbody>`;
+    recent.forEach(e=>{
+      const d = new Date(e.ts);
+      const timeStr = d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) + ' ' + d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
+      const detail = e.path||e.offer||e.capture_type||e.guide||'';
+      html += `<tr>
+        <td class="mono" style="color:var(--t3);font-size:12px">${timeStr}</td>
+        <td><span class="v-badge v-${e.variant}">${e.variant?.toUpperCase()}</span></td>
+        <td>${e.event}</td>
+        <td style="color:var(--t3);font-size:12px">${detail}</td>
+      </tr>`;
+    });
+    html += `</tbody></table>`;
+  } else {
+    html += `<div class="empty"><h3>No events yet</h3><p>Events will appear here as visitors interact with your pages.</p></div>`;
+  }
+
+  document.getElementById('dashboard-content').innerHTML = html;
+  document.getElementById('last-update').textContent = 'Updated ' + new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+}
+
+// ── DATA LOADING ──
+async function loadFromSheets(url){
+  // Google Sheets returns JSONP wrapped data
+  const res = await fetch(url);
+  const text = await res.text();
+  // Strip JSONP wrapper: google.visualization.Query.setResponse({...})
+  const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+  const rows = json.table?.rows || [];
+  const cols = json.table?.cols?.map(c=>c.label) || [];
+
+  return rows.map(row => {
+    const obj = {};
+    cols.forEach((col,i) => { obj[col] = row.c[i]?.v || ''; });
+    return obj;
+  });
+}
+
+async function loadData(){
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('loading');
+  btn.textContent = '↻ Loading…';
+
+  const url = document.getElementById('sheets-url').value.trim();
+
+  if(url){
+    try {
+      const events = await loadFromSheets(url);
+      usingMock = false;
+      document.getElementById('conn-dot').className = 'conn-dot live';
+      document.getElementById('conn-label').textContent = `Live data — ${events.length} events loaded`;
+      renderDashboard(events);
+    } catch(err){
+      document.getElementById('conn-dot').className = 'conn-dot error';
+      document.getElementById('conn-label').textContent = `Connection error: ${err.message}. Showing demo data.`;
+      usingMock = true;
+      renderDashboard(generateMockData());
+    }
+  } else {
+    usingMock = true;
+    document.getElementById('conn-dot').className = 'conn-dot mock';
+    document.getElementById('conn-label').textContent = 'Using demo data — configure Google Sheets URL above to see real data';
+    renderDashboard(generateMockData());
+  }
+
+  btn.classList.remove('loading');
+  btn.textContent = '↻ Refresh';
+}
+
+function saveConfig(){
+  const url = document.getElementById('sheets-url').value.trim();
+  localStorage.setItem('mm_sheets_url', url);
+  loadData();
+}
+
+// ── INIT ──
+loadData();
+// Auto-refresh every 60 seconds
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>

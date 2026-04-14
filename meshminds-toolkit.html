@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meshminds Profit Toolkit</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --o: #FF5C00;
+  --od: #cc4900;
+  --bg: #0a0a0a;
+  --s1: #141414;
+  --s2: #1c1c1c;
+  --s3: #252525;
+  --b: rgba(255,255,255,0.07);
+  --b2: rgba(255,255,255,0.14);
+  --t: #f0f0f0;
+  --t2: #aaa;
+  --t3: #666;
+  --green: #22c55e;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --r: 12px;
+  --r2: 8px;
+  --fd: 'Bebas Neue', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --fm: 'DM Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; }
+body { background: var(--bg); color: var(--t); font-family: var(--fb); min-height: 100vh; }
+
+/* ── HEADER ── */
+.header {
+  padding: 20px 24px 0;
+  border-bottom: 1px solid var(--b);
+  background: var(--bg);
+  position: sticky; top: 0; z-index: 100;
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px;
+}
+.logo { font-family: var(--fd); font-size: 22px; letter-spacing: 1px; }
+.logo span { color: var(--o); }
+.header-sub { font-size: 12px; color: var(--t3); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+.tabs { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 12px 20px; font-size: 13px; font-weight: 600; font-family: var(--fb);
+  color: var(--t3); background: none; border: none; cursor: pointer;
+  border-bottom: 2px solid transparent; white-space: nowrap;
+  transition: color .2s, border-color .2s;
+}
+.tab.active { color: var(--o); border-bottom-color: var(--o); }
+.tab:hover:not(.active) { color: var(--t2); }
+
+/* ── PANELS ── */
+.panel { display: none; padding: 28px 24px 80px; max-width: 640px; margin: 0 auto; }
+.panel.active { display: block; }
+
+/* ── COMMON COMPONENTS ── */
+.card {
+  background: var(--s1); border: 1px solid var(--b);
+  border-radius: var(--r); padding: 20px; margin-bottom: 16px;
+}
+.card-title {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--o); font-weight: 700; margin-bottom: 16px;
+}
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 12px; color: var(--t3); margin-bottom: 6px;
+  font-weight: 500; letter-spacing: .3px;
+}
+.field input, .field select {
+  width: 100%; background: var(--s2); border: 1px solid var(--b2);
+  border-radius: var(--r2); padding: 10px 14px; color: var(--t);
+  font-family: var(--fm); font-size: 15px; transition: border-color .2s;
+  -webkit-appearance: none;
+}
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--o);
+}
+.field select option { background: var(--s2); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── RESULT BOX ── */
+.result-box {
+  background: var(--s2); border: 1px solid var(--b);
+  border-radius: var(--r); padding: 20px; margin-top: 20px;
+}
+.result-main {
+  display: flex; align-items: flex-end; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.result-price {
+  font-family: var(--fd); font-size: 56px; line-height: 1; color: var(--o);
+}
+.result-label { font-size: 13px; color: var(--t3); margin-bottom: 6px; }
+.result-badge {
+  background: rgba(255,92,0,.12); border: 1px solid rgba(255,92,0,.3);
+  color: var(--o); font-size: 12px; font-weight: 700; padding: 4px 10px;
+  border-radius: 100px; margin-bottom: 4px; display: inline-block;
+}
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.result-item {
+  background: var(--s1); border-radius: var(--r2); padding: 12px;
+}
+.result-item-label { font-size: 11px; color: var(--t3); margin-bottom: 4px; }
+.result-item-value { font-size: 18px; font-weight: 700; font-family: var(--fm); }
+.result-item-value.green { color: var(--green); }
+.result-item-value.yellow { color: var(--yellow); }
+.result-item-value.red { color: var(--red); }
+
+.divider { height: 1px; background: var(--b); margin: 16px 0; }
+
+/* ── SLIDERS ── */
+.slider-row { display: flex; align-items: center; gap: 12px; }
+.slider-row input[type=range] {
+  flex: 1; -webkit-appearance: none; height: 4px;
+  background: var(--s3); border-radius: 2px; outline: none; border: none;
+}
+.slider-row input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px;
+  background: var(--o); border-radius: 50%; cursor: pointer;
+}
+.slider-val {
+  font-family: var(--fm); font-size: 14px; color: var(--t);
+  min-width: 48px; text-align: right;
+}
+
+/* ── NICHE VALIDATOR ── */
+.niche-q { margin-bottom: 20px; }
+.niche-q-label {
+  font-size: 14px; font-weight: 600; margin-bottom: 4px;
+}
+.niche-q-sub { font-size: 12px; color: var(--t3); margin-bottom: 10px; }
+.niche-options { display: flex; gap: 8px; flex-wrap: wrap; }
+.niche-opt {
+  padding: 8px 14px; background: var(--s2); border: 1px solid var(--b);
+  border-radius: 100px; font-size: 13px; cursor: pointer;
+  transition: all .15s; color: var(--t2);
+}
+.niche-opt:hover { border-color: var(--b2); color: var(--t); }
+.niche-opt.sel { background: rgba(255,92,0,.12); border-color: var(--o); color: var(--o); font-weight: 600; }
+
+.score-bar-wrap { margin: 20px 0; }
+.score-bar-bg { height: 8px; background: var(--s3); border-radius: 4px; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 4px; transition: width .6s cubic-bezier(.16,1,.3,1); }
+.score-num { font-family: var(--fd); font-size: 48px; line-height: 1; }
+.verdict {
+  font-size: 15px; font-weight: 600; margin-top: 6px; margin-bottom: 12px;
+}
+.niche-tips { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 13px; color: var(--t2); line-height: 1.4;
+}
+.tip-ic { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+
+/* ── BATCH PLANNER ── */
+.job-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.job-row {
+  display: grid; grid-template-columns: 1fr 70px 70px 70px 70px 32px;
+  gap: 8px; align-items: center;
+  background: var(--s2); border: 1px solid var(--b);
+  border-radius: var(--r2); padding: 10px 12px;
+}
+.job-row input {
+  background: transparent; border: none; color: var(--t);
+  font-family: var(--fb); font-size: 14px; width: 100%;
+}
+.job-row input::placeholder { color: var(--t3); }
+.job-row input:focus { outline: none; }
+.job-col-label {
+  font-size: 10px; color: var(--t3); text-align: center;
+  letter-spacing: .5px; text-transform: uppercase;
+}
+.job-col-name-label { text-align: left; }
+.job-del {
+  background: none; border: none; color: var(--t3); cursor: pointer;
+  font-size: 16px; padding: 0; line-height: 1; transition: color .15s;
+}
+.job-del:hover { color: var(--red); }
+.add-job-btn {
+  width: 100%; background: var(--s2); border: 1px dashed var(--b2);
+  color: var(--t3); font-family: var(--fb); font-size: 14px; font-weight: 500;
+  padding: 10px; border-radius: var(--r2); cursor: pointer;
+  transition: border-color .2s, color .2s;
+}
+.add-job-btn:hover { border-color: var(--o); color: var(--o); }
+
+.plan-results { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.plan-stat {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 16px; background: var(--s1); border-radius: var(--r2);
+  border-left: 3px solid var(--o);
+}
+.plan-stat-label { font-size: 13px; color: var(--t2); }
+.plan-stat-value { font-family: var(--fm); font-size: 16px; font-weight: 600; }
+.overnight-visual {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px;
+}
+.night-block {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--s2); border-radius: var(--r2); padding: 8px 12px;
+  font-size: 12px; color: var(--t2);
+}
+.night-block .night-ic { font-size: 16px; }
+
+/* ── REFERENCE ── */
+.ref-section { margin-bottom: 28px; }
+.ref-title {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--o); font-weight: 700; margin-bottom: 12px;
+}
+.ref-table { width: 100%; border-collapse: collapse; }
+.ref-table th {
+  font-size: 11px; color: var(--t3); text-align: left;
+  padding: 6px 10px; border-bottom: 1px solid var(--b);
+  font-weight: 500; letter-spacing: .3px;
+}
+.ref-table td {
+  padding: 10px 10px; font-size: 14px; border-bottom: 1px solid var(--b);
+  vertical-align: top;
+}
+.ref-table tr:last-child td { border-bottom: none; }
+.ref-table td:first-child { color: var(--t2); }
+.ref-table td.mono { font-family: var(--fm); }
+.ref-tag {
+  display: inline-block; background: rgba(255,92,0,.1); border: 1px solid rgba(255,92,0,.25);
+  color: var(--o); font-size: 11px; padding: 2px 8px; border-radius: 100px;
+  font-weight: 600; margin-right: 4px;
+}
+.ref-tag.green { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.25); color: var(--green); }
+.ref-tag.yellow { background: rgba(245,158,11,.1); border-color: rgba(245,158,11,.25); color: var(--yellow); }
+
+.price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.price-pill {
+  background: var(--s2); border-radius: var(--r2); padding: 12px;
+  text-align: center;
+}
+.price-pill-n { font-family: var(--fd); font-size: 24px; color: var(--o); }
+.price-pill-l { font-size: 11px; color: var(--t3); margin-top: 2px; }
+
+/* ── BUTTONS ── */
+.btn {
+  background: var(--o); color: #fff; border: none; border-radius: var(--r2);
+  padding: 12px 22px; font-family: var(--fb); font-size: 15px; font-weight: 600;
+  cursor: pointer; width: 100%; transition: background .2s;
+}
+.btn:hover { background: var(--od); }
+.btn-sm {
+  background: var(--s2); color: var(--t2); border: 1px solid var(--b2);
+  border-radius: var(--r2); padding: 8px 16px; font-family: var(--fb);
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s;
+}
+.btn-sm:hover { border-color: var(--o); color: var(--o); }
+
+.cta-strip {
+  background: linear-gradient(135deg, rgba(255,92,0,.08), rgba(255,92,0,.03));
+  border: 1px solid rgba(255,92,0,.2); border-radius: var(--r);
+  padding: 20px; margin-top: 24px; text-align: center;
+}
+.cta-strip h3 { font-family: var(--fd); font-size: 24px; margin-bottom: 6px; }
+.cta-strip p { font-size: 13px; color: var(--t3); margin-bottom: 14px; }
+
+/* ── SAVINGS BADGE ── */
+.saved-badge {
+  background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2);
+  color: var(--green); font-size: 12px; font-weight: 700;
+  padding: 3px 10px; border-radius: 100px; display: inline-block; margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .panel { padding: 20px 16px 80px; }
+  .result-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .job-row { grid-template-columns: 1fr 60px 60px 60px 28px; }
+  .job-row input:nth-child(3) { display: none; } /* hide sell price on mobile */
+  .price-grid { grid-template-columns: repeat(2,1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <div class="logo"><span>MESH</span>MINDS</div>
+      <div class="header-sub">Profit Toolkit — Bambu Lab Edition</div>
+    </div>
+    <a href="variant-a.html" style="margin-left:auto;font-size:12px;color:var(--t3);text-decoration:none;white-space:nowrap;padding:2px 0;transition:color .2s" onmouseover="this.style.color='var(--o)'" onmouseout="this.style.color='var(--t3)'">← Back to site</a>
+</div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('calc')">💰 Profit Calculator</button>
+    <button class="tab" onclick="switchTab('niche')">🎯 Niche Validator</button>
+    <button class="tab" onclick="switchTab('batch')">🖨️ Batch Planner</button>
+    <button class="tab" onclick="switchTab('ref')">📋 Reference</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 1 — PROFIT CALCULATOR
+══════════════════════════════════════════════ -->
+<div class="panel active" id="panel-calc">
+
+  <div class="card">
+    <div class="card-title">Print Details</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Filament used (grams)</label>
+        <input type="number" id="c-grams" value="80" min="1" oninput="calcUpdate()">
+      </div>
+      <div class="field">
+        <label>Filament cost (€/kg)</label>
+        <input type="number" id="c-filament-cost" value="22" min="1" oninput="calcUpdate()">
+      </div>
+    </div>
+    <div class="field">
+      <label>Print time (hours) <span id="c-hours-val" style="color:var(--o);margin-left:8px">2.0h</span></label>
+      <div class="slider-row">
+        <input type="range" id="c-hours" min="0.25" max="24" step="0.25" value="2" oninput="calcUpdate()">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Post-processing (min)</label>
+        <input type="number" id="c-post" value="15" min="0" oninput="calcUpdate()">
+      </div>
+      <div class="field">
+        <label>Packaging cost (€)</label>
+        <input type="number" id="c-pack" value="0.40" step="0.10" min="0" oninput="calcUpdate()">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Your Setup</div>
+    <div class="field">
+      <label>Your time rate (€/hr)</label>
+      <div class="slider-row">
+        <input type="range" id="c-rate" min="5" max="40" step="1" value="12" oninput="calcUpdate()">
+        <span class="slider-val" id="c-rate-val">€12/hr</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Platform fees (% of sale price)</label>
+      <div class="slider-row">
+        <input type="range" id="c-fees" min="5" max="30" step="1" value="20" oninput="calcUpdate()">
+        <span class="slider-val" id="c-fees-val">20%</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Failure buffer (%)</label>
+      <div class="slider-row">
+        <input type="range" id="c-fail" min="0" max="25" step="5" value="10" oninput="calcUpdate()">
+        <span class="slider-val" id="c-fail-val">10%</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Electricity (€/kWh) · Printer ~150W</label>
+      <input type="number" id="c-kwh" value="0.30" step="0.05" min="0.05" oninput="calcUpdate()">
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-box" id="calc-result">
+    <div class="result-label">Recommended sale price</div>
+    <div class="result-main">
+      <div class="result-price" id="res-price">€0.00</div>
+      <div>
+        <div class="result-badge" id="res-markup-badge">3.0× markup</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px" id="res-margin-pct">— margin</div>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-item">
+        <div class="result-item-label">Total cost</div>
+        <div class="result-item-value" id="res-cost">€0.00</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Your net profit</div>
+        <div class="result-item-value green" id="res-profit">€0.00</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Material cost</div>
+        <div class="result-item-value" id="res-material">€0.00</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Your time cost</div>
+        <div class="result-item-value" id="res-time">€0.00</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="card-title">Price Comparison</div>
+    <div style="display:flex;flex-direction:column;gap:8px" id="res-compare"></div>
+
+    <div class="divider"></div>
+
+    <div class="card-title">Monthly Revenue Estimate</div>
+    <div class="field-row" style="margin-bottom:8px">
+      <div class="field" style="margin:0">
+        <label>Units per day</label>
+        <input type="number" id="c-units-day" value="5" min="1" oninput="calcUpdate()">
+      </div>
+      <div class="field" style="margin:0">
+        <label>Working days/month</label>
+        <input type="number" id="c-days" value="20" min="1" max="31" oninput="calcUpdate()">
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <div class="result-item">
+        <div class="result-item-label">Monthly revenue</div>
+        <div class="result-item-value" id="res-monthly-rev">€0</div>
+      </div>
+      <div class="result-item">
+        <div class="result-item-label">Monthly profit</div>
+        <div class="result-item-value green" id="res-monthly-profit">€0</div>
+      </div>
+    </div>
+    <div class="saved-badge" id="res-savings" style="display:none"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 2 — NICHE VALIDATOR
+══════════════════════════════════════════════ -->
+<div class="panel" id="panel-niche">
+
+  <div class="card">
+    <div class="card-title">Your Product Idea</div>
+    <div class="field">
+      <label>What do you want to sell?</label>
+      <input type="text" id="nv-product" placeholder="e.g. personalised dart holder with name" oninput="nicheUpdate()">
+    </div>
+  </div>
+
+  <div class="card" id="niche-questions">
+    <div class="card-title">Score Your Idea</div>
+
+    <div class="niche-q" id="nq-gift">
+      <div class="niche-q-label">Gifting or personal identity?</div>
+      <div class="niche-q-sub">Products bought as gifts or to express a hobby/identity command the highest prices.</div>
+      <div class="niche-options">
+        <div class="niche-opt sel" data-q="gift" data-v="3" onclick="nSel(this)">Perfect gift or hobby item</div>
+        <div class="niche-opt" data-q="gift" data-v="2" onclick="nSel(this)">Sometimes gifted</div>
+        <div class="niche-opt" data-q="gift" data-v="0" onclick="nSel(this)">Purely functional, no emotion</div>
+      </div>
+    </div>
+
+    <div class="niche-q" id="nq-custom">
+      <div class="niche-q-label">Customisation potential?</div>
+      <div class="niche-q-sub">Adding a name, colour, or personal detail eliminates price comparison.</div>
+      <div class="niche-options">
+        <div class="niche-opt sel" data-q="custom" data-v="3" onclick="nSel(this)">Easy to personalise (name, colour)</div>
+        <div class="niche-opt" data-q="custom" data-v="1" onclick="nSel(this)">Limited customisation</div>
+        <div class="niche-opt" data-q="custom" data-v="0" onclick="nSel(this)">Fixed design only</div>
+      </div>
+    </div>
+
+    <div class="niche-q" id="nq-compete">
+      <div class="niche-q-label">How much competition on Etsy?</div>
+      <div class="niche-q-sub">Search your exact product. Count the number of active listings.</div>
+      <div class="niche-options">
+        <div class="niche-opt" data-q="compete" data-v="3" onclick="nSel(this)">Under 50 listings</div>
+        <div class="niche-opt sel" data-q="compete" data-v="2" onclick="nSel(this)">50–500 listings</div>
+        <div class="niche-opt" data-q="compete" data-v="1" onclick="nSel(this)">500–5000 listings</div>
+        <div class="niche-opt" data-q="compete" data-v="0" onclick="nSel(this)">5000+ listings</div>
+      </div>
+    </div>
+
+    <div class="niche-q" id="nq-print">
+      <div class="niche-q-label">Print complexity?</div>
+      <div class="niche-q-sub">Simpler prints = faster turnaround = higher daily output.</div>
+      <div class="niche-options">
+        <div class="niche-opt sel" data-q="print" data-v="3" onclick="nSel(this)">Under 2 hours, simple</div>
+        <div class="niche-opt" data-q="print" data-v="2" onclick="nSel(this)">2–5 hours, moderate</div>
+        <div class="niche-opt" data-q="print" data-v="0" onclick="nSel(this)">5+ hours or complex support</div>
+      </div>
+    </div>
+
+    <div class="niche-q" id="nq-sale">
+      <div class="niche-q-label">Expected sale price range?</div>
+      <div class="niche-q-sub">This should feel natural for the product — not forced.</div>
+      <div class="niche-options">
+        <div class="niche-opt" data-q="sale" data-v="3" onclick="nSel(this)">€25 or more</div>
+        <div class="niche-opt sel" data-q="sale" data-v="2" onclick="nSel(this)">€12–€24</div>
+        <div class="niche-opt" data-q="sale" data-v="1" onclick="nSel(this)">Under €12</div>
+      </div>
+    </div>
+
+    <div class="niche-q" id="nq-repeat">
+      <div class="niche-q-label">Repeat purchase or bundle potential?</div>
+      <div class="niche-q-sub">Customers who come back are worth 3x a one-time buyer.</div>
+      <div class="niche-options">
+        <div class="niche-opt" data-q="repeat" data-v="3" onclick="nSel(this)">Naturally extends (sets, refills, gifts)</div>
+        <div class="niche-opt sel" data-q="repeat" data-v="1" onclick="nSel(this)">Mostly one-time purchase</div>
+        <div class="niche-opt" data-q="repeat" data-v="0" onclick="nSel(this)">No obvious follow-up</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE RESULT -->
+  <div class="result-box" id="niche-result">
+    <div style="display:flex;align-items:flex-end;gap:16px;margin-bottom:12px">
+      <div>
+        <div class="result-label">Niche score</div>
+        <div class="score-num" id="nv-score">0</div>
+        <div class="verdict" id="nv-verdict">—</div>
+      </div>
+      <div style="flex:1">
+        <div class="score-bar-bg">
+          <div class="score-bar-fill" id="nv-bar" style="width:0%;background:var(--green)"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:4px">
+          <span>0</span><span>100</span>
+        </div>
+      </div>
+    </div>
+    <div class="niche-tips" id="nv-tips"></div>
+  </div>
+
+  <div class="cta-strip">
+    <h3>PROVEN NICHES</h3>
+    <p>These score 70+ on this validator and have real Etsy traction right now.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:14px">
+      <span style="background:var(--s2);border:1px solid var(--b);padding:6px 12px;border-radius:100px;font-size:13px">🎯 Dart holder + name</span>
+      <span style="background:var(--s2);border:1px solid var(--b);padding:6px 12px;border-radius:100px;font-size:13px">🎸 Guitar player gifts</span>
+      <span style="background:var(--s2);border:1px solid var(--b);padding:6px 12px;border-radius:100px;font-size:13px">🎂 Custom birthday gifts</span>
+      <span style="background:var(--s2);border:1px solid var(--b);padding:6px 12px;border-radius:100px;font-size:13px">🐕 Personalised pet signs</span>
+      <span style="background:var(--s2);border:1px solid var(--b);padding:6px 12px;border-radius:100px;font-size:13px">🏡 Custom name signs</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 3 — BATCH PLANNER
+══════════════════════════════════════════════ -->
+<div class="panel" id="panel-batch">
+
+  <div class="card">
+    <div class="card-title">Your Jobs</div>
+    <div style="display:grid;grid-template-columns:1fr 60px 60px 60px 60px 32px;gap:8px;padding:0 0 6px;margin-bottom:2px">
+      <div class="job-col-label job-col-name-label">Product</div>
+      <div class="job-col-label">g/unit</div>
+      <div class="job-col-label">hrs/unit</div>
+      <div class="job-col-label">Qty</div>
+      <div class="job-col-label">€ each</div>
+      <div></div>
+    </div>
+    <div class="job-list" id="job-list"></div>
+    <button class="add-job-btn" onclick="addJob()">+ Add product</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Print Window</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Overnight hours available</label>
+        <input type="number" id="bp-overnight" value="8" min="1" max="24" oninput="batchUpdate()">
+      </div>
+      <div class="field">
+        <label>Daytime hours available</label>
+        <input type="number" id="bp-daytime" value="4" min="0" max="16" oninput="batchUpdate()">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Filament cost (€/kg)</label>
+        <input type="number" id="bp-filament" value="22" min="1" oninput="batchUpdate()">
+      </div>
+      <div class="field">
+        <label>Platform fees (%)</label>
+        <input type="number" id="bp-fees" value="20" min="0" max="50" oninput="batchUpdate()">
+      </div>
+    </div>
+  </div>
+
+  <!-- BATCH RESULTS -->
+  <div class="result-box">
+    <div class="plan-results" id="batch-results">
+      <div style="color:var(--t3);font-size:14px;text-align:center;padding:12px">Add jobs above to see your print plan</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Overnight Schedule</div>
+    <div class="overnight-visual" id="overnight-visual">
+      <div style="color:var(--t3);font-size:13px">Add jobs to generate schedule</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     TAB 4 — REFERENCE
+══════════════════════════════════════════════ -->
+<div class="panel" id="panel-ref">
+
+  <div class="ref-section">
+    <div class="ref-title">Psychological Price Points</div>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:14px">Never price at €11 or €17. Use these thresholds — buyers bucket products here mentally.</p>
+    <div class="price-grid">
+      <div class="price-pill"><div class="price-pill-n">€7.99</div><div class="price-pill-l">Small add-on</div></div>
+      <div class="price-pill"><div class="price-pill-n">€9.99</div><div class="price-pill-l">Impulse buy</div></div>
+      <div class="price-pill"><div class="price-pill-n">€14.99</div><div class="price-pill-l">Entry gift</div></div>
+      <div class="price-pill"><div class="price-pill-n">€19.99</div><div class="price-pill-l">Standard gift</div></div>
+      <div class="price-pill"><div class="price-pill-n">€24.99</div><div class="price-pill-l">Premium gift</div></div>
+      <div class="price-pill"><div class="price-pill-n">€34.99</div><div class="price-pill-l">Gift set</div></div>
+      <div class="price-pill"><div class="price-pill-n">€49.99</div><div class="price-pill-l">Premium set</div></div>
+      <div class="price-pill"><div class="price-pill-n">€74.99</div><div class="price-pill-l">Statement piece</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ref-section">
+    <div class="ref-title">Etsy Fee Breakdown (2026)</div>
+    <table class="ref-table">
+      <tr><th>Fee type</th><th>Rate</th><th>On €20 sale</th></tr>
+      <tr><td>Listing fee</td><td>€0.20 per listing (4-month)</td><td class="mono">~€0.05</td></tr>
+      <tr><td>Transaction fee</td><td>6.5% of sale price</td><td class="mono">€1.30</td></tr>
+      <tr><td>Payment processing</td><td>~3.5% + €0.25</td><td class="mono">€0.95</td></tr>
+      <tr><td>Etsy Ads (light)</td><td>~3–5% of revenue</td><td class="mono">€0.70</td></tr>
+      <tr style="font-weight:700"><td>Total (with light ads)</td><td><span class="ref-tag">~20%</span></td><td class="mono">€3.00</td></tr>
+    </table>
+    <p style="font-size:12px;color:var(--t3);margin-top:8px">Rule of thumb: assume 20% off the top goes to Etsy. Price accordingly.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ref-section">
+    <div class="ref-title">Markup Targets</div>
+    <table class="ref-table">
+      <tr><th>Markup</th><th>When to use</th><th>Health</th></tr>
+      <tr><td class="mono">2× cost</td><td>Never. You are losing money after fees and time.</td><td><span class="ref-tag" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25);color:var(--red)">Loss</span></td></tr>
+      <tr><td class="mono">3× cost</td><td>Absolute minimum. High volume, very fast prints only.</td><td><span class="ref-tag yellow">Minimum</span></td></tr>
+      <tr><td class="mono">4× cost</td><td>Healthy. Standard products with modest customisation.</td><td><span class="ref-tag green">Good</span></td></tr>
+      <tr><td class="mono">5× cost</td><td>Target. Personalised gifts, hobby-specific, limited items.</td><td><span class="ref-tag green">Strong</span></td></tr>
+      <tr><td class="mono">7–10×</td><td>Premium. Custom orders, fast turnaround, exclusivity.</td><td><span class="ref-tag green">Excellent</span></td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ref-section">
+    <div class="ref-title">Niche Quick Reference</div>
+    <table class="ref-table">
+      <tr><th>Niche</th><th>Typical price</th><th>Key angle</th></tr>
+      <tr><td>Dart holder + name</td><td class="mono">€15–€28</td><td>Hobby gift, personalised</td></tr>
+      <tr><td>Guitar player gifts</td><td class="mono">€12–€35</td><td>Pick holder, wall mount, cable tidy</td></tr>
+      <tr><td>Custom birthday gifts</td><td class="mono">€10–€30</td><td>Name, date, age — unique every time</td></tr>
+      <tr><td>Pet name signs</td><td class="mono">€12–€25</td><td>Breed specific, emotional buy</td></tr>
+      <tr><td>Kids room name signs</td><td class="mono">€15–€40</td><td>Font choice, colour, size options</td></tr>
+      <tr><td>D&amp;D / tabletop terrain</td><td class="mono">€18–€60</td><td>Sets, modularity, community</td></tr>
+      <tr><td>Cable desk organiser</td><td class="mono">€10–€22</td><td>Lifestyle photo, colour match</td></tr>
+      <tr><td>Replacement parts</td><td class="mono">€8–€20</td><td>Problem-solve, high intent buyer</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ref-section">
+    <div class="ref-title">Filament Cost Reference</div>
+    <table class="ref-table">
+      <tr><th>Material</th><th>Typical cost/kg</th><th>Best for</th></tr>
+      <tr><td>PLA Basic</td><td class="mono">€15–€20</td><td>Gifts, decor, fast prints</td></tr>
+      <tr><td>PLA Matte</td><td class="mono">€18–€24</td><td>Premium look, higher perceived value</td></tr>
+      <tr><td>PLA Silk / Sparkle</td><td class="mono">€20–€28</td><td>Jewellery, display pieces</td></tr>
+      <tr><td>PETG</td><td class="mono">€18–€26</td><td>Functional, food-adjacent parts</td></tr>
+      <tr><td>TPU (flexible)</td><td class="mono">€22–€35</td><td>Phone cases, protective items</td></tr>
+      <tr><td>ABS / ASA</td><td class="mono">€18–€26</td><td>Outdoor, UV-resistant parts</td></tr>
+      <tr><td>Wood / Carbon fill</td><td class="mono">€30–€55</td><td>Premium aesthetics, higher price point</td></tr>
+    </table>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="ref-section">
+    <div class="ref-title">Legal Checklist — Etsy 2026</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="tip"><div class="tip-ic">✅</div><div>Your design is original — you created the STL file yourself or significantly modified one</div></div>
+      <div class="tip"><div class="tip-ic">✅</div><div>No copyrighted characters (Disney, Marvel, Nintendo, sports teams) in any listing</div></div>
+      <div class="tip"><div class="tip-ic">✅</div><div>Food-contact items use food-safe filament or have a food-safe liner — clearly stated in listing</div></div>
+      <div class="tip"><div class="tip-ic">✅</div><div>Items marketed to children are not described as toys (CE marking required for toys in EU)</div></div>
+      <div class="tip"><div class="tip-ic">✅</div><div>Listing photos are your own, not renders or stock photos from another seller</div></div>
+      <div class="tip"><div class="tip-ic">✅</div><div>EU Design Regulation (May 2025) — check your designs don't replicate a registered appearance</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── TAB SWITCHING ──
+function switchTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════════════
+// TAB 1 — PROFIT CALCULATOR
+// ══════════════════════════════════════════════
+function g(id){ return parseFloat(document.getElementById(id).value)||0; }
+function fmt(n){ return '€' + n.toFixed(2); }
+function fmtK(n){ return n >= 1000 ? '€' + (n/1000).toFixed(1) + 'K' : '€' + Math.round(n); }
+
+function calcUpdate(){
+  const grams     = g('c-grams');
+  const filCost   = g('c-filament-cost');
+  const hours     = g('c-hours');
+  const postMin   = g('c-post');
+  const packCost  = g('c-pack');
+  const rate      = g('c-rate');
+  const feesPct   = g('c-fees') / 100;
+  const failBuf   = g('c-fail') / 100;
+  const kwh       = g('c-kwh');
+  const unitsDay  = Math.max(1, g('c-units-day'));
+  const days      = Math.max(1, g('c-days'));
+
+  // Update slider labels
+  document.getElementById('c-hours-val').textContent = hours.toFixed(2) + 'h';
+  document.getElementById('c-rate-val').textContent = '€' + rate + '/hr';
+  document.getElementById('c-fees-val').textContent = g('c-fees') + '%';
+  document.getElementById('c-fail-val').textContent = g('c-fail') + '%';
+
+  // Costs
+  const material   = (grams / 1000) * filCost * (1 + failBuf);
+  const electricity = (0.15 * hours) * kwh;                   // 150W printer
+  const depreciation = hours * 0.08;                          // €400 printer / 5000h
+  const timeHours  = hours + (postMin / 60);
+  const timeCost   = timeHours * rate;
+  const totalCost  = material + electricity + depreciation + timeCost + packCost;
+
+  // Recommended price: work backwards from margin target with fees
+  // Net = price × (1 - feesPct), we want net >= 4× cost
+  // So price = 4 × cost / (1 - feesPct)
+  const targetMarkup = 4;
+  const recPrice = (totalCost * targetMarkup) / (1 - feesPct);
+
+  // Net profit at recommended price
+  const netProfit = recPrice * (1 - feesPct) - totalCost;
+  const margin = (netProfit / recPrice) * 100;
+
+  // Markup achieved (on cost)
+  const actualMarkup = recPrice * (1 - feesPct) / totalCost;
+
+  // Update main display
+  document.getElementById('res-price').textContent = fmt(recPrice);
+  document.getElementById('res-markup-badge').textContent = actualMarkup.toFixed(1) + '× markup on cost';
+  document.getElementById('res-margin-pct').textContent = margin.toFixed(0) + '% net margin';
+  document.getElementById('res-cost').textContent = fmt(totalCost);
+  document.getElementById('res-profit').textContent = fmt(netProfit);
+  document.getElementById('res-material').textContent = fmt(material);
+  document.getElementById('res-time').textContent = fmt(timeCost);
+
+  // Color profit
+  const profEl = document.getElementById('res-profit');
+  profEl.className = 'result-item-value ' + (netProfit > 5 ? 'green' : netProfit > 0 ? 'yellow' : 'red');
+
+  // Price comparison at different markups
+  const markups = [
+    { label: '3× cost (minimum)', m: 3 },
+    { label: '4× cost (recommended)', m: 4, rec: true },
+    { label: '5× cost (premium)', m: 5 },
+  ];
+  document.getElementById('res-compare').innerHTML = markups.map(mk => {
+    const price = (totalCost * mk.m) / (1 - feesPct);
+    const net = price * (1 - feesPct) - totalCost;
+    const rounded = roundToThreshold(price);
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:${mk.rec?'rgba(255,92,0,.07)':'var(--s1)'};border-radius:6px;border:1px solid ${mk.rec?'rgba(255,92,0,.2)':'var(--b)'}">
+      <span style="font-size:13px;color:${mk.rec?'var(--o)':'var(--t2)'}">${mk.label}</span>
+      <span style="font-family:var(--fm);font-weight:700;color:${mk.rec?'var(--o)':'var(--t)'}">${fmt(rounded)}</span>
+    </div>`;
+  }).join('');
+
+  // Monthly estimates
+  const monthRevenue = recPrice * unitsDay * days;
+  const monthProfit  = netProfit * unitsDay * days;
+  document.getElementById('res-monthly-rev').textContent = fmtK(monthRevenue);
+  document.getElementById('res-monthly-profit').textContent = fmtK(monthProfit);
+
+  // Comparison: if they priced at 2× instead
+  const badPrice = (totalCost * 2) / (1 - feesPct);
+  const badProfit = badPrice * (1 - feesPct) - totalCost;
+  const savedPerUnit = netProfit - badProfit;
+  const savedMonthly = savedPerUnit * unitsDay * days;
+  if(savedMonthly > 0){
+    const badge = document.getElementById('res-savings');
+    badge.style.display = 'inline-block';
+    badge.textContent = `vs. 2× underpricing: +${fmtK(savedMonthly)}/month more profit`;
+  }
+
+  // Save to localStorage
+  try {
+    localStorage.setItem('mm-calc', JSON.stringify({
+      grams, filCost, hours, postMin, packCost, rate,
+      fees: g('c-fees'), fail: g('c-fail'), kwh, unitsDay, days
+    }));
+  } catch(e){}
+}
+
+function roundToThreshold(price){
+  const thresholds = [4.99,7.99,9.99,12.99,14.99,17.99,19.99,24.99,29.99,34.99,39.99,44.99,49.99,59.99,74.99,99.99];
+  for(const t of thresholds){ if(t >= price) return t; }
+  return Math.ceil(price / 5) * 5 - 0.01;
+}
+
+// Load saved settings
+function loadCalcSettings(){
+  try {
+    const s = JSON.parse(localStorage.getItem('mm-calc'));
+    if(!s) return;
+    const map = {grams:'c-grams',filCost:'c-filament-cost',hours:'c-hours',postMin:'c-post',
+      packCost:'c-pack',rate:'c-rate',fees:'c-fees',fail:'c-fail',kwh:'c-kwh',
+      unitsDay:'c-units-day',days:'c-days'};
+    for(const [k,id] of Object.entries(map)){
+      if(s[k] !== undefined) document.getElementById(id).value = s[k];
+    }
+  } catch(e){}
+}
+
+// ══════════════════════════════════════════════
+// TAB 2 — NICHE VALIDATOR
+// ══════════════════════════════════════════════
+const nicheScores = { gift:3, custom:3, compete:2, print:3, sale:2, repeat:1 };
+
+function nSel(el){
+  const q = el.dataset.q;
+  document.querySelectorAll(`[data-q="${q}"]`).forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');
+  nicheScores[q] = parseInt(el.dataset.v);
+  nicheUpdate();
+}
+
+function nicheUpdate(){
+  const maxScore = { gift:3, custom:3, compete:3, print:3, sale:3, repeat:3 };
+  const weights  = { gift:22, custom:20, compete:18, print:12, sale:16, repeat:12 };
+  let score = 0;
+  let maxTotal = 0;
+  for(const [k, w] of Object.entries(weights)){
+    score += (nicheScores[k] / maxScore[k]) * w;
+    maxTotal += w;
+  }
+  const pct = Math.round((score / maxTotal) * 100);
+
+  document.getElementById('nv-score').textContent = pct;
+
+  const bar = document.getElementById('nv-bar');
+  bar.style.width = pct + '%';
+  bar.style.background = pct >= 70 ? 'var(--green)' : pct >= 45 ? 'var(--yellow)' : 'var(--red)';
+
+  let verdict, verdictColor, tips = [];
+  if(pct >= 75){
+    verdict = '✅ Strong niche — go build it';
+    verdictColor = 'var(--green)';
+    tips = [
+      ['🎯', 'High personalisation + gift angle = premium pricing. Charge more than you think.'],
+      ['📸', 'Invest in one great lifestyle photo set. This niche sells on emotion, not spec.'],
+      ['📦', 'Create a gift set bundle at 1.5× the single item price — most gift buyers will take it.'],
+    ];
+  } else if(pct >= 55){
+    verdict = '⚠️ Viable — improve one dimension first';
+    verdictColor = 'var(--yellow)';
+    if(nicheScores.custom < 2) tips.push(['🔧', 'Add personalisation (name, colour, size). This alone can add €5–10 to the price.']);
+    if(nicheScores.gift < 2) tips.push(['🎁', 'Reframe the listing as a gift. Change the title to "Gift for [hobby] lovers" — it\'s the same product, different buyer.']);
+    if(nicheScores.compete < 1) tips.push(['🏪', 'High competition means you need a strong niche within the niche. Find the specific angle no one else is doing.']);
+    if(nicheScores.sale < 2) tips.push(['💶', 'The sale price is low. Find a way to bundle or add perceived value to get above €15.']);
+    if(tips.length === 0) tips.push(['📈', 'The fundamentals are there. Focus on listing quality — title, photos, first image — before scaling.']);
+  } else if(pct >= 35){
+    verdict = '⚠️ Hard sell — reconsider';
+    verdictColor = 'var(--yellow)';
+    tips = [
+      ['❌', 'This niche lacks a strong reason for someone to pay a premium. That usually means low margins.'],
+      ['🔁', 'Can you pivot to a more specific sub-niche? Specificity almost always improves scores.'],
+      ['📊', 'Try the niche validator on one of the proven niches (dart holder, guitar gift) to calibrate.'],
+    ];
+  } else {
+    verdict = '❌ Skip this — pick a different niche';
+    verdictColor = 'var(--red)';
+    tips = [
+      ['🚫', 'Too much competition, too little margin, or no gift/identity angle. These three things kill 3D printing products on Etsy.'],
+      ['💡', 'The most profitable niches on Etsy in 2026 combine: a specific hobby identity + personalisation + a natural gift occasion.'],
+    ];
+  }
+
+  const verdEl = document.getElementById('nv-verdict');
+  verdEl.textContent = verdict;
+  verdEl.style.color = verdictColor;
+
+  document.getElementById('nv-tips').innerHTML = tips.map(([ic,t])=>
+    `<div class="tip"><div class="tip-ic">${ic}</div><div>${t}</div></div>`
+  ).join('');
+}
+
+// ══════════════════════════════════════════════
+// TAB 3 — BATCH PLANNER
+// ══════════════════════════════════════════════
+let jobs = [
+  { name:'Dart holder + name', grams:45, hours:1.5, qty:4, price:22 },
+  { name:'Guitar pick holder', grams:30, hours:1.0, qty:6, price:16 },
+  { name:'Pet name sign',      grams:60, hours:2.0, qty:3, price:19 },
+];
+let jobId = 3;
+
+function addJob(){
+  jobs.push({ id: jobId++, name:'', grams:50, hours:2, qty:2, price:18 });
+  renderJobs();
+  batchUpdate();
+}
+function removeJob(i){
+  jobs.splice(i, 1);
+  renderJobs();
+  batchUpdate();
+}
+function jobChanged(i, field, val){
+  jobs[i][field] = field==='name' ? val : parseFloat(val)||0;
+  batchUpdate();
+}
+
+function renderJobs(){
+  document.getElementById('job-list').innerHTML = jobs.map((j,i) => `
+    <div class="job-row">
+      <input type="text" value="${j.name}" placeholder="Product name" oninput="jobChanged(${i},'name',this.value)">
+      <input type="number" value="${j.grams}" min="1" style="text-align:center" oninput="jobChanged(${i},'grams',this.value)">
+      <input type="number" value="${j.hours}" min="0.25" step="0.25" style="text-align:center" oninput="jobChanged(${i},'hours',this.value)">
+      <input type="number" value="${j.qty}" min="1" style="text-align:center" oninput="jobChanged(${i},'qty',this.value)">
+      <input type="number" value="${j.price}" min="0" style="text-align:center" oninput="jobChanged(${i},'price',this.value)">
+      <button class="job-del" onclick="removeJob(${i})">✕</button>
+    </div>`).join('');
+}
+
+function batchUpdate(){
+  if(jobs.length === 0){
+    document.getElementById('batch-results').innerHTML = `<div style="color:var(--t3);font-size:14px;text-align:center;padding:12px">Add jobs above to see your print plan</div>`;
+    document.getElementById('overnight-visual').innerHTML = `<div style="color:var(--t3);font-size:13px">Add jobs to generate schedule</div>`;
+    return;
+  }
+
+  const overnight = parseFloat(document.getElementById('bp-overnight').value)||8;
+  const daytime   = parseFloat(document.getElementById('bp-daytime').value)||4;
+  const filCost   = parseFloat(document.getElementById('bp-filament').value)||22;
+  const fees      = parseFloat(document.getElementById('bp-fees').value)/100||0.20;
+  const totalWindow = overnight + daytime;
+
+  let totalPrintHours = 0, totalGrams = 0, totalRevenue = 0, totalUnits = 0;
+  jobs.forEach(j => {
+    const units = Math.max(0, j.qty||0);
+    totalPrintHours += (j.hours||0) * units;
+    totalGrams      += (j.grams||0) * units;
+    totalRevenue    += (j.price||0) * units;
+    totalUnits      += units;
+  });
+
+  const totalFilamentCost = (totalGrams / 1000) * filCost;
+  const netRevenue = totalRevenue * (1 - fees);
+  const sessions = Math.ceil(totalPrintHours / totalWindow);
+  const overnightSessions = Math.ceil(totalPrintHours / overnight);
+  const daysNeeded = Math.ceil(totalPrintHours / totalWindow);
+  const profitEstimate = netRevenue - totalFilamentCost - (totalPrintHours * 0.08); // minus depreciation
+
+  document.getElementById('batch-results').innerHTML = `
+    <div class="plan-stat"><span class="plan-stat-label">Total print time</span><span class="plan-stat-value">${totalPrintHours.toFixed(1)} hours</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Total filament</span><span class="plan-stat-value">${totalGrams}g · ${fmt(totalFilamentCost)}</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Gross revenue (${totalUnits} units)</span><span class="plan-stat-value">${fmt(totalRevenue)}</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Net revenue (after ${Math.round(fees*100)}% fees)</span><span class="plan-stat-value" style="color:var(--green)">${fmt(netRevenue)}</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Estimated profit (excl. your time)</span><span class="plan-stat-value" style="color:var(--green)">${fmt(profitEstimate)}</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Overnight sessions needed</span><span class="plan-stat-value">${overnightSessions} nights</span></div>
+    <div class="plan-stat"><span class="plan-stat-label">Days to fulfil (with daytime)</span><span class="plan-stat-value">${daysNeeded} day${daysNeeded!==1?'s':''}</span></div>
+  `;
+
+  // Overnight visual — show how jobs pack into overnight sessions
+  let sessions_visual = [];
+  let currentSession = { hours: 0, jobs: [] };
+  jobs.forEach(j => {
+    let remaining = j.qty;
+    while(remaining > 0){
+      const fitsInSession = Math.floor((overnight - currentSession.hours) / (j.hours||1));
+      const take = Math.min(remaining, Math.max(1, fitsInSession));
+      currentSession.jobs.push({ name: j.name||'Job', qty: take, hours: (j.hours||0)*take });
+      currentSession.hours += (j.hours||0) * take;
+      remaining -= take;
+      if(currentSession.hours >= overnight - 0.1 || (fitsInSession < 1 && remaining === 0)){
+        sessions_visual.push({...currentSession});
+        currentSession = { hours: 0, jobs: [] };
+      }
+    }
+  });
+  if(currentSession.jobs.length > 0) sessions_visual.push(currentSession);
+
+  document.getElementById('overnight-visual').innerHTML = sessions_visual.slice(0,6).map((s,i) => `
+    <div class="night-block">
+      <span class="night-ic">🌙</span>
+      <span>Night ${i+1} · ${s.hours.toFixed(1)}h · ${s.jobs.map(j=>`${j.qty}× ${j.name}`).join(', ')}</span>
+    </div>`).join('') +
+    (sessions_visual.length > 6 ? `<div class="night-block"><span>+${sessions_visual.length-6} more nights</span></div>` : '');
+
+  // Save jobs
+  try { localStorage.setItem('mm-jobs', JSON.stringify(jobs)); } catch(e){}
+}
+
+// Load saved jobs
+function loadJobs(){
+  try {
+    const saved = JSON.parse(localStorage.getItem('mm-jobs'));
+    if(saved && saved.length) { jobs = saved; renderJobs(); batchUpdate(); return; }
+  } catch(e){}
+  renderJobs();
+  batchUpdate();
+}
+
+// ── INIT ──
+loadCalcSettings();
+calcUpdate();
+nicheUpdate();
+loadJobs();
+</script>
+
+</body>
+</html>

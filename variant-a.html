@@ -353,6 +353,7 @@ nav{
 .p-desc{font-size:12px;color:var(--t2);margin-bottom:8px;line-height:1.4}
 .p-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
 .p-tags span{font-size:10px;background:var(--s2);border:1px solid var(--b);color:var(--t3);padding:2px 7px;border-radius:3px}
+.p-exclusive{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(90deg,#15803d,#16a34a);color:#fff;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:4px 8px;text-align:center;z-index:3}
 .p-btn{display:inline-flex;align-items:center;gap:6px;background:var(--o);color:#fff;font-size:12px;font-weight:600;text-decoration:none;padding:7px 13px;border-radius:var(--r2);transition:background .2s}
 .p-btn:hover{background:var(--od)}
 
@@ -561,8 +562,13 @@ nav{
 .yt-title{font-size:15px;font-weight:600;margin-bottom:2px}
 .yt-sub{font-size:13px;color:var(--t2);line-height:1.3}
 
+/* DM LABEL */
+.dm-feature-label{text-align:center;padding:16px 20px 0;font-size:13px;color:var(--t3)}
+.dm-feature-label a{color:var(--o);text-decoration:none;font-weight:600}
+.dm-feature-label a:hover{text-decoration:underline}
+
 /* ABOUT SECTION */
-.about-section{padding:40px 20px;border-top:1px solid var(--b);max-width:600px;margin:0 auto}
+.about-section{padding:24px 20px 40px;border-top:1px solid var(--b);max-width:600px;margin:0 auto}
 .about-inner{display:flex;gap:20px;align-items:flex-start}
 .about-avatar{flex-shrink:0;width:72px;height:72px;border-radius:50%;overflow:hidden;border:2px solid var(--o)}
 .about-avatar img{width:100%;height:100%;object-fit:cover}
@@ -673,23 +679,21 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 </head>
 <body>
 <script>
-// ── A/B TRACKING ──
+// ── TRACKING ──
 (function(){
-  const N8N = 'https://meshminds.app.n8n.cloud/webhook/ab-track';
-  const params = new URLSearchParams(location.search);
-  const variant = params.get('v') || localStorage.getItem('mm_variant') || 'a';
-  const uid = params.get('uid') || localStorage.getItem('mm_uid') || 'direct';
-  window.MM_VARIANT = variant;
+  const N8N    = 'https://meshminds.app.n8n.cloud/webhook/ab-track';
+  const SHEETS = localStorage.getItem('mm_sheets_url') || '';
+  let uid = localStorage.getItem('mm_uid');
+  if(!uid){ uid='u_'+Math.random().toString(36).slice(2,10); localStorage.setItem('mm_uid',uid); }
   window.MM_UID = uid;
+  localStorage.setItem('mm_variant','a');
 
   window.mmTrack = function(event, extra){
-    fetch(N8N, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({event, variant, uid, ts: new Date().toISOString(), ...extra})
-    }).catch(()=>{});
+    const payload = JSON.stringify({event, uid, page:'a', ref:document.referrer||'direct', ts:new Date().toISOString(), ...(extra||{})});
+    fetch(N8N,    {method:'POST',headers:{'Content-Type':'application/json'},body:payload}).catch(()=>{});
+    if(SHEETS) fetch(SHEETS,{method:'POST',headers:{'Content-Type':'application/json'},body:payload}).catch(()=>{});
   };
-  // Track landing
-  mmTrack('variant_land');
+  mmTrack('page_land');
 })();
 </script>
 
@@ -702,13 +706,13 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
     <p class="ssub rv">Everything below is on my printer.</p>
   </div>
   <div class="picks-grid" style="max-width:600px;margin:28px auto 0">
-    <div class="pick rv" style="cursor:pointer"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">📋</span><span class="ph-label">Free List</span></div><div class="p-badge" style="background:#16a34a">FREE</div></div><div class="pick-body"><div class="p-brand">Meshminds</div><div class="p-name">100 Profitable 3D Prints</div><div class="p-desc">The exact models that sell. Sorted by demand, margin, and ease of print.</div><div class="p-tags"><span>Free download</span><span>Etsy bestsellers</span><span>100 models</span></div><div class="p-tap">Get free list →</div></div></div>
+    <div class="pick rv" style="cursor:pointer" onclick="openFreeListModal()"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">📋</span><span class="ph-label">Free List</span></div><div class="p-badge" style="background:#16a34a">FREE</div></div><div class="pick-body"><div class="p-brand">Meshminds</div><div class="p-name">100 Profitable 3D Prints</div><div class="p-desc">The exact models that sell. Sorted by demand, margin, and ease of print.</div><div class="p-tags"><span>Free download</span><span>Etsy bestsellers</span><span>100 models</span></div><div class="p-tap">Get free list →</div></div></div>
     <a class="pick rv" href="#" onclick="alert('Coming soon - link to gumroad goes here')" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">📈</span><span class="ph-label">Meshminds</span></div><div class="p-badge">$49</div></div><div class="pick-body"><div class="p-brand">Meshminds</div><div class="p-name">Grow & Monetize Playbook</div><div class="p-desc">0 to 100K · Brand deals · Affiliate · STL files</div><div class="p-tags"><span>Instant download</span><span>Instagram + TikTok</span><span>Monetization</span></div><div class="p-tap">Get →</div></div></a>
-    <a class="pick rv" href="https://3d-farmers.com/#farmloop-section" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🏭</span><span class="ph-label">Product photo</span></div><div class="p-badge">AUTO PRINT</div></div><div class="pick-body"><div class="p-brand">3D Farmers</div><div class="p-name">FarmLoop System</div><div class="p-desc">Prints, auto-ejects, starts the next job. Run your printer all day without babysitting it.</div><div class="p-tags"><span>Auto-eject</span><span>Batch jobs</span><span>Unattended</span></div><div class="p-tap">Tap to shop →</div></div></a>
-    <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🔧</span><span class="ph-label">Product photo</span></div><div class="p-badge">UPGRADE #1</div></div><div class="pick-body"><div class="p-brand">Panda Touch</div><div class="p-name">CryoGrip BuildPlate</div><div class="p-desc">Grips hot, releases cold. Saves hours per week - no glue, no hairspray.</div><div class="p-tags"><span>Auto-release</span><span>No adhesive</span><span>Bambu-compatible</span></div><div class="p-tap">Tap to shop →</div></div></a>
+    <a class="pick rv" href="https://3d-farmers.com/#farmloop-section" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🏭</span><span class="ph-label">Product photo</span></div><div class="p-badge">AUTO PRINT</div><div class="p-exclusive">Exclusive Meshminds deal</div></div><div class="pick-body"><div class="p-brand">3D Farmers</div><div class="p-name">FarmLoop System</div><div class="p-desc">Prints, auto-ejects, starts the next job. Run your printer all day without babysitting it.</div><div class="p-tags"><span>Auto-eject</span><span>Batch jobs</span><span>Unattended</span></div><div class="p-tap">Tap to shop →</div></div></a>
+    <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🔧</span><span class="ph-label">Product photo</span></div><div class="p-badge">UPGRADE #1</div><div class="p-exclusive">Reader discount</div></div><div class="pick-body"><div class="p-brand">Panda Touch</div><div class="p-name">CryoGrip BuildPlate</div><div class="p-desc">Grips hot, releases cold. Saves hours per week - no glue, no hairspray.</div><div class="p-tags"><span>Auto-release</span><span>No adhesive</span><span>Bambu-compatible</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://amzn.to/meshminds-dryer" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">⚡</span><span class="ph-label">Product photo</span></div><div class="p-badge">MUST HAVE</div></div><div class="pick-body"><div class="p-brand">Sunlu</div><div class="p-name">Filament Dryer S4</div><div class="p-desc">Wet filament = failed prints. Non-negotiable once you print at volume.</div><div class="p-tags"><span>4 spools at once</span><span>45-70°C</span><span>Real-time drying</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://amzn.to/meshminds-pla" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🧴</span><span class="ph-label">Product photo</span></div><div class="p-badge">DAILY DRIVER</div></div><div class="pick-body"><div class="p-brand">PolyMaker</div><div class="p-name">PolyLite PLA Pro</div><div class="p-desc">Matte finish, zero clogs. Looks premium - lets you charge more for the same print.</div><div class="p-tags"><span>Matte finish</span><span>1.75mm</span><span>Zero clogging</span></div><div class="p-tap">Tap to shop →</div></div></a>
-    <a class="pick rv" href="https://timeplast.com/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🧵</span><span class="ph-label">Product photo</span></div><div class="p-badge">HIDDEN GEM</div></div><div class="pick-body"><div class="p-brand">Timeplast</div><div class="p-name">Soap Filament</div><div class="p-desc">Prints like PLA, dissolves like soap. Eco story = premium price without argument.</div><div class="p-tags"><span>Biodegradable</span><span>PLA settings</span><span>Eco-premium</span></div><div class="p-tap">Tap to shop →</div></div></a>
+    <a class="pick rv" href="https://timeplast.com/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🧵</span><span class="ph-label">Product photo</span></div><div class="p-badge">HIDDEN GEM</div><div class="p-exclusive">Exclusive discount</div></div><div class="pick-body"><div class="p-brand">Timeplast</div><div class="p-name">Soap Filament</div><div class="p-desc">Prints like PLA, dissolves like soap. Eco story = premium price without argument.</div><div class="p-tags"><span>Biodegradable</span><span>PLA settings</span><span>Eco-premium</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">📱</span><span class="ph-label">Product photo</span></div><div class="p-badge">CONTENT WIN</div></div><div class="pick-body"><div class="p-brand">Bambu Lab</div><div class="p-name">Knomi Smart Display</div><div class="p-desc">Live temps and GIFs on your print head. Makes behind-the-scenes content look great.</div><div class="p-tags"><span>Fits Bambu</span><span>WiFi</span><span>Custom GIFs</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🖨️</span><span class="ph-label">Product photo</span></div><div class="p-badge">BEST BEGINNER</div></div><div class="pick-body"><div class="p-brand">Bambu Lab</div><div class="p-name">A1 + AMS Combo</div><div class="p-desc">The easiest beginner printer on the market. Plug in and start printing in minutes - no calibration, no guesswork. Multi-color from day one.</div><div class="p-tags"><span>Multi-color</span><span>256 mm/s</span><span>4-spool AMS</span></div><div class="p-tap">Tap to shop →</div></div></a>
   </div>
@@ -1008,6 +1012,9 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
   </div>
 </section>
 
+<!-- DM LABEL -->
+<div class="dm-feature-label">Got a 3D printing brand or product? <a href="https://instagram.com/meshminds3d" target="_blank">DM @meshminds3d to get featured →</a></div>
+
 <!-- ABOUT -->
 <section class="about-section">
   <div class="about-inner">
@@ -1045,6 +1052,26 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
   <div class="cookie-banner-btns">
     <button class="cookie-accept" onclick="acceptCookies()">Got it</button>
     <button class="cookie-reject" onclick="rejectCookies()">Essential only</button>
+  </div>
+</div>
+
+<!-- FREE LIST POPUP -->
+<div class="modal-overlay" id="modal-free-list" onclick="if(event.target===this)closeModal('free-list')">
+  <div class="modal" style="max-width:420px">
+    <button class="modal-close" onclick="closeModal('free-list')">✕</button>
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--o);font-weight:700;margin-bottom:10px">📋 Free download</div>
+    <h2 style="font-family:var(--fd);font-size:clamp(24px,7vw,34px);line-height:.97;letter-spacing:1px;margin-bottom:12px">100 PROFITABLE<br>3D PRINTS.</h2>
+    <p style="font-size:14px;color:var(--t2);line-height:1.55;margin-bottom:20px">The exact models that sell on Etsy and MakerWorld. Sorted by demand, margin, and ease of print. 100 picks - all free to share.</p>
+    <div class="author-bio" style="margin-bottom:20px">
+      <div style="width:44px;height:44px;border-radius:50%;background:var(--o);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🖨️</div>
+      <div><div class="author-name">Daniel, 23 · Berlin</div><div class="author-line">93K Instagram · 55K TikTok · 100M+ views</div></div>
+    </div>
+    <div class="eb-form" id="free-list-form">
+      <input type="email" class="ec-input" id="free-list-email" placeholder="your@email.com" style="flex:1">
+      <button class="ec-btn" onclick="submitFreeList()">Send me the free list →</button>
+    </div>
+    <div id="free-list-thanks" style="display:none;color:var(--o);font-size:15px;font-weight:600;padding:12px 0">✓ On its way - check your inbox.</div>
+    <div class="ec-consent" style="margin-top:10px">No spam. Unsubscribe anytime.</div>
   </div>
 </div>
 
@@ -1163,7 +1190,6 @@ const STEPS = {
   ]},
   fun_printer:{key:'fun_printer',question:'WHAT PRINTER\nDO YOU HAVE?',options:[
     {val:'fdm',        ic:'🖨️',t:'FDM printer',          s:'Bambu Lab, Creality, Prusa or any filament printer'},
-    {val:'resin',      ic:'💧',t:'Resin printer',         s:'Elegoo, Anycubic, Phrozen'},
     {val:'no-printer', ic:'🛒',t:'I don\'t have one yet', s:'Still deciding what to get'},
   ]},
   // COMMERCIAL PATH
@@ -1254,7 +1280,6 @@ const STEPS = {
   }},
   help_printer:{key:'help_printer',question:'WHAT PRINTER\nDO YOU HAVE?',options:[
     {val:'fdm',        ic:'🖨️',t:'FDM printer',          s:'Bambu Lab, Creality, Prusa or any filament printer'},
-    {val:'resin',      ic:'💧',t:'Resin printer',         s:'Elegoo, Anycubic, Phrozen'},
     {val:'no-printer', ic:'🛒',t:'I don\'t have one yet', s:'Still deciding what to get'},
   ]},
 };
@@ -1371,6 +1396,7 @@ function renderStep(stepKey, stepNum, totalSteps){
 
 // ── PICK ──
 function pick(el, val, stepKey){
+  mmTrack('quiz_step', {stepKey, val, step: qIndex+1, path: path||'start'});
   el.closest('.qopts').querySelectorAll('.qo').forEach(o=>o.classList.remove('sel'));
   el.classList.add('sel');
   const hint=document.getElementById('q-tap-hint');
@@ -1418,6 +1444,7 @@ function pick(el, val, stepKey){
 
 // ── BACK ──
 function goBack(){
+  mmTrack('quiz_back', {step: qIndex+1, path: path||'start'});
   if(history.length===0) return;
   const prev=history.pop();
   // Delete the answer for the current step
@@ -1486,6 +1513,7 @@ function showResult(){
 // ── RESTART ──
 // ── RESTART ──
 function restartQuiz(){
+  mmTrack('quiz_restart', {path: path||'unknown'});
   answers={};path=null;qIndex=0;activeFlow={};history.length=0;
   document.querySelectorAll('.qres').forEach(e=>{e.classList.remove('active');e.style.display='';});
   document.getElementById('res-newsletter').style.display='none';
@@ -1518,14 +1546,10 @@ const GEAR={
     {ic:'🧴',brand:'eSUN',name:'ePLA-Matte Filament',desc:'Matte finish, vivid colors, consistent diameter. My daily PLA.',url:'https://esun.com/?ref=meshminds'},
     {ic:'⚡',brand:'Sunlu',name:'Filament Dryer S4',desc:'Keeps 4 spools dry while printing. Non-negotiable at volume.',url:'https://amzn.to/meshminds-dryer'},
   ],
-  resin:[
-    {ic:'🖨️',brand:'Creality',name:'HALOT-MAGE S',desc:'High-res resin for miniatures and detail work.',url:'https://creality.com/?ref=meshminds'},
-    {ic:'🧴',brand:'eSUN',name:'eResin-ABS Like',desc:'Tough resin, low odor, great for functional parts.',url:'https://esun.com/?ref=meshminds'},
-  ],
   'no-printer':[
-    {ic:'🖨️',brand:'Creality',name:'Ender-3 V3 SE',desc:'Best beginner FDM printer in 2026. Easy setup.',url:'https://creality.com/?ref=meshminds'},
-    {ic:'🖨️',brand:'Bambu Lab',name:'A1 + AMS Combo',desc:'Best if you want multi-color from day one.',url:'https://biqu.equipment/?ref=meshminds'},
-    {ic:'🧴',brand:'eSUN',name:'ePLA-Matte Filament',desc:'Start with matte PLA - better finish, easier.',url:'https://esun.com/?ref=meshminds'},
+    {ic:'🖨️',brand:'Bambu Lab',name:'A1 + AMS Combo',desc:'The printer I run daily. Plug in, start printing in minutes. Multi-color from day one. Best beginner printer on the market.',url:'https://biqu.equipment/?ref=meshminds'},
+    {ic:'🧴',brand:'PolyMaker',name:'PolyLite PLA Pro',desc:'Start with matte PLA. Better finish, easier prints - and you can charge more for them.',url:'https://amzn.to/meshminds-pla'},
+    {ic:'⚡',brand:'Sunlu',name:'Filament Dryer S4',desc:'Get this with your first spools. Dry filament = clean prints from day one.',url:'https://amzn.to/meshminds-dryer'},
   ],
   default:[
     {ic:'🔧',brand:'Panda Touch',name:'CryoGrip BuildPlate',desc:'The upgrade every FDM printer needs.',url:'https://biqu.equipment/?ref=meshminds'},
@@ -1943,13 +1967,13 @@ const HELP_EBOOKS = {
     ]
   },
   buying:{
-    title:'THE PRINTER\nBUYER\'S GUIDE',
-    desc:'Which printer to buy in 2026 - matched to your budget, use case, and how serious you are. No brand bias, just the honest breakdown.',
-    includes:['✓ Under €300: the one FDM printer worth buying','✓ €300–600: where Bambu Lab changes the game','✓ Resin vs FDM - which is actually right for you','✓ What to buy with your first printer (the short list)'],
+    title:'HERE\'S YOUR\nSTARTER SETUP.',
+    desc:'The Bambu Lab A1 is the best beginner printer in 2026. Here\'s the exact setup I\'d buy today if I was starting from scratch.',
+    includes:['✓ Bambu Lab A1 + AMS - best beginner printer, multi-color from day one','✓ PolyMaker PolyLite PLA Pro - the filament to start with','✓ Sunlu Filament Dryer S4 - non-negotiable for clean prints','✓ Free: MakerWorld account - thousands of free print-ready models'],
     gear:[
-      {ic:'🖨️',brand:'Creality',name:'Ender-3 V3 SE',desc:'Best beginner FDM printer in 2026. Easy setup, great results.',url:'https://creality.com/?ref=meshminds'},
       {ic:'🖨️',brand:'Bambu Lab',name:'A1 + AMS Combo',desc:'The printer I run. Fast, reliable, multi-color from day one.',url:'https://biqu.equipment/?ref=meshminds'},
-      {ic:'🧴',brand:'eSUN',name:'ePLA-Matte Filament',desc:'Stock up before your printer arrives.',url:'https://esun.com/?ref=meshminds'},
+      {ic:'🧴',brand:'PolyMaker',name:'PolyLite PLA Pro',desc:'Start with matte PLA. Better finish, charge more.',url:'https://amzn.to/meshminds-pla'},
+      {ic:'⚡',brand:'Sunlu',name:'Filament Dryer S4',desc:'Dry filament = clean prints. Get this with your first spools.',url:'https://amzn.to/meshminds-dryer'},
     ]
   }
 };
@@ -1963,10 +1987,10 @@ function showHelpResult(){
   const printer = answers['help_printer'] || 'bambu';
   const ebook = HELP_EBOOKS[problem] || HELP_EBOOKS.quality;
 
-  const pathLabels = {quality:'Print Quality Fix',setup:'Printer Setup',materials:'Materials Guide',buying:'Buying Guide'};
+  const pathLabels = {quality:'Print Quality Fix',setup:'Printer Setup',materials:'Materials Guide',buying:'Your Starter Setup'};
   document.getElementById('help-path').textContent = pathLabels[problem] || 'Troubleshooting';
 
-  const titles = {quality:"LET'S FIX\nYOUR PRINTS.",setup:"LET'S GET YOUR\nPRINTER DIALLED IN.",materials:"LET'S SORT\nYOUR MATERIALS.",buying:"LET'S FIND\nYOUR PRINTER."};
+  const titles = {quality:"LET'S FIX\nYOUR PRINTS.",setup:"LET'S GET YOUR\nPRINTER DIALLED IN.",materials:"LET'S SORT\nYOUR MATERIALS.",buying:"HERE'S YOUR\nSTARTER SETUP."};
   document.getElementById('help-title').innerHTML = (titles[problem]||titles.quality).replace(/\n/g,'<br>');
   document.getElementById('help-diag').textContent = ebook.desc;
   document.getElementById('help-ebook-title').innerHTML = ebook.title.replace(/\n/g,'<br>');
@@ -1995,6 +2019,7 @@ function showHelpResult(){
 }
 
 function showNewsletterFallback(btn){
+  mmTrack('not_interested', {path: path||'unknown'});
   const parent=btn.closest('.email-capture,.offer-block');
   if(parent)parent.style.display='none';
 
@@ -2081,16 +2106,39 @@ function submitFreePopup(){
   const input = document.getElementById('popup-email-input');
   const val = input.value.trim();
   if(!val || !val.includes('@')){input.classList.add('err');setTimeout(()=>input.classList.remove('err'),1500);return;}
-  window._submissions = window._submissions||[];
-  window._submissions.push({type:'free-'+_currentFreeGuide, email:val, date:new Date().toISOString()});
-  // TODO: fetch webhook
   document.getElementById('popup-form').style.display = 'none';
   document.getElementById('popup-thanks').style.display = 'block';
+  mmTrack('email_submit', {type:'free-guide-'+_currentFreeGuide});
+  fetch('https://meshminds.app.n8n.cloud/webhook/email-capture',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:val,type:'free-guide',guide:_currentFreeGuide,path:path||'direct',uid:window.MM_UID})
+  }).catch(()=>{});
+}
+
+// ── FREE LIST POPUP ──
+function openFreeListModal(){
+  mmTrack('free_list_click', {source:'picks-grid'});
+  document.getElementById('free-list-email').value = '';
+  document.getElementById('free-list-form').style.display = '';
+  document.getElementById('free-list-thanks').style.display = 'none';
+  openModal('free-list');
+}
+function submitFreeList(){
+  const input = document.getElementById('free-list-email');
+  const val = input.value.trim();
+  if(!val || !val.includes('@')){input.classList.add('err');setTimeout(()=>input.classList.remove('err'),1500);return;}
+  document.getElementById('free-list-form').style.display = 'none';
+  document.getElementById('free-list-thanks').style.display = 'block';
+  mmTrack('email_submit', {type:'free-list'});
+  fetch('https://meshminds.app.n8n.cloud/webhook/email-capture',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({email:val,type:'free-list',path:path||'direct',uid:window.MM_UID})
+  }).catch(()=>{});
 }
 
 // ── COOKIE BANNER ──
 function showCookieBanner(){setTimeout(()=>{document.getElementById('cookie-banner').classList.add('visible');},800);}
-function acceptCookies(){document.getElementById('cookie-banner').classList.remove('visible');}
+function acceptCookies(){document.getElementById('cookie-banner').classList.remove('visible');mmTrack('cookie_consent',{action:'accept'});}
 function rejectCookies(){document.getElementById('cookie-banner').classList.remove('visible');}
 function closeCookieBanner(){document.getElementById('cookie-banner').classList.remove('visible');}
 showCookieBanner();
@@ -2107,6 +2155,93 @@ document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
 // ── INIT ──
 renderStep('intent',1,4);
+
+// ── GLOBAL EVENT TRACKING ──
+(function(){
+  document.addEventListener('click', function(e){
+    // Product cards (gear section)
+    const card = e.target.closest('.pick');
+    if(card){
+      const name  = (card.querySelector('.p-name')?.textContent||'').trim();
+      const brand = (card.querySelector('.p-brand')?.textContent||'').trim();
+      const badge = (card.querySelector('.p-badge')?.textContent||'').trim();
+      mmTrack('product_click',{product:brand+' '+name, badge, context:'gear_section'});
+      return;
+    }
+    // Result gear picks
+    const fp = e.target.closest('.fp');
+    if(fp){
+      const name=(fp.querySelector('.fp-name')?.textContent||'').trim();
+      mmTrack('product_click',{product:name, context:'result_gear', path:path||'unknown'});
+      return;
+    }
+    // Partner cards in results
+    const partner = e.target.closest('.partner-card');
+    if(partner){
+      const name=(partner.querySelector('.pc-name')?.textContent||'').trim();
+      mmTrack('partner_click',{partner:name, path:path||'unknown'});
+      return;
+    }
+    // Inline picks in results
+    const inline = e.target.closest('.inline-pick');
+    if(inline){
+      const name=(inline.querySelector('.ip-name')?.textContent||'').trim();
+      mmTrack('product_click',{product:name, context:'result_inline', path:path||'unknown'});
+      return;
+    }
+    // Creator cards (Thangs)
+    const cc = e.target.closest('.creator-card,.thangs-platform-link');
+    if(cc){
+      const handle=(cc.querySelector('.cc-handle')?.textContent||'thangs').trim();
+      mmTrack('creator_click',{creator:handle, path:path||'unknown'});
+      return;
+    }
+    // Offer CTAs in results
+    if(e.target.closest('.fu-btn')){
+      mmTrack('offer_click',{cta:'main_offer', path:path||'unknown'});
+      return;
+    }
+    if(e.target.closest('.ob-starter-btn')){
+      mmTrack('offer_click',{cta:'starter_pack'});
+      return;
+    }
+    // YouTube & social
+    if(e.target.closest('.yt-nudge')){
+      mmTrack('social_click',{type:'youtube', path:path||'unknown'});
+      return;
+    }
+    if(e.target.closest('.nav-ig')){
+      mmTrack('social_click',{type:'instagram'});
+      return;
+    }
+    // GET FEATURED
+    if(e.target.closest('.feat-btn')){
+      mmTrack('feature_click',{});
+      return;
+    }
+    // Scroll nudge
+    if(e.target.closest('.scroll-nudge')){
+      mmTrack('scroll_nudge_click',{});
+      return;
+    }
+  });
+
+  // Email field focus
+  document.addEventListener('focusin', function(e){
+    if(e.target.classList.contains('ec-input')){
+      mmTrack('email_focus',{form:e.target.id||'unknown', path:path||'unknown'});
+    }
+  });
+
+  // Scroll depth milestones
+  const _miles=new Set();
+  window.addEventListener('scroll',function(){
+    const pct=Math.round((window.scrollY/(document.body.scrollHeight-window.innerHeight||1))*100);
+    [25,50,75,90].forEach(m=>{
+      if(pct>=m && !_miles.has(m)){ _miles.add(m); mmTrack('scroll_depth',{pct:m}); }
+    });
+  },{passive:true});
+})();
 
 </script>
 </body>

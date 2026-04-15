@@ -213,7 +213,7 @@ function buildRecs(s){
       title:'Offer converting well move it higher',
       body:`Offer click rate is ${(offerRate*100).toFixed(1)}% (benchmark ~10–15%). Moving the offer above the email gate could increase revenue directly.`,
       action:'How to move it up',
-      steps:`In <span class="rec-code">variant-a.html</span> find <span class="rec-code">id="email-commercial"</span> and paste the <span class="rec-code">.product</span> div above it.`
+      steps:`In <span class="rec-code">index.html</span> find <span class="rec-code">id="email-commercial"</span> and paste the <span class="rec-code">.product</span> div above it.`
     });
 
   if(emailRate > 0.28 && offerRate < 0.08)
@@ -229,7 +229,7 @@ function buildRecs(s){
       title:'Quiz drop-off is high',
       body:`Only ${(quizRate*100).toFixed(0)}% of visitors finish the quiz. Removing one step typically improves completion by 15–25%.`,
       action:'What to remove',
-      steps:`In <span class="rec-code">variant-a.html</span>, in the <span class="rec-code">nextStep()</span> function, remove the <span class="rec-code">can_design</span> step from the commercial path.`
+      steps:`In <span class="rec-code">index.html</span>, in the <span class="rec-code">nextStep()</span> function, remove the <span class="rec-code">can_design</span> step from the commercial path.`
     });
 
   if(emailRate > 0.25)

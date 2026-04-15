@@ -135,17 +135,14 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;li
 .p-badge.green{background:#16a34a}
 .p-badge.red{background:#dc2626}
 .p-badge.purple{background:#7c3aed}
-.p-discount{position:absolute;bottom:8px;right:8px;background:#16a34a;color:#fff;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:3px;z-index:2;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media (max-width:380px){
   .p-badge{font-size:8px;letter-spacing:.5px;padding:3px 6px}
-  .p-discount{font-size:8px;letter-spacing:.3px;padding:3px 6px}
 }
 .pick-body{padding:12px}
 .p-brand{font-size:10px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
 .p-name{font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.2}
 .p-desc{font-size:12px;color:var(--t2);margin-bottom:8px;line-height:1.4}
 .p-tap{font-size:13px;color:var(--o);font-weight:600;margin-top:8px}
-.p-exclusive{display:inline-block;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#22c55e;font-size:10px;font-weight:700;padding:2px 7px;border-radius:3px;margin-bottom:6px}
 
 /* SHOW MORE BTN */
 .show-more-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px 18px;background:transparent;border:1px solid rgba(255,255,255,.15);border-radius:8px;color:var(--t2);font-family:var(--fb);font-size:13px;font-weight:500;letter-spacing:.5px;cursor:pointer;transition:border-color .2s,color .2s}
@@ -357,9 +354,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <hr class="sdiv">
 <section class="sec" id="gear-section">
   <div class="sec-inner">
-    <p class="eye rv">My actual setup</p>
-    <h2 class="stitle rv">THE GEAR THAT<br>MAKES MONEY.</h2>
-    <p class="ssub rv">Every product below is something I personally use and test on my Bambu Lab A1. No filler picks, just the tools that actually move the needle when you're printing to sell.</p>
+    <p class="eye rv">The exact stack I run</p>
+    <h2 class="stitle rv">THE GEAR BEHIND<br>100M VIEWS.</h2>
+    <p class="ssub rv">Every product below is something I personally use and test on my Bambu Lab A1. No filler picks, just the tools that actually move the needle.</p>
   </div>
 
   <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
@@ -424,7 +421,6 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_content',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:0 0 20px">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">FREE · VIRAL CONTENT</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">MakerWorld</div>
@@ -461,7 +457,6 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_fun',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:20px 0">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">100% FREE</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">MakerWorld</div>
@@ -501,7 +496,6 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:0 0 20px">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">FREE · FIRST PRINTS</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">MakerWorld</div>
@@ -643,8 +637,7 @@ const ALL_PICKS = [
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg',
     brand:'MakerWorld', name:'My Free Bestseller Models',
     desc:'The exact models I sold 11,000+ times on Etsy, now free to download with a commercial license. Start printing proven bestsellers today.',
-    ic:'🎁', badge:'FREE · COMMERCIAL', badgeClass:'green',
-    discount:'100% FREE',
+    ic:'🎁',
     url:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount',
     tap:'Download free →'
   },
@@ -654,8 +647,6 @@ const ALL_PICKS = [
     brand:'Meshy', name:'AI 3D Model Generator',
     desc:'Type a prompt, get a print-ready 3D model. Skip the design phase entirely and go straight to printing and selling. No CAD skills needed.',
     ic:'🤖', badge:'AI TOOL', badgeClass:'purple',
-    discount:'20% OFF',
-    discountCode:'MESH20',
     url:'https://www.meshy.ai?via=meshminds',
     tap:'Try free →'
   },
@@ -665,8 +656,6 @@ const ALL_PICKS = [
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Sell 3D printed products from 1,000+ professional designs legally. One license, unlimited prints. No IP risk.',
     ic:'📜', badge:'COMMERCIAL USE', badgeClass:'orange',
-    discount:'25% OFF',
-    discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
     tap:'Get licensed →'
   },
@@ -676,10 +665,8 @@ const ALL_PICKS = [
     brand:'Panda Touch', name:'CryoGrip BuildPlate',
     desc:'Grips hot, releases cold. No glue, no hairspray. Saves hours per week the first upgrade to make on any Bambu printer.',
     ic:'🔧', badge:'UPGRADE #1', badgeClass:'orange',
-    discount:'10% OFF',
-    discountCode:'MESH10',
     url:'https://biqu.equipment/?ref=meshminds',
-    tap:'Get the discount →'
+    tap:'Shop CryoGrip →'
   },
   {
     id:'farmloop',
@@ -687,8 +674,6 @@ const ALL_PICKS = [
     brand:'3D Farmers', name:'FarmLoop System',
     desc:'Prints, auto-ejects, starts the next job. Run your printer all day without babysitting it. The system behind unattended batch printing.',
     ic:'🏭', badge:'AUTO PRINT', badgeClass:'orange',
-    discount:'15% OFF',
-    discountCode:'MESHFARM',
     url:'https://3d-farmers.com/#farmloop-section',
     tap:'See FarmLoop →'
   },
@@ -698,8 +683,6 @@ const ALL_PICKS = [
     brand:'Timeplast', name:'Soap Filament',
     desc:'Prints like PLA, dissolves like soap. Eco story = premium price without argument. A hidden gem for gift and novelty markets.',
     ic:'🧵', badge:'HIDDEN GEM', badgeClass:'orange',
-    discount:'10% OFF',
-    discountCode:'MESHECO',
     url:'https://timeplast.com/?ref=meshminds',
     tap:'Shop Timeplast →'
   },
@@ -718,8 +701,6 @@ const ALL_PICKS = [
     brand:'InfinityFlow3D', name:'Print Farm Management',
     desc:'Multi-printer queue management, failure detection, and analytics. Once you hit 3+ printers, this pays for itself in saved filament.',
     ic:'📊', badge:'SCALE UP', badgeClass:'orange',
-    discount:'20% OFF',
-    discountCode:'MESHFLOW',
     url:'https://infinityflow3d.com/?ref=meshminds',
     tap:'See InfinityFlow →'
   },
@@ -729,23 +710,17 @@ const DEFAULT_VISIBLE = 8;
 let showingAll = false;
 
 function buildPickHTML(p){
-  const badge   = p.badge    ? '<span class="p-badge ' + (p.badgeClass||'orange') + '">' + p.badge + '</span>' : '';
-  const discount= p.discount ? '<span class="p-discount">' + p.discount + '</span>' : '';
-  const excl    = p.discount ? '<div class="p-exclusive">&#10022; Exclusive deal</div>' : '';
-  const hasCode = p.discountCode ? true : false;
-  const linkTarget = hasCode ? 'javascript:void(0)' : p.url;
-  return '<a class="pick rv" href="' + linkTarget + '"'
-    + (hasCode ? '' : ' target="_blank" rel="noopener"')
-    + ' data-id="' + p.id + '" data-url="' + p.url + '" data-code="' + (p.discountCode||'') + '" onclick="trackPick(this)">'
+  const badge = p.badge ? '<span class="p-badge ' + (p.badgeClass||'orange') + '">' + p.badge + '</span>' : '';
+  return '<a class="pick rv" href="' + p.url + '" target="_blank" rel="noopener"'
+    + ' data-id="' + p.id + '" data-url="' + p.url + '" onclick="trackPick(this)">'
     + '<div class="pick-img">'
     + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="hideImg(this)">' : '')
     + '<span class="ph-ic" style="' + (p.img ? 'display:none' : '') + '">' + p.ic + '</span>'
     + '<span class="ph-label">' + p.name + '</span>'
-    + badge + discount
+    + badge
     + '</div>'
     + '<div class="pick-body">'
     + '<div class="p-brand">' + p.brand + '</div>'
-    + excl
     + '<div class="p-name">' + p.name + '</div>'
     + '<div class="p-desc">' + p.desc + '</div>'
     + '<div class="p-tap">' + p.tap + '</div>'
@@ -754,12 +729,6 @@ function buildPickHTML(p){
 
 function hideImg(el){el.style.display='none';}
 function trackPick(el){
-  const code = el.dataset.code;
-  if(code){
-    // Show discount popup instead of navigating directly
-    openDiscountPopup(code, el.dataset.url, el.dataset.id);
-    return false;
-  }
   track('offer_click', {button: el.dataset.id, href: el.dataset.url});
 }
 
@@ -993,10 +962,9 @@ function showHelpResult(){
     </a>`;
 
   const cryoGripCard = `
-    <div class="res-offer-card" onclick="openDiscountPopup('MESH10','https://biqu.equipment/?ref=meshminds','cryogrip_help_quality')" style="cursor:pointer;margin:20px 0">
+    <a class="res-offer-card" href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'cryogrip_help_quality',href:'https://biqu.equipment/?ref=meshminds'})" style="margin:20px 0">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg" alt="CryoGrip BuildPlate" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">10% OFF · CODE MESH10</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">Panda Touch</div>
@@ -1004,15 +972,14 @@ function showHelpResult(){
           </div>
         </div>
         <div class="res-offer-desc">Grips hot, releases cold. No glue, no hairspray. First upgrade I put on every printer I own.</div>
-        <div class="res-offer-cta">Get the discount → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
+        <div class="res-offer-cta">Shop CryoGrip →</div>
       </div>
-    </div>`;
+    </a>`;
 
   const makerworldCard = `
     <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help_materials',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:20px 0">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">FREE · PROVEN MODELS</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">MakerWorld</div>
@@ -1072,10 +1039,9 @@ function showCommercialResult(){
   const cubeeFirst = true;
 
   const cubeeCard = `
-    <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer">
+    <a class="res-offer-card" href="https://cubee3d.com/?ref=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'cubee3d_quiz',href:'https://cubee3d.com/?ref=meshminds'})">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D Commercial STL License" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">25% OFF · CODE MESHMINDS</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">Cubee3D</div>
@@ -1083,15 +1049,14 @@ function showCommercialResult(){
           </div>
         </div>
         <div class="res-offer-desc">1,000+ professional designs you can legally sell. Browse proven niches, pick what fits your market, start printing.</div>
-        <div class="res-offer-cta">Get licensed → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
+        <div class="res-offer-cta">Get licensed →</div>
       </div>
-    </div>`;
+    </a>`;
 
   const meshyCard = `
     <a class="res-offer-card" href="https://www.meshy.ai?via=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'meshy_quiz',href:'https://www.meshy.ai?via=meshminds'})">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg" alt="Meshy AI 3D Model Generator" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge secondary">FREE TO START</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">Meshy AI</div>
@@ -1107,7 +1072,6 @@ function showCommercialResult(){
     <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_commercial',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%283%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-badge">100% FREE · PROVEN BESTSELLERS</div>
         <div class="res-offer-top">
           <div>
             <div class="res-offer-brand">MakerWorld</div>
@@ -1300,67 +1264,6 @@ renderPicks();
   quizObs.observe(quizEl);
 })();
 
-// ── DISCOUNT CODE POPUP ──
-function openDiscountPopup(code, url, productId){
-  track('offer_click', {button: productId, href: url});
-  document.getElementById('popup-code').textContent = code;
-  document.getElementById('popup-link').href = url;
-  const popup = document.getElementById('discount-popup');
-  popup.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-  // Reset copy button
-  document.getElementById('copy-btn').textContent = 'Copy';
-}
-function closeDiscountPopup(){
-  track('button_click',{button:'discount_popup_close'});
-  document.getElementById('discount-popup').style.display = 'none';
-  document.body.style.overflow = '';
-}
-function copyCode(){
-  const code = document.getElementById('popup-code').textContent;
-  track('button_click',{button:'discount_code_copy',extra:code});
-  navigator.clipboard.writeText(code).then(()=>{
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = 'Copied!';
-    btn.style.background = '#22c55e';
-    setTimeout(()=>{ btn.textContent = 'Copy'; btn.style.background = 'var(--o)'; }, 2000);
-  }).catch(()=>{
-    // Fallback for older browsers
-    const el = document.createElement('textarea');
-    el.value = code;
-    document.body.appendChild(el);
-    el.select();
-    document.execCommand('copy');
-    document.body.removeChild(el);
-    const btn = document.getElementById('copy-btn');
-    btn.textContent = 'Copied!';
-    btn.style.background = '#22c55e';
-    setTimeout(()=>{ btn.textContent = 'Copy'; btn.style.background = 'var(--o)'; }, 2000);
-  });
-}
-// Close on backdrop click (deferred to after DOM ready)
-document.addEventListener('DOMContentLoaded', function(){
-  const dp = document.getElementById('discount-popup');
-  if(dp) dp.addEventListener('click', function(e){ if(e.target===this) closeDiscountPopup(); });
-});
 </script>
-
-<!-- DISCOUNT CODE POPUP -->
-<div id="discount-popup" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;align-items:center;justify-content:center">
-  <div style="background:#141414;border:1px solid rgba(255,92,0,.3);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center">
-    <div style="font-size:28px;margin-bottom:12px">🎟️</div>
-    <div style="font-family:var(--fd);font-size:26px;letter-spacing:1px;margin-bottom:8px">YOUR EXCLUSIVE<br>DISCOUNT CODE</div>
-    <div style="font-size:14px;color:var(--t2);margin-bottom:20px;line-height:1.5">Copy the code below, then click the button to visit the website and paste it at checkout.</div>
-    <div style="display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid rgba(255,92,0,.3);border-radius:8px;padding:12px 16px;margin-bottom:16px;justify-content:space-between">
-      <span id="popup-code" style="font-family:var(--fm);font-size:20px;font-weight:700;color:var(--o);letter-spacing:2px">MESHMINDS</span>
-      <button onclick="copyCode()" id="copy-btn" style="background:var(--o);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Copy</button>
-    </div>
-    <a id="popup-link" href="#" target="_blank" onclick="closeDiscountPopup()"
-      style="display:block;background:var(--o);color:#fff;text-decoration:none;border-radius:8px;padding:14px;font-size:15px;font-weight:600;margin-bottom:12px">
-      Go to website →
-    </a>
-    <button onclick="closeDiscountPopup()" style="background:transparent;border:none;color:var(--t3);font-size:13px;cursor:pointer;font-family:var(--fb)">Close</button>
-  </div>
-</div>
 </body>
 </html>

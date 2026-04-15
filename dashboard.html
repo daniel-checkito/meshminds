@@ -169,11 +169,25 @@ function generateMockData(){
   const variants = ['a','a','a','a','b','b','c','c']; // 50/25/25 split
   const uids = Array.from({length:120}, (_,i) => 'u_mock'+i);
 
+  const mockCountries = [
+    {country:'US',country_name:'United States',city:'Los Angeles'},
+    {country:'US',country_name:'United States',city:'New York'},
+    {country:'US',country_name:'United States',city:'Chicago'},
+    {country:'GB',country_name:'United Kingdom',city:'London'},
+    {country:'DE',country_name:'Germany',city:'Berlin'},
+    {country:'AU',country_name:'Australia',city:'Sydney'},
+    {country:'CA',country_name:'Canada',city:'Toronto'},
+    {country:'NL',country_name:'Netherlands',city:'Amsterdam'},
+    {country:'FR',country_name:'France',city:'Paris'},
+    {country:'SE',country_name:'Sweden',city:'Stockholm'},
+  ];
+
   uids.forEach((uid, i) => {
     const v = variants[i % variants.length];
     const ts = new Date(now - Math.random() * 7 * 24 * 3600000).toISOString();
+    const geo = mockCountries[i % mockCountries.length];
 
-    events.push({event:'variant_land', variant:v, uid, ts});
+    events.push({event:'variant_land', variant:v, uid, ts, ...geo});
 
     // Quiz A: 65% complete quiz
     if(v === 'a' && Math.random() < 0.65){
@@ -209,23 +223,31 @@ function processEvents(events){
     FUNNEL_STEPS.forEach(s => stats[v][s.key] = stats[v][s.key] || 0);
   });
 
+  const countryCounts = {};
+
   events.forEach(e => {
     const v = e.variant;
     if(!stats[v]) return;
     stats[v].unique_uids.add(e.uid);
     if(stats[v][e.event] !== undefined) stats[v][e.event]++;
     eventsByVariant[v].push(e);
+    // Count countries from landing events
+    if(e.event === 'variant_land' && e.country){
+      const key = e.country;
+      if(!countryCounts[key]) countryCounts[key] = { country: e.country, country_name: e.country_name || e.country, count: 0 };
+      countryCounts[key].count++;
+    }
   });
 
   // Convert sets to counts
   ['a','b','c'].forEach(v => stats[v].unique_users = stats[v].unique_uids.size);
 
-  return { stats, eventsByVariant, totalEvents: events.length };
+  return { stats, eventsByVariant, totalEvents: events.length, countryCounts };
 }
 
 // ── RENDER ──
 function renderDashboard(events){
-  const { stats, totalEvents } = processEvents(events);
+  const { stats, totalEvents, countryCounts } = processEvents(events);
   const totalUsers = Object.values(stats).reduce((s,v)=>s+v.unique_users, 0);
 
   let html = '';
@@ -345,19 +367,47 @@ function renderDashboard(events){
     html += `<div class="empty" style="padding:20px;text-align:left;margin-bottom:28px"><p style="font-size:13px;color:var(--t3)">No quiz completions yet. Path data will appear here.</p></div>`;
   }
 
+  // Visitor Locations
+  html += `<div class="section-title">VISITOR LOCATIONS</div>`;
+  const sortedCountries = Object.values(countryCounts).sort((a,b)=>b.count-a.count);
+  if(sortedCountries.length > 0){
+    const maxCount = sortedCountries[0].count;
+    html += `<div class="funnel" style="margin-bottom:28px">`;
+    sortedCountries.slice(0,10).forEach(({country, country_name, count})=>{
+      const pct = Math.round((count/maxCount)*100);
+      const totalLands = events.filter(e=>e.event==='variant_land').length || 1;
+      const sharePct = Math.round((count/totalLands)*100);
+      html += `<div class="funnel-row">
+        <div class="funnel-label" style="display:flex;align-items:center;gap:6px">
+          <span style="font-family:var(--fm);font-size:11px;color:var(--t3);min-width:28px">${country}</span>
+          <span style="font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px">${country_name}</span>
+        </div>
+        <div class="funnel-bars"><div class="funnel-bar-row">
+          <div class="funnel-bar-wrap"><div class="funnel-bar-fill" style="width:${pct}%;background:rgba(255,92,0,.35)"><span class="funnel-bar-pct">${count}</span></div></div>
+          <div class="funnel-bar-label">${sharePct}%</div>
+        </div></div>
+      </div>`;
+    });
+    html += `</div>`;
+  } else {
+    html += `<div class="empty" style="padding:20px;text-align:left;margin-bottom:28px"><p style="font-size:13px;color:var(--t3)">No location data yet. Location is captured from the variant_land event.</p></div>`;
+  }
+
   // Recent events
   html += `<div class="section-title">RECENT EVENTS</div>`;
   const recent = [...events].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);
   if(recent.length > 0){
-    html += `<table class="events-table"><thead><tr><th>Time</th><th>Variant</th><th>Event</th><th>Detail</th></tr></thead><tbody>`;
+    html += `<table class="events-table"><thead><tr><th>Time</th><th>Variant</th><th>Event</th><th>Location</th><th>Detail</th></tr></thead><tbody>`;
     recent.forEach(e=>{
       const d = new Date(e.ts);
       const timeStr = d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'}) + ' ' + d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'});
       const detail = e.path||e.offer||e.capture_type||e.guide||'';
+      const location = e.country ? `<span style="font-family:var(--fm);font-size:11px">${e.country}</span>${e.city ? ` <span style="color:var(--t3);font-size:11px">${e.city}</span>` : ''}` : '<span style="color:var(--t3)">—</span>';
       html += `<tr>
         <td class="mono" style="color:var(--t3);font-size:12px">${timeStr}</td>
         <td><span class="v-badge v-${e.variant}">${e.variant?.toUpperCase()}</span></td>
         <td>${e.event}</td>
+        <td style="font-size:12px">${location}</td>
         <td style="color:var(--t3);font-size:12px">${detail}</td>
       </tr>`;
     });

@@ -1113,7 +1113,7 @@ const history = [];
 const STEPS = {
   intent: {
     key:'intent',
-    question:'What describes you best?',
+    question:'WHAT\'S YOUR\n3D PRINTING GOAL?',
     options:[
       {val:'commercial',ic:'💰',t:'To make money',               s:'Sell prints, STL files or build a real print business'},
       {val:'content',   ic:'📈',t:'Grow my 3D printing content', s:'Build an audience on Instagram, TikTok or YouTube'},
@@ -1283,7 +1283,7 @@ function countSteps(firstStep){
 function renderStep(stepKey, stepNum, totalSteps){
   const step=STEPS[stepKey];
   const opts=typeof step.options==='function'?step.options(answers):step.options;
-  document.getElementById('dyn-eyebrow').textContent = stepNum === 1 ? '' : `Question ${stepNum} of ${totalSteps}`;
+  document.getElementById('dyn-eyebrow').textContent = stepNum === 1 ? 'Answer 3 questions → get a personalised plan' : `Question ${stepNum} of ${totalSteps}`;
   document.getElementById('dyn-question').innerHTML=step.question.replace(/\n/g,'<br>');
   document.getElementById('dyn-options').innerHTML=opts.map(o=>`
     <button class="qo" onclick="pick(this,'${o.val}','${stepKey}')">

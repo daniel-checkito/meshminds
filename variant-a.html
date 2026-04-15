@@ -25,12 +25,6 @@
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;line-height:1.6;overflow-x:hidden}
 
-/* NAV */
-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:50px;border-bottom:1px solid var(--b)}
-.logo{font-family:var(--fd);font-size:20px;letter-spacing:1px;color:var(--t);text-decoration:none}
-.logo span{color:var(--o)}
-.nav-ig{font-size:12px;color:var(--t3);text-decoration:none}
-
 /* QUIZ */
 .quiz-wrap{display:flex;flex-direction:column;padding:48px 20px 60px;max-width:560px;margin:0 auto;background-image:repeating-linear-gradient(180deg,transparent,transparent 3px,rgba(255,255,255,0.013) 3px,rgba(255,255,255,0.013) 4px);position:relative}
 .quiz-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--o),transparent);opacity:.7}
@@ -216,8 +210,6 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 /* MOBILE OPTIMIZATIONS (iPhone 15 and below) */
 @media (max-width:430px){
   body{font-size:16px}
-  nav{padding:0 16px;height:48px}
-  .logo{font-size:18px}
   .quiz-wrap{padding:32px 16px 48px}
   .sec{padding:36px 16px}
   .about-section{padding:32px 16px}
@@ -241,9 +233,36 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
   .res-offer-body{padding:16px}
   .res-offer-name{font-size:15px}
   .res-offer-desc{font-size:13px}
-  .about-avatar{width:56px;height:56px}
+  .about-avatar{width:64px;height:64px}
+  .about-inner{gap:14px}
+  .about-name{font-size:15px;margin-bottom:6px}
+  .about-bio{font-size:14.5px;line-height:1.6}
+  .about-stats{gap:14px}
   .stitle{font-size:clamp(26px,7.5vw,38px)}
   .ssub{font-size:14px}
+  .ec-btn{padding:15px;font-size:15px;min-height:48px}
+  .ec-input{padding:14px 16px;font-size:16px}
+  .cookie-banner{padding:16px}
+  .cookie-banner-text{font-size:13px}
+  .cookie-accept,.cookie-reject{padding:10px 18px;font-size:14px;flex:1}
+  footer{padding:20px 16px}
+  .foot-legal{gap:12px;flex-wrap:wrap}
+  .foot-affiliate{font-size:11.5px;line-height:1.6}
+  .q-restart{font-size:13px}
+  .modal-overlay{padding:16px}
+  .modal-overlay.open{padding-top:24px}
+  .modal{padding:24px 20px}
+  .modal h2{font-size:24px;margin-bottom:14px}
+  .modal p,.modal li{font-size:13.5px}
+}
+
+@media (max-width:360px){
+  .qq,.qres-title{font-size:clamp(26px,8vw,36px)}
+  .qo{padding:11px 12px;gap:10px}
+  .qo-t{font-size:14px}
+  .qo-ic{font-size:20px;width:26px}
+  .blog-card{flex:0 0 82%}
+  .blog-all-card{flex:0 0 150px}
 }
 
 /* BLOG */
@@ -324,11 +343,6 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 })();
 </script>
 
-<nav>
-  <a class="logo" href="/"><span>MESH</span>MINDS</a>
-  <a class="nav-ig" href="https://instagram.com/meshminds3d" target="_blank" onclick="track('button_click',{button:'nav_instagram'})">@meshminds3d</a>
-</nav>
-
 <!-- QUIZ -->
 
 
@@ -400,7 +414,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     </div>
 
     <!-- Block B: MakerWorld free models -->
-    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_content',href:'https://makerworld.com/de/@Meshminds'})" style="margin:0 0 20px">
+    <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_content',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:0 0 20px">
       <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
         <div class="res-offer-badge">FREE · VIRAL CONTENT</div>
@@ -437,7 +451,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <div class="qres-diag">Printing for fun has no rules, only good prints and better ones. Start with models I've already tested so you can have something cool coming off the plate tonight.</div>
 
     <!-- Block A: MakerWorld free models -->
-    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_fun',href:'https://makerworld.com/de/@Meshminds'})" style="margin:20px 0">
+    <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_fun',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:20px 0">
       <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
         <div class="res-offer-badge">100% FREE</div>
@@ -477,7 +491,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <div id="help-offer-card"></div>
 
     <!-- Block B: MakerWorld free models -->
-    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help',href:'https://makerworld.com/de/@Meshminds'})" style="margin:0 0 20px">
+    <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:0 0 20px">
       <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
         <div class="res-offer-badge">FREE · FIRST PRINTS</div>
@@ -566,7 +580,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <!-- ABOUT -->
 <section class="about-section">
   <div class="about-inner">
-    <div class="about-avatar"><img src="/daniel.jpg" alt="Daniel" onerror="this.style.display='none';this.parentNode.style.fontSize='28px';this.parentNode.style.background='var(--s2)';this.parentNode.style.display='flex';this.parentNode.style.alignItems='center';this.parentNode.style.justifyContent='center';this.parentNode.innerHTML='👤'"></div>
+    <div class="about-avatar"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/1751266450928.jpeg" alt="Daniel" loading="lazy"></div>
     <div>
       <div class="about-name">Daniel, 23 · Berlin</div>
       <div class="about-bio">I grew @meshminds3d to 93K on Instagram and 55K on TikTok with a single Bambu Lab A1, over 100 million views so far. Every week I share what's actually working for people making money with 3D printing.</div>
@@ -624,7 +638,7 @@ const ALL_PICKS = [
     desc:'The exact models I sold 11,000+ times on Etsy, now free to download with a commercial license. Start printing proven bestsellers today.',
     ic:'🎁', badge:'FREE · COMMERCIAL', badgeClass:'green',
     discount:'100% FREE',
-    url:'https://makerworld.com/de/@Meshminds',
+    url:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount',
     tap:'Download free →'
   },
   {
@@ -927,6 +941,7 @@ function pick(el, val, stepKey){
 
 function goBack(){
   if(!history.length) return;
+  track('button_click',{button:'quiz_back'});
   const prev = history.pop();
   delete answers[prev.stepKey];
   qIndex = prev.stepNum - 1;
@@ -987,7 +1002,7 @@ function showHelpResult(){
     </div>`;
 
   const makerworldCard = `
-    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help_materials',href:'https://makerworld.com/de/@Meshminds'})" style="margin:20px 0">
+    <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help_materials',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})" style="margin:20px 0">
       <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
         <div class="res-offer-badge">FREE · PROVEN MODELS</div>
@@ -1082,7 +1097,7 @@ function showCommercialResult(){
     </a>`;
 
   const makerworldCard = `
-    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_commercial',href:'https://makerworld.com/de/@Meshminds'})">
+    <a class="res-offer-card" href="https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_commercial',href:'https://makerworld.com/de/%40Meshminds/upload?orderBy=likeCount'})">
       <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
         <div class="res-offer-badge">100% FREE · PROVEN BESTSELLERS</div>
@@ -1182,14 +1197,14 @@ function submitEmail(type){
 }
 
 // ── MODALS ──
-function openModal(id){ document.getElementById('modal-'+id).classList.add('open'); document.body.style.overflow='hidden'; }
+function openModal(id){ track('button_click',{button:'open_'+id}); document.getElementById('modal-'+id).classList.add('open'); document.body.style.overflow='hidden'; }
 function closeModal(id){ document.getElementById('modal-'+id).classList.remove('open'); document.body.style.overflow=''; }
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id.replace('modal-',''));});});
 
 // ── COOKIES ──
 function showCookieBanner(){ setTimeout(()=>document.getElementById('cookie-banner').classList.add('visible'),800); }
 function acceptCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); track('button_click',{button:'cookie_accept'}); }
-function rejectCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); }
+function rejectCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); track('button_click',{button:'cookie_reject'}); }
 showCookieBanner();
 
 // ── SCROLL REVEAL ──
@@ -1228,11 +1243,13 @@ function openDiscountPopup(code, url, productId){
   document.getElementById('copy-btn').textContent = 'Copy';
 }
 function closeDiscountPopup(){
+  track('button_click',{button:'discount_popup_close'});
   document.getElementById('discount-popup').style.display = 'none';
   document.body.style.overflow = '';
 }
 function copyCode(){
   const code = document.getElementById('popup-code').textContent;
+  track('button_click',{button:'discount_code_copy',extra:code});
   navigator.clipboard.writeText(code).then(()=>{
     const btn = document.getElementById('copy-btn');
     btn.textContent = 'Copied!';

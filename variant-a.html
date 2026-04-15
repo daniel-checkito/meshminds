@@ -338,7 +338,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <div class="sec-inner">
     <p class="eye rv">My actual setup</p>
     <h2 class="stitle rv">THE GEAR THAT<br>MAKES MONEY.</h2>
-    <p class="ssub rv">Every product below is something I personally use, tested on my Bambu Lab A1. No filler picks just what actually moves the needle when you're printing to sell.</p>
+    <p class="ssub rv">Every product below is something I personally use and test on my Bambu Lab A1. No filler picks, just the tools that actually move the needle when you're printing to sell.</p>
   </div>
 
   <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
@@ -434,7 +434,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <div class="qres" id="res-fun">
     <div class="qres-path">For the love of printing</div>
     <div class="qres-title">YOU'RE IN THE<br>RIGHT HOBBY.</div>
-    <div class="qres-diag">The best part about printing for fun is there are no rules. Start with proven models and have something cool off the plate tonight.</div>
+    <div class="qres-diag">Printing for fun has no rules, only good prints and better ones. Start with models I've already tested so you can have something cool coming off the plate tonight.</div>
 
     <!-- Block A: MakerWorld free models -->
     <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_fun',href:'https://makerworld.com/de/@Meshminds'})" style="margin:20px 0">
@@ -469,9 +469,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
   <!-- RESULT: HELP -->
   <div class="qres" id="res-help">
-    <div class="qres-path">Help Path</div>
+    <div class="qres-path">Buying Guide</div>
     <div class="qres-title">THE BEST PRINTER<br>TO START WITH.</div>
-    <div class="qres-diag">I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I'd buy again tomorrow.</div>
+    <div class="qres-diag">I run a Bambu Lab A1 with AMS. Fastest setup, best value at the price, and the one I'd buy again tomorrow. Zero calibration, multi-color from day one, and good enough to grow into a real business.</div>
 
     <!-- Block A: Dynamic offer card -->
     <div id="help-offer-card"></div>
@@ -511,7 +511,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <div class="qres" id="res-newsletter" style="display:none">
     <div class="qres-path">Free newsletter</div>
     <div class="qres-title">FREE 3D PRINTING<br>IDEAS EVERY WEEK.</div>
-    <div class="qres-diag">Trending topics, viral ideas and what is working in 3D printing right now.</div>
+    <div class="qres-diag">Trending topics, viral ideas, and what's actually working in 3D printing right now, straight to your inbox.</div>
     <div class="email-capture" style="margin-top:0">
       <div class="ec-icon">📬</div>
       <div class="ec-title">JOIN THE FREE WEEKLY LIST</div>
@@ -569,7 +569,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <div class="about-avatar"><img src="/daniel.jpg" alt="Daniel" onerror="this.style.display='none';this.parentNode.style.fontSize='28px';this.parentNode.style.background='var(--s2)';this.parentNode.style.display='flex';this.parentNode.style.alignItems='center';this.parentNode.style.justifyContent='center';this.parentNode.innerHTML='👤'"></div>
     <div>
       <div class="about-name">Daniel, 23 · Berlin</div>
-      <div class="about-bio">I grew @meshminds3d to 93K on Instagram and 55K on TikTok with one Bambu A1 printer. Over 100 million views. I share everything I learn about making money with 3D printing.</div>
+      <div class="about-bio">I grew @meshminds3d to 93K on Instagram and 55K on TikTok with a single Bambu Lab A1, over 100 million views so far. Every week I share what's actually working for people making money with 3D printing.</div>
       <div class="about-bio" style="margin-top:10px"><strong style="color:var(--t)">Built something cool?</strong> DM me <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--o)" onclick="track('button_click',{button:'about_dm_feature'})">@meshminds3d</a> and I'll feature your 3D printing project to my audience.</div>
       <div class="about-stats">
         <div><div class="as-num">93K</div><div class="as-label">Instagram</div></div>
@@ -585,7 +585,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a onclick="openModal('impressum')">Impressum</a>
     <a onclick="openModal('datenschutz')">Datenschutzerklärung</a>
   </div>
-  <div class="foot-affiliate">* This page contains affiliate links. If you buy through one of these links I earn a small commission no extra cost to you.</div>
+  <div class="foot-affiliate">* This page contains affiliate links. If you buy through one of them I earn a small commission at no extra cost to you.</div>
 </footer>
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-impressum" onclick="if(event.target===this)closeModal('impressum')">
@@ -780,10 +780,10 @@ const history = [];
 
 const STEPS = {
   intent:{key:'intent',question:"WHAT\'S YOUR\n3D PRINTING GOAL?",options:[
-    {val:'commercial',ic:'💰',t:'Make money with printing',     s:'Sell prints, STL files or build a real print business'},
-    {val:'content',   ic:'📈',t:'Grow my 3D printing content',  s:'Build an audience on Instagram, TikTok or YouTube'},
-    {val:'fun',       ic:'🎨',t:'Fun and creative projects',     s:'Cool models, gifts, hobby. Just for the love of it.'},
-    {val:'help',      ic:'🖨️',t:"I don\'t have a printer yet", s:"I want to get started but haven\'t bought one yet"},
+    {val:'commercial',ic:'💰',t:'Make money with printing',     s:'Sell prints, STL files, or build a real print business'},
+    {val:'content',   ic:'📈',t:'Grow my 3D printing content',  s:'Build an audience on Instagram, TikTok, or YouTube'},
+    {val:'fun',       ic:'🎨',t:'Fun and creative projects',    s:'Cool models, gifts, hobby prints, just for the love of it'},
+    {val:'help',      ic:'🖨️',t:"I don\'t have a printer yet", s:'Show me which one to buy first'},
   ]},
 
   // COMMERCIAL PATH
@@ -797,10 +797,8 @@ const STEPS = {
     {val:'no',       ic:'📦',t:'No, I print existing files',   s:'I use files from MakerWorld, Thangs or similar'},
   ]},
   com_problem:{key:'com_problem',question:"WHAT\'S YOUR\nBIGGEST BLOCK?",options:[
-    {val:'niche',   ic:'🎯',t:'Finding products people buy',      s:'Too many options, not sure what actually sells'},
-    {val:'scale',   ic:'⚙️',t:'Scaling without burning out',     s:'More orders just means more of my time'},
-    {val:'setup',   ic:'🖨️',t:'Getting my printer sale-ready',   s:'Calibration, automation, consistent quality'},
-    {val:'passive', ic:'💤',t:'Earning while I sleep',            s:'STL files, digital products, passive income'},
+    {val:'what', ic:'🎯',t:"I don\'t know what to sell",  s:'Picking a product people actually want to buy'},
+    {val:'sell', ic:'📣',t:"I don\'t know how to sell",   s:'Getting seen, getting clicks, getting the checkout'},
   ]},
 
   // CONTENT PATH
@@ -835,20 +833,13 @@ const STEPS = {
     {val:'no-printer', ic:'🛒',t:"I don\'t have one yet", s:'Still deciding what to get'},
   ]},
 
-  // HELP/BUYING PATH
-  help_type:{key:'help_type',question:'WHAT DO YOU\nNEED HELP WITH?',options:[
-    {val:'buying',   ic:'🛒',t:'Choosing my first printer',  s:'Not sure which one fits my budget and goals'},
-    {val:'quality',  ic:'🔍',t:'My prints look bad',         s:'Stringing, warping, layer issues'},
-    {val:'materials',ic:'🧵',t:'Confused about materials',   s:'Not sure which filament to use when'},
-    {val:'setup',    ic:'⚙️',t:'Setting up a new printer',   s:'First prints, calibration, getting dialled in'},
-  ]},
 };
 
 function nextStep(stepKey, val){
   if(stepKey==='intent'){
     if(val==='fun')     return 'fun_type';
     if(val==='content') return 'content_stage';
-    if(val==='help')    return 'help_type';
+    if(val==='help')    return null; // no printer yet → straight to recommendation
     return 'com_level'; // commercial
   }
   // Commercial
@@ -862,8 +853,6 @@ function nextStep(stepKey, val){
   // Fun
   if(stepKey==='fun_type')    return 'fun_printer';
   if(stepKey==='fun_printer') return null;
-  // Help/buying
-  if(stepKey==='help_type')   return null;
   return null;
 }
 
@@ -872,7 +861,7 @@ function totalSteps(p){
   if(p==='commercial') return 4; // intent + level + can_design + problem
   if(p==='content')    return 4; // intent + stage + platform + goal
   if(p==='fun')        return 3; // intent + type + printer
-  return 2; // intent + help_type
+  return 1; // help: just intent → printer recommendation
 }
 
 function renderStep(stepKey, stepNum, total){
@@ -1044,27 +1033,21 @@ function showContentResult(){
 }
 
 function showCommercialResult(){
-  const problem = answers['com_problem']||'niche';
+  const problem = answers['com_problem']||'what';
   const level   = answers['com_level']||'beginner';
 
   // Title + diagnosis adapt to problem
   const titles = {
-    niche:  'FIND YOUR<br>PROFITABLE NICHE.',
-    scale:  'SCALE YOUR<br>PRINT BUSINESS.',
-    setup:  'GET YOUR<br>SETUP RIGHT.',
-    passive:'BUILD PASSIVE<br>INCOME.',
+    what: 'FIND WHAT<br>ACTUALLY SELLS.',
+    sell: 'TURN PRINTS<br>INTO SALES.',
   };
   const diags = {
-    niche:  'The fastest way to find a winning niche is to print what already sells, legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
-    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck. Meshy lets you generate custom files in minutes so you can list new products faster.',
-    setup:  'Getting set up right means having the right files before your first sale. Cubee gives you a commercial license and 1,000+ ready-to-print designs, so you can go from printer to profit without legal risk.',
-    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly, pick your niches and start building your catalogue.',
+    what: "The fastest way to find a winning product is to print what already sells. Cubee gives you 1,000+ licensed commercial designs so you can skip the guesswork, pick a proven niche, and start shipping today.",
+    sell: "Selling starts with having something people already want to buy. Skip the \"will this work?\" gamble by starting with a library of proven designs, then put your energy into listings, photos, and getting in front of buyers.",
   };
 
-  // Primary + secondary offer adapt to problem
-  // niche/setup/passive → Cubee first, Meshy second
-  // scale → Meshy first, Cubee second
-  const cubeeFirst = (problem !== 'scale');
+  // Both problems lead with Cubee (proven, licensed products)
+  const cubeeFirst = true;
 
   const cubeeCard = `
     <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer">
@@ -1127,8 +1110,8 @@ function showCommercialResult(){
     </div>`;
 
   document.getElementById('qr-path').textContent = (level.charAt(0).toUpperCase()+level.slice(1))+' Path';
-  document.getElementById('qr-title').innerHTML = titles[problem]||titles.niche;
-  document.getElementById('qr-diag').innerHTML  = diags[problem]||diags.niche;
+  document.getElementById('qr-title').innerHTML = titles[problem]||titles.what;
+  document.getElementById('qr-diag').innerHTML  = diags[problem]||diags.what;
   document.getElementById('dyn-offer-block').innerHTML =
     '<div class="res-offer-grid">' +
     (cubeeFirst ? cubeeCard + meshyCard : meshyCard + cubeeCard) +

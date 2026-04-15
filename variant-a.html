@@ -223,6 +223,19 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 .blog-all-btn:hover{background:rgba(255,92,0,.08)}
 
 .p-take{font-size:12px;color:var(--t2);border-left:2px solid var(--o);padding-left:8px;margin:8px 0 6px;line-height:1.5;font-style:italic}
+
+/* QUIZ RESULT OFFER CARDS */
+.res-offer-grid{display:flex;flex-direction:column;gap:12px;margin:20px 0 8px}
+.res-offer-card{display:block;background:var(--s2);border:1px solid rgba(255,92,0,.25);border-radius:var(--r);padding:18px;text-decoration:none;color:inherit;position:relative;transition:border-color .2s}
+.res-offer-card:hover{border-color:rgba(255,92,0,.5);text-decoration:none}
+.res-offer-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;background:var(--o);color:#fff;border-radius:4px;padding:3px 8px;margin-bottom:12px}
+.res-offer-badge.secondary{background:transparent;border:1px solid rgba(255,92,0,.4);color:var(--o)}
+.res-offer-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.res-offer-ic{font-size:28px;flex-shrink:0}
+.res-offer-brand{font-size:11px;color:var(--t3);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.res-offer-name{font-size:15px;font-weight:700;color:var(--t)}
+.res-offer-desc{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px}
+.res-offer-cta{font-size:13px;font-weight:700;color:var(--o)}
 </style>
 </head>
 <body>
@@ -893,19 +906,72 @@ function showContentResult(){
 function showCommercialResult(){
   const problem = answers['com_problem']||'niche';
   const level   = answers['com_level']||'beginner';
-  const titles  = {niche:"FIND YOUR\nPROFITABLE NICHE.",pricing:"FIX YOUR\nMARGINS.",scale:"SCALE WITHOUT\nBURNING OUT.",legal:"STAY LEGALLY\nSAFE."};
-  const diags   = {
-    niche:`<strong>Section 01</strong> of the Starter Pack covers the top 5 niches with real margin data. Pick one, commit, and start.`,
-    pricing:`<strong>Section 02</strong> has the pricing formula that turns €5 of filament into a €55 sale. Most sellers double their margin without changing a product.`,
-    scale:`<strong>Section 03</strong> is the full automation setup auto-eject, batch queuing, unattended runs. My printer runs 18 hours a day.`,
-    legal:`<strong>Section 04</strong> covers what\'s legally risky on Etsy right now: licensed characters, EU Design Regulation, food safety. Know before you list.`,
-  };
-  document.getElementById('qr-path').textContent = level.charAt(0).toUpperCase()+level.slice(1)+' Path';
-  document.getElementById('qr-title').innerHTML = (titles[problem]||titles.niche).replace(/\n/g,'<br>');
-  document.getElementById('qr-diag').innerHTML = diags[problem]||diags.niche;
 
-  // Offer block
-  document.getElementById('dyn-offer-block').innerHTML = '';
+  // Title + diagnosis adapt to problem
+  const titles = {
+    niche:  'FIND YOUR<br>PROFITABLE NICHE.',
+    scale:  'SCALE YOUR<br>PRINT BUSINESS.',
+    setup:  'GET YOUR<br>SETUP RIGHT.',
+    passive:'BUILD PASSIVE<br>INCOME.',
+  };
+  const diags = {
+    niche:  'The fastest way to find a winning niche is to print what already sells — legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
+    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck — Meshy lets you generate custom files in minutes so you can list new products faster.',
+    setup:  'Getting set up right means having the right files before your first sale. Cubee gives you a commercial license and 1,000+ ready-to-print designs, so you can go from printer to profit without legal risk.',
+    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly — pick your niches and start building your catalogue.',
+  };
+
+  // Primary + secondary offer adapt to problem
+  // niche/setup/passive → Cubee first, Meshy second
+  // scale → Meshy first, Cubee second
+  const cubeeFirst = (problem !== 'scale');
+
+  const cubeeCard = `
+    <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer">
+      <div class="res-offer-badge">RECOMMENDED</div>
+      <div class="res-offer-top">
+        <span class="res-offer-ic">📜</span>
+        <div>
+          <div class="res-offer-brand">Cubee3D</div>
+          <div class="res-offer-name">Commercial STL License</div>
+        </div>
+      </div>
+      <div class="res-offer-desc">1,000+ professional designs you can legally sell. Browse proven niches, pick what fits your market, start printing. Use code <strong style="color:var(--o)">MESHMINDS</strong> for exclusive access.</div>
+      <div class="res-offer-cta">Get licensed → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
+    </div>`;
+
+  const meshyCard = `
+    <a class="res-offer-card" href="https://www.meshy.ai?via=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'meshy_quiz',href:'https://www.meshy.ai?via=meshminds'})">
+      <div class="res-offer-badge secondary">FREE TO START</div>
+      <div class="res-offer-top">
+        <span class="res-offer-ic">🤖</span>
+        <div>
+          <div class="res-offer-brand">Meshy AI</div>
+          <div class="res-offer-name">AI 3D Model Generator</div>
+        </div>
+      </div>
+      <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright — no licensing required.</div>
+      <div class="res-offer-cta">Try free →</div>
+    </a>`;
+
+  const emailCapture = `
+    <div class="email-capture" style="margin-top:8px">
+      <div class="ec-icon">📬</div>
+      <div class="ec-title">NOT READY TO BUY YET?</div>
+      <div class="ec-sub">Get 10 profitable product ideas every week — free. Real niches, real margin data, straight to your inbox.</div>
+      <div class="ec-form">
+        <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial">
+        <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>
+      </div>
+    </div>`;
+
+  document.getElementById('qr-path').textContent = (level.charAt(0).toUpperCase()+level.slice(1))+' Path';
+  document.getElementById('qr-title').innerHTML = titles[problem]||titles.niche;
+  document.getElementById('qr-diag').innerHTML  = diags[problem]||diags.niche;
+  document.getElementById('dyn-offer-block').innerHTML =
+    '<div class="res-offer-grid">' +
+    (cubeeFirst ? cubeeCard + meshyCard : meshyCard + cubeeCard) +
+    '</div>' + emailCapture;
 
   document.getElementById('res-commercial').classList.add('active');
 }

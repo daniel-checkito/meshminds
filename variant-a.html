@@ -682,14 +682,21 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
   window.MM_VARIANT = variant;
   window.MM_UID = uid;
 
+  window.MM_GEO = {};
   window.mmTrack = function(event, extra){
     fetch(N8N, {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({event, variant, uid, ts: new Date().toISOString(), ...extra})
+      body: JSON.stringify({event, variant, uid, ts: new Date().toISOString(), ...window.MM_GEO, ...extra})
     }).catch(()=>{});
   };
-  // Track landing
-  mmTrack('variant_land');
+  // Fetch geolocation then track landing
+  fetch('https://ipapi.co/json/')
+    .then(r => r.json())
+    .then(geo => {
+      window.MM_GEO = { country: geo.country_code, country_name: geo.country_name, city: geo.city };
+      mmTrack('variant_land');
+    })
+    .catch(() => mmTrack('variant_land'));
 })();
 </script>
 
@@ -710,7 +717,11 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
     <a class="pick rv" href="https://amzn.to/meshminds-pla" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🧴</span><span class="ph-label">Product photo</span></div><div class="p-badge">DAILY DRIVER</div></div><div class="pick-body"><div class="p-brand">PolyMaker</div><div class="p-name">PolyLite PLA Pro</div><div class="p-desc">Matte finish, zero clogs. Looks premium - lets you charge more for the same print.</div><div class="p-tags"><span>Matte finish</span><span>1.75mm</span><span>Zero clogging</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://timeplast.com/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🧵</span><span class="ph-label">Product photo</span></div><div class="p-badge">HIDDEN GEM</div></div><div class="pick-body"><div class="p-brand">Timeplast</div><div class="p-name">Soap Filament</div><div class="p-desc">Prints like PLA, dissolves like soap. Eco story = premium price without argument.</div><div class="p-tags"><span>Biodegradable</span><span>PLA settings</span><span>Eco-premium</span></div><div class="p-tap">Tap to shop →</div></div></a>
     <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">📱</span><span class="ph-label">Product photo</span></div><div class="p-badge">CONTENT WIN</div></div><div class="pick-body"><div class="p-brand">Bambu Lab</div><div class="p-name">Knomi Smart Display</div><div class="p-desc">Live temps and GIFs on your print head. Makes behind-the-scenes content look great.</div><div class="p-tags"><span>Fits Bambu</span><span>WiFi</span><span>Custom GIFs</span></div><div class="p-tap">Tap to shop →</div></div></a>
-    <a class="pick rv" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🖨️</span><span class="ph-label">Product photo</span></div><div class="p-badge">BEST BEGINNER</div></div><div class="pick-body"><div class="p-brand">Bambu Lab</div><div class="p-name">A1 + AMS Combo</div><div class="p-desc">The easiest beginner printer on the market. Plug in and start printing in minutes - no calibration, no guesswork. Multi-color from day one.</div><div class="p-tags"><span>Multi-color</span><span>256 mm/s</span><span>4-spool AMS</span></div><div class="p-tap">Tap to shop →</div></div></a>
+    <a class="pick rv pick-extra" href="https://biqu.equipment/?ref=meshminds" target="_blank" style="display:none;text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🖨️</span><span class="ph-label">Product photo</span></div><div class="p-badge">BEST BEGINNER</div></div><div class="pick-body"><div class="p-brand">Bambu Lab</div><div class="p-name">A1 + AMS Combo</div><div class="p-desc">The easiest beginner printer on the market. Plug in and start printing in minutes - no calibration, no guesswork. Multi-color from day one.</div><div class="p-tags"><span>Multi-color</span><span>256 mm/s</span><span>4-spool AMS</span></div><div class="p-tap">Tap to shop →</div></div></a>
+    <a class="pick rv pick-extra" href="https://www.meshy.ai?via=meshminds" target="_blank" style="display:none;text-decoration:none;color:inherit"><div class="pick-img"><div class="img-ph-box"><span class="ph-ic">🤖</span><span class="ph-label">AI Tool</span></div><div class="p-badge">AI MODEL GEN</div></div><div class="pick-body"><div class="p-brand">Meshy</div><div class="p-name">AI 3D Model Generator</div><div class="p-desc">Type a prompt, get a printable 3D model. Skip the design phase entirely and go straight to printing and selling.</div><div class="p-tags"><span>Text to 3D</span><span>Print-ready</span><span>No CAD skills</span></div><div class="p-tap">Try free →</div></div></a>
+  </div>
+  <div style="text-align:center;margin-top:20px">
+    <button id="picks-more-btn" onclick="toggleMorePicks()" style="background:var(--s2);border:1px solid var(--b2);color:var(--t2);font-family:var(--fb);font-size:14px;font-weight:600;padding:10px 22px;border-radius:var(--r);cursor:pointer;transition:all .15s" onmouseover="this.style.borderColor='var(--o)';this.style.color='var(--o)'" onmouseout="this.style.borderColor='';this.style.color=''">See 2 more products →</button>
   </div>
 </section>
 
@@ -2100,6 +2111,18 @@ function openModal(id){document.getElementById('modal-'+id).classList.add('open'
 function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');document.body.style.overflow='';}
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id.replace('modal-',''));});});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modal-overlay.open').forEach(el=>el.classList.remove('open'));});
+
+// ── MORE PICKS TOGGLE ──
+function toggleMorePicks(){
+  const extras = document.querySelectorAll('.pick-extra');
+  const btn = document.getElementById('picks-more-btn');
+  const isHidden = extras[0].style.display === 'none';
+  extras.forEach(el => {
+    el.style.display = isHidden ? '' : 'none';
+    if(isHidden) obs.observe(el);
+  });
+  btn.textContent = isHidden ? 'Show less ←' : 'See 2 more products →';
+}
 
 // ── SCROLL REVEAL ──
 const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target);}});},{threshold:0.04,rootMargin:'0px 0px -10px 0px'});

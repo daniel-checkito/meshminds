@@ -14,9 +14,11 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://meshminds.vercel.app/blog">
 <meta property="og:site_name" content="Meshminds">
+<meta property="og:image" content="https://placehold.co/1200x630/131313/FF5C00?text=MESHMINDS+BLOG">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Blog Making Money With 3D Printing | Meshminds">
 <meta name="twitter:description" content="Founder stories, business models and industry analysis on making money with 3D printing.">
+<meta name="twitter:image" content="https://placehold.co/1200x630/131313/FF5C00?text=MESHMINDS+BLOG">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
@@ -29,31 +31,39 @@
     --r:10px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;line-height:1.75}
+  body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;line-height:1.6}
   a{color:var(--o);text-decoration:none}
   a:hover{text-decoration:underline}
 
-  nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--b);position:sticky;top:0;background:rgba(11,11,11,0.95);backdrop-filter:blur(8px);z-index:100}
-  .logo{font-family:var(--fd);font-size:22px;letter-spacing:1px;color:var(--t);text-decoration:none}
-  .logo span{color:var(--o)}
-  .nav-ig{font-size:13px;color:var(--t3);font-weight:500}
+  .back-bar{padding:14px 20px;border-bottom:1px solid var(--b);position:sticky;top:0;background:rgba(11,11,11,0.95);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:center;justify-content:space-between}
+  .back-bar a{font-size:14px;color:var(--t2);font-family:var(--fb);font-weight:500}
+  .back-bar a:hover{color:var(--o);text-decoration:none}
 
-  .hero{padding:56px 20px 32px;max-width:720px;margin:0 auto;border-bottom:1px solid var(--b)}
+  .hero{padding:48px 20px 28px;max-width:760px;margin:0 auto}
   .hero-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);margin-bottom:12px;text-transform:uppercase}
-  h1{font-family:var(--fd);font-size:clamp(38px,7vw,60px);line-height:1.05;margin-bottom:16px;letter-spacing:0.5px}
-  .hero-sub{font-size:18px;line-height:1.6;color:var(--t2);max-width:600px}
+  h1{font-family:var(--fd);font-size:clamp(36px,7vw,58px);line-height:1.05;margin-bottom:14px;letter-spacing:0.5px}
+  .hero-sub{font-size:17px;line-height:1.55;color:var(--t2);max-width:560px}
 
-  .list{max-width:720px;margin:0 auto;padding:32px 20px 60px}
-  .post-card{display:block;background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:24px;margin-bottom:16px;text-decoration:none;color:inherit;transition:border-color .15s ease}
-  .post-card:hover{border-color:rgba(255,92,0,0.35);text-decoration:none}
+  .list{max-width:760px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:1fr;gap:20px}
+  .post-card{display:block;background:var(--s1);border:1px solid var(--b);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s ease,transform .15s ease}
+  .post-card:hover{border-color:rgba(255,92,0,0.35);text-decoration:none;transform:translateY(-2px)}
+  .post-cover{aspect-ratio:16/9;background:var(--s3);overflow:hidden}
+  .post-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .post-body{padding:20px 22px 22px}
   .post-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);margin-bottom:10px;text-transform:uppercase}
-  .post-title{font-family:var(--fd);font-size:clamp(22px,3.6vw,28px);line-height:1.15;letter-spacing:0.5px;margin-bottom:10px;color:var(--t)}
-  .post-excerpt{font-size:15px;color:var(--t2);line-height:1.55;margin-bottom:14px}
+  .post-title{font-family:var(--fd);font-size:clamp(22px,4.2vw,28px);line-height:1.15;letter-spacing:0.5px;margin-bottom:10px;color:var(--t)}
+  .post-excerpt{font-size:14.5px;color:var(--t2);line-height:1.55;margin-bottom:12px}
   .post-meta{font-size:12px;color:var(--t3);letter-spacing:0.5px}
   .post-meta span{color:var(--t2)}
 
   footer{padding:24px 20px;border-top:1px solid var(--b);text-align:center;font-size:13px;color:var(--t3)}
   footer a{color:var(--t3)}
+
+  @media (max-width:430px){
+    .hero{padding:32px 16px 20px}
+    .list{padding:16px 16px 48px;gap:16px}
+    .post-body{padding:16px 18px 18px}
+  }
 </style>
 <script type="application/ld+json">
 {
@@ -95,10 +105,10 @@
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="/"><span>MESH</span>MINDS</a>
-  <a class="nav-ig" href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>
-</nav>
+<div class="back-bar">
+  <a href="/">← Home</a>
+  <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>
+</div>
 
 <section class="hero">
   <div class="hero-label">The Meshminds Blog</div>
@@ -108,24 +118,33 @@
 
 <section class="list">
   <a class="post-card" href="/blog/dont-ban-3d-printers-us-regulation">
-    <div class="post-label">Regulation &amp; Industry</div>
-    <div class="post-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
-    <p class="post-excerpt">Several US states are drafting laws that would require every 3D printer sold to include firearms-detection software. Here's what's happening, what's at stake for the maker community, and why critics say the whole approach is technically unworkable.</p>
-    <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>8 min read</span></div>
+    <div class="post-cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=US+3D+PRINTER+BAN" alt="US 3D printer ban" loading="lazy"></div>
+    <div class="post-body">
+      <div class="post-label">Regulation &amp; Industry</div>
+      <div class="post-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
+      <p class="post-excerpt">Several US states are drafting laws that would require every 3D printer sold to include firearms-detection software. Here's what's happening, what's at stake for the maker community, and why critics say the whole approach is technically unworkable.</p>
+      <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>8 min read</span></div>
+    </div>
   </a>
 
   <a class="post-card" href="/blog/3d-printed-horse-hoof-protection-goodsmith">
-    <div class="post-label">Business Model</div>
-    <div class="post-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
-    <p class="post-excerpt">Goodsmith makes custom horse hoof protection using FDM printing and TPU no nails, no metal. Here's how they found a niche nobody else was serving, and why 3D printing was the only manufacturing method that worked.</p>
-    <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>7 min read</span></div>
+    <div class="post-cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=GOODSMITH+HORSE+HOOF" alt="Goodsmith horse hoof business" loading="lazy"></div>
+    <div class="post-body">
+      <div class="post-label">Business Model</div>
+      <div class="post-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
+      <p class="post-excerpt">Goodsmith makes custom horse hoof protection using FDM printing and TPU. No nails, no metal. Here's how they found a niche nobody else was serving, and why 3D printing was the only manufacturing method that worked.</p>
+      <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>7 min read</span></div>
+    </div>
   </a>
 
   <a class="post-card" href="/blog/3dream-studio-making-money-3d-printing">
-    <div class="post-label">Founder Story</div>
-    <div class="post-title">How Hector Turned a Personal 3D Printing Hobby Into a Real Business</div>
-    <p class="post-excerpt">Hector Ureña started 3Dream Studio in 2021 in Ciudad Obregón, Mexico not with a business plan, but with a personal obsession with 3D printing. Here's how that turned into a studio serving real customers with real problems.</p>
-    <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>6 min read</span></div>
+    <div class="post-cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=3DREAM+STUDIO" alt="3Dream Studio founder story" loading="lazy"></div>
+    <div class="post-body">
+      <div class="post-label">Founder Story</div>
+      <div class="post-title">How Hector Turned a Personal 3D Printing Hobby Into a Real Business</div>
+      <p class="post-excerpt">Hector Ureña started 3Dream Studio in 2021 in Ciudad Obregón, Mexico not with a business plan, but with a personal obsession with 3D printing. Here's how that turned into a studio serving real customers with real problems.</p>
+      <div class="post-meta"><time datetime="2026-04-01">April 2026</time> &nbsp;·&nbsp; <span>6 min read</span></div>
+    </div>
   </a>
 </section>
 

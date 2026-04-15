@@ -136,12 +136,16 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px
 .pick-img .ph-label{display:none}
 .pick-img .ph-ic{font-size:32px;opacity:.5}
 .pick-img .ph-label{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;text-align:center;padding:0 8px;line-height:1.3}
-.p-badge{position:absolute;top:8px;left:8px;color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;z-index:2}
+.p-badge{position:absolute;top:8px;left:8px;color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:3px;z-index:2;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .p-badge.orange{background:var(--o)}
 .p-badge.green{background:#16a34a}
 .p-badge.red{background:#dc2626}
 .p-badge.purple{background:#7c3aed}
-.p-discount{position:absolute;top:8px;right:8px;background:#16a34a;color:#fff;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:3px;z-index:2}
+.p-discount{position:absolute;bottom:8px;right:8px;background:#16a34a;color:#fff;font-size:9px;font-weight:800;letter-spacing:.5px;padding:3px 7px;border-radius:3px;z-index:2;max-width:calc(100% - 16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:380px){
+  .p-badge{font-size:8px;letter-spacing:.5px;padding:3px 6px}
+  .p-discount{font-size:8px;letter-spacing:.3px;padding:3px 6px}
+}
 .pick-body{padding:12px}
 .p-brand{font-size:10px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px}
 .p-name{font-size:14px;font-weight:600;margin-bottom:4px;line-height:1.2}
@@ -209,33 +213,73 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 .rv{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
 .rv.in{opacity:1;transform:none}
 
-/* BLOG */
-.blog-section{padding:48px 20px;border-top:1px solid var(--b);max-width:640px;margin:0 auto}
-.blog-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);margin-bottom:10px;font-family:var(--fb)}
-.blog-headline{font-family:var(--fd);font-size:26px;line-height:1.2;margin-bottom:28px}
-.blog-grid{display:flex;flex-direction:column;gap:16px;margin-bottom:28px}
-.blog-card{display:flex;gap:14px;align-items:flex-start;background:var(--s2);border:1px solid var(--b);border-radius:10px;padding:16px;text-decoration:none;color:inherit;transition:border-color .2s}
-.blog-card:hover{border-color:rgba(255,92,0,.4)}
-.blog-card-icon{font-size:26px;flex-shrink:0;width:44px;height:44px;background:var(--s3);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.blog-card-title{font-size:15px;font-weight:700;margin-bottom:4px;line-height:1.3}
-.blog-card-meta{font-size:12px;color:var(--t3);font-family:var(--fb)}
-.blog-all-btn{display:block;text-align:center;border:1px solid rgba(255,92,0,.4);color:var(--o);text-decoration:none;border-radius:8px;padding:13px;font-size:14px;font-weight:600;font-family:var(--fb);transition:background .2s}
-.blog-all-btn:hover{background:rgba(255,92,0,.08)}
+/* MOBILE OPTIMIZATIONS (iPhone 15 and below) */
+@media (max-width:430px){
+  body{font-size:16px}
+  nav{padding:0 16px;height:48px}
+  .logo{font-size:18px}
+  .quiz-wrap{padding:32px 16px 48px}
+  .sec{padding:36px 16px}
+  .about-section{padding:32px 16px}
+  .blog-section{padding:36px 0 24px}
+  .blog-section-head{padding:0 16px}
+  .blog-grid{padding:4px 16px 16px;scroll-padding-left:16px}
+  .qq,.qres-title{font-size:clamp(28px,8.5vw,42px)}
+  .qres-diag{font-size:15px}
+  .picks-grid{gap:10px;margin-top:20px}
+  .pick-body{padding:10px}
+  .p-name{font-size:13px}
+  .p-desc{font-size:11.5px;margin-bottom:6px}
+  .p-tap{font-size:12px;margin-top:6px}
+  .p-brand{font-size:9px}
+  .qo{padding:12px 14px;gap:12px;min-height:52px}
+  .qo-t{font-size:15px}
+  .qo-ic{font-size:22px;width:28px}
+  .ec-title{font-size:clamp(20px,5.5vw,26px)}
+  .ec-desc{font-size:14px}
+  .email-capture{padding:20px 18px}
+  .res-offer-body{padding:16px}
+  .res-offer-name{font-size:15px}
+  .res-offer-desc{font-size:13px}
+  .about-avatar{width:56px;height:56px}
+  .stitle{font-size:clamp(26px,7.5vw,38px)}
+  .ssub{font-size:14px}
+}
 
-.p-take{font-size:12px;color:var(--t2);border-left:2px solid var(--o);padding-left:8px;margin:8px 0 6px;line-height:1.5;font-style:italic}
+/* BLOG */
+.blog-section{padding:48px 0 32px;border-top:1px solid var(--b);margin:0 auto}
+.blog-section-head{padding:0 20px;max-width:640px;margin:0 auto}
+.blog-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);margin-bottom:10px;font-family:var(--fb)}
+.blog-headline{font-family:var(--fd);font-size:26px;line-height:1.2;margin-bottom:20px}
+.blog-grid{display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scroll-padding-left:20px;padding:4px 20px 16px;margin:0;scrollbar-width:none}
+.blog-grid::-webkit-scrollbar{display:none}
+.blog-card{flex:0 0 78%;max-width:300px;scroll-snap-align:start;display:flex;flex-direction:column;background:var(--s2);border:1px solid var(--b);border-radius:12px;padding:0;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .2s}
+.blog-card:hover{border-color:rgba(255,92,0,.4);text-decoration:none}
+.blog-card-cover{aspect-ratio:16/9;background:var(--s3);overflow:hidden;position:relative}
+.blog-card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.blog-card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;min-height:100px}
+.blog-card-title{font-size:15px;font-weight:700;line-height:1.3;color:var(--t)}
+.blog-card-meta{font-size:11px;color:var(--t3);font-family:var(--fb);letter-spacing:.3px}
+.blog-all-card{flex:0 0 180px;scroll-snap-align:start;display:flex;flex-direction:column;align-items:center;justify-content:center;background:transparent;border:1.5px dashed rgba(255,92,0,.4);border-radius:12px;padding:20px;text-decoration:none;color:var(--o);font-family:var(--fb);text-align:center;transition:background .2s,border-color .2s}
+.blog-all-card:hover{background:rgba(255,92,0,.06);border-color:var(--o);text-decoration:none}
+.blog-all-card-arrow{font-size:28px;font-weight:700;line-height:1;margin-bottom:8px}
+.blog-all-card-text{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
 
 /* QUIZ RESULT OFFER CARDS */
 .res-offer-grid{display:flex;flex-direction:column;gap:12px;margin:20px 0 8px}
-.res-offer-card{display:block;background:var(--s2);border:1px solid rgba(255,92,0,.25);border-radius:var(--r);padding:18px;text-decoration:none;color:inherit;position:relative;transition:border-color .2s}
+.res-offer-card{display:block;background:var(--s2);border:1px solid rgba(255,92,0,.25);border-radius:var(--r);overflow:hidden;text-decoration:none;color:inherit;position:relative;transition:border-color .2s}
 .res-offer-card:hover{border-color:rgba(255,92,0,.5);text-decoration:none}
+.res-offer-img{aspect-ratio:2/1;background:var(--s3);overflow:hidden;position:relative}
+.res-offer-img img{width:100%;height:100%;object-fit:cover;display:block}
+.res-offer-body{padding:18px}
 .res-offer-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1.5px;background:var(--o);color:#fff;border-radius:4px;padding:3px 8px;margin-bottom:12px}
 .res-offer-badge.secondary{background:transparent;border:1px solid rgba(255,92,0,.4);color:var(--o)}
 .res-offer-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
 .res-offer-ic{font-size:28px;flex-shrink:0}
 .res-offer-brand{font-size:11px;color:var(--t3);font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
-.res-offer-name{font-size:15px;font-weight:700;color:var(--t)}
-.res-offer-desc{font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px}
-.res-offer-cta{font-size:13px;font-weight:700;color:var(--o)}
+.res-offer-name{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.res-offer-desc{font-size:14px;color:var(--t2);line-height:1.55;margin-bottom:12px}
+.res-offer-cta{font-size:14px;font-weight:700;color:var(--o)}
 </style>
 </head>
 <body>
@@ -342,10 +386,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <!-- Block A: Instagram DM card -->
     <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0;position:relative">
       <div style="padding:22px 20px 20px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">📲 FOR CREATORS</div>
         <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">@meshminds3d</div>
         <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">DM ME ON INSTAGRAM</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Show me your account and what you print. I do shoutouts for creators I genuinely rate 85K+ followers, real engagement, 3D printing audience.</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Show me your account and what you print. I feature creators I genuinely rate to my 85K+ followers, real engagement, 3D printing audience.</div>
       </div>
       <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
         <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener"
@@ -356,35 +399,32 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
       </div>
     </div>
 
-    <!-- Block B: Email capture -->
+    <!-- Block B: MakerWorld free models -->
+    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_content',href:'https://makerworld.com/de/@Meshminds'})" style="margin:0 0 20px">
+      <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">FREE · VIRAL CONTENT</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">MakerWorld</div>
+            <div class="res-offer-name">Proven Models For Your Feed</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">Print the exact models that racked up 100M+ views on my account. Free on MakerWorld. Built for content that travels.</div>
+        <div class="res-offer-cta">Download free →</div>
+      </div>
+    </a>
+
+    <!-- Block C: Email capture -->
     <div class="email-capture" id="email-content">
-      <div class="ec-icon">📬</div>
-      <div class="ec-title">WANT WEEKLY CONTENT IDEAS?</div>
+      <div class="ec-title">WEEKLY CONTENT IDEAS</div>
       <div class="ec-desc">What to post, what to avoid, and what's working in 3D printing content right now. Free, every week.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" id="email-content-input" placeholder="your@email.com">
         <button class="ec-btn" onclick="submitEmail('content')">Send me the weekly ideas →</button>
       </div>
-      <div class="ec-thanks" id="ec-thanks-content">✓ You're in. First edition coming soon.</div>
+      <div class="ec-thanks" id="ec-thanks-content">You're in. First edition coming soon.</div>
       <div class="ec-consent">No spam. Unsubscribe anytime.</div>
-    </div>
-
-    <!-- Block C: Blog articles -->
-    <div class="blog-grid" style="margin-top:24px;margin-bottom:0">
-      <a class="blog-card" href="/blog/3dream-studio-making-money-3d-printing" onclick="track('blog_click',{button:'content_result_blog_1',href:this.href})">
-        <div class="blog-card-icon">💡</div>
-        <div>
-          <div class="blog-card-title">How Hector Turned a Personal 3D Printing Hobby Into a Real Business</div>
-          <div class="blog-card-meta">6 min read · Founder Story</div>
-        </div>
-      </a>
-      <a class="blog-card" href="/blog/dont-ban-3d-printers-us-regulation" onclick="track('blog_click',{button:'content_result_blog_2',href:this.href})">
-        <div class="blog-card-icon">🚫</div>
-        <div>
-          <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
-          <div class="blog-card-meta">8 min read · Regulation & Industry</div>
-        </div>
-      </a>
     </div>
 
     <button class="q-restart" onclick="restartQuiz()">Retake the quiz</button>
@@ -394,54 +434,34 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <div class="qres" id="res-fun">
     <div class="qres-path">For the love of printing</div>
     <div class="qres-title">YOU'RE IN THE<br>RIGHT HOBBY.</div>
-    <div class="qres-diag">The best part about printing for fun is there are no rules. Follow along for free model drops, creative ideas, and whatever I'm making this week.</div>
+    <div class="qres-diag">The best part about printing for fun is there are no rules. Start with proven models and have something cool off the plate tonight.</div>
 
-    <!-- Block A: Instagram follow card -->
-    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0;position:relative">
-      <div style="padding:22px 20px 20px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">📸 FREE</div>
-        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">@meshminds3d</div>
-        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">FOLLOW FOR WEEKLY INSPIRATION</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Free models, creative prints, behind-the-scenes builds. 85K+ makers already follow along.</div>
+    <!-- Block A: MakerWorld free models -->
+    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_fun',href:'https://makerworld.com/de/@Meshminds'})" style="margin:20px 0">
+      <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">100% FREE</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">MakerWorld</div>
+            <div class="res-offer-name">My Bestseller Models, Free</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">The exact models I sold 11,000+ times on Etsy now free on MakerWorld. Download, print, and customize. Commercial license available.</div>
+        <div class="res-offer-cta">Download free →</div>
       </div>
-      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
-        <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener"
-          onclick="track('button_click',{button:'ig_follow_fun_result',href:'https://instagram.com/meshminds3d'})"
-          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
-          Follow on Instagram →
-        </a>
-      </div>
-    </div>
+    </a>
 
-    <!-- Block B: Email capture -->
+    <!-- Block B: Email capture (newsletter) -->
     <div class="email-capture">
-      <div class="ec-icon">📬</div>
-      <div class="ec-title">WANT THE BEST FREE MODELS EVERY WEEK?</div>
-      <div class="ec-desc">The best free STL finds, creative print ideas, and what I'm making each week. No spam.</div>
+      <div class="ec-title">FREE WEEKLY MODEL DROPS</div>
+      <div class="ec-desc">The best free STL finds, creative print ideas, and what I'm making each week. Straight to your inbox.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" id="email-fun-input" placeholder="your@email.com">
         <button class="ec-btn" onclick="submitEmail('fun')">Send me the weekly drop →</button>
       </div>
-      <div class="ec-thanks" id="ec-thanks-fun">✓ You're in. First drop coming soon.</div>
+      <div class="ec-thanks" id="ec-thanks-fun">You're in. First drop coming soon.</div>
       <div class="ec-consent">No spam. Unsubscribe anytime.</div>
-    </div>
-
-    <!-- Block C: Blog articles -->
-    <div class="blog-grid" style="margin-top:24px;margin-bottom:0">
-      <a class="blog-card" href="/blog/3d-printed-horse-hoof-protection-goodsmith" onclick="track('blog_click',{button:'fun_result_blog_1',href:this.href})">
-        <div class="blog-card-icon">🐴</div>
-        <div>
-          <div class="blog-card-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
-          <div class="blog-card-meta">7 min read · Business Model</div>
-        </div>
-      </a>
-      <a class="blog-card" href="/blog/3dream-studio-making-money-3d-printing" onclick="track('blog_click',{button:'fun_result_blog_2',href:this.href})">
-        <div class="blog-card-icon">💡</div>
-        <div>
-          <div class="blog-card-title">How Hector Turned a Personal 3D Printing Hobby Into a Real Business</div>
-          <div class="blog-card-meta">6 min read · Founder Story</div>
-        </div>
-      </a>
     </div>
 
     <button class="q-restart" onclick="restartQuiz()">Retake the quiz</button>
@@ -456,16 +476,31 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <!-- Block A: Dynamic offer card -->
     <div id="help-offer-card"></div>
 
-    <!-- Block B: Shared email capture -->
+    <!-- Block B: MakerWorld free models -->
+    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help',href:'https://makerworld.com/de/@Meshminds'})" style="margin:0 0 20px">
+      <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">FREE · FIRST PRINTS</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">MakerWorld</div>
+            <div class="res-offer-name">Start With Proven Models</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">My bestselling Etsy designs 11,000+ sold, now free on MakerWorld. Perfect first prints, calibrated for Bambu and most FDM printers.</div>
+        <div class="res-offer-cta">Download free →</div>
+      </div>
+    </a>
+
+    <!-- Block C: Shared email capture -->
     <div class="email-capture">
-      <div class="ec-icon">📬</div>
-      <div class="ec-title">WANT WEEKLY TIPS & FIXES?</div>
+      <div class="ec-title">WEEKLY TIPS &amp; FIXES</div>
       <div class="ec-desc">What's working, what to avoid, and the upgrades that actually matter. Free, every week.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" id="email-help-input" placeholder="your@email.com">
         <button class="ec-btn" onclick="submitEmail('help')">Send me the weekly tips →</button>
       </div>
-      <div class="ec-thanks" id="ec-thanks-help">✓ You're in. First edition coming soon.</div>
+      <div class="ec-thanks" id="ec-thanks-help">You're in. First edition coming soon.</div>
       <div class="ec-consent">No spam. Unsubscribe anytime.</div>
     </div>
 
@@ -495,32 +530,37 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
 <!-- BLOG -->
 <section class="blog-section">
-  <div class="blog-label">FROM THE BLOG</div>
-  <div class="blog-headline">READ THE FULL STORY</div>
+  <div class="blog-section-head">
+    <div class="blog-label">FROM THE BLOG</div>
+    <div class="blog-headline">READ THE FULL STORY</div>
+  </div>
   <div class="blog-grid">
     <a class="blog-card rv" href="/blog/dont-ban-3d-printers-us-regulation" onclick="track('blog_click',{button:'article_1',href:this.href})">
-      <div class="blog-card-icon">🚫</div>
-      <div>
+      <div class="blog-card-cover"><img src="https://placehold.co/600x338/131313/FF5C00?text=US+3D+PRINTER+BAN" alt="US 3D printer ban article cover" loading="lazy"></div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">Regulation &amp; Industry · 8 min</div>
         <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
-        <div class="blog-card-meta">8 min read · Regulation & Industry</div>
       </div>
     </a>
     <a class="blog-card rv" href="/blog/3d-printed-horse-hoof-protection-goodsmith" onclick="track('blog_click',{button:'article_2',href:this.href})">
-      <div class="blog-card-icon">🐴</div>
-      <div>
+      <div class="blog-card-cover"><img src="https://placehold.co/600x338/131313/FF5C00?text=GOODSMITH+HORSE+HOOF" alt="Goodsmith horse hoof article cover" loading="lazy"></div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">Business Model · 7 min</div>
         <div class="blog-card-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
-        <div class="blog-card-meta">7 min read · Business Model</div>
       </div>
     </a>
     <a class="blog-card rv" href="/blog/3dream-studio-making-money-3d-printing" onclick="track('blog_click',{button:'article_3',href:this.href})">
-      <div class="blog-card-icon">💡</div>
-      <div>
+      <div class="blog-card-cover"><img src="https://placehold.co/600x338/131313/FF5C00?text=3DREAM+STUDIO" alt="3Dream Studio founder story cover" loading="lazy"></div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">Founder Story · 6 min</div>
         <div class="blog-card-title">How Hector Turned a Personal 3D Printing Hobby Into a Real Business</div>
-        <div class="blog-card-meta">6 min read · Founder Story</div>
       </div>
     </a>
+    <a class="blog-all-card rv" href="/blog" onclick="track('blog_click',{button:'see_all',href:this.href})">
+      <div class="blog-all-card-arrow">→</div>
+      <div class="blog-all-card-text">See all<br>articles</div>
+    </a>
   </div>
-  <a class="blog-all-btn" href="/blog" onclick="track('blog_click',{button:'see_all',href:this.href})">See all articles →</a>
 </section>
 
 <!-- ABOUT -->
@@ -530,6 +570,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <div>
       <div class="about-name">Daniel, 23 · Berlin</div>
       <div class="about-bio">I grew @meshminds3d to 93K on Instagram and 55K on TikTok with one Bambu A1 printer. Over 100 million views. I share everything I learn about making money with 3D printing.</div>
+      <div class="about-bio" style="margin-top:10px"><strong style="color:var(--t)">Built something cool?</strong> DM me <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--o)" onclick="track('button_click',{button:'about_dm_feature'})">@meshminds3d</a> and I'll feature your 3D printing project to my audience.</div>
       <div class="about-stats">
         <div><div class="as-num">93K</div><div class="as-label">Instagram</div></div>
         <div><div class="as-num">55K</div><div class="as-label">TikTok</div></div>
@@ -577,24 +618,33 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 // ── AFFILIATE PRODUCTS ──
 const ALL_PICKS = [
   {
+    id:'makerworld',
+    img:'https://placehold.co/600x450/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS',
+    brand:'MakerWorld', name:'My Free Bestseller Models',
+    desc:'The exact models I sold 11,000+ times on Etsy, now free to download with a commercial license. Start printing proven bestsellers today.',
+    ic:'🎁', badge:'FREE · COMMERCIAL', badgeClass:'green',
+    discount:'100% FREE',
+    url:'https://makerworld.com/de/@Meshminds',
+    tap:'Download free →'
+  },
+  {
     id:'meshy',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg',
-    take:"I use this to skip the design phase entirely generate, print, sell.",
     brand:'Meshy', name:'AI 3D Model Generator',
     desc:'Type a prompt, get a print-ready 3D model. Skip the design phase entirely and go straight to printing and selling. No CAD skills needed.',
     ic:'🤖', badge:'AI TOOL', badgeClass:'purple',
-    discount:'FREE TRIAL',
+    discount:'20% OFF',
+    discountCode:'MESH20',
     url:'https://www.meshy.ai?via=meshminds',
     tap:'Try free →'
   },
   {
     id:'cubee3d',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
-    take:"If you sell printed products, this is the only legal way to do it properly.",
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Sell 3D printed products from 1,000+ professional designs legally. One license, unlimited prints. No IP risk.',
     ic:'📜', badge:'COMMERCIAL USE', badgeClass:'orange',
-    discount:'EXCLUSIVE ACCESS',
+    discount:'25% OFF',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
     tap:'Get licensed →'
@@ -602,69 +652,39 @@ const ALL_PICKS = [
   {
     id:'cryogrip',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg',
-    take:"First thing I put on every printer I own. Saves glue, saves time, saves prints.",
     brand:'Panda Touch', name:'CryoGrip BuildPlate',
     desc:'Grips hot, releases cold. No glue, no hairspray. Saves hours per week the first upgrade to make on any Bambu printer.',
     ic:'🔧', badge:'UPGRADE #1', badgeClass:'orange',
-    discount:'EXCLUSIVE 10% OFF',
+    discount:'10% OFF',
+    discountCode:'MESH10',
     url:'https://biqu.equipment/?ref=meshminds',
     tap:'Get the discount →'
   },
   {
     id:'farmloop',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2810%29.jpg',
-    take:"This is what lets me print while I sleep. Batch printing without babysitting.",
     brand:'3D Farmers', name:'FarmLoop System',
     desc:'Prints, auto-ejects, starts the next job. Run your printer all day without babysitting it. The system behind unattended batch printing.',
     ic:'🏭', badge:'AUTO PRINT', badgeClass:'orange',
+    discount:'15% OFF',
+    discountCode:'MESHFARM',
     url:'https://3d-farmers.com/#farmloop-section',
     tap:'See FarmLoop →'
   },
   {
     id:'timeplast',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2811%29.jpg',
-    take:"Niche, weird, and it commands premium pricing. Customers love the eco angle.",
     brand:'Timeplast', name:'Soap Filament',
     desc:'Prints like PLA, dissolves like soap. Eco story = premium price without argument. A hidden gem for gift and novelty markets.',
     ic:'🧵', badge:'HIDDEN GEM', badgeClass:'orange',
+    discount:'10% OFF',
+    discountCode:'MESHECO',
     url:'https://timeplast.com/?ref=meshminds',
     tap:'Shop Timeplast →'
   },
   {
-    id:'sunlu-dryer',
-    img:'https://www.sunlu.com/public/upload/file/20260326/8da58ca6-f877-4b1d-afd9-9e0414b0161a.png',
-    take:"Non-negotiable once you scale. Wet filament kills prints and margins.",
-    brand:'Sunlu', name:'Filament Dryer S4',
-    desc:'Wet filament = failed prints. Dries 4 spools simultaneously while printing. Non-negotiable once you print at volume.',
-    ic:'⚡', badge:'MUST HAVE', badgeClass:'orange',
-    discount:'EXCLUSIVE DEAL',
-    url:'https://amzn.to/meshminds-dryer',
-    tap:'Shop now →'
-  },
-  {
-    id:'knomi',
-    img:'',
-    take:"Makes the printer look good on camera. Doubles as a content prop.",
-    brand:'Bambu Lab', name:'Knomi Smart Display',
-    desc:'Live temps and custom GIFs on your print head. Makes behind-the-scenes content look incredible. Content win + printer upgrade.',
-    ic:'📱', badge:'CONTENT WIN', badgeClass:'orange',
-    url:'https://biqu.equipment/?ref=meshminds',
-    tap:'Shop now →'
-  },
-  {
-    id:'esun-pla',
-    img:'https://cdnus.globalso.com/esun3d/PLA-Matte-TANGERINE.jpg',
-    take:"My go-to everyday filament. Matte finish makes everything look more premium.",
-    brand:'eSUN', name:'ePLA-Matte Filament',
-    desc:'Matte finish, vivid colors, zero clogs. Makes every print look more premium lets you charge more for the same model.',
-    ic:'🧴', badge:'DAILY DRIVER', badgeClass:'orange',
-    url:'https://esun.com/?ref=meshminds',
-    tap:'Shop eSUN →'
-  },
-  {
     id:'bambu-a1',
     img:'https://store.bblcdn.com/s7/default/866e470a983f4d989f81a495a5f5c71c/A1-compressed.jpg',
-    take:"The exact printer I run. If I had to start over today, same choice.",
     brand:'Bambu Lab', name:'A1 + AMS Combo',
     desc:'The printer I run. Multi-color from day one, 256mm/s, zero calibration. The best beginner-to-pro machine on the market.',
     ic:'🖨️', badge:'BEST PICK', badgeClass:'orange',
@@ -674,10 +694,11 @@ const ALL_PICKS = [
   {
     id:'infinity',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2812%29.jpg',
-    take:"Only relevant once you hit 3+ printers, but at that point it pays for itself fast.",
     brand:'InfinityFlow3D', name:'Print Farm Management',
     desc:'Multi-printer queue management, failure detection, and analytics. Once you hit 3+ printers, this pays for itself in saved filament.',
     ic:'📊', badge:'SCALE UP', badgeClass:'orange',
+    discount:'20% OFF',
+    discountCode:'MESHFLOW',
     url:'https://infinityflow3d.com/?ref=meshminds',
     tap:'See InfinityFlow →'
   },
@@ -706,7 +727,6 @@ function buildPickHTML(p){
     + excl
     + '<div class="p-name">' + p.name + '</div>'
     + '<div class="p-desc">' + p.desc + '</div>'
-    + (p.take ? '<div class="p-take">&#8220;' + p.take + '&#8221;</div>' : '')
     + '<div class="p-tap">' + p.tap + '</div>'
     + '</div></a>';
 }
@@ -946,61 +966,58 @@ function showHelpResult(){
   const ht = answers['help_type']||'buying';
 
   const bambuCard = `
-    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
-      <div style="padding:22px 20px 20px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🖨️ MY #1 PICK</div>
-        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Bambu Lab</div>
-        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">A1 + AMS COMBO</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Multi-color from day one, 256mm/s, zero calibration. The best beginner-to-pro machine on the market.</div>
+    <a class="res-offer-card" href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'bambu_a1_help_${ht}',href:'https://biqu.equipment/?ref=meshminds'})" style="margin:20px 0">
+      <div class="res-offer-img"><img src="https://store.bblcdn.com/s7/default/866e470a983f4d989f81a495a5f5c71c/A1-compressed.jpg" alt="Bambu Lab A1 + AMS" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">MY #1 PICK</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">Bambu Lab</div>
+            <div class="res-offer-name">A1 + AMS Combo</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">Multi-color from day one, 256mm/s, zero calibration. The best beginner-to-pro machine on the market.</div>
+        <div class="res-offer-cta">Shop Bambu Lab A1 →</div>
       </div>
-      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
-        <a href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener"
-          onclick="track('offer_click',{button:'bambu_a1_help_${ht}',href:'https://biqu.equipment/?ref=meshminds'})"
-          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
-          Shop Bambu Lab A1 →
-        </a>
-      </div>
-    </div>`;
+    </a>`;
 
   const cryoGripCard = `
-    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
-      <div style="padding:22px 20px 20px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🔧 UPGRADE #1</div>
-        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Panda Touch</div>
-        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">CRYOGRIP BUILDPLATE</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Grips hot, releases cold. No glue, no hairspray. First upgrade I put on every printer I own.</div>
-      </div>
-      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
-        <a href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener"
-          onclick="track('offer_click',{button:'cryogrip_help_quality',href:'https://biqu.equipment/?ref=meshminds'})"
-          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
-          Get the discount →
-        </a>
+    <div class="res-offer-card" onclick="openDiscountPopup('MESH10','https://biqu.equipment/?ref=meshminds','cryogrip_help_quality')" style="cursor:pointer;margin:20px 0">
+      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg" alt="CryoGrip BuildPlate" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">10% OFF · CODE MESH10</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">Panda Touch</div>
+            <div class="res-offer-name">CryoGrip BuildPlate</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">Grips hot, releases cold. No glue, no hairspray. First upgrade I put on every printer I own.</div>
+        <div class="res-offer-cta">Get the discount → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
       </div>
     </div>`;
 
-  const esunCard = `
-    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
-      <div style="padding:22px 20px 20px">
-        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🧴 DAILY DRIVER</div>
-        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">eSUN</div>
-        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">ePLA-MATTE FILAMENT</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Matte finish, vivid colors, zero clogs. Makes every print look more premium my go-to for everything.</div>
+  const makerworldCard = `
+    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help_materials',href:'https://makerworld.com/de/@Meshminds'})" style="margin:20px 0">
+      <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">FREE · PROVEN MODELS</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">MakerWorld</div>
+            <div class="res-offer-name">Test Your Materials With Bestsellers</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">Free bestselling models to benchmark every filament you try. Same file, same print, any material fastest way to see which one wins.</div>
+        <div class="res-offer-cta">Download free →</div>
       </div>
-      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
-        <a href="https://esun.com/?ref=meshminds" target="_blank" rel="noopener"
-          onclick="track('offer_click',{button:'esun_help_materials',href:'https://esun.com/?ref=meshminds'})"
-          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
-          Shop eSUN →
-        </a>
-      </div>
-    </div>`;
+    </a>`;
 
   const copy = {
     buying:    { path:'Buying Guide',      title:'THE BEST PRINTER<br>TO START WITH.',  diag:'I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I\'d buy again tomorrow.', card: bambuCard },
     quality:   { path:'Print Quality Fix', title:'BETTER PRINTS<br>START HERE.',        diag:'Most quality issues come down to one thing: bed adhesion. Fix that first and 80% of problems disappear.', card: cryoGripCard },
-    materials: { path:'Materials Guide',   title:'RIGHT FILAMENT.<br>RIGHT JOB.',       diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. Start with a good matte PLA and you\'re 90% covered.', card: esunCard },
-    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything no manual tuning, ever.', card: bambuCard },
+    materials: { path:'Materials Guide',   title:'RIGHT FILAMENT.<br>RIGHT JOB.',       diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. Start with a good matte PLA and you\'re 90% covered.', card: makerworldCard },
+    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything, no manual tuning, ever.', card: bambuCard },
   };
   const c = copy[ht]||copy.buying;
   document.querySelector('#res-help .qres-path').textContent = c.path;
@@ -1038,10 +1055,10 @@ function showCommercialResult(){
     passive:'BUILD PASSIVE<br>INCOME.',
   };
   const diags = {
-    niche:  'The fastest way to find a winning niche is to print what already sells legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
-    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck Meshy lets you generate custom files in minutes so you can list new products faster.',
+    niche:  'The fastest way to find a winning niche is to print what already sells, legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
+    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck. Meshy lets you generate custom files in minutes so you can list new products faster.',
     setup:  'Getting set up right means having the right files before your first sale. Cubee gives you a commercial license and 1,000+ ready-to-print designs, so you can go from printer to profit without legal risk.',
-    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly pick your niches and start building your catalogue.',
+    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly, pick your niches and start building your catalogue.',
   };
 
   // Primary + secondary offer adapt to problem
@@ -1051,42 +1068,61 @@ function showCommercialResult(){
 
   const cubeeCard = `
     <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer">
-      <div class="res-offer-badge">RECOMMENDED</div>
-      <div class="res-offer-top">
-        <span class="res-offer-ic">📜</span>
-        <div>
-          <div class="res-offer-brand">Cubee3D</div>
-          <div class="res-offer-name">Commercial STL License</div>
+      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D Commercial STL License" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">25% OFF · CODE MESHMINDS</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">Cubee3D</div>
+            <div class="res-offer-name">Commercial STL License</div>
+          </div>
         </div>
+        <div class="res-offer-desc">1,000+ professional designs you can legally sell. Browse proven niches, pick what fits your market, start printing.</div>
+        <div class="res-offer-cta">Get licensed → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
       </div>
-      <div class="res-offer-desc">1,000+ professional designs you can legally sell. Browse proven niches, pick what fits your market, start printing. Use code <strong style="color:var(--o)">MESHMINDS</strong> for exclusive access.</div>
-      <div class="res-offer-cta">Get licensed → <span style="font-size:12px;opacity:.6">(tap to reveal code)</span></div>
     </div>`;
 
   const meshyCard = `
     <a class="res-offer-card" href="https://www.meshy.ai?via=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'meshy_quiz',href:'https://www.meshy.ai?via=meshminds'})">
-      <div class="res-offer-badge secondary">FREE TO START</div>
-      <div class="res-offer-top">
-        <span class="res-offer-ic">🤖</span>
-        <div>
-          <div class="res-offer-brand">Meshy AI</div>
-          <div class="res-offer-name">AI 3D Model Generator</div>
+      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg" alt="Meshy AI 3D Model Generator" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge secondary">FREE TO START</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">Meshy AI</div>
+            <div class="res-offer-name">AI 3D Model Generator</div>
+          </div>
         </div>
+        <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright.</div>
+        <div class="res-offer-cta">Try free →</div>
       </div>
-      <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright no licensing required.</div>
-      <div class="res-offer-cta">Try free →</div>
+    </a>`;
+
+  const makerworldCard = `
+    <a class="res-offer-card" href="https://makerworld.com/de/@Meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_commercial',href:'https://makerworld.com/de/@Meshminds'})">
+      <div class="res-offer-img"><img src="https://placehold.co/600x300/131313/FF5C00?text=MESHMINDS%0AFREE+MODELS" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
+      <div class="res-offer-body">
+        <div class="res-offer-badge">100% FREE · PROVEN BESTSELLERS</div>
+        <div class="res-offer-top">
+          <div>
+            <div class="res-offer-brand">MakerWorld</div>
+            <div class="res-offer-name">My Bestseller Models, Free</div>
+          </div>
+        </div>
+        <div class="res-offer-desc">Every model I sold 11,000+ times on Etsy, now free to download. Start selling proven products today. Commercial license available on MakerWorld.</div>
+        <div class="res-offer-cta">Download free →</div>
+      </div>
     </a>`;
 
   const emailCapture = `
     <div class="email-capture" style="margin-top:8px">
-      <div class="ec-icon">📬</div>
-      <div class="ec-title">NOT READY TO BUY YET?</div>
-      <div class="ec-desc">Get 10 profitable product ideas every week free. Real niches, real margin data, straight to your inbox.</div>
+      <div class="ec-title">FREE WEEKLY IDEAS FOR YOUR PRINT BUSINESS</div>
+      <div class="ec-desc">10 profitable product ideas every week. Real niches, real margin data, straight to your inbox.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial">
         <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>
       </div>
-      <div class="ec-thanks" id="ec-thanks-commercial">✓ You're in. First edition coming soon.</div>
+      <div class="ec-thanks" id="ec-thanks-commercial">You're in. First edition coming soon.</div>
       <div class="ec-consent">No spam. Unsubscribe anytime.</div>
     </div>`;
 
@@ -1096,6 +1132,7 @@ function showCommercialResult(){
   document.getElementById('dyn-offer-block').innerHTML =
     '<div class="res-offer-grid">' +
     (cubeeFirst ? cubeeCard + meshyCard : meshyCard + cubeeCard) +
+    makerworldCard +
     '</div>' + emailCapture;
 
   document.getElementById('res-commercial').classList.add('active');
@@ -1257,36 +1294,4 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>
 </body>
-</html>
-
-<!-- MODALS -->
-<div class="modal-overlay" id="modal-impressum" onclick="if(event.target===this)closeModal('impressum')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('impressum')">✕</button>
-    <h2>IMPRESSUM</h2>
-    <p>Daniel [Nachname] · [Adresse] · Berlin · Deutschland</p>
-    <h3>Kontakt</h3><p>Instagram: @meshminds3d</p>
-    <h3>Affiliate-Hinweis</h3><p>Diese Seite enthält Affiliate-Links. Als Amazon-Partner verdiene ich an qualifizierten Verkäufen.</p>
-  </div>
-</div>
-<div class="modal-overlay" id="modal-datenschutz" onclick="if(event.target===this)closeModal('datenschutz')">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('datenschutz')">✕</button>
-    <h2>DATENSCHUTZERKLÄRUNG</h2>
-    <p>Diese Website erfasst anonyme Nutzungsdaten (Klicks, Quiz-Antworten) zur Verbesserung des Angebots. Es werden keine personenbezogenen Daten ohne Einwilligung gespeichert. Affiliate-Links zu Amazon, BIQU, Gumroad und anderen Anbietern können eigene Cookies setzen.</p>
-    <h3>Ihre Rechte</h3><p>Auskunft, Berichtigung, Löschung jederzeit per DM an @meshminds3d.</p>
-  </div>
-</div>
-
-<div class="cookie-banner" id="cookie-banner">
-  <div class="cookie-banner-text">🍪 This site tracks anonymous quiz interactions to improve recommendations. Affiliate links may set their own cookies.</div>
-  <div class="cookie-banner-btns">
-    <button class="cookie-accept" onclick="acceptCookies()">Got it</button>
-    <button class="cookie-reject" onclick="rejectCookies()">Essential only</button>
-  </div>
-</div>
-
-
-
-<!-- DISCOUNT CODE POPUP -->
 </html>

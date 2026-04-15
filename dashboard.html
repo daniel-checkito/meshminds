@@ -137,7 +137,7 @@ function processEvents(events){
   const ago15 = now - 15*86400000;
 
   const uids = new Set(), emails = new Set();
-  let visits=0, quizDone=0, emailCaptures=0, offerClicks=0, toolkitClicks=0;
+  let visits=0, quizDone=0, emailCaptures=0, offerClicks=0;
   const clicksByDay={}, sources={}, countries={};
   let clicks30=0, clicksPrev15=0, clicksRecent15=0;
 
@@ -152,7 +152,6 @@ function processEvents(events){
     if(a==='quiz_complete')  quizDone++;
     if(a==='email_capture'||e.email)   emailCaptures++;
     if(a==='offer_click')    offerClicks++;
-    if(a==='toolkit_click')  toolkitClicks++;
 
     // Any click action (offer, button, link)
     const isClick = a==='offer_click' || a==='button_click' || e.button || e.link;
@@ -184,7 +183,7 @@ function processEvents(events){
     total: events.length,
     uniqueVisitors: uids.size,
     visits, quizDone,
-    uniqueEmails, offerClicks, toolkitClicks,
+    uniqueEmails, offerClicks,
     clicksByDay, clicks30, clicksPrev15, clicksRecent15,
     sources, countries,
   };
@@ -196,7 +195,6 @@ function buildRecs(s){
   const emailRate   = s.uniqueEmails / base;
   const offerRate   = s.offerClicks  / base;
   const quizRate    = s.quizDone     / base;
-  const toolkitRate = s.toolkitClicks / Math.max(s.uniqueEmails, 1);
   const trend       = s.clicksRecent15 - s.clicksPrev15;
   const recs = [];
 
@@ -240,14 +238,6 @@ function buildRecs(s){
       body:`${(emailRate*100).toFixed(0)}% of visitors give their email. Make sure the n8n welcome sequence fires within 5 minutes of signup.`,
       action:'Check n8n',
       steps:`Verify the <span class="rec-code">/webhook/email-capture</span> trigger in n8n has an active email node. Check for errors in the execution log.`
-    });
-
-  if(toolkitRate > 0.35 && s.uniqueEmails > 10)
-    recs.push({type:'blue', icon:'🛠️',
-      title:'Toolkit is popular surface it earlier',
-      body:`${(toolkitRate*100).toFixed(0)}% of email submitters open the toolkit. Mentioning it before the gate would increase email signups.`,
-      action:'What to change',
-      steps:`Add "Free toolkit inside →" to the result title in <span class="rec-code">showCommercialResult()</span>, just above the email gate div.`
     });
 
   if(trend < -3 && s.clicks30 > 10)
@@ -380,7 +370,6 @@ function render(events){
     {label:'Quiz completed',  val:s.quizDone},
     {label:'Email captured',  val:s.uniqueEmails},
     {label:'Offer clicked',   val:s.offerClicks},
-    {label:'Toolkit opened',  val:s.toolkitClicks},
   ];
   const fMax = steps[0].val || 1;
   html += `<div class="section-title">FUNNEL</div><div class="funnel">`;

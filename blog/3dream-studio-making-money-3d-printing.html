@@ -15,12 +15,14 @@
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://meshminds.vercel.app/blog/3dream-studio-making-money-3d-printing">
 <meta property="og:site_name" content="Meshminds">
+<meta property="og:image" content="https://placehold.co/1200x630/131313/FF5C00?text=3DREAM+STUDIO">
 <meta property="article:published_time" content="2026-04-01T00:00:00Z">
 <meta property="article:author" content="Daniel">
 <meta property="article:section" content="Founder Story">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="How Hector Turned a Personal 3D Printing Hobby Into a Real Business">
 <meta name="twitter:description" content="Hector started 3Dream Studio not with a business plan, but with a personal obsession. Here's how that turned into a real studio serving real customers.">
+<meta name="twitter:image" content="https://placehold.co/1200x630/131313/FF5C00?text=3DREAM+STUDIO">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
@@ -37,12 +39,14 @@
   a{color:var(--o);text-decoration:none}
   a:hover{text-decoration:underline}
 
-  nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--b);position:sticky;top:0;background:rgba(11,11,11,0.95);backdrop-filter:blur(8px);z-index:100}
-  .logo{font-family:var(--fd);font-size:22px;letter-spacing:1px;color:var(--t);text-decoration:none}
-  .logo span{color:var(--o)}
-  .nav-ig{font-size:13px;color:var(--t3);font-weight:500}
+  .back-bar{padding:14px 20px;border-bottom:1px solid var(--b);position:sticky;top:0;background:rgba(11,11,11,0.95);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:center;justify-content:space-between}
+  .back-bar a{font-size:14px;color:var(--t2);font-family:var(--fb);font-weight:500}
+  .back-bar a:hover{color:var(--o);text-decoration:none}
 
-  .hero{padding:48px 20px 32px;max-width:720px;margin:0 auto;border-bottom:1px solid var(--b)}
+  .cover{width:100%;max-width:960px;margin:0 auto;aspect-ratio:16/9;background:var(--s3);overflow:hidden}
+  .cover img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .hero{padding:40px 20px 28px;max-width:720px;margin:0 auto;border-bottom:1px solid var(--b)}
   .article-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--o);margin-bottom:12px;font-family:var(--fb);text-transform:uppercase}
   .article-label a{color:var(--o)}
   h1{font-family:var(--fd);font-size:clamp(34px,6vw,54px);line-height:1.1;margin-bottom:16px;letter-spacing:0.5px}
@@ -71,15 +75,32 @@
 
   .related{background:var(--s1);border-top:1px solid var(--b);padding:40px 20px}
   .related-inner{max-width:720px;margin:0 auto}
-  .related h2{font-family:var(--fd);font-size:24px;margin-bottom:20px}
-  .related-grid{display:flex;flex-direction:column;gap:12px}
-  .related-card{background:var(--s2);border:1px solid var(--b);border-radius:var(--r);padding:16px;text-decoration:none;color:inherit;display:block}
-  .related-card:hover{border-color:rgba(255,92,0,0.3);text-decoration:none}
-  .related-card-label{font-size:11px;color:var(--o);font-weight:700;letter-spacing:1px;margin-bottom:6px}
+  .related h2{font-family:var(--fd);font-size:24px;margin-bottom:20px;letter-spacing:0.5px}
+  .related-grid{display:flex;flex-direction:column;gap:14px}
+  .related-card{background:var(--s2);border:1px solid var(--b);border-radius:14px;overflow:hidden;text-decoration:none;color:inherit;display:block;transition:border-color .15s ease,transform .15s ease}
+  .related-card:hover{border-color:rgba(255,92,0,0.35);text-decoration:none;transform:translateY(-2px)}
+  .related-card-cover{aspect-ratio:16/9;background:var(--s3);overflow:hidden}
+  .related-card-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .related-card-body{padding:14px 16px 16px}
+  .related-card-label{font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;margin-bottom:6px;text-transform:uppercase}
   .related-card-title{font-size:15px;font-weight:700;line-height:1.3}
 
   footer{padding:24px 20px;border-top:1px solid var(--b);text-align:center;font-size:13px;color:var(--t3)}
   footer a{color:var(--t3)}
+
+  @media (max-width:430px){
+    body{font-size:16px;line-height:1.7}
+    .hero{padding:28px 16px 20px}
+    h1{font-size:clamp(28px,8vw,40px)}
+    .lead{font-size:16px;padding-left:14px}
+    .article-body{padding:28px 16px 56px}
+    .article-body h2{font-size:24px;margin:36px 0 14px}
+    .article-body h3{font-size:17px;margin:24px 0 10px}
+    .callout{padding:16px;margin:24px 0}
+    .quote{padding:18px 18px 18px 20px;margin:28px 0}
+    .quote p{font-size:16px}
+    .related{padding:32px 16px}
+  }
 </style>
 <script type="application/ld+json">
 {
@@ -111,10 +132,12 @@
 </head>
 <body>
 
-<nav>
-  <a class="logo" href="/"><span>MESH</span>MINDS</a>
-  <a class="nav-ig" href="https://instagram.com/meshminds3d" target="_blank">@meshminds3d</a>
-</nav>
+<div class="back-bar">
+  <a href="/blog">← All articles</a>
+  <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>
+</div>
+
+<div class="cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=3DREAM+STUDIO" alt="3Dream Studio founder story" loading="lazy"></div>
 
 <article>
   <div class="hero">
@@ -208,12 +231,18 @@
     <h2>MORE FROM THE BLOG</h2>
     <div class="related-grid">
       <a class="related-card" href="/blog/dont-ban-3d-printers-us-regulation">
-        <div class="related-card-label">Regulation & Industry</div>
-        <div class="related-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
+        <div class="related-card-cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=US+3D+PRINTER+BAN" alt="US 3D printer ban" loading="lazy"></div>
+        <div class="related-card-body">
+          <div class="related-card-label">Regulation & Industry</div>
+          <div class="related-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
+        </div>
       </a>
       <a class="related-card" href="/blog/3d-printed-horse-hoof-protection-goodsmith">
-        <div class="related-card-label">Business Model</div>
-        <div class="related-card-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
+        <div class="related-card-cover"><img src="https://placehold.co/1200x675/131313/FF5C00?text=GOODSMITH+HORSE+HOOF" alt="Goodsmith horse hoof business" loading="lazy"></div>
+        <div class="related-card-body">
+          <div class="related-card-label">Business Model</div>
+          <div class="related-card-title">The Horse Hoof Startup Using FDM 3D Printing to Build a Real Business</div>
+        </div>
       </a>
     </div>
   </div>

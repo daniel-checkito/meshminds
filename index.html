@@ -390,6 +390,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
   <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
   <button class="show-more-btn" id="show-more-btn" style="max-width:600px;margin:0 auto;display:none" onclick="showMorePicks()">See all products ↓</button>
+  <p style="max-width:600px;margin:18px auto 0;font-size:11px;color:var(--t3);text-align:center;letter-spacing:.3px;line-height:1.55">
+    Some links above are affiliate links. If you buy through them I may earn a small commission at no extra cost to you. I only recommend gear I actually use.
+  </p>
 </section>
 
 <hr class="sdiv">
@@ -1132,6 +1135,7 @@ function showCommercialResult(){
 }
 
 function restartQuiz(){
+  track('button_click',{button:'quiz_restart'});
   answers={};path=null;qIndex=0;activeFlow={};history.length=0;
   document.querySelectorAll('.qres').forEach(e=>{e.classList.remove('active');e.style.display='';});
   document.getElementById('res-newsletter').style.display='none';
@@ -1255,7 +1259,7 @@ function submitEmail(type){
 
 // ── MODALS ──
 function openModal(id){ track('button_click',{button:'open_'+id}); document.getElementById('modal-'+id).classList.add('open'); document.body.style.overflow='hidden'; }
-function closeModal(id){ document.getElementById('modal-'+id).classList.remove('open'); document.body.style.overflow=''; }
+function closeModal(id){ track('button_click',{button:'close_'+id}); document.getElementById('modal-'+id).classList.remove('open'); document.body.style.overflow=''; }
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id.replace('modal-',''));});});
 
 // ── COOKIES ──

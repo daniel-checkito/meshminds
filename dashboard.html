@@ -400,6 +400,38 @@ function render(events){
   });
   html += `</div>`;
 
+  // Quiz paths - which path do visitors complete?
+  const pathMap = {
+    quiz_commercial: 'Commercial / sell prints',
+    quiz_content:    'Content creator',
+    quiz_fun:        'Fun / personal use',
+    quiz_help:       'Help / getting started',
+  };
+  const pathEntries = Object.entries(pathMap)
+    .map(([key, label])=>[label, s.buttonCounts[key]||0])
+    .filter(([,v])=>v>0)
+    .sort((a,b)=>b[1]-a[1]);
+  if(pathEntries.length){
+    const pathTotal = pathEntries.reduce((a,[,v])=>a+v, 0);
+    html += `<div class="section-title">QUIZ PATHS COMPLETED</div><div class="funnel">`;
+    pathEntries.forEach(([label, cnt])=>{
+      const pct = Math.round(cnt/pathTotal*100);
+      html += `<div class="funnel-row">
+        <div class="funnel-label" style="font-size:11px">${label}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-fill" style="width:${pct}%;background:rgba(124,58,237,0.45)">
+            <span>${cnt}</span>
+          </div>
+        </div>
+        <div class="funnel-pct">${pct}%</div>
+      </div>`;
+    });
+    html += `</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
+        ${pathTotal} total completions. % of visitors who finished each path.
+      </div>`;
+  }
+
   // Top offers & buttons (clicks + click rate, sorted by clicks)
   const btnEntries = Object.entries(s.buttonCounts).sort((a,b)=>b[1]-a[1]);
   if(btnEntries.length){

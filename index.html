@@ -16,11 +16,25 @@ body { background: #0a0a0a; margin: 0; display: flex; align-items: center; justi
 <script>
 (function(){
   const N8N = 'https://meshminds.app.n8n.cloud/webhook/ab-track';
+
+  // Assign user ID
   let uid = localStorage.getItem('mm_uid');
   if(!uid){ uid = 'u_' + Math.random().toString(36).slice(2,10); localStorage.setItem('mm_uid', uid); }
-  fetch(N8N, { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({event:'page_view', variant:'a', uid, ref: document.referrer||'direct', ts: new Date().toISOString()})
+
+  // Track page view
+  fetch(N8N, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      event: 'page_view',
+      variant: 'a',
+      uid,
+      ref: document.referrer || 'direct',
+      ts: new Date().toISOString()
+    })
   }).catch(()=>{});
+
+  // Single variant - go straight to variant-a
   window.location.replace('variant-a.html?v=a&uid=' + uid);
 })();
 </script>

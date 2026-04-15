@@ -345,7 +345,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
         <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">📲 FOR CREATORS</div>
         <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">@meshminds3d</div>
         <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">DM ME ON INSTAGRAM</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Show me your account and what you print. I do shoutouts for creators I genuinely rate — 85K+ followers, real engagement, 3D printing audience.</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Show me your account and what you print. I do shoutouts for creators I genuinely rate 85K+ followers, real engagement, 3D printing audience.</div>
       </div>
       <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
         <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener"
@@ -381,7 +381,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
       <a class="blog-card" href="/blog/dont-ban-3d-printers-us-regulation" onclick="track('blog_click',{button:'content_result_blog_2',href:this.href})">
         <div class="blog-card-icon">🚫</div>
         <div>
-          <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers — And Why It Won't Work</div>
+          <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
           <div class="blog-card-meta">8 min read · Regulation & Industry</div>
         </div>
       </a>
@@ -501,7 +501,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a class="blog-card rv" href="/blog/dont-ban-3d-printers-us-regulation" onclick="track('blog_click',{button:'article_1',href:this.href})">
       <div class="blog-card-icon">🚫</div>
       <div>
-        <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers — And Why It Won't Work</div>
+        <div class="blog-card-title">Why the US Is Trying to Ban 3D Printers And Why It Won't Work</div>
         <div class="blog-card-meta">8 min read · Regulation & Industry</div>
       </div>
     </a>
@@ -579,7 +579,7 @@ const ALL_PICKS = [
   {
     id:'meshy',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg',
-    take:"I use this to skip the design phase entirely — generate, print, sell.",
+    take:"I use this to skip the design phase entirely generate, print, sell.",
     brand:'Meshy', name:'AI 3D Model Generator',
     desc:'Type a prompt, get a print-ready 3D model. Skip the design phase entirely and go straight to printing and selling. No CAD skills needed.',
     ic:'🤖', badge:'AI TOOL', badgeClass:'purple',
@@ -601,7 +601,7 @@ const ALL_PICKS = [
   },
   {
     id:'cryogrip',
-    img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%289%29.jpg',
+    img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg',
     take:"First thing I put on every printer I own. Saves glue, saves time, saves prints.",
     brand:'Panda Touch', name:'CryoGrip BuildPlate',
     desc:'Grips hot, releases cold. No glue, no hairspray. Saves hours per week the first upgrade to make on any Bambu printer.',
@@ -739,13 +739,13 @@ function showMorePicks(){
   track('button_click', {button:'show_more_picks'});
   const grid = document.getElementById('picks-grid');
   const btn  = document.getElementById('show-more-btn');
-  // Append only the hidden picks — no re-render of existing ones
+  // Append only the hidden picks no re-render of existing ones
   const extra = ALL_PICKS.slice(DEFAULT_VISIBLE);
   extra.forEach(p => {
     const div = document.createElement('div');
     div.innerHTML = buildPickHTML(p);
     const el = div.firstElementChild;
-    // Skip reveal animation — show immediately
+    // Skip reveal animation show immediately
     el.classList.remove('rv');
     el.style.opacity = '1';
     el.style.transform = 'none';
@@ -985,7 +985,7 @@ function showHelpResult(){
         <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🧴 DAILY DRIVER</div>
         <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">eSUN</div>
         <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">ePLA-MATTE FILAMENT</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55">Matte finish, vivid colors, zero clogs. Makes every print look more premium — my go-to for everything.</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Matte finish, vivid colors, zero clogs. Makes every print look more premium my go-to for everything.</div>
       </div>
       <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
         <a href="https://esun.com/?ref=meshminds" target="_blank" rel="noopener"
@@ -1000,7 +1000,7 @@ function showHelpResult(){
     buying:    { path:'Buying Guide',      title:'THE BEST PRINTER<br>TO START WITH.',  diag:'I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I\'d buy again tomorrow.', card: bambuCard },
     quality:   { path:'Print Quality Fix', title:'BETTER PRINTS<br>START HERE.',        diag:'Most quality issues come down to one thing: bed adhesion. Fix that first and 80% of problems disappear.', card: cryoGripCard },
     materials: { path:'Materials Guide',   title:'RIGHT FILAMENT.<br>RIGHT JOB.',       diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. Start with a good matte PLA and you\'re 90% covered.', card: esunCard },
-    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything — no manual tuning, ever.', card: bambuCard },
+    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything no manual tuning, ever.', card: bambuCard },
   };
   const c = copy[ht]||copy.buying;
   document.querySelector('#res-help .qres-path').textContent = c.path;
@@ -1016,7 +1016,7 @@ function showContentResult(){
     brand:    { title:'WANT TO GROW?<br>LET ME<br><em style="color:var(--o)">PUSH YOU.</em>',
                 diag:'I grew @meshminds3d to 85K+ without a big budget. If you want to grow your 3D printing account, DM me on Instagram. I do occasional shoutouts for creators I genuinely rate.' },
     products: { title:'I\'LL SHOW YOUR<br>WORK TO MY<br><em style="color:var(--o)">AUDIENCE.</em>',
-                diag:'The fastest way to get your first customers is to get in front of an existing audience. If your work is good, DM me — I feature creators and products to my 85K+ followers when something stands out.' },
+                diag:'The fastest way to get your first customers is to get in front of an existing audience. If your work is good, DM me I feature creators and products to my 85K+ followers when something stands out.' },
     all:      { title:'WANT A<br>3D PRINTING<br><em style="color:var(--o)">SHOUTOUT?</em>',
                 diag:'A shoutout from the right account can shortcut months of work. DM me on Instagram and show me what you\'re building. I feature creators I genuinely believe in.' },
   };
@@ -1038,10 +1038,10 @@ function showCommercialResult(){
     passive:'BUILD PASSIVE<br>INCOME.',
   };
   const diags = {
-    niche:  'The fastest way to find a winning niche is to print what already sells — legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
-    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck — Meshy lets you generate custom files in minutes so you can list new products faster.',
+    niche:  'The fastest way to find a winning niche is to print what already sells legally. Cubee gives you 1,000+ licensed commercial designs so you can browse proven niches and start printing today.',
+    scale:  'Scaling means printing more with less manual work. Start by eliminating the design bottleneck Meshy lets you generate custom files in minutes so you can list new products faster.',
     setup:  'Getting set up right means having the right files before your first sale. Cubee gives you a commercial license and 1,000+ ready-to-print designs, so you can go from printer to profit without legal risk.',
-    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly — pick your niches and start building your catalogue.',
+    passive:'Passive income from 3D printing starts with a library of products. Cubee gets you 1,000+ licensed designs instantly pick your niches and start building your catalogue.',
   };
 
   // Primary + secondary offer adapt to problem
@@ -1073,7 +1073,7 @@ function showCommercialResult(){
           <div class="res-offer-name">AI 3D Model Generator</div>
         </div>
       </div>
-      <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright — no licensing required.</div>
+      <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright no licensing required.</div>
       <div class="res-offer-cta">Try free →</div>
     </a>`;
 
@@ -1081,7 +1081,7 @@ function showCommercialResult(){
     <div class="email-capture" style="margin-top:8px">
       <div class="ec-icon">📬</div>
       <div class="ec-title">NOT READY TO BUY YET?</div>
-      <div class="ec-desc">Get 10 profitable product ideas every week — free. Real niches, real margin data, straight to your inbox.</div>
+      <div class="ec-desc">Get 10 profitable product ideas every week free. Real niches, real margin data, straight to your inbox.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial">
         <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>
@@ -1142,7 +1142,7 @@ function submitEmail(type){
   const thanks = document.getElementById('ec-thanks-'+type);
   if(form) form.style.display='none';
   if(thanks) thanks.style.display='block';
-  // Also write email to sheet — use text/plain to avoid CORS preflight on Apps Script
+  // Also write email to sheet use text/plain to avoid CORS preflight on Apps Script
   fetch(SCRIPT_URL, {
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=utf-8'},

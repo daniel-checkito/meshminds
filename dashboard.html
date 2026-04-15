@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Analytics — Meshminds</title>
+<title>Analytics Meshminds</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -85,7 +85,7 @@ canvas#clickChart{width:100%!important;height:90px!important}
     <div class="logo-sub">Analytics</div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <span id="last-update" style="font-size:11px;color:var(--t3)">—</span>
+    <span id="last-update" style="font-size:11px;color:var(--t3)"></span>
     <button class="refresh-btn" id="refresh-btn" onclick="loadData()">↻ Refresh</button>
   </div>
 </div>
@@ -101,7 +101,7 @@ canvas#clickChart{width:100%!important;height:90px!important}
 
 <script>
 // ── DATA SOURCE ──
-// Same Apps Script URL used by n8n — handles both POST (write) and GET (read)
+// Same Apps Script URL used by n8n handles both POST (write) and GET (read)
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec';
 
 // ── COLUMN MAPPING ──
@@ -126,7 +126,7 @@ async function loadFromSheets(){
   const res = await fetch(SHEETS_URL);
   if(!res.ok) throw new Error(`HTTP ${res.status}`);
   const json = await res.json();
-  if(!json.rows) throw new Error('Unexpected response — redeploy the Apps Script (Deploy → Manage deployments → New version)');
+  if(!json.rows) throw new Error('Unexpected response redeploy the Apps Script (Deploy → Manage deployments → New version)');
   return json.rows.map(normaliseRow);
 }
 
@@ -205,14 +205,14 @@ function buildRecs(s){
       title:'Not enough data yet',
       body:`${s.visits} visits logged. Recommendations become reliable at 100+. Keep posting.`,
       action:'Get more traffic',
-      steps:`Post a carousel ending with "take the quiz — link in bio". Stories with a link sticker also work well.`
+      steps:`Post a carousel ending with "take the quiz link in bio". Stories with a link sticker also work well.`
     });
     return recs;
   }
 
   if(offerRate > 0.18)
     recs.push({type:'green', icon:'📈',
-      title:'Offer converting well — move it higher',
+      title:'Offer converting well move it higher',
       body:`Offer click rate is ${(offerRate*100).toFixed(1)}% (benchmark ~10–15%). Moving the offer above the email gate could increase revenue directly.`,
       action:'How to move it up',
       steps:`In <span class="rec-code">variant-a.html</span> find <span class="rec-code">id="email-commercial"</span> and paste the <span class="rec-code">.product</span> div above it.`
@@ -244,7 +244,7 @@ function buildRecs(s){
 
   if(toolkitRate > 0.35 && s.uniqueEmails > 10)
     recs.push({type:'blue', icon:'🛠️',
-      title:'Toolkit is popular — surface it earlier',
+      title:'Toolkit is popular surface it earlier',
       body:`${(toolkitRate*100).toFixed(0)}% of email submitters open the toolkit. Mentioning it before the gate would increase email signups.`,
       action:'What to change',
       steps:`Add "Free toolkit inside →" to the result title in <span class="rec-code">showCommercialResult()</span>, just above the email gate div.`
@@ -253,7 +253,7 @@ function buildRecs(s){
   if(trend < -3 && s.clicks30 > 10)
     recs.push({type:'red', icon:'📉',
       title:'Clicks declining',
-      body:`Last 15 days: ${s.clicksRecent15} clicks vs ${s.clicksPrev15} the 15 days before. Something changed — traffic or offer.`,
+      body:`Last 15 days: ${s.clicksRecent15} clicks vs ${s.clicksPrev15} the 15 days before. Something changed traffic or offer.`,
       action:'What to check',
       steps:`1. Check if Instagram reach dropped. 2. Refresh the offer headline in <span class="rec-code">.prod-title</span>. 3. Consider testing a lower price.`
     });
@@ -261,7 +261,7 @@ function buildRecs(s){
   if(trend > 3)
     recs.push({type:'green', icon:'🚀',
       title:'Clicks trending up',
-      body:`Clicks grew from ${s.clicksPrev15} → ${s.clicksRecent15}. Don't change the offer — focus on more traffic.`,
+      body:`Clicks grew from ${s.clicksPrev15} → ${s.clicksRecent15}. Don't change the offer focus on more traffic.`,
       action:'Keep going',
       steps:`Post more Instagram carousels and add the quiz URL to your TikTok bio.`
     });
@@ -461,12 +461,12 @@ function render(events){
       <thead><tr><th>Time</th><th>Action</th><th>Country</th><th>Source</th></tr></thead><tbody>`;
     recent.forEach(e => {
       const d   = e.ts ? new Date(e.ts) : null;
-      const t   = d ? d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '—';
-      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,14):'—';
-      const loc = e.city && e.country ? e.city+', '+e.country : e.country || e.city || '—';
+      const t   = d ? d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '';
+      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,14):'';
+      const loc = e.city && e.country ? e.city+', '+e.country : e.country || e.city || '';
       html += `<tr>
         <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${t}</td>
-        <td>${e.action||'—'}</td>
+        <td>${e.action||''}</td>
         <td style="color:var(--t3);font-size:11px">${loc}</td>
         <td style="color:var(--t3)">${src}</td>
       </tr>`;
@@ -489,7 +489,7 @@ async function loadData(){
   try{
     const events = await loadFromSheets();
     document.getElementById('conn-dot').className='dot live';
-    document.getElementById('conn-label').textContent=`Live — ${events.length} rows loaded`;
+    document.getElementById('conn-label').textContent=`Live ${events.length} rows loaded`;
     render(events);
   } catch(err){
     document.getElementById('conn-dot').className='dot err';

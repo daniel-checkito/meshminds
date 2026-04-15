@@ -138,7 +138,7 @@ function processEvents(events){
 
   const uids = new Set(), emails = new Set();
   let visits=0, quizDone=0, emailCaptures=0, offerClicks=0;
-  const clicksByDay={}, sources={}, countries={};
+  const clicksByDay={}, sources={}, countries={}, buttonCounts={};
   let clicks30=0, clicksPrev15=0, clicksRecent15=0;
 
   events.forEach(e => {
@@ -147,20 +147,33 @@ function processEvents(events){
 
     const ts = e.ts ? new Date(e.ts).getTime() : 0;
     const a  = e.action;
+    // Action starts with one of these for any click-type event
+    const isClickAction = a.startsWith('offer_click') || a.startsWith('button_click');
 
     if(a==='visit'||a==='new_visitor') visits++;
-    if(a==='quiz_complete')  quizDone++;
+    if(a.startsWith('quiz_complete'))  quizDone++;
     if(a==='email_capture'||e.email)   emailCaptures++;
-    if(a==='offer_click')    offerClicks++;
+    if(a.startsWith('offer_click'))    offerClicks++;
 
     // Any click action (offer, button, link)
-    const isClick = a==='offer_click' || a==='button_click' || e.button || e.link;
+    const isClick = isClickAction || e.button || e.link;
     if(isClick && ts >= ago30){
       clicks30++;
       const day = new Date(ts).toISOString().slice(0,10);
       clicksByDay[day] = (clicksByDay[day]||0) + 1;
       if(ts < ago15) clicksPrev15++;
       else           clicksRecent15++;
+    }
+
+    // Per-offer / per-button counts.  Prefer the dedicated Button column,
+    // fall back to parsing the suffix from Action (e.g. "offer_click:cubee3d").
+    let btn = e.button;
+    if(!btn && a.includes(':')){
+      btn = a.split(':').slice(1).join(':');
+    }
+    if(btn){
+      const key = btn.trim();
+      if(key) buttonCounts[key] = (buttonCounts[key]||0)+1;
     }
 
     // Traffic source
@@ -185,7 +198,7 @@ function processEvents(events){
     visits, quizDone,
     uniqueEmails, offerClicks,
     clicksByDay, clicks30, clicksPrev15, clicksRecent15,
-    sources, countries,
+    sources, countries, buttonCounts,
   };
 }
 
@@ -386,6 +399,33 @@ function render(events){
     </div>`;
   });
   html += `</div>`;
+
+  // Top offers & buttons (clicks + click rate, sorted by clicks)
+  const btnEntries = Object.entries(s.buttonCounts).sort((a,b)=>b[1]-a[1]);
+  if(btnEntries.length){
+    const topCount = btnEntries[0][1] || 1;
+    html += `<div class="section-title">TOP OFFERS &amp; BUTTONS</div>
+      <div class="funnel" style="max-height:320px;overflow-y:auto;padding-right:4px">`;
+    btnEntries.forEach(([name, cnt])=>{
+      const rate = (cnt/base*100).toFixed(1);
+      const pct  = Math.max(4, Math.round(cnt/topCount*100));
+      const isOffer = /^(cubee|meshy|makerworld|timeplast|cryogrip|farmloop|bambu|infinity)/i.test(name);
+      const barColor = isOffer ? 'rgba(255,92,0,0.55)' : 'rgba(59,130,246,0.4)';
+      html += `<div class="funnel-row">
+        <div class="funnel-label" style="font-size:11px;width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${name}">${name}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-fill" style="width:${pct}%;background:${barColor}">
+            <span>${cnt}</span>
+          </div>
+        </div>
+        <div class="funnel-pct" style="width:46px">${rate}%</div>
+      </div>`;
+    });
+    html += `</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
+        Click rate = clicks ÷ ${s.visits} visits. Offers in orange, other buttons in blue.
+      </div>`;
+  }
 
   // Traffic sources
   const srcEntries = Object.entries(s.sources).sort((a,b)=>b[1]-a[1]);

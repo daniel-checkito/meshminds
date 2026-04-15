@@ -273,7 +273,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     };
     fetch(SCRIPT_URL, {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
       body: JSON.stringify(payload)
     }).catch(()=>{});
   };
@@ -447,31 +447,28 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <button class="q-restart" onclick="restartQuiz()">Retake the quiz</button>
   </div>
 
-  <!-- RESULT: BUYING -->
+  <!-- RESULT: HELP -->
   <div class="qres" id="res-help">
-    <div class="qres-path">Buying Guide</div>
+    <div class="qres-path">Help Path</div>
     <div class="qres-title">THE BEST PRINTER<br>TO START WITH.</div>
-    <div class="qres-diag">I run a Bambu Lab A1 with AMS. It\'s the easiest printer to set up, the fastest to print on, and the one I\'d buy again tomorrow. Here\'s why and where to get it.</div>
-    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin-bottom:20px">
-      <div style="padding:20px">
-        <div style="display:inline-flex;align-items:center;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;padding:5px 12px;border-radius:100px;margin-bottom:14px">🖨️ My recommendation</div>
-        <div style="font-family:var(--fd);font-size:clamp(20px,6vw,30px);letter-spacing:1px;margin-bottom:8px">BAMBU LAB A1<br>+ AMS COMBO</div>
-        <div style="font-size:14px;color:var(--t2);line-height:1.55;margin-bottom:16px">Multi-color from day one. 256mm/s. Zero calibration. Plug in and print in under 10 minutes. This is the printer I use to run @meshminds3d 18 hours a day, zero drama.</div>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
-          <div style="font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px">✓ <span>Best-in-class speed for beginners</span></div>
-          <div style="font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px">✓ <span>4-color AMS included no extra setup</span></div>
-          <div style="font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px">✓ <span>Works with Bambu Studio out of the box</span></div>
-          <div style="font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px">✓ <span>Huge MakerWorld library of free models</span></div>
-        </div>
+    <div class="qres-diag">I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I'd buy again tomorrow.</div>
+
+    <!-- Block A: Dynamic offer card -->
+    <div id="help-offer-card"></div>
+
+    <!-- Block B: Shared email capture -->
+    <div class="email-capture">
+      <div class="ec-icon">📬</div>
+      <div class="ec-title">WANT WEEKLY TIPS & FIXES?</div>
+      <div class="ec-desc">What's working, what to avoid, and the upgrades that actually matter. Free, every week.</div>
+      <div class="ec-form">
+        <input type="email" class="ec-input" id="email-help-input" placeholder="your@email.com">
+        <button class="ec-btn" onclick="submitEmail('help')">Send me the weekly tips →</button>
       </div>
-      <div style="padding:16px 20px;background:var(--s2);border-top:1px solid var(--b);display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-        <a href="https://biqu.equipment/?ref=meshminds" target="_blank"
-          onclick="track(\'offer_click\',{button:\'bambu_a1_help\',href:\'https://biqu.equipment/?ref=meshminds\'})"
-          style="flex:1;min-width:140px;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center">
-          Shop Bambu Lab A1 →
-        </a>
-      </div>
+      <div class="ec-thanks" id="ec-thanks-help">✓ You're in. First edition coming soon.</div>
+      <div class="ec-consent">No spam. Unsubscribe anytime.</div>
     </div>
+
     <button class="q-restart" onclick="restartQuiz()">Retake the quiz</button>
   </div>
 
@@ -947,17 +944,69 @@ function showResult(){
 
 function showHelpResult(){
   const ht = answers['help_type']||'buying';
+
+  const bambuCard = `
+    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
+      <div style="padding:22px 20px 20px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🖨️ MY #1 PICK</div>
+        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Bambu Lab</div>
+        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">A1 + AMS COMBO</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Multi-color from day one, 256mm/s, zero calibration. The best beginner-to-pro machine on the market.</div>
+      </div>
+      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
+        <a href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener"
+          onclick="track('offer_click',{button:'bambu_a1_help_${ht}',href:'https://biqu.equipment/?ref=meshminds'})"
+          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
+          Shop Bambu Lab A1 →
+        </a>
+      </div>
+    </div>`;
+
+  const cryoGripCard = `
+    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
+      <div style="padding:22px 20px 20px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🔧 UPGRADE #1</div>
+        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Panda Touch</div>
+        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">CRYOGRIP BUILDPLATE</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Grips hot, releases cold. No glue, no hairspray. First upgrade I put on every printer I own.</div>
+      </div>
+      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
+        <a href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener"
+          onclick="track('offer_click',{button:'cryogrip_help_quality',href:'https://biqu.equipment/?ref=meshminds'})"
+          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
+          Get the discount →
+        </a>
+      </div>
+    </div>`;
+
+  const esunCard = `
+    <div style="background:var(--s1);border:1px solid rgba(255,92,0,.28);border-radius:var(--r);overflow:hidden;margin:20px 0">
+      <div style="padding:22px 20px 20px">
+        <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.22);color:var(--o);font-size:11px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:100px;margin-bottom:14px">🧴 DAILY DRIVER</div>
+        <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">eSUN</div>
+        <div style="font-family:var(--fd);font-size:clamp(22px,6vw,30px);letter-spacing:1px;line-height:1.05;margin-bottom:10px">ePLA-MATTE FILAMENT</div>
+        <div style="font-size:14px;color:var(--t2);line-height:1.55">Matte finish, vivid colors, zero clogs. Makes every print look more premium — my go-to for everything.</div>
+      </div>
+      <div style="padding:14px 20px 16px;background:var(--s2);border-top:1px solid var(--b)">
+        <a href="https://esun.com/?ref=meshminds" target="_blank" rel="noopener"
+          onclick="track('offer_click',{button:'esun_help_materials',href:'https://esun.com/?ref=meshminds'})"
+          style="display:inline-flex;width:100%;align-items:center;justify-content:center;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 20px;font-family:var(--fb);font-size:15px;font-weight:600;text-decoration:none">
+          Shop eSUN →
+        </a>
+      </div>
+    </div>`;
+
   const copy = {
-    buying:  { path:'Buying Guide',      title:'THE BEST PRINTER<br>TO START WITH.',       diag:'I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I\'d buy again tomorrow. Here\'s where to get it.' },
-    quality: { path:'Print Quality Fix', title:'BETTER PRINTS<br>START HERE.',              diag:'Most quality issues come down to three things: bed adhesion, temp calibration, and print speed. Here\'s what to check first.' },
-    materials:{ path:'Materials Guide',  title:'RIGHT FILAMENT.<br>RIGHT JOB.',             diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. I\'ve tested them all on the A1 — here\'s the breakdown.' },
-    setup:   { path:'Setup Guide',       title:'GET YOUR PRINTER<br>DIALLED IN.',           diag:'First print checklist: level the bed, run a temp tower, print a calibration cube. Takes 20 minutes and saves weeks of frustration.' },
+    buying:    { path:'Buying Guide',      title:'THE BEST PRINTER<br>TO START WITH.',  diag:'I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I\'d buy again tomorrow.', card: bambuCard },
+    quality:   { path:'Print Quality Fix', title:'BETTER PRINTS<br>START HERE.',        diag:'Most quality issues come down to one thing: bed adhesion. Fix that first and 80% of problems disappear.', card: cryoGripCard },
+    materials: { path:'Materials Guide',   title:'RIGHT FILAMENT.<br>RIGHT JOB.',       diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. Start with a good matte PLA and you\'re 90% covered.', card: esunCard },
+    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything — no manual tuning, ever.', card: bambuCard },
   };
   const c = copy[ht]||copy.buying;
   document.querySelector('#res-help .qres-path').textContent = c.path;
   document.querySelector('#res-help .qres-title').innerHTML = c.title;
-  document.querySelector('#res-help .qres-diag').textContent = '';
   document.querySelector('#res-help .qres-diag').innerHTML = c.diag;
+  document.getElementById('help-offer-card').innerHTML = c.card;
   document.getElementById('res-help').classList.add('active');
 }
 
@@ -1032,11 +1081,13 @@ function showCommercialResult(){
     <div class="email-capture" style="margin-top:8px">
       <div class="ec-icon">📬</div>
       <div class="ec-title">NOT READY TO BUY YET?</div>
-      <div class="ec-sub">Get 10 profitable product ideas every week — free. Real niches, real margin data, straight to your inbox.</div>
+      <div class="ec-desc">Get 10 profitable product ideas every week — free. Real niches, real margin data, straight to your inbox.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial">
         <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>
       </div>
+      <div class="ec-thanks" id="ec-thanks-commercial">✓ You're in. First edition coming soon.</div>
+      <div class="ec-consent">No spam. Unsubscribe anytime.</div>
     </div>`;
 
   document.getElementById('qr-path').textContent = (level.charAt(0).toUpperCase()+level.slice(1))+' Path';
@@ -1070,13 +1121,19 @@ function showNewsletterFallback(btn){
   if(parent) parent.style.display='none';
   const nl = document.getElementById('res-newsletter');
   nl.style.display='flex'; nl.classList.add('active');
-  nl.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 // ── EMAIL SUBMIT ──
 function submitEmail(type){
   track('email_capture', {button:'email_'+type});
-  const ids = {com:'email-com-input', content:'email-content-input', fun:'email-fun-input', help:'email-help-input', newsletter:'email-nl-input'};
+  const ids = {
+    com:'email-com-input',
+    commercial:'email-commercial',
+    content:'email-content-input',
+    fun:'email-fun-input',
+    help:'email-help-input',
+    newsletter:'email-nl-input',
+  };
   const input = document.getElementById(ids[type]);
   if(!input) return;
   const val = input.value.trim();
@@ -1085,10 +1142,10 @@ function submitEmail(type){
   const thanks = document.getElementById('ec-thanks-'+type);
   if(form) form.style.display='none';
   if(thanks) thanks.style.display='block';
-  // Also write email to sheet
+  // Also write email to sheet — use text/plain to avoid CORS preflight on Apps Script
   fetch(SCRIPT_URL, {
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
     body: JSON.stringify({
       uid: window.MM_UID,
       variant: 'a',

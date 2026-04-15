@@ -108,14 +108,16 @@ const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 // Your columns: Timestamp | UID | Variant | email | Action | Button | Link | Where do they come from? | Device | Screen width
 function normaliseRow(row){
   return {
-    ts:     row['Timestamp'] || '',
-    uid:    row['UID']       || '',
-    email:  row['email']     || '',
-    action: (row['Action']   || '').toLowerCase().trim(),
-    button: row['Button']    || '',
-    link:   row['Link']      || '',
-    source: row['Where do they come from?'] || '',
-    device: row['Device']    || '',
+    ts:      row['Timestamp'] || '',
+    uid:     row['UID']       || '',
+    email:   row['email']     || '',
+    action:  (row['Action']   || '').toLowerCase().trim(),
+    button:  row['Button']    || '',
+    link:    row['Link']      || '',
+    source:  row['Where do they come from?'] || '',
+    device:  row['Device']    || '',
+    country: row['Country']   || '',
+    city:    row['City']      || '',
   };
 }
 
@@ -136,7 +138,7 @@ function processEvents(events){
 
   const uids = new Set(), emails = new Set();
   let visits=0, quizDone=0, emailCaptures=0, offerClicks=0, toolkitClicks=0;
-  const clicksByDay={}, sources={};
+  const clicksByDay={}, sources={}, countries={};
   let clicks30=0, clicksPrev15=0, clicksRecent15=0;
 
   events.forEach(e => {
@@ -169,6 +171,10 @@ function processEvents(events){
                 e.source==='(direct)'          ? 'Direct'    : 'Other';
       sources[s] = (sources[s]||0)+1;
     }
+    // Country
+    if(e.country){
+      countries[e.country] = (countries[e.country]||0)+1;
+    }
   });
 
   // De-duplicate email captures using the email column
@@ -180,7 +186,7 @@ function processEvents(events){
     visits, quizDone,
     uniqueEmails, offerClicks, toolkitClicks,
     clicksByDay, clicks30, clicksPrev15, clicksRecent15,
-    sources,
+    sources, countries,
   };
 }
 
@@ -412,6 +418,26 @@ function render(events){
     html += `</div>`;
   }
 
+  // Countries
+  const countryEntries = Object.entries(s.countries).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  if(countryEntries.length){
+    const cTotal = countryEntries.reduce((acc,[,v])=>acc+v,0)||1;
+    html += `<div class="section-title">VISITOR LOCATIONS</div><div class="funnel">`;
+    countryEntries.forEach(([country,cnt])=>{
+      const pct = Math.round(cnt/cTotal*100);
+      html += `<div class="funnel-row">
+        <div class="funnel-label" style="font-size:11px">${country}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-fill" style="width:${pct}%;background:rgba(34,197,94,0.4)">
+            <span>${cnt}</span>
+          </div>
+        </div>
+        <div class="funnel-pct">${pct}%</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
   // Recommendations
   html += `<div class="section-title">RECOMMENDATIONS</div><div class="recs">`;
   recs.forEach(r => {
@@ -432,17 +458,17 @@ function render(events){
   html += `<div class="section-title">RECENT EVENTS</div>`;
   if(recent.length){
     html += `<table class="events-table">
-      <thead><tr><th>Time</th><th>Action</th><th>Source</th><th>Device</th></tr></thead><tbody>`;
+      <thead><tr><th>Time</th><th>Action</th><th>Country</th><th>Source</th></tr></thead><tbody>`;
     recent.forEach(e => {
       const d   = e.ts ? new Date(e.ts) : null;
       const t   = d ? d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '—';
-      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,18):'—';
-      const dev = e.device.includes('iPhone')||e.device.includes('Android')?'📱 Mobile':e.device?'💻 Desktop':'—';
+      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,14):'—';
+      const loc = e.city && e.country ? e.city+', '+e.country : e.country || e.city || '—';
       html += `<tr>
         <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${t}</td>
         <td>${e.action||'—'}</td>
+        <td style="color:var(--t3);font-size:11px">${loc}</td>
         <td style="color:var(--t3)">${src}</td>
-        <td style="color:var(--t3)">${dev}</td>
       </tr>`;
     });
     html += `</tbody></table>`;

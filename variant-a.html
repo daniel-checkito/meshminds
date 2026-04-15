@@ -956,7 +956,7 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 <hr class="sdiv">
 
 <!-- GET FEATURED -->
-<section class="sec" id="get-featured-section">
+<section class="sec" id="get-featured-section" style="display:none">
   <div class="sec-inner">
     <p class="eye rv">For brands &amp; creators</p>
     <h2 class="stitle rv">GET FEATURED<br>TO 85K PRINTERS.</h2>
@@ -1390,7 +1390,9 @@ function applyPathVisibility(p){
   const showGear = p==='commercial'||p==='help'||p==='fun';
   [gear, gearHr].forEach(el=>{ if(el) el.style.display = showGear ? '' : 'none'; });
   // Offer slider + get featured only for commercial
-  [slider, featured].forEach(el=>{ if(el) el.style.display = p==='commercial' ? '' : 'none'; });
+  if(slider) slider.style.display = p==='commercial' ? '' : 'none';
+  const showFeatured = p==='content' || (p==='commercial' && answers['com_level']==='seller');
+  if(featured) featured.style.display = showFeatured ? '' : 'none';
   // Toolkit banner redundant on commercial (gated in result), hide everywhere
   if(banner) banner.style.display = 'none';
 }
@@ -1419,7 +1421,7 @@ function restartQuiz(){
   document.getElementById('res-newsletter').style.display='none';
   document.getElementById('qs-dynamic').classList.add('active');
   // Restore all static sections
-  ['gear-section','gear-divider','all-offers','get-featured-section'].forEach(id=>{
+  ['gear-section','gear-divider'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.style.display='';
   });
   const proof=document.querySelector('.quiz-social-proof');

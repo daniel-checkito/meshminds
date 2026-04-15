@@ -1159,10 +1159,43 @@ function showNewsletterFallback(btn){
 }
 
 // ── EMAIL SUBMIT ──
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const EMAIL_QUEUE_KEY = 'mm_email_queue';
+
+function _readEmailQueue(){
+  try { return JSON.parse(localStorage.getItem(EMAIL_QUEUE_KEY) || '[]'); }
+  catch(e){ return []; }
+}
+function _writeEmailQueue(q){
+  try { localStorage.setItem(EMAIL_QUEUE_KEY, JSON.stringify(q)); } catch(e){}
+}
+function _sendEmailPayload(payload){
+  return fetch(SCRIPT_URL, {
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload),
+    keepalive: true,
+  }).then(r => { if(!r.ok) throw new Error('http_'+r.status); return r; });
+}
+function _flushEmailQueue(){
+  const q = _readEmailQueue();
+  if(!q.length) return;
+  const remaining = [];
+  let idx = 0;
+  const next = () => {
+    if(idx >= q.length){ _writeEmailQueue(remaining); return; }
+    const item = q[idx++];
+    _sendEmailPayload(item)
+      .then(next)
+      .catch(()=>{ remaining.push(item); next(); });
+  };
+  next();
+}
+// Retry any emails that failed on previous visits
+try { _flushEmailQueue(); } catch(e){}
+
 function submitEmail(type){
-  track('email_capture', {button:'email_'+type});
   const ids = {
-    com:'email-com-input',
     commercial:'email-commercial',
     content:'email-content-input',
     fun:'email-fun-input',
@@ -1172,28 +1205,57 @@ function submitEmail(type){
   const input = document.getElementById(ids[type]);
   if(!input) return;
   const val = input.value.trim();
-  if(!val||!val.includes('@')){ input.style.borderColor='#ef4444'; setTimeout(()=>input.style.borderColor='',1500); return; }
-  const form = input.closest('.ec-form');
-  const thanks = document.getElementById('ec-thanks-'+type);
-  if(form) form.style.display='none';
-  if(thanks) thanks.style.display='block';
-  // Also write email to sheet use text/plain to avoid CORS preflight on Apps Script
-  fetch(SCRIPT_URL, {
-    method:'POST',
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body: JSON.stringify({
-      uid: window.MM_UID,
-      variant: 'a',
-      email: val,
-      type: 'email_capture',
-      button: type,
-      referrer: document.referrer||'(direct)',
-      userAgent: navigator.userAgent,
-      screenWidth: screen.width,
-      country: window.MM_GEO.country||'',
-      city: window.MM_GEO.city||'',
+  if(!val || !EMAIL_RE.test(val)){
+    input.style.borderColor = '#ef4444';
+    setTimeout(()=>input.style.borderColor='', 1500);
+    return;
+  }
+  // Prevent double-submit
+  const btn = input.closest('.ec-form') && input.closest('.ec-form').querySelector('.ec-btn');
+  if(btn){
+    if(btn.disabled) return;
+    btn.disabled = true;
+    btn.dataset.origText = btn.textContent;
+    btn.textContent = 'Sending…';
+  }
+
+  const payload = {
+    uid: window.MM_UID,
+    variant: 'a',
+    email: val,
+    type: 'email_capture',
+    button: type,
+    referrer: document.referrer || '(direct)',
+    userAgent: navigator.userAgent,
+    screenWidth: screen.width,
+    country: (window.MM_GEO && window.MM_GEO.country) || '',
+    city:    (window.MM_GEO && window.MM_GEO.city)    || '',
+    ts: new Date().toISOString(),
+  };
+
+  // Queue first, remove on success. Guarantees delivery across page navigations / offline.
+  const queue = _readEmailQueue();
+  queue.push(payload);
+  _writeEmailQueue(queue);
+
+  const showThanks = () => {
+    const form = input.closest('.ec-form');
+    const thanks = document.getElementById('ec-thanks-'+type);
+    if(form) form.style.display = 'none';
+    if(thanks) thanks.style.display = 'block';
+  };
+
+  _sendEmailPayload(payload)
+    .then(() => {
+      // Remove this payload from queue on success
+      const q2 = _readEmailQueue().filter(p => !(p.email === payload.email && p.ts === payload.ts));
+      _writeEmailQueue(q2);
+      showThanks();
     })
-  }).catch(()=>{});
+    .catch(() => {
+      // Leave queued for retry on next page load; still confirm to user
+      showThanks();
+    });
 }
 
 // ── MODALS ──

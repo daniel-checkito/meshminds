@@ -214,67 +214,112 @@ function buildRecs(s){
   if(s.visits < 30){
     recs.push({type:'blue', icon:'ℹ️',
       title:'Not enough data yet',
-      body:`${s.visits} visits logged. Recommendations become reliable at 100+. Keep posting.`,
-      action:'Get more traffic',
-      steps:`Post a carousel ending with "take the quiz link in bio". Stories with a link sticker also work well.`
+      body:`${s.visits} visit${s.visits!==1?'s':''} logged — recommendations become reliable at 100+. Focus on getting traffic first.`,
+      action:'Quick wins for traffic',
+      steps:`1. Post a 5–7 slide carousel on Instagram ending with "Take the quiz — link in bio." 2. Add a link sticker to your next Story. 3. Repost your best-performing Reel with updated caption pointing to the quiz.`
     });
     return recs;
   }
 
+  // Email capture broken (visits but no emails at all)
+  if(s.visits >= 30 && s.uniqueEmails === 0)
+    recs.push({type:'red', icon:'🔴',
+      title:'Email capture not working',
+      body:`${s.visits} visits but 0 emails collected. The form or the n8n webhook is likely broken.`,
+      action:'Debug steps',
+      steps:`1. Submit a test email on the live site and check n8n's execution log for errors. 2. Make sure the n8n webhook URL in <span class="rec-code">index.html</span> matches the active production webhook. 3. Check that the Apps Script is receiving <span class="rec-code">action=email_capture</span> rows.`
+    });
+
+  // Offer converting very well
   if(offerRate > 0.18)
     recs.push({type:'green', icon:'📈',
-      title:'Offer converting well move it higher',
-      body:`Offer click rate is ${(offerRate*100).toFixed(1)}% (benchmark ~10–15%). Moving the offer above the email gate could increase revenue directly.`,
+      title:'Offer click rate is above average — consider moving it higher',
+      body:`${(offerRate*100).toFixed(1)}% of visitors click an offer (benchmark ~10–15%). Placing the offer above the email gate could remove friction and increase revenue.`,
       action:'How to move it up',
-      steps:`In <span class="rec-code">index.html</span> find <span class="rec-code">id="email-commercial"</span> and paste the <span class="rec-code">.product</span> div above it.`
+      steps:`In <span class="rec-code">index.html</span> find <span class="rec-code">id="email-commercial"</span> and paste the <span class="rec-code">.product</span> div directly above it. A/B test for 7 days and compare offer clicks.`
     });
 
+  // Email gate blocking conversions
   if(emailRate > 0.28 && offerRate < 0.08)
     recs.push({type:'yellow', icon:'🚪',
-      title:'Email gate may be blocking offer clicks',
-      body:`Email rate is high (${(emailRate*100).toFixed(0)}%) but offer clicks are low (${(offerRate*100).toFixed(0)}%). Users submit email but don't continue to the offer.`,
+      title:'Email gate may be killing offer clicks',
+      body:`Email rate is ${(emailRate*100).toFixed(0)}% but offer clicks are only ${(offerRate*100).toFixed(0)}%. Visitors submit their email and leave without reaching the offer.`,
       action:'What to test',
-      steps:`Move <span class="rec-code">id="email-commercial"</span> below the offer, or remove it temporarily and compare offer clicks over the next 7 days.`
+      steps:`Option A: Move <span class="rec-code">id="email-commercial"</span> below the offer (show offer first, collect email after). Option B: Remove the gate for 7 days and compare offer clicks. Option A is lower risk.`
     });
 
+  // Quiz drop-off
   if(quizRate < 0.45 && s.quizDone > 5)
     recs.push({type:'yellow', icon:'🎯',
-      title:'Quiz drop-off is high',
-      body:`Only ${(quizRate*100).toFixed(0)}% of visitors finish the quiz. Removing one step typically improves completion by 15–25%.`,
+      title:'More than half of visitors abandon the quiz',
+      body:`${(quizRate*100).toFixed(0)}% of visitors finish. Shortening by one question typically lifts completion 15–25%.`,
       action:'What to remove',
-      steps:`In <span class="rec-code">index.html</span>, in the <span class="rec-code">nextStep()</span> function, remove the <span class="rec-code">can_design</span> step from the commercial path.`
+      steps:`In <span class="rec-code">index.html</span>, in the <span class="rec-code">nextStep()</span> function, skip the <span class="rec-code">can_design</span> step on the commercial path (line ~880) and jump straight to <span class="rec-code">com_problem</span>. This saves one tap for your highest-intent users.`
     });
 
+  // Quiz completion is great
+  if(quizRate >= 0.6 && s.quizDone > 10)
+    recs.push({type:'green', icon:'✅',
+      title:'Quiz completion rate is excellent',
+      body:`${(quizRate*100).toFixed(0)}% of visitors finish the quiz — well above the 40–50% benchmark for multi-step quizzes.`,
+      action:'Keep the quiz, push traffic',
+      steps:`Don't change the quiz flow. Instead focus on Instagram Reels and Stories that end with a clear "Take the quiz" CTA to funnel more people through this already-working flow.`
+    });
+
+  // Strong email capture
   if(emailRate > 0.25)
     recs.push({type:'green', icon:'📬',
       title:'Email capture is strong',
-      body:`${(emailRate*100).toFixed(0)}% of visitors give their email. Make sure the n8n welcome sequence fires within 5 minutes of signup.`,
-      action:'Check n8n',
-      steps:`Verify the <span class="rec-code">/webhook/email-capture</span> trigger in n8n has an active email node. Check for errors in the execution log.`
+      body:`${(emailRate*100).toFixed(0)}% of visitors give their email (benchmark ~15–20%). Make sure your welcome sequence fires within 5 minutes of signup.`,
+      action:'Check your n8n flow',
+      steps:`Open n8n and verify the <span class="rec-code">/webhook/email-capture</span> trigger is active. Check the latest executions for errors. The welcome email should send within 5 min — delayed emails get ignored.`
     });
 
+  // Traffic source concentration
+  const srcEntries = Object.entries(s.sources);
+  if(srcEntries.length === 1 && s.visits >= 50)
+    recs.push({type:'yellow', icon:'⚠️',
+      title:`All traffic comes from ${srcEntries[0][0]} — risky`,
+      body:`100% of your ${s.visits} visits come from one platform. One algorithm change or account ban would cut your traffic to zero.`,
+      action:'Diversify now',
+      steps:`Start cross-posting to a second platform. If you're only on Instagram, create a TikTok account and post the same Reels (no watermark — use CapCut). Even 20% from a second source is meaningful protection.`
+    });
+
+  // Top quiz path dominates — tailor content
+  const commercialCount = s.buttonCounts['quiz_commercial'] || 0;
+  const totalQuizPaths = Object.values(s.buttonCounts).reduce((a,v)=>a+v,0);
+  if(commercialCount / Math.max(totalQuizPaths,1) > 0.55 && commercialCount > 5)
+    recs.push({type:'blue', icon:'🏷️',
+      title:'Most visitors want to sell prints — lean into it',
+      body:`${Math.round(commercialCount/totalQuizPaths*100)}% of quiz completions take the commercial path. Your audience is sellers, not hobbyists.`,
+      action:'Align your content',
+      steps:`1. Post more content about "how I make money with my 3D printer." 2. Make the commercial offer your primary CTA above the fold. 3. Consider an email sequence focused on print-farm setup, pricing, and finding clients rather than general beginner tips.`
+    });
+
+  // Declining trend
   if(trend < -3 && s.clicks30 > 10)
     recs.push({type:'red', icon:'📉',
-      title:'Clicks declining',
-      body:`Last 15 days: ${s.clicksRecent15} clicks vs ${s.clicksPrev15} the 15 days before. Something changed traffic or offer.`,
+      title:'Clicks are declining',
+      body:`Last 15 days: ${s.clicksRecent15} clicks vs ${s.clicksPrev15} the 15 days before (${Math.abs(Math.round(trend/Math.max(s.clicksPrev15,1)*100))}% drop). Something changed.`,
       action:'What to check',
-      steps:`1. Check if Instagram reach dropped. 2. Refresh the offer headline in <span class="rec-code">.prod-title</span>. 3. Consider testing a lower price.`
+      steps:`1. Open Instagram Insights — check if reach dropped. 2. Look at the top offers table above: if one offer's clicks fell, check the product is still in stock/available. 3. Try refreshing the offer headline in <span class="rec-code">.prod-title</span>. 4. Consider testing a limited-time discount to re-activate interest.`
     });
 
+  // Rising trend
   if(trend > 3)
     recs.push({type:'green', icon:'🚀',
-      title:'Clicks trending up',
-      body:`Clicks grew from ${s.clicksPrev15} → ${s.clicksRecent15}. Don't change the offer focus on more traffic.`,
-      action:'Keep going',
-      steps:`Post more Instagram carousels and add the quiz URL to your TikTok bio.`
+      title:'Clicks are trending up',
+      body:`Clicks grew from ${s.clicksPrev15} → ${s.clicksRecent15} in the last 15 days. Something is working — don't break it.`,
+      action:'Double down',
+      steps:`Identify which post drove the spike in Instagram Insights. Repost or create a follow-up in the same format. Add the quiz link to your TikTok bio if it isn't there yet.`
     });
 
   if(!recs.length)
     recs.push({type:'blue', icon:'✓',
-      title:'Metrics look stable',
-      body:`No urgent actions. Check back as more data comes in.`,
-      action:'Nothing urgent',
-      steps:`Keep driving traffic. Come back when you have 200+ visits for deeper insights.`
+      title:'Metrics look stable — here\'s what to focus on next',
+      body:`No urgent issues. Email rate: ${(emailRate*100).toFixed(0)}% · Offer rate: ${(offerRate*100).toFixed(0)}% · Quiz completion: ${(quizRate*100).toFixed(0)}%.`,
+      action:'Growth levers to pull',
+      steps:`1. Post 3× per week on Instagram — consistency matters more than perfection. 2. Add a second offer to the commercial path (a lower-priced entry product). 3. Set up a 3-email welcome sequence in n8n if you haven't already: welcome → value tip → offer reminder.`
     });
 
   return recs;

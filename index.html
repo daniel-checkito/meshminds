@@ -1282,9 +1282,9 @@ function closeModal(id){ track('button_click',{button:'close_'+id}); document.ge
 document.querySelectorAll('.modal-overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)closeModal(el.id.replace('modal-',''));});});
 
 // ── COOKIES ──
-function showCookieBanner(){ setTimeout(()=>document.getElementById('cookie-banner').classList.add('visible'),800); }
-function acceptCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); track('button_click',{button:'cookie_accept'}); }
-function rejectCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); track('button_click',{button:'cookie_reject'}); }
+function showCookieBanner(){ if(localStorage.getItem('cookie_consent')) return; setTimeout(()=>document.getElementById('cookie-banner').classList.add('visible'),800); }
+function acceptCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); localStorage.setItem('cookie_consent','accepted'); track('button_click',{button:'cookie_accept'}); }
+function rejectCookies(){ document.getElementById('cookie-banner').classList.remove('visible'); localStorage.setItem('cookie_consent','rejected'); track('button_click',{button:'cookie_reject'}); }
 showCookieBanner();
 
 // ── SCROLL REVEAL ──

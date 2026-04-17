@@ -129,7 +129,7 @@ canvas#clickChart{width:100%!important;height:90px!important}
 })();
 function checkPassword(){
   const val = document.getElementById('gate-input').value;
-  if(val === 'MESH'){
+  if(val.toUpperCase() === 'MESH'){
     sessionStorage.setItem('mm_auth','1');
     document.getElementById('gate').style.display='none';
     loadData();

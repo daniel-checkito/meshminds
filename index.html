@@ -208,6 +208,8 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 .foot-legal a{font-size:12px;color:var(--t3);text-decoration:none;cursor:pointer}
 .foot-copy{font-size:12px;color:var(--t3);margin-top:10px}
 .foot-affiliate{font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5;max-width:560px}
+.admin-link{display:inline-block;margin-left:8px;font-size:13px;line-height:1;vertical-align:middle;opacity:.55;text-decoration:none;color:var(--t2);transition:opacity .2s,color .2s;cursor:pointer}
+.admin-link:hover{opacity:1;color:var(--o)}
 
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);padding:20px;overflow-y:auto}
@@ -653,7 +655,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     <a onclick="openModal('impressum')">Impressum</a>
     <a onclick="openModal('datenschutz')">Datenschutzerklärung</a>
   </div>
-  <div class="foot-affiliate">* This page contains affiliate links. If you buy through one of them I earn a small commission at no extra cost to you.<a href="dashboard.html" aria-hidden="true" tabindex="-1" style="display:inline-block;width:14px;height:14px;margin-left:6px;vertical-align:middle;opacity:.4;text-decoration:none;color:var(--t3);font-size:14px;line-height:1">·</a></div>
+  <div class="foot-affiliate">* This page contains affiliate links. If you buy through one of them I earn a small commission at no extra cost to you.<a href="dashboard.html" class="admin-link" title="Admin">⚙</a></div>
 </footer>
 <!-- MODALS -->
 <div class="modal-overlay" id="modal-impressum" onclick="if(event.target===this)closeModal('impressum')">

@@ -901,6 +901,7 @@ function totalSteps(p){
 }
 
 function renderStep(stepKey, stepNum, total){
+  track('quiz_view', {button: stepKey});
   const step = STEPS[stepKey];
   const opts = typeof step.options==='function' ? step.options(answers) : step.options;
 

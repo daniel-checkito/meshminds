@@ -104,6 +104,52 @@ canvas#clickChart{width:100%!important;height:90px!important}
 // Same Apps Script URL used by n8n handles both POST (write) and GET (read)
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec';
 
+// ── QUIZ STEP METADATA ──
+const KNOWN_STEPS = ['intent','com_level','can_design','com_problem','content_stage','content_platform','content_goal','fun_type','fun_printer'];
+
+const STEP_META = [
+  {key:'intent',           label:'Step 1 — Pick your path',       path:'all'},
+  {key:'com_level',        label:'Commercial › Level',             path:'commercial'},
+  {key:'can_design',       label:'Commercial › Can design?',       path:'commercial'},
+  {key:'com_problem',      label:'Commercial › Biggest block',     path:'commercial'},
+  {key:'content_stage',    label:'Content › Stage',                path:'content'},
+  {key:'content_platform', label:'Content › Platform',             path:'content'},
+  {key:'content_goal',     label:'Content › Goal',                 path:'content'},
+  {key:'fun_type',         label:'Fun › What to print',            path:'fun'},
+  {key:'fun_printer',      label:'Fun › Printer type',             path:'fun'},
+];
+
+const OPT_LABELS = {
+  intent:           {commercial:'Sell prints',           content:'Grow content',         fun:'Fun & creative',     help:'No printer yet'},
+  com_level:        {beginner:'Just starting',           maker:"Print, don't sell",      seller:'Already selling'},
+  can_design:       {yes:'Yes, I design',                no:'No, use files'},
+  com_problem:      {what:"Don't know what to sell",     sell:"Don't know how to sell"},
+  content_stage:    {zero:'From zero',                   growing:'Slow growth',          monetize:'Have audience'},
+  content_platform: {instagram:'Instagram / TikTok',     youtube:'YouTube',              multi:'Multi-platform',   notsure:'Not sure yet'},
+  content_goal:     {brand:'Brand deals & affiliate',    products:'Own products',        all:'All income streams'},
+  fun_type:         {miniatures:'Miniatures',             functional:'Functional prints', art:'Art & design',       explore:'Still exploring'},
+  fun_printer:      {bambu:'Bambu Lab',                   fdm:'Other FDM',                resin:'Resin',            'no-printer':'No printer yet'},
+};
+
+const OPT_ORDER = {
+  intent:           ['commercial','content','fun','help'],
+  com_level:        ['beginner','maker','seller'],
+  can_design:       ['yes','no'],
+  com_problem:      ['what','sell'],
+  content_stage:    ['zero','growing','monetize'],
+  content_platform: ['instagram','youtube','multi','notsure'],
+  content_goal:     ['brand','products','all'],
+  fun_type:         ['miniatures','functional','art','explore'],
+  fun_printer:      ['bambu','fdm','resin','no-printer'],
+};
+
+function parseStepBtn(btn){
+  for(const k of KNOWN_STEPS){
+    if(btn && btn.startsWith(k+'_')) return {step:k, val:btn.slice(k.length+1)};
+  }
+  return null;
+}
+
 // ── COLUMN MAPPING ──
 // Your columns: Timestamp | UID | Variant | email | Action | Button | Link | Where do they come from? | Device | Screen width
 function normaliseRow(row){
@@ -141,13 +187,17 @@ function processEvents(events){
   const clicksByDay={}, sources={}, countries={}, buttonCounts={};
   let clicks30=0, clicksPrev15=0, clicksRecent15=0;
 
+  // Quiz step analytics
+  const stepViews   = {};  // {stepKey: count}  — from quiz_view events
+  const stepAnswers = {};  // {stepKey: {val: count}} — from quiz_step events
+  const uidEvts     = {};  // {uid: [events]} — for post-quiz offer linking
+
   events.forEach(e => {
     if(e.uid)   uids.add(e.uid);
     if(e.email) emails.add(e.email.toLowerCase());
 
     const ts = e.ts ? new Date(e.ts).getTime() : 0;
     const a  = e.action;
-    // Action starts with one of these for any click-type event
     const isClickAction = a.startsWith('offer_click') || a.startsWith('button_click');
 
     if(a==='visit'||a==='new_visitor') visits++;
@@ -165,16 +215,9 @@ function processEvents(events){
       else           clicksRecent15++;
     }
 
-    // Per-offer / per-button counts.  Prefer the dedicated Button column,
-    // fall back to parsing the suffix from Action (e.g. "offer_click:cubee3d").
     let btn = e.button;
-    if(!btn && a.includes(':')){
-      btn = a.split(':').slice(1).join(':');
-    }
-    if(btn){
-      const key = btn.trim();
-      if(key) buttonCounts[key] = (buttonCounts[key]||0)+1;
-    }
+    if(!btn && a.includes(':')) btn = a.split(':').slice(1).join(':');
+    if(btn){ const key=btn.trim(); if(key) buttonCounts[key]=(buttonCounts[key]||0)+1; }
 
     // Traffic source
     if(e.source){
@@ -183,13 +226,57 @@ function processEvents(events){
                 e.source==='(direct)'          ? 'Direct'    : 'Other';
       sources[s] = (sources[s]||0)+1;
     }
-    // Country
-    if(e.country){
-      countries[e.country] = (countries[e.country]||0)+1;
+    if(e.country) countries[e.country]=(countries[e.country]||0)+1;
+
+    // Quiz step view counts (quiz_view:stepKey)
+    if(a.startsWith('quiz_view:')){
+      const step=a.slice(10);
+      stepViews[step]=(stepViews[step]||0)+1;
     }
+
+    // Quiz step answer choices (quiz_step:stepKey_val)
+    if(a.startsWith('quiz_step:')){
+      const raw=e.button||(a.slice(10));
+      const p=parseStepBtn(raw);
+      if(p){
+        if(!stepAnswers[p.step]) stepAnswers[p.step]={};
+        stepAnswers[p.step][p.val]=(stepAnswers[p.step][p.val]||0)+1;
+      }
+    }
+
+    // Group by UID for post-quiz offer linking
+    if(e.uid){ if(!uidEvts[e.uid]) uidEvts[e.uid]=[]; uidEvts[e.uid].push(e); }
   });
 
-  // De-duplicate email captures using the email column
+  // Infer step entry counts from answer chains (for data predating quiz_view tracking)
+  const ans=stepAnswers;
+  const sumVals=obj=>Object.values(obj||{}).reduce((a,b)=>a+b,0);
+  if(!stepViews['intent'])           stepViews['intent']           = sumVals(ans['intent']);
+  if(!stepViews['com_level'])        stepViews['com_level']        = (ans['intent']||{})['commercial']||0;
+  if(!stepViews['can_design'])       stepViews['can_design']       = sumVals(ans['com_level']);
+  if(!stepViews['com_problem'])      stepViews['com_problem']      = sumVals(ans['can_design']);
+  if(!stepViews['content_stage'])    stepViews['content_stage']    = (ans['intent']||{})['content']||0;
+  if(!stepViews['content_platform']) stepViews['content_platform'] = sumVals(ans['content_stage']);
+  if(!stepViews['content_goal'])     stepViews['content_goal']     = sumVals(ans['content_platform']);
+  if(!stepViews['fun_type'])         stepViews['fun_type']         = (ans['intent']||{})['fun']||0;
+  if(!stepViews['fun_printer'])      stepViews['fun_printer']      = sumVals(ans['fun_type']);
+
+  // Post-quiz offer clicks — link to quiz path via UID session order
+  const postQuizOffers={}; // {path: {offer: count}}
+  Object.values(uidEvts).forEach(evts=>{
+    const sorted=[...evts].sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+    let lastPath=null;
+    sorted.forEach(e=>{
+      if(e.action.startsWith('quiz_complete:')){
+        lastPath=e.action.replace('quiz_complete:quiz_','');
+      } else if(e.action.startsWith('offer_click:') && lastPath){
+        const offer=e.button||e.action.slice(12);
+        if(!postQuizOffers[lastPath]) postQuizOffers[lastPath]={};
+        postQuizOffers[lastPath][offer]=(postQuizOffers[lastPath][offer]||0)+1;
+      }
+    });
+  });
+
   const uniqueEmails = emails.size || emailCaptures;
 
   return {
@@ -199,6 +286,7 @@ function processEvents(events){
     uniqueEmails, offerClicks,
     clicksByDay, clicks30, clicksPrev15, clicksRecent15,
     sources, countries, buttonCounts,
+    stepViews, stepAnswers, postQuizOffers,
   };
 }
 
@@ -475,6 +563,115 @@ function render(events){
       <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
         ${pathTotal} total completions. % of visitors who finished each path.
       </div>`;
+  }
+
+  // ── QUIZ STEP DROP-OFF ──
+  const dropoffPaths = [
+    {label:'Commercial path', steps:['intent','com_level','can_design','com_problem']},
+    {label:'Content path',    steps:['intent','content_stage','content_platform','content_goal']},
+    {label:'Fun path',        steps:['intent','fun_type','fun_printer']},
+  ];
+  const hasAnyStepData = KNOWN_STEPS.some(k => s.stepViews[k] > 0);
+  if(hasAnyStepData){
+    html += `<div class="section-title">QUIZ STEP DROP-OFF</div>`;
+    dropoffPaths.forEach(path => {
+      const stepsWithData = path.steps.filter(k => s.stepViews[k] > 0);
+      if(!stepsWithData.length) return;
+      const topVal = s.stepViews[path.steps[0]] || 1;
+      html += `<div style="margin-bottom:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase">${path.label}</div>`;
+      path.steps.forEach((key, i) => {
+        const entered  = s.stepViews[key] || 0;
+        const answered = Object.values(s.stepAnswers[key]||{}).reduce((a,b)=>a+b,0);
+        const dropped  = Math.max(0, entered - answered);
+        const dropPct  = entered > 0 ? Math.round(dropped/entered*100) : 0;
+        const barW     = Math.round(entered/topVal*100);
+        const meta     = STEP_META.find(m=>m.key===key);
+        const label    = meta ? meta.label : key;
+        if(!entered) return;
+        html += `<div class="funnel-row" style="margin-bottom:6px">
+          <div class="funnel-label" style="font-size:11px;width:150px">${label}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.45)">
+              <span>${entered} entered</span>
+            </div>
+          </div>
+          <div style="font-size:10px;width:64px;text-align:right;flex-shrink:0;color:${dropPct>30?'var(--red)':dropPct>15?'var(--yellow)':'var(--t3)'}">
+            ${answered} ans · <span style="font-weight:700">${dropPct}% left</span>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">
+      "Left" = people who reached that step but did not answer. Red ≥ 30%, yellow ≥ 15%.
+    </div>`;
+  }
+
+  // ── QUIZ ANSWER BREAKDOWN ──
+  const stepsWithAnswers = STEP_META.filter(m => {
+    const a = s.stepAnswers[m.key];
+    return a && Object.values(a).some(v=>v>0);
+  });
+  if(stepsWithAnswers.length){
+    html += `<div class="section-title">QUIZ ANSWER BREAKDOWN</div>`;
+    stepsWithAnswers.forEach(meta => {
+      const ansMap = s.stepAnswers[meta.key] || {};
+      const total  = Object.values(ansMap).reduce((a,b)=>a+b,0);
+      const order  = OPT_ORDER[meta.key] || Object.keys(ansMap);
+      const topCnt = Math.max(...order.map(v=>ansMap[v]||0), 1);
+      html += `<div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
+          <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">${meta.label}</div>
+          <div style="font-size:10px;color:var(--t3)">${total} answers</div>
+        </div>`;
+      order.forEach(val => {
+        const cnt  = ansMap[val] || 0;
+        const pct  = total > 0 ? Math.round(cnt/total*100) : 0;
+        const barW = Math.max(2, Math.round(cnt/topCnt*100));
+        const lbl  = (OPT_LABELS[meta.key]||{})[val] || val;
+        html += `<div class="funnel-row" style="margin-bottom:5px">
+          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${lbl}">${lbl}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(124,58,237,0.45)">
+              <span>${cnt}</span>
+            </div>
+          </div>
+          <div class="funnel-pct">${pct}%</div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">% of people who answered that step who chose each option.</div>`;
+  }
+
+  // ── POST-QUIZ OFFER CLICKS ──
+  const pathNames = {commercial:'Commercial path', content:'Content path', fun:'Fun path', help:'Help path'};
+  const postQuizPaths = Object.entries(s.postQuizOffers).filter(([,m])=>Object.keys(m).length>0);
+  if(postQuizPaths.length){
+    html += `<div class="section-title">OFFERS CLICKED AFTER QUIZ</div>`;
+    postQuizPaths.forEach(([path, offers]) => {
+      const entries = Object.entries(offers).sort((a,b)=>b[1]-a[1]);
+      const pathTotal = entries.reduce((a,[,v])=>a+v,0);
+      const topCnt = entries[0]?.[1] || 1;
+      html += `<div style="margin-bottom:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">${pathNames[path]||path} — ${pathTotal} clicks</div>`;
+      entries.forEach(([offer, cnt]) => {
+        const pct  = Math.round(cnt/pathTotal*100);
+        const barW = Math.max(4, Math.round(cnt/topCnt*100));
+        html += `<div class="funnel-row" style="margin-bottom:5px">
+          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${offer}">${offer}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.5)">
+              <span>${cnt}</span>
+            </div>
+          </div>
+          <div class="funnel-pct">${pct}%</div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">Offer clicks tracked per user session after quiz completion.</div>`;
   }
 
   // Top offers & buttons (clicks + click rate, sorted by clicks)

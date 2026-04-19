@@ -456,6 +456,110 @@ function buildRecs(s){
   return recs;
 }
 
+// ── CHANGELOG ──
+// Add an entry here every time you ship a change. date = YYYY-MM-DD of deploy.
+const CHANGELOG = [
+  {
+    date: '2026-04-19',
+    label: 'Landing page optimization — data-driven',
+    changes: [
+      'Hero rewritten to "DON\'T KNOW WHAT TO SELL?" (targets #1 pain point)',
+      'Quiz Step 1: new question + "60 seconds → personalized plan" eyebrow',
+      'Commercial path: removed can_design step (4 steps → 3)',
+      'Email capture: sharper copy — "10 products to sell this week"',
+      'Cubee3d: badge updated to "#1 MOST CLICKED" for social proof',
+    ]
+  }
+];
+
+function metricsForRange(events, fromMs, toMs){
+  const ev = events.filter(e => {
+    const ts = e.ts ? new Date(e.ts).getTime() : 0;
+    return ts >= fromMs && ts < toMs;
+  });
+  const visits = Math.max(1, ev.filter(e => e.action==='visit'||e.action==='new_visitor').length);
+  const quizDone = ev.filter(e => e.action.startsWith('quiz_complete')).length;
+  const emailSet = new Set(ev.filter(e => e.email).map(e => e.email.toLowerCase()));
+  const emailCount = emailSet.size || ev.filter(e => e.action==='email_capture').length;
+  const offerClicks = ev.filter(e => e.action.startsWith('offer_click')).length;
+  const step1Views   = ev.filter(e => e.action==='quiz_view:intent').length;
+  const step1Answers = ev.filter(e => e.action.startsWith('quiz_step:intent')).length;
+  const step1Drop = step1Views > 0 ? Math.round((step1Views - step1Answers) / step1Views * 100) : null;
+  return {
+    visits,
+    quizRate:  +(quizDone    / visits * 100).toFixed(1),
+    offerRate: +(offerClicks / visits * 100).toFixed(1),
+    emailRate: +(emailCount  / visits * 100).toFixed(1),
+    step1Drop,
+    step1Views,
+  };
+}
+
+function renderChangelog(events){
+  if(!CHANGELOG.length) return '';
+  let html = `<div class="section-title">CHANGES LOG</div>`;
+  CHANGELOG.forEach(entry => {
+    const changeTs  = new Date(entry.date).getTime();
+    const day7      = 7 * 86400000;
+    const before    = metricsForRange(events, changeTs - day7, changeTs);
+    const after     = metricsForRange(events, changeTs, changeTs + day7);
+    const hasB      = before.visits > 5;
+    const hasA      = after.visits  > 5;
+
+    function delta(afterVal, beforeVal, lowerIsBetter){
+      if(!hasA || !hasB || afterVal === null || beforeVal === null) return '<span style="color:var(--t3)">—</span>';
+      const d = afterVal - beforeVal;
+      if(d === 0) return '<span style="color:var(--t3)">→ 0</span>';
+      const improved = lowerIsBetter ? d < 0 : d > 0;
+      const sign = d > 0 ? '+' : '';
+      return `<span style="color:${improved ? 'var(--green)' : 'var(--red)'};font-weight:700">${sign}${Number.isInteger(d) ? d : d.toFixed(1)}</span>`;
+    }
+
+    const rows = [
+      {label:'Step 1 drop-off',    b: before.step1Drop !== null ? before.step1Drop+'%' : '—', a: after.step1Drop !== null ? after.step1Drop+'%' : '—', d: delta(after.step1Drop,  before.step1Drop,  true)},
+      {label:'Quiz completion',    b: before.quizRate+'%',  a: after.quizRate+'%',  d: delta(after.quizRate,  before.quizRate,  false)},
+      {label:'Offer click rate',   b: before.offerRate+'%', a: after.offerRate+'%', d: delta(after.offerRate, before.offerRate, false)},
+      {label:'Email capture rate', b: before.emailRate+'%', a: after.emailRate+'%', d: delta(after.emailRate, before.emailRate, false)},
+    ];
+
+    const badge = !hasA
+      ? `<span style="font-size:10px;background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);color:var(--yellow);padding:3px 8px;border-radius:4px;font-weight:700;letter-spacing:.5px">TRACKING — waiting for data</span>`
+      : `<span style="font-size:10px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:var(--green);padding:3px 8px;border-radius:4px;font-weight:700;letter-spacing:.5px">RESULTS IN</span>`;
+
+    html += `<div style="background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:16px 18px;margin-bottom:14px">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${entry.date}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--t)">${entry.label}</div>
+        </div>
+        ${badge}
+      </div>
+      <ul style="margin:0 0 14px 0;padding-left:16px;list-style:disc">
+        ${entry.changes.map(c=>`<li style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:2px">${c}</li>`).join('')}
+      </ul>
+      <table style="width:100%;border-collapse:collapse;font-size:11px">
+        <thead><tr>
+          <th style="text-align:left;color:var(--t3);font-weight:600;padding:4px 0;border-bottom:1px solid var(--b)">Metric</th>
+          <th style="text-align:right;color:var(--t3);font-weight:600;padding:4px 4px;border-bottom:1px solid var(--b)">7d before</th>
+          <th style="text-align:right;color:var(--t3);font-weight:600;padding:4px 4px;border-bottom:1px solid var(--b)">7d after</th>
+          <th style="text-align:right;color:var(--t3);font-weight:600;padding:4px 0;border-bottom:1px solid var(--b)">Δ</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r=>`<tr>
+            <td style="padding:5px 0;color:var(--t2)">${r.label}</td>
+            <td style="text-align:right;padding:5px 4px;font-family:var(--fm);color:var(--t)">${hasB ? r.b : '—'}</td>
+            <td style="text-align:right;padding:5px 4px;font-family:var(--fm);color:${hasA ? 'var(--t)' : 'var(--t3)'}">${hasA ? r.a : 'waiting…'}</td>
+            <td style="text-align:right;padding:5px 0">${r.d}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:var(--t3);margin-top:8px">Before window: ${before.visits} visits · After window: ${after.visits} visits${!hasA ? ' (need 5+ to show results)' : ''}</div>
+    </div>`;
+  });
+  html += `<div style="font-size:10px;color:var(--t3);margin-bottom:20px">7-day window before vs after each change date. Step 1 drop-off: lower = better. All others: higher = better.</div>`;
+  return html;
+}
+
 // ── CHART ──
 function drawChart(clicksByDay){
   const canvas = document.getElementById('clickChart');
@@ -798,6 +902,9 @@ function render(events){
     </div>`;
   });
   html += `</div>`;
+
+  // Changes log
+  html += renderChangelog(events);
 
   // Recent events
   const recent = [...events].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);

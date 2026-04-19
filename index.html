@@ -605,11 +605,10 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
       <div class="eye" style="margin-bottom:10px">Need something printed?</div>
       <div style="font-family:var(--fd);font-size:clamp(24px,7vw,36px);letter-spacing:1px;line-height:1.05;margin-bottom:12px">I'LL PRINT IT<br>FOR YOU.</div>
       <p style="font-size:15px;color:var(--t2);line-height:1.6;margin-bottom:22px;max-width:440px">Based in Berlin, ship worldwide. Or I'll connect you with someone in my network who prints near you. Just send me an email and tell me what you need.</p>
-      <a href="mailto:meshminds3dd@gmail.com?subject=I%20need%20something%203D%20printed"
-        onclick="track('button_click',{button:'print_for_me',href:'mailto:meshminds3dd@gmail.com'})"
-        style="display:inline-flex;align-items:center;gap:8px;background:var(--o);color:#fff;text-decoration:none;border-radius:var(--r2);padding:14px 22px;font-size:15px;font-weight:600;font-family:var(--fb)">
+      <button onclick="openModal('print')"
+        style="display:inline-flex;align-items:center;gap:8px;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 22px;font-size:15px;font-weight:600;font-family:var(--fb);cursor:pointer">
         Send me an email →
-      </a>
+      </button>
     </div>
   </div>
 </section>
@@ -675,6 +674,20 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <div class="foot-affiliate">* This page contains affiliate links. If you buy through one of them I earn a small commission at no extra cost to you.<a href="dashboard.html" class="admin-link" title="Admin">⚙</a></div>
 </footer>
 <!-- MODALS -->
+<div class="modal-overlay" id="modal-print" onclick="if(event.target===this)closeModal('print')">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <button class="modal-close" onclick="closeModal('print')">✕</button>
+    <div style="font-size:32px;margin-bottom:12px">🖨️</div>
+    <h2 style="margin-bottom:8px">LET'S PRINT IT.</h2>
+    <p style="margin-bottom:6px">Drop me an email and tell me what you need. I'm based in Berlin and ship worldwide — or I'll connect you with someone in my network closer to you.</p>
+    <div style="background:var(--s2);border:1px solid var(--b2);border-radius:var(--r2);padding:14px;margin:20px 0;font-family:'DM Mono',monospace;font-size:15px;letter-spacing:.5px;color:var(--t)">meshminds3dd@gmail.com</div>
+    <a href="mailto:meshminds3dd@gmail.com?subject=I%20need%20something%203D%20printed"
+      onclick="track('button_click',{button:'print_for_me_email',href:'mailto:meshminds3dd@gmail.com'})"
+      style="display:flex;align-items:center;justify-content:center;gap:8px;background:var(--o);color:#fff;text-decoration:none;border-radius:var(--r2);padding:15px 22px;font-size:15px;font-weight:600;font-family:var(--fb);width:100%">
+      Open email app →
+    </a>
+  </div>
+</div>
 <div class="modal-overlay" id="modal-impressum" onclick="if(event.target===this)closeModal('impressum')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('impressum')">✕</button>

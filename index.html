@@ -403,9 +403,9 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <hr class="sdiv">
 <section class="sec" id="gear-section">
   <div class="sec-inner">
-    <p class="eye rv">Meshminds — make money with 3D printing</p>
-    <h1 class="stitle rv">PRINT FOR<br>PROFIT.</h1>
-    <p class="ssub rv">Everything here runs on my own printer day in, day out. If it's on this list, it paid its way.</p>
+    <p class="eye rv">3D printing side hustle · find what actually sells</p>
+    <h1 class="stitle rv">DON'T KNOW<br>WHAT TO SELL?</h1>
+    <p class="ssub rv">Most printers stall at the same question. Take the 60-second quiz below and get a tailored product roadmap — then grab the gear that makes it happen.</p>
   </div>
 
   <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
@@ -692,7 +692,7 @@ const ALL_PICKS = [
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Sell 3D printed products from 1,000+ professional designs legally. One license, unlimited prints. No IP risk.',
-    ic:'📜', badge:'COMMERCIAL USE', badgeClass:'orange',
+    ic:'📜', badge:'#1 MOST CLICKED', badgeClass:'orange',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
     tap:'Get licensed →'
@@ -815,11 +815,11 @@ let answers = {}, path = null, qIndex = 0, activeFlow = {};
 const history = [];
 
 const STEPS = {
-  intent:{key:'intent',question:"WHAT\'S YOUR\n3D PRINTING GOAL?",options:[
-    {val:'commercial',ic:'💰',t:'Make money with printing',     s:'Sell prints, STL files, or build a real print business'},
-    {val:'content',   ic:'📈',t:'Grow my 3D printing content',  s:'Build an audience on Instagram, TikTok, or YouTube'},
-    {val:'fun',       ic:'🎨',t:'Fun and creative projects',    s:'Cool models, gifts, hobby prints, just for the love of it'},
-    {val:'help',      ic:'🖨️',t:"I don\'t have a printer yet", s:'Show me which one to buy first'},
+  intent:{key:'intent',question:"WHAT DO YOU\nWANT FROM\nYOUR PRINTER?",options:[
+    {val:'commercial',ic:'💰',t:'Sell my prints and make money',  s:"I want to find what sells, get licensed, and start earning"},
+    {val:'content',   ic:'📈',t:'Grow my 3D printing content',    s:'Build an audience on Instagram, TikTok, or YouTube'},
+    {val:'fun',       ic:'🎨',t:'Fun and creative projects',      s:'Cool models, gifts, hobby prints, just for the love of it'},
+    {val:'help',      ic:'🖨️',t:"I don\'t have a printer yet",   s:'Show me which one to buy first'},
   ]},
 
   // COMMERCIAL PATH
@@ -879,8 +879,7 @@ function nextStep(stepKey, val){
     return 'com_level'; // commercial
   }
   // Commercial
-  if(stepKey==='com_level')   return 'can_design';
-  if(stepKey==='can_design')  return 'com_problem';
+  if(stepKey==='com_level')   return 'com_problem';
   if(stepKey==='com_problem') return null;
   // Content
   if(stepKey==='content_stage')    return 'content_platform';
@@ -894,7 +893,7 @@ function nextStep(stepKey, val){
 
 
 function totalSteps(p){
-  if(p==='commercial') return 4; // intent + level + can_design + problem
+  if(p==='commercial') return 3; // intent + level + problem
   if(p==='content')    return 4; // intent + stage + platform + goal
   if(p==='fun')        return 3; // intent + type + printer
   return 1; // help: just intent → printer recommendation
@@ -921,7 +920,7 @@ function renderStep(stepKey, stepNum, total){
     }
   } else if(prog) prog.style.display='none';
 
-  document.getElementById('dyn-eyebrow').textContent = stepNum===1 ? 'Find your 3D printing path →' : '';
+  document.getElementById('dyn-eyebrow').textContent = stepNum===1 ? '60 seconds → your personalized print-for-profit plan' : '';
   document.getElementById('dyn-question').innerHTML = step.question.replace(/\n/g,'<br>');
   document.getElementById('dyn-options').innerHTML = opts.map(o=>`
     <button class="qo" onclick="pick(this,'${o.val}','${stepKey}')">
@@ -1133,8 +1132,8 @@ function showCommercialResult(){
   const emailCapture = `
     <div class="email-capture" style="margin-top:8px">
       <div class="ec-icon">💡</div>
-      <div class="ec-title">FREE WEEKLY IDEAS FOR YOUR PRINT BUSINESS</div>
-      <div class="ec-desc">10 profitable product ideas every week. Real niches, real margin data, straight to your inbox.</div>
+      <div class="ec-title">FREE: 10 PRODUCTS TO SELL THIS WEEK</div>
+      <div class="ec-desc">Every week I share the exact niches making money right now — real margin, proven demand, what to print. Free to your inbox, no fluff.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial" aria-label="Email address">
         <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>

@@ -25,6 +25,7 @@ const ALL_PICKS = [
     brand:'MakerWorld', name:'My Free Bestseller Models',
     desc:'The exact models I sold 11,000+ times on Etsy, now free to download with a commercial license. Start printing proven bestsellers today.',
     ic:'🎁',
+    badge:'FREE', badgeClass:'green',
     url:'https://makerworld.com/de/collections/9383161-my-bestsellers',
     tap:'Download free →'
   },
@@ -146,24 +147,6 @@ const STEPS = {
     {val:'sell', ic:'📣',t:"I don\'t know how to sell",   s:'Getting seen, getting clicks, getting the checkout'},
   ]},
 
-  // CONTENT PATH
-  content_stage:{key:'content_stage',question:'WHERE ARE YOU\nWITH CONTENT?',options:[
-    {val:'zero',    ic:'🌱',t:'Starting from zero',              s:"Haven\'t posted yet or just getting started"},
-    {val:'growing', ic:'📈',t:'I post but growth is slow',      s:'Some followers but growth has stalled'},
-    {val:'monetize',ic:'💶',t:'I have an audience, need money', s:"People follow me, I just don\'t know how to monetize"},
-  ]},
-  content_platform:{key:'content_platform',question:'WHERE DO YOU\nWANT TO GROW?',options:[
-    {val:'instagram',ic:'📸',t:'Instagram and TikTok', s:'Short videos and carousels'},
-    {val:'youtube',  ic:'▶️', t:'YouTube',              s:'Long form videos and tutorials'},
-    {val:'multi',    ic:'🌐',t:'Multiple platforms',   s:'I want to grow everywhere'},
-    {val:'notsure',  ic:'🤔',t:'Not sure yet',         s:"I\'ll go where the audience is"},
-  ]},
-  content_goal:{key:'content_goal',question:"WHAT\'S YOUR\nCONTENT GOAL?",options:[
-    {val:'brand',   ic:'🤝',t:'Brand deals and affiliate income', s:'Sponsorships and commissions from gear brands'},
-    {val:'products',ic:'📦',t:'Sell my own products',             s:'Drive traffic to my own digital or physical products'},
-    {val:'all',     ic:'💰',t:'All of the above',                 s:'As many income streams as possible'},
-  ]},
-
   // FUN PATH
   fun_type:{key:'fun_type',question:'WHAT DO YOU\nLOVE PRINTING?',options:[
     {val:'miniatures',ic:'🐉',t:'Miniatures and figurines',       s:'D&D, Warhammer, collectibles'},
@@ -182,18 +165,12 @@ const STEPS = {
 
 function nextStep(stepKey, val){
   if(stepKey==='intent'){
-    if(val==='fun')     return 'fun_type';
-    if(val==='content') return 'content_stage';
-    if(val==='help')    return null; // no printer yet → straight to recommendation
+    if(val==='fun') return 'fun_type';
     return 'com_level'; // commercial
   }
   // Commercial
   if(stepKey==='com_level')   return 'com_problem';
   if(stepKey==='com_problem') return null;
-  // Content
-  if(stepKey==='content_stage')    return 'content_platform';
-  if(stepKey==='content_platform') return 'content_goal';
-  if(stepKey==='content_goal')     return null;
   // Fun
   if(stepKey==='fun_type')    return 'fun_printer';
   if(stepKey==='fun_printer') return null;
@@ -203,9 +180,8 @@ function nextStep(stepKey, val){
 
 function totalSteps(p){
   if(p==='commercial') return 3; // intent + level + problem
-  if(p==='content')    return 4; // intent + stage + platform + goal
   if(p==='fun')        return 3; // intent + type + printer
-  return 1; // help: just intent → printer recommendation
+  return 3;
 }
 
 function renderStep(stepKey, stepNum, total){
@@ -295,89 +271,8 @@ function showResult(){
   setTimeout(()=>{
     if(loader) loader.classList.remove('active');
     if(path==='commercial') showCommercialResult();
-    else if(path==='content'){ showContentResult(); }
     else if(path==='fun'){ document.getElementById('res-fun').classList.add('active'); }
-    else { showHelpResult(); }
   }, 1400);
-}
-
-function showHelpResult(){
-  const ht = answers['help_type']||'buying';
-
-  const bambuCard = `
-    <a class="res-offer-card" href="https://eu.store.bambulab.com/de/products/a1?srsltid=AfmBOopWBrouM3KT6vyvjQRc_DKbsV2vtiCzGwJLDhZvQQKzYKbV99sK&id=599117150694776840" target="_blank" rel="noopener" onclick="track('offer_click',{button:'bambu_a1_help_${ht}',href:'https://eu.store.bambulab.com/de/products/a1'})" style="margin:20px 0">
-      <div class="res-offer-img"><img src="https://store.bblcdn.com/s7/default/866e470a983f4d989f81a495a5f5c71c/A1-compressed.jpg" alt="Bambu Lab A1 + AMS" loading="lazy"></div>
-      <div class="res-offer-body">
-        <div class="res-offer-badge">MY #1 PICK</div>
-        <div class="res-offer-top">
-          <div>
-
-            <div class="res-offer-name">A1 + AMS Combo</div>
-          </div>
-        </div>
-        <div class="res-offer-desc">Multi-color from day one, 256mm/s, zero calibration. The best beginner-to-pro machine on the market.</div>
-        <div class="res-offer-cta">Shop Bambu Lab A1 →</div>
-      </div>
-    </a>`;
-
-  const cryoGripCard = `
-    <a class="res-offer-card" href="https://biqu.equipment/?ref=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'cryogrip_help_quality',href:'https://biqu.equipment/?ref=meshminds'})" style="margin:20px 0">
-      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg" alt="CryoGrip BuildPlate" loading="lazy"></div>
-      <div class="res-offer-body">
-        <div class="res-offer-top">
-          <div>
-
-            <div class="res-offer-name">CryoGrip BuildPlate</div>
-          </div>
-        </div>
-        <div class="res-offer-desc">Grips hot, releases cold. No glue, no hairspray. First upgrade I put on every printer I own.</div>
-        <div class="res-offer-cta">Shop CryoGrip →</div>
-      </div>
-    </a>`;
-
-  const makerworldCard = `
-    <a class="res-offer-card" href="https://makerworld.com/de/collections/9383161-my-bestsellers" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_help_materials',href:'https://makerworld.com/de/collections/9383161-my-bestsellers'})" style="margin:20px 0">
-      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%285%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
-      <div class="res-offer-body">
-        <div class="res-offer-top">
-          <div>
-
-            <div class="res-offer-name">Test Your Materials With Bestsellers</div>
-          </div>
-        </div>
-        <div class="res-offer-desc">Free bestselling models to benchmark every filament you try. Same file, same print, any material fastest way to see which one wins.</div>
-        <div class="res-offer-cta">Download free →</div>
-      </div>
-    </a>`;
-
-  const copy = {
-    buying:    { path:'Buying Guide',      title:'THE BEST PRINTER<br>TO START WITH.',  diag:'I run a Bambu Lab A1 with AMS. Fastest setup, best value, and the one I\'d buy again tomorrow.', card: bambuCard },
-    quality:   { path:'Print Quality Fix', title:'BETTER PRINTS<br>START HERE.',        diag:'Most quality issues come down to one thing: bed adhesion. Fix that first and 80% of problems disappear.', card: cryoGripCard },
-    materials: { path:'Materials Guide',   title:'RIGHT FILAMENT.<br>RIGHT JOB.',       diag:'PLA for most things, PETG for heat and flex, ABS/ASA for outdoors. Start with a good matte PLA and you\'re 90% covered.', card: makerworldCard },
-    setup:     { path:'Setup Guide',       title:'LET\'S GET YOUR<br>SETUP RIGHT.',     diag:'A good setup starts with the right printer. The Bambu A1 auto-calibrates everything, no manual tuning, ever.', card: bambuCard },
-  };
-  const c = copy[ht]||copy.buying;
-  document.querySelector('#res-help .qres-path').textContent = c.path;
-  document.querySelector('#res-help .qres-title').innerHTML = c.title;
-  document.querySelector('#res-help .qres-diag').innerHTML = c.diag;
-  document.getElementById('help-offer-card').innerHTML = c.card;
-  document.getElementById('res-help').classList.add('active');
-}
-
-function showContentResult(){
-  const goal = answers['content_goal']||'all';
-  const hooks = {
-    brand:    { title:'WANT TO GROW?<br>LET ME<br><em style="color:var(--o)">PUSH YOU.</em>',
-                diag:'I grew @meshminds3d to 93K+ on Instagram without a big budget. If you want to grow your 3D printing account, DM me on Instagram. I do occasional shoutouts for creators I genuinely rate.' },
-    products: { title:'I\'LL SHOW YOUR<br>WORK TO MY<br><em style="color:var(--o)">AUDIENCE.</em>',
-                diag:'The fastest way to get your first customers is to get in front of an existing audience. If your work is good, DM me I feature creators and products to my 93K+ Instagram followers when something stands out.' },
-    all:      { title:'WANT A<br>3D PRINTING<br><em style="color:var(--o)">SHOUTOUT?</em>',
-                diag:'A shoutout from the right account can shortcut months of work. DM me on Instagram and show me what you\'re building. I feature creators I genuinely believe in.' },
-  };
-  const h = hooks[goal]||hooks.all;
-  document.getElementById('ct-title').innerHTML = h.title;
-  document.querySelector('#res-content .qres-diag').innerHTML = h.diag;
-  document.getElementById('res-content').classList.add('active');
 }
 
 function showCommercialResult(){

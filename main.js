@@ -342,8 +342,8 @@ function showCommercialResult(){
         <div style="font-size:32px;opacity:.4">🖼️</div>
         <div style="font-size:10px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600">Thumbnail coming soon</div>
       </div>
-      <div class="ec-title">FREE: 10 PRODUCTS TO SELL THIS WEEK</div>
-      <div class="ec-desc">Every week I share the exact niches making money right now: real margin, proven demand, what to print. Free to your inbox, no fluff.</div>
+      <div class="ec-title">WHAT SHOULD I 3D PRINT TO MAKE MONEY?</div>
+      <div class="ec-desc"><strong>THE FREE GUIDE 164,000 ETSY SHOPS WISH THEY HAD.</strong> Free guide with proven products and data that sell.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial" aria-label="Email address">
         <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>

@@ -134,9 +134,8 @@ const STEPS = {
 
   // COMMERCIAL PATH
   com_level:{key:'com_level',question:'WHERE ARE YOU\nRIGHT NOW?',options:[
-    {val:'beginner',ic:'🔰',t:'Just getting started',              s:'I have a printer or am about to buy one'},
-    {val:'maker',   ic:'🛠️',t:"I print but don\'t sell yet",      s:'I know slicers and filaments, not making money yet'},
-    {val:'seller',  ic:'💸',t:"I\'m already selling",             s:'On Etsy, locally, or working toward more'},
+    {val:'beginner',ic:'🔰',t:'Just getting started',  s:'I have a printer or am about to buy one'},
+    {val:'seller',  ic:'💸',t:"I\'m already selling",  s:'On Etsy, locally, or working toward more'},
   ]},
   can_design:{key:'can_design',question:'CAN YOU DESIGN\nYOUR OWN MODELS?',options:[
     {val:'yes',      ic:'✏️',t:'Yes, I design my own files',  s:'Fusion 360, Blender, CAD or similar'},

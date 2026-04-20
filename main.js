@@ -672,23 +672,3 @@ document.addEventListener('DOMContentLoaded', function(){
   const dp = document.getElementById('discount-popup');
   if(dp) dp.addEventListener('click', function(e){ if(e.target===this) closeDiscountPopup(); });
 });
-
-// ── EXIT INTENT POPUP (Cubee3D) ──
-(function(){
-  let exitShown = false;
-  function showExitPopup(){
-    if(exitShown) return;
-    exitShown = true;
-    track('button_click', {button:'cubee3d_exit_popup_show'});
-    const pop = document.getElementById('exit-popup');
-    if(pop){ pop.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
-  }
-  document.addEventListener('mouseleave', function(e){
-    if(e.clientY <= 5) showExitPopup();
-  });
-})();
-function closeExitPopup(clicked){
-  track('button_click', {button: clicked ? 'cubee3d_exit_popup_click' : 'cubee3d_exit_popup_close'});
-  document.getElementById('exit-popup').style.display = 'none';
-  document.body.style.overflow = '';
-}

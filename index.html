@@ -44,9 +44,9 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --o:#FF5C00;--od:#cc4900;--o8:rgba(255,92,0,0.08);
-  --bg:#0b0b0b;--s1:#131313;--s2:#1a1a1a;--s3:#222;
-  --t:#f0ede8;--t2:rgba(240,237,232,0.62);--t3:rgba(240,237,232,0.3);
-  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --bg:#ffffff;--s1:#f4f4f4;--s2:#ebebeb;--s3:#e0e0e0;
+  --t:#0d0d0d;--t2:rgba(13,13,13,0.58);--t3:rgba(13,13,13,0.38);
+  --b:rgba(0,0,0,0.08);--b2:rgba(0,0,0,0.14);
   --fd:'Bebas Neue','Arial Black',sans-serif;--fb:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   --r:10px;--r2:6px;
 }
@@ -228,7 +228,7 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 /* MODAL */
 .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);padding:20px;overflow-y:auto}
 .modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;padding-top:40px}
-.modal{background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:32px 28px;max-width:620px;width:100%;position:relative}
+.modal{background:#ffffff;border:1px solid rgba(0,0,0,.12);border-radius:12px;padding:32px 28px;max-width:620px;width:100%;position:relative}
 .modal h2{font-family:var(--fd);font-size:28px;letter-spacing:1px;margin-bottom:20px;color:var(--t)}
 .modal h3{font-size:15px;font-weight:600;margin:20px 0 6px;color:var(--t)}
 .modal p,.modal li{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:8px}
@@ -239,7 +239,7 @@ footer{padding:18px 20px 28px;border-top:1px solid var(--b)}
 .qres#res-newsletter{display:none}
 
 /* COOKIE BANNER */
-.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#161616;border-top:1px solid rgba(255,255,255,.1);padding:20px;display:flex;flex-direction:column;gap:14px;transform:translateY(100%);transition:transform .4s ease}
+.cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:400;background:#f4f4f4;border-top:1px solid rgba(0,0,0,.1);padding:20px;display:flex;flex-direction:column;gap:14px;transform:translateY(100%);transition:transform .4s ease}
 .cookie-banner.visible{transform:translateY(0)}
 .cookie-banner-text{font-size:14px;color:var(--t2);line-height:1.55}
 .cookie-banner-btns{display:flex;gap:10px;flex-wrap:wrap}
@@ -759,7 +759,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
 <!-- EXIT INTENT POPUP (Cubee3D) -->
 <div id="exit-popup" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);padding:20px;align-items:center;justify-content:center" onclick="if(event.target===this)closeExitPopup(false)">
-  <div style="background:#141414;border:1px solid rgba(255,92,0,.35);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center">
+  <div style="background:#ffffff;border:1px solid rgba(255,92,0,.35);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center">
     <div style="font-size:28px;margin-bottom:14px">🎟️</div>
     <div style="font-family:var(--fd);font-size:clamp(20px,5vw,26px);letter-spacing:.5px;line-height:1.2;margin-bottom:10px">BEFORE YOU GO —<br>1,000+ DESIGNS WITH A<br><em style="color:var(--o)">COMMERCIAL LICENCE.</em></div>
     <div style="font-size:14px;color:var(--t2);margin-bottom:22px;line-height:1.55">Print and sell from a library of proven designs. No IP risk. No guesswork. Use code <strong style="color:var(--o)">MESHMINDS</strong> at checkout.</div>
@@ -773,7 +773,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
 <!-- DISCOUNT CODE POPUP (Cubee only) -->
 <div id="discount-popup" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);padding:20px;align-items:center;justify-content:center">
-  <div style="background:#141414;border:1px solid rgba(255,92,0,.3);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center">
+  <div style="background:#ffffff;border:1px solid rgba(255,92,0,.3);border-radius:12px;padding:28px 24px;max-width:360px;width:100%;text-align:center">
     <div style="font-size:28px;margin-bottom:12px">🎟️</div>
     <div style="font-family:var(--fd);font-size:26px;letter-spacing:1px;margin-bottom:8px">YOUR DISCOUNT<br>CODE</div>
     <div style="font-size:14px;color:var(--t2);margin-bottom:20px;line-height:1.5">Copy the code below, then click the button to visit Cubee3D and paste it at checkout.</div>

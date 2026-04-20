@@ -5,7 +5,7 @@ const ALL_PICKS = [
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Sell 3D printed products from 1,000+ professional designs legally. One license, unlimited prints. No IP risk.',
-    ic:'📜', badge:'#1 MOST CLICKED', badgeClass:'orange',
+    ic:'📜', badge:'Most Popular', badgeClass:'orange',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
     tap:'Get licensed →'

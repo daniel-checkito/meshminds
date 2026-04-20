@@ -469,7 +469,48 @@ const CHANGELOG = [
       'Email capture: sharper copy -"10 products to sell this week"',
       'Cubee3d: badge updated to "#1 MOST CLICKED" for social proof',
     ]
-  }
+  },
+  {
+    date: '2026-04-20',
+    label: 'quiz_step1_simplified — reduce Step 1 drop-off',
+    changes: [
+      'Replaced 4-option intent question with 2 large side-by-side buttons: "I want to sell prints" / "I just print for fun"',
+      'Removed subtext from Step 1 buttons to cut cognitive load',
+      'Simplified question copy to "WHAT\'S YOUR GOAL?"',
+      'Target metric: Step 1 drop-off rate (currently 72% — goal: <50%)',
+    ]
+  },
+  {
+    date: '2026-04-20',
+    label: 'cubee3d_post_quiz_priority — surface Cubee3D first after commercial quiz',
+    changes: [
+      'Moved Cubee3D to full-width hero card above the product grid in commercial result',
+      'Added "START WITH 1,000+ PROVEN DESIGNS." headline above the card',
+      'Added "SOLVE THE \'WHAT TO SELL\' PROBLEM" badge on the card',
+      'Target metric: Cubee3D offer click rate after quiz completion (baseline: 28 clicks)',
+    ]
+  },
+  {
+    date: '2026-04-20',
+    label: 'email_capture_above_fold — move email capture higher',
+    changes: [
+      'Added standalone email capture section between affiliate picks and quiz',
+      'Copy: "GET THE WEEKLY BREAKDOWN." / "Real numbers, real businesses — what actually works in 3D printing."',
+      'Visible to all visitors regardless of quiz completion',
+      'Target metric: email capture rate (currently 2% — goal: >5%)',
+    ]
+  },
+  {
+    date: '2026-04-20',
+    label: 'cubee3d_exit_popup — exit intent popup for Cubee3D',
+    changes: [
+      'Added exit intent detection (desktop: mouseleave top of viewport)',
+      'Popup headline: "BEFORE YOU GO — 1,000+ DESIGNS WITH A COMMERCIAL LICENCE."',
+      'CTA button: "See if spots are open →" linking to Cubee3D affiliate link',
+      'Shows MESHMINDS discount code in popup body',
+      'Target metric: cubee3d_exit_popup_click events vs cubee3d_exit_popup_close (currently 36 closes with generic popup)',
+    ]
+  },
 ];
 
 function metricsForRange(events, fromMs, toMs){

@@ -469,6 +469,16 @@ function submitEmail(type){
   queue.push(payload);
   _writeEmailQueue(queue);
 
+  // For the commercial freebie: fire webhook then redirect immediately
+  if(type === 'commercial'){
+    _sendEmailPayload(payload).then(()=>{
+      const q2 = _readEmailQueue().filter(p=>!(p.email===payload.email&&p.ts===payload.ts));
+      _writeEmailQueue(q2);
+    }).catch(()=>{});
+    window.location.href = '/freebie';
+    return;
+  }
+
   const showThanks = () => {
     const form = input.closest('.ec-form');
     const thanks = document.getElementById('ec-thanks-'+type);

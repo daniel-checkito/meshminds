@@ -427,11 +427,9 @@ try { _flushEmailQueue(); } catch(e){}
 function submitEmail(type){
   const ids = {
     commercial:'email-commercial',
-    content:'email-content-input',
+    freebie:'email-freebie',
     fun:'email-fun-input',
-    help:'email-help-input',
     newsletter:'email-nl-input',
-    above_fold:'email-above-fold-input',
   };
   const input = document.getElementById(ids[type]);
   if(!input) return;
@@ -469,8 +467,8 @@ function submitEmail(type){
   queue.push(payload);
   _writeEmailQueue(queue);
 
-  // For the commercial freebie: fire webhook then redirect immediately
-  if(type === 'commercial'){
+  // For freebie captures: fire webhook then redirect immediately
+  if(type === 'commercial' || type === 'freebie'){
     _sendEmailPayload(payload).then(()=>{
       const q2 = _readEmailQueue().filter(p=>!(p.email===payload.email&&p.ts===payload.ts));
       _writeEmailQueue(q2);

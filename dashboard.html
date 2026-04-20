@@ -511,6 +511,40 @@ const CHANGELOG = [
       'Target metric: cubee3d_exit_popup_click events vs cubee3d_exit_popup_close (currently 36 closes with generic popup)',
     ]
   },
+  {
+    date: '2026-04-20',
+    label: 'quiz_two_col_layout — all quiz steps side-by-side tiles',
+    changes: [
+      'All quiz steps now render as 2-column tile grid (was only Step 1)',
+      'Removed subtitle text and checkboxes from tiles for cleaner look',
+      'Removed dead content creator + help quiz paths (cleaner code, fewer load bytes)',
+      'Target metric: quiz completion rate (all steps)',
+    ]
+  },
+  {
+    date: '2026-04-20',
+    label: 'freebie_funnel — /freebie page + email capture redirect',
+    changes: [
+      'Added /freebie page (freebie.html) with guide content',
+      'Commercial quiz email capture now redirects instantly to /freebie after submit',
+      'Added standalone freebie email capture section between quiz and blog (visible to all visitors)',
+      'Freebie email type tracked as button:freebie in Google Sheet',
+      'Guide title: "WHAT SHOULD I 3D PRINT TO MAKE MONEY?" / "THE FREE GUIDE 164,000 ETSY SHOPS WISH THEY HAD."',
+      'Target metric: freebie email captures (email_capture:freebie + email_capture:commercial events)',
+    ]
+  },
+  {
+    date: '2026-04-20',
+    label: 'visual_redesign — section colors + dark quiz theme',
+    changes: [
+      'Added distinct background per section: white (gear), dark #111 + orange glow (quiz), light orange #fff5f0 (freebie), gray #f4f4f4 (blog), dark #111 (about + footer)',
+      'Quiz buttons: white floating cards with orange glow on hover — replaces flat gray',
+      'About section moved to bottom of page above footer; avatar enlarged 72px → 96px',
+      'Gear section heading changed to "MY PICKS, GEAR & RESOURCES"',
+      'Dark footer: white text at 28-45% opacity for legal/affiliate lines',
+      'Target metric: session duration + scroll depth (visual engagement)',
+    ]
+  },
 ];
 
 function metricsForRange(events, fromMs, toMs){

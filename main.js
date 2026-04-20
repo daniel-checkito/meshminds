@@ -339,7 +339,7 @@ function showCommercialResult(){
   const emailCapture = `
     <div class="email-capture" style="margin-top:8px">
       <div style="width:100%;border-radius:var(--r);margin-bottom:16px;overflow:hidden">
-        <img src="/freebie-cover.jpg" alt="The 3D Print Money Guide" style="width:100%;display:block">
+        <img src="/freebie-cover.jpg" alt="The 3D Print Money Guide" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
       </div>
       <div class="ec-title">WHAT SHOULD I 3D PRINT TO MAKE MONEY?</div>
       <div class="ec-desc"><strong>THE FREE GUIDE 164,000 ETSY SHOPS WISH THEY HAD.</strong> Free guide with proven products and data that sell.</div>

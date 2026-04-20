@@ -207,16 +207,13 @@ function renderStep(stepKey, stepNum, total){
 
   document.getElementById('dyn-eyebrow').textContent = stepNum===1 ? '60 seconds → your personalized print-for-profit plan' : '';
   document.getElementById('dyn-question').innerHTML = step.question.replace(/\n/g,'<br>');
-  const isIntentStep = stepKey === 'intent';
   const optsEl = document.getElementById('dyn-options');
   optsEl.innerHTML = opts.map(o=>`
     <button class="qo" onclick="pick(this,'${o.val}','${stepKey}')">
       <span class="qo-ic">${o.ic}</span>
-      <div class="qo-text"><div class="qo-t">${o.t}</div>${o.s && !isIntentStep ? `<div class="qo-s">${o.s}</div>` : ''}</div>
-      ${!isIntentStep ? '<span class="qo-check">✓</span>' : ''}
+      <div class="qo-text"><div class="qo-t">${o.t}</div></div>
     </button>`).join('');
-  if(isIntentStep) optsEl.classList.add('two-up');
-  else optsEl.classList.remove('two-up');
+  optsEl.classList.add('two-up');
 
   const backRow = document.getElementById('quiz-back-row');
   if(backRow) backRow.style.display = stepNum>1 ? 'block' : 'none';

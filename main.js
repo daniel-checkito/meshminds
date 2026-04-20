@@ -338,9 +338,8 @@ function showCommercialResult(){
 
   const emailCapture = `
     <div class="email-capture" style="margin-top:8px">
-      <div id="ec-thumb-commercial" style="width:100%;aspect-ratio:16/9;background:var(--s2);border:2px dashed var(--b2);border-radius:var(--r);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;overflow:hidden">
-        <div style="font-size:32px;opacity:.4">🖼️</div>
-        <div style="font-size:10px;color:var(--t3);letter-spacing:1.5px;text-transform:uppercase;font-weight:600">Thumbnail coming soon</div>
+      <div style="width:100%;border-radius:var(--r);margin-bottom:16px;overflow:hidden">
+        <img src="/freebie-cover.jpg" alt="The 3D Print Money Guide" style="width:100%;display:block">
       </div>
       <div class="ec-title">WHAT SHOULD I 3D PRINT TO MAKE MONEY?</div>
       <div class="ec-desc"><strong>THE FREE GUIDE 164,000 ETSY SHOPS WISH THEY HAD.</strong> Free guide with proven products and data that sell.</div>

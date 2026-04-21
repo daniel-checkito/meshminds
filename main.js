@@ -4,7 +4,7 @@ const ALL_PICKS = [
     id:'cubee3d',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
     brand:'Cubee3D', name:'Commercial STL License',
-    desc:'Sell 3D printed products from 1,000+ professional designs legally. One license, unlimited prints. No IP risk.',
+    desc:'1,000+ designs, unlimited prints, no IP risk.',
     ic:'📜', badge:'Most Popular', badgeClass:'orange',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
@@ -14,7 +14,7 @@ const ALL_PICKS = [
     id:'meshy',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg',
     brand:'Meshy', name:'AI 3D Model Generator',
-    desc:'Type a prompt, get a print-ready 3D model. Skip the design phase entirely and go straight to printing and selling. No CAD skills needed.',
+    desc:'Type a prompt, get a print-ready 3D model. No CAD skills needed.',
     ic:'🤖',
     url:'https://www.meshy.ai?via=meshminds',
     tap:'Try free →'
@@ -23,7 +23,7 @@ const ALL_PICKS = [
     id:'makerworld',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%285%29.jpg',
     brand:'MakerWorld', name:'My Free Bestseller Models',
-    desc:'The exact models I sold 11,000+ times on Etsy, now free to download with a commercial license. Start printing proven bestsellers today.',
+    desc:'My bestsellers, free to download with a commercial license.',
     ic:'🎁',
     badge:'FREE', badgeClass:'green',
     url:'https://makerworld.com/de/collections/9383161-my-bestsellers',
@@ -33,7 +33,7 @@ const ALL_PICKS = [
     id:'timeplast',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2811%29.jpg',
     brand:'Timeplast', name:'Soap Filament',
-    desc:'Prints like PLA, dissolves like soap. Eco story = premium price without argument. A hidden gem for gift and novelty markets.',
+    desc:'Prints like PLA, dissolves like soap. Premium eco story for gift markets.',
     ic:'🧵', badge:'HIDDEN GEM', badgeClass:'orange',
     url:'https://timeplast.com/?ref=meshminds',
     tap:'Shop Timeplast →'
@@ -42,7 +42,7 @@ const ALL_PICKS = [
     id:'cryogrip',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%282%29.jpg',
     brand:'Panda Touch', name:'CryoGrip BuildPlate',
-    desc:'Grips hot, releases cold. No glue, no hairspray. Saves hours per week the first upgrade to make on any Bambu printer.',
+    desc:'Grips hot, releases cold. No glue, no hairspray.',
     ic:'🔧', badge:'UPGRADE #1', badgeClass:'orange',
     url:'https://biqu.equipment/?ref=meshminds',
     tap:'Shop CryoGrip →'
@@ -51,7 +51,7 @@ const ALL_PICKS = [
     id:'farmloop',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2810%29.jpg',
     brand:'3D Farmers', name:'Automate Your Printer',
-    desc:'Prints, auto-ejects, starts the next job. Run your printer all day without babysitting it. The system behind unattended batch printing.',
+    desc:'Auto-ejects, starts the next job. Run your printer all day unattended.',
     ic:'🏭', badge:'AUTO PRINT', badgeClass:'orange',
     url:'https://3d-farmers.com/#farmloop-section',
     tap:'Automate now →'

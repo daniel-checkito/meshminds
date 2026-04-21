@@ -610,6 +610,175 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   </p>
 </section>
 
+<!-- COMMUNITY TEASER -->
+<style>
+.cm-teaser-pulse{animation:cm-pulse 2.2s ease-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes cm-pulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(2.6);opacity:0}}
+.cm-teaser-live{animation:cm-live 1.8s ease-in-out infinite}
+@keyframes cm-live{0%,100%{opacity:1}50%{opacity:.3}}
+.cm-teaser-btn-p{background:#FF5C00;color:#fff;border:none;border-radius:6px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:background .15s}
+.cm-teaser-btn-p:hover{background:#cc4900;color:#fff;text-decoration:none}
+.cm-teaser-btn-g{background:transparent;color:rgba(245,245,245,.7);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:border-color .15s,color .15s}
+.cm-teaser-btn-g:hover{border-color:rgba(255,255,255,.4);color:#fff;text-decoration:none}
+.cm-teaser-tt{position:fixed;background:rgba(15,15,15,.95);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 10px;pointer-events:none;z-index:200;display:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+.cm-tt-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px}
+.cm-tt-city{font-size:11px;color:rgba(245,245,245,.55)}
+</style>
+
+<section id="community-teaser" style="background:#111;border-top:1px solid rgba(255,255,255,0.06)">
+  <div style="max-width:600px;margin:0 auto;padding:48px 20px 32px">
+
+    <!-- 1. Header block -->
+    <div style="margin-bottom:28px">
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#FF5C00;font-family:'DM Mono',monospace;margin-bottom:10px">3D PRINTER COMMUNITY</div>
+      <div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:clamp(36px,10vw,56px);line-height:.95;letter-spacing:2px;color:#fff;margin-bottom:12px">OUR<br><span style="color:#FF5C00">COMMUNITY</span></div>
+      <div style="font-size:14px;color:rgba(245,245,245,.55);max-width:400px;line-height:1.55">The most active 3D print sellers on the planet — featured in front of 93K followers.</div>
+    </div>
+
+    <!-- 2. Stats row -->
+    <div style="display:flex;gap:12px 32px;flex-wrap:wrap">
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">24</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Members</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">12</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Countries</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">48K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Total Sales</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">93K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Followers</div></div>
+    </div>
+
+  </div>
+
+  <!-- 3. Map — full width, no side padding -->
+  <div style="background:#0d1117;overflow:hidden">
+    <svg id="cm-teaser-map" viewBox="0 0 380 200" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;min-height:200px;display:block"></svg>
+  </div>
+
+  <!-- Tooltip -->
+  <div class="cm-teaser-tt" id="cm-teaser-tt"><div class="cm-tt-name" id="cm-tt-name"></div><div class="cm-tt-city" id="cm-tt-city"></div></div>
+
+  <!-- 4. Footer bar -->
+  <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="cm-teaser-live" style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(245,245,245,.45)">24 members live</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <a href="/community" class="cm-teaser-btn-p" onclick="track('button_click',{button:'community_teaser_map'})">Explore the community →</a>
+      <a href="/community#join" class="cm-teaser-btn-g" onclick="track('button_click',{button:'community_teaser_join'})">Get listed · €9/mo</a>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  function loadScript(src, cb){
+    var s = document.createElement('script');
+    s.src = src; s.onload = cb; s.onerror = cb;
+    document.head.appendChild(s);
+  }
+
+  function initTeaserMap(){
+    var svg = document.getElementById('cm-teaser-map');
+    if(!svg || !window.d3 || !window.topojson) return;
+
+    var projection = d3.geoNaturalEarth1().scale(60).translate([190, 100]);
+    var path = d3.geoPath().projection(projection);
+
+    var members = [
+      {name:'Lena M.',    city:'Berlin',    lon:13.4,   lat:52.5,   color:'#FF5C00', rank:1, sales:'12K sales'},
+      {name:'Tom K.',     city:'Amsterdam', lon:4.9,    lat:52.37,  color:'#22c55e', rank:2, sales:'9K sales'},
+      {name:'James R.',   city:'London',    lon:-0.12,  lat:51.5,   color:'#3b82f6', rank:3, sales:'7K sales'},
+      {name:'Marc D.',    city:'Paris',     lon:2.35,   lat:48.85,  color:'#8b5cf6',         sales:'6K sales'},
+      {name:'Sara V.',    city:'Vienna',    lon:16.37,  lat:48.21,  color:'#eab308',         sales:'5K sales'},
+      {name:'Erik S.',    city:'Stockholm', lon:18.07,  lat:59.33,  color:'#22c55e',         sales:'4K sales'},
+      {name:'Chiara B.',  city:'Milan',     lon:9.19,   lat:45.46,  color:'#ef4444',         sales:'3K sales'},
+      {name:'Ana P.',     city:'Lisbon',    lon:-9.14,  lat:38.72,  color:'#FF5C00',         sales:'2K sales'},
+    ];
+
+    var extraPins = [
+      [-74.0,40.7],[-87.6,41.8],[151.2,-33.8],[103.8,1.35],[55.3,25.2],
+      [37.6,55.75],[126.9,37.5],[-43.2,-22.9],[29.0,41.0],[139.7,35.7],
+      [-3.7,40.4],[23.7,37.98],[174.8,-36.9],[-99.1,19.4],[72.8,19.1]
+    ];
+
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+      .then(function(r){return r.json();})
+      .then(function(world){
+        var countries = topojson.feature(world, world.objects.countries);
+        var borders = topojson.mesh(world, world.objects.countries, function(a,b){return a!==b;});
+        var svgEl = d3.select('#cm-teaser-map');
+
+        svgEl.append('rect').attr('width',380).attr('height',200).attr('fill','#0d1117');
+
+        svgEl.selectAll('.cm-cty')
+          .data(countries.features).enter().append('path')
+          .attr('class','cm-cty').attr('d',path)
+          .attr('fill','#1e2433').attr('stroke','none');
+
+        svgEl.append('path').datum(borders).attr('d',path)
+          .attr('fill','none').attr('stroke','#2a3045').attr('stroke-width',0.4);
+
+        extraPins.forEach(function(c){
+          var pt = projection(c);
+          if(!pt) return;
+          svgEl.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',1.5)
+            .attr('fill','rgba(255,92,0,0.22)').attr('stroke','none');
+        });
+
+        var tt  = document.getElementById('cm-teaser-tt');
+        var ttN = document.getElementById('cm-tt-name');
+        var ttC = document.getElementById('cm-tt-city');
+
+        members.forEach(function(m){
+          var pt = projection([m.lon, m.lat]);
+          if(!pt) return;
+          var g = svgEl.append('g').style('cursor','pointer');
+
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',6)
+            .attr('fill',m.color).attr('fill-opacity',0.12).attr('stroke','none')
+            .attr('class','cm-teaser-pulse');
+
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',4)
+            .attr('fill','none').attr('stroke',m.color).attr('stroke-width',1.5).attr('stroke-opacity',0.75);
+
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2.5)
+            .attr('fill',m.color);
+
+          if(m.rank && m.rank<=3){
+            g.append('text').attr('x',pt[0]).attr('y',pt[1]-9)
+              .attr('text-anchor','middle').attr('font-size','6px')
+              .attr('font-family','DM Mono,monospace').attr('fill',m.color)
+              .attr('font-weight','700').text('#'+m.rank);
+          }
+
+          g.on('mouseenter',function(event){
+            ttN.textContent = m.name+' · '+m.sales;
+            ttC.textContent = m.city;
+            tt.style.display = 'block';
+          }).on('mousemove',function(event){
+            tt.style.left = (event.clientX+12)+'px';
+            tt.style.top  = (event.clientY-8)+'px';
+          }).on('mouseleave',function(){
+            tt.style.display = 'none';
+          });
+        });
+      })
+      .catch(function(){});
+  }
+
+  function run(){
+    var d3ok   = typeof window.d3       !== 'undefined';
+    var topoOk = typeof window.topojson !== 'undefined';
+    if(d3ok && topoOk){ setTimeout(initTeaserMap, 50); return; }
+    var need = 0, done = 0;
+    function check(){ if(++done === need) setTimeout(initTeaserMap, 50); }
+    if(!d3ok)  { need++; loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js', check); }
+    if(!topoOk){ need++; loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js', check); }
+    if(!need) setTimeout(initTeaserMap, 50);
+  }
+
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+})();
+</script>
+
 <!-- FREEBIE -->
 <section class="freebie-outer">
 <div style="max-width:600px;margin:0 auto;padding:40px 20px">

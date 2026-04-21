@@ -224,11 +224,21 @@ function toast(msg, type='ok'){
 // Fetches email capture events from the same Apps Script sheet used by the main analytics
 const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec';
 
+function normaliseRow(row){
+  return {
+    timestamp: row['Timestamp'] || '',
+    email:     row['email']     || '',
+    action:    (row['Action']   || '').toLowerCase().trim(),
+    button:    row['Button']    || '',
+    source:    row['Where do they come from?'] || '',
+  };
+}
+
 function loadSubscribers(){
   fetch(SHEETS_URL)
     .then(r=>r.json())
     .then(data=>{
-      const rows = (data.rows||[]).filter(r=>r.action==='email_capture' && r.email);
+      const rows = (data.rows||[]).map(normaliseRow).filter(r=>r.action==='email_capture' && r.email);
       const seen = new Set();
       const unique = rows.filter(r=>{
         if(seen.has(r.email)) return false;

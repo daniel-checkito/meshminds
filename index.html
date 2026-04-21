@@ -614,9 +614,10 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 /* Leaflet pin + popup overrides for teaser */
-.cm-lf-pin{background:transparent!important;border:none!important;display:flex;align-items:center;justify-content:center}
-.cm-lf-dot{border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3),0 0 0 1px rgba(0,0,0,.1);transition:transform .15s;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
-.cm-lf-pin:hover .cm-lf-dot{transform:translate(-50%,-50%) scale(1.4)}
+.cm-lf-pin{background:transparent!important;border:none!important}
+.cm-lf-pin-inner{width:20px;height:20px;border-radius:50% 50% 50% 0;background:#FF5C00;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.28);transform:rotate(-45deg);transition:transform .15s,box-shadow .15s}
+.cm-lf-pin:hover .cm-lf-pin-inner{transform:rotate(-45deg) scale(1.2);box-shadow:0 4px 12px rgba(0,0,0,.38)}
+.cm-lf-dot{border-radius:50%;border:1.5px solid rgba(255,255,255,.6);box-shadow:0 1px 3px rgba(0,0,0,.25);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 .cm-lf-popup .leaflet-popup-content-wrapper{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);padding:0;overflow:hidden}
 .cm-lf-popup .leaflet-popup-tip{background:#fff}
 .cm-lf-popup .leaflet-popup-content{margin:0;width:160px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
@@ -729,14 +730,14 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <script>
 (function(){
   var members = [
-    {name:'Lena M.',   city:'Berlin',    lon:13.4,  lat:52.5,  color:'#FF5C00', sales:'12K sales'},
-    {name:'Tom K.',    city:'Amsterdam', lon:4.9,   lat:52.37, color:'#22c55e', sales:'9K sales'},
-    {name:'James R.',  city:'London',    lon:-0.12, lat:51.5,  color:'#3b82f6', sales:'7K sales'},
-    {name:'Marc D.',   city:'Paris',     lon:2.35,  lat:48.85, color:'#8b5cf6', sales:'6K sales'},
-    {name:'Sara V.',   city:'Vienna',    lon:16.37, lat:48.21, color:'#eab308', sales:'5K sales'},
-    {name:'Erik S.',   city:'Stockholm', lon:18.07, lat:59.33, color:'#22c55e', sales:'4K sales'},
-    {name:'Chiara B.', city:'Milan',     lon:9.19,  lat:45.46, color:'#ef4444', sales:'3K sales'},
-    {name:'Ana P.',    city:'Lisbon',    lon:-9.14, lat:38.72, color:'#FF5C00', sales:'2K sales'},
+    {name:'Lena M.',   city:'Berlin',    lon:13.4,  lat:52.5,  sales:'847 sales'},
+    {name:'Tom K.',    city:'Amsterdam', lon:4.9,   lat:52.37, sales:'1,240 sales'},
+    {name:'James R.',  city:'London',    lon:-0.12, lat:51.5,  sales:'652 sales'},
+    {name:'Marc D.',   city:'Paris',     lon:2.35,  lat:48.85, sales:'318 sales'},
+    {name:'Sara V.',   city:'Vienna',    lon:16.37, lat:48.21, sales:'483 sales'},
+    {name:'Erik S.',   city:'Stockholm', lon:18.07, lat:59.33, sales:'921 sales'},
+    {name:'Chiara B.', city:'Milan',     lon:9.19,  lat:45.46, sales:'214 sales'},
+    {name:'Ana P.',    city:'Lisbon',    lon:-9.14, lat:38.72, sales:'376 sales'},
   ];
 
   var extraPins = [
@@ -761,8 +762,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     });
 
     members.forEach(function(m){
-      var icon = L.divIcon({className:'cm-lf-pin',html:'<div class="cm-lf-dot" style="background:'+m.color+';width:14px;height:14px"></div>',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
-      var popupHtml = '<div class="cm-lf-card"><div class="cm-lf-card-name"><span class="cm-lf-card-dot" style="background:'+m.color+'"></span>'+m.name+'</div><div class="cm-lf-card-city">'+m.city+'</div><div class="cm-lf-card-sales">'+m.sales+'</div></div>';
+      var icon = L.divIcon({className:'cm-lf-pin',html:'<div class="cm-lf-pin-inner"></div>',iconSize:[20,26],iconAnchor:[10,26],popupAnchor:[0,-28]});
+      var popupHtml = '<div class="cm-lf-card"><div class="cm-lf-card-name">'+m.name+'</div><div class="cm-lf-card-city">'+m.city+'</div><div class="cm-lf-card-sales">'+m.sales+'</div></div>';
       L.marker([m.lat,m.lon],{icon:icon}).bindPopup(L.popup({maxWidth:160,className:'cm-lf-popup',closeButton:false}).setContent(popupHtml)).addTo(map);
     });
   }

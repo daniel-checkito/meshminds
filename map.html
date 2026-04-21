@@ -207,6 +207,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;li
 .partners-cta-btn{background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:11px 22px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
 .partners-cta-btn:hover{background:var(--od)}
 
+.av-o{background:rgba(255,92,0,.12);color:#FF5C00}
 .av-g{background:rgba(34,197,94,.12);color:#22c55e}
 .av-b{background:rgba(59,130,246,.12);color:#3b82f6}
 .av-p{background:rgba(139,92,246,.12);color:#8b5cf6}
@@ -224,9 +225,12 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;li
 .mm-pin{background:transparent!important;border:none!important;display:flex;align-items:center;justify-content:center}
 .mm-pin-dot{width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.12);transition:transform .15s;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
 .mm-pin:hover .mm-pin-dot{transform:translate(-50%,-50%) scale(1.4)}
+.mm-member-pin{background:transparent!important;border:none!important}
+.mm-member-pin-inner{width:22px;height:22px;border-radius:50% 50% 50% 0;background:#FF5C00;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.28);transform:rotate(-45deg);transition:transform .15s,box-shadow .15s}
+.mm-member-pin:hover .mm-member-pin-inner{transform:rotate(-45deg) scale(1.2);box-shadow:0 4px 14px rgba(0,0,0,.4)}
 .mm-popup .leaflet-popup-content-wrapper{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:var(--r);box-shadow:0 6px 24px rgba(0,0,0,.15);padding:0;overflow:hidden}
 .mm-popup .leaflet-popup-tip{background:#fff}
-.mm-popup .leaflet-popup-content{margin:0;width:252px!important}
+.mm-popup .leaflet-popup-content{margin:0;width:262px!important}
 .mm-popup .leaflet-popup-close-button{color:rgba(0,0,0,.4)!important;background:rgba(0,0,0,.07)!important;border-radius:50%!important;width:22px!important;height:22px!important;font-size:14px!important;line-height:22px!important;text-align:center!important;padding:0!important;top:8px!important;right:8px!important}
 .mm-popup .leaflet-popup-close-button:hover{color:#000!important;background:rgba(0,0,0,.14)!important}
 .mm-popup .popup-img{background:#e8e8e8}
@@ -335,17 +339,15 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;li
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 const MEMBERS=[
-  {id:0,name:"Lena M.",init:"LM",av:"av-o",city:"Berlin",country:"Germany",flag:"🇩🇪",tags:["Home decor","Gifts","Lamps"],sales:2140,revenue:47080,etsy:"lena3dberlin",ig:"@lena3d",rank:1,badge:"top",lon:13.4,lat:52.5,project:{name:"Minimal Lamp Series",desc:"Award-winning minimalist lamp collection. 6 designs, all tested for commercial print. Ships to 12 countries.",imgs:["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=560&h=220&fit=crop","https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
-  {id:1,name:"Tom K.",init:"TK",av:"av-g",city:"Amsterdam",country:"Netherlands",flag:"🇳🇱",tags:["Planters","Organizers"],sales:3410,revenue:74020,etsy:"tomkprints",ig:"@tomkprint",rank:2,badge:"top",lon:4.9,lat:52.37,project:{name:"Modular Planter System",desc:"Interlocking wall planter system. Over 3,400 sold. Featured in Dutch design magazine.",imgs:["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
-  {id:2,name:"James R.",init:"JR",av:"av-b",city:"London",country:"UK",flag:"🇬🇧",tags:["Gaming","Minis"],sales:4820,revenue:96400,etsy:"jamesrprints",ig:"@jrprints3d",rank:3,badge:"top",lon:-0.12,lat:51.5,project:{name:"DnD Miniature Line",desc:"Hand-designed tabletop miniatures. 4,800+ sales across 40+ countries. Monthly new drops.",imgs:["https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=560&h=220&fit=crop"]},joined:"Dec 2024"},
-  {id:3,name:"Marc D.",init:"MD",av:"av-p",city:"Paris",country:"France",flag:"🇫🇷",tags:["Jewelry","Gifts"],sales:890,revenue:19580,etsy:"marcdparis",ig:"@marcdprint",rank:4,badge:"rising",lon:2.35,lat:48.85,project:{name:"Geometric Jewelry",desc:"Precision-printed geometric jewelry. PLA and PETG. Custom orders welcome.",imgs:["https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
-  {id:4,name:"Sara V.",init:"SV",av:"av-y",city:"Vienna",country:"Austria",flag:"🇦🇹",tags:["Home decor","Seasonal"],sales:1240,revenue:27280,etsy:"saravdesigns",ig:"@saravprint",rank:5,badge:"verified",lon:16.37,lat:48.21,project:{name:"Seasonal Decor Sets",desc:"Christmas, Easter, and seasonal print collections. 1,200+ sales, 5-star average.",imgs:["https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
-  {id:5,name:"Erik S.",init:"ES",av:"av-b",city:"Stockholm",country:"Sweden",flag:"🇸🇪",tags:["Organizers","Functional"],sales:1560,revenue:34320,etsy:"eriksprints",ig:"@eriksprints",rank:6,badge:"verified",lon:18.07,lat:59.33,project:{name:"Desk Organizer System",desc:"Modular desk organizers. Minimalist Scandinavian aesthetic. 15 compatible pieces.",imgs:["https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
-  {id:6,name:"Chiara B.",init:"CB",av:"av-r",city:"Milan",country:"Italy",flag:"🇮🇹",tags:["Home decor","Art"],sales:760,revenue:16720,etsy:"chiarabdesign",ig:"@chiarab3d",rank:7,badge:"new",lon:9.19,lat:45.46,project:{name:"Abstract Wall Art",desc:"Bold abstract wall panels inspired by Italian design. FDM printed, hand-sanded.",imgs:["https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=560&h=220&fit=crop"]},joined:"Apr 2025"},
-  {id:7,name:"Ana P.",init:"AP",av:"av-g",city:"Lisbon",country:"Portugal",flag:"🇵🇹",tags:["Gifts","Custom"],sales:980,revenue:21560,etsy:"anapprints",ig:"@anaprint3d",rank:8,badge:"verified",lon:-9.14,lat:38.72,project:{name:"Custom Gift Boxes",desc:"Personalized gift packaging with 3D printed lids. Weddings, birthdays, corporate.",imgs:["https://images.unsplash.com/photo-1513201099705-a9746072f043?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
+  {id:0,name:"Lena M.",init:"LM",av:"av-o",city:"Berlin",country:"Germany",flag:"🇩🇪",tags:["Lamps","Home decor"],sales:847,revenue:18634,etsy:"lena3dberlin",ig:"@lena3d",public:true,rank:1,badge:"top",lon:13.4,lat:52.5,bio:"Part-time seller, full-time chaos. I print minimalist lamps and wall shelves when my kids are asleep.",project:{name:"Minimal Lamp Series",desc:"Clean, minimalist lamp collection. 6 designs, all print-tested and ready to sell.",imgs:["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=560&h=220&fit=crop","https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
+  {id:1,name:"Tom K.",init:"TK",av:"av-g",city:"Amsterdam",country:"Netherlands",flag:"🇳🇱",tags:["Planters","Organizers"],sales:1240,revenue:24800,etsy:"tomkprints",ig:"@tomkprint",public:true,rank:2,badge:"top",lon:4.9,lat:52.37,bio:"Dutch designer with a Bambu X1C and way too many filament spools. I make modular planters for small apartments.",project:{name:"Modular Planter System",desc:"Interlocking wall planter system. Works with any wall type, ships flat.",imgs:["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
+  {id:2,name:"James R.",init:"JR",av:"av-b",city:"London",country:"UK",flag:"🇬🇧",tags:["Gaming","Minis"],sales:652,revenue:12388,etsy:"jamesrprints",ig:"@jrprints3d",public:false,rank:3,badge:"top",lon:-0.12,lat:51.5,bio:"Tabletop gamer who got tired of buying expensive minis. Now I design and sell them. D&D runs in my blood.",project:{name:"DnD Miniature Line",desc:"Hand-designed tabletop miniatures. New drops every month, 40+ countries shipped.",imgs:["https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=560&h=220&fit=crop"]},joined:"Dec 2024"},
+  {id:3,name:"Marc D.",init:"MD",av:"av-p",city:"Paris",country:"France",flag:"🇫🇷",tags:["Jewelry","Gifts"],sales:318,revenue:7632,etsy:"marcdparis",ig:"@marcdprint",public:false,rank:4,badge:"rising",lon:2.35,lat:48.85,bio:"Jewellery designer by day, 3D print nerd by night. My wife thinks I spend too much on filament. She's right.",project:{name:"Geometric Jewelry",desc:"Precision-printed geometric jewelry in PLA and PETG. Custom orders always welcome.",imgs:["https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
+  {id:4,name:"Sara V.",init:"SV",av:"av-y",city:"Vienna",country:"Austria",flag:"🇦🇹",tags:["Seasonal","Home decor"],sales:483,revenue:10143,etsy:"saravdesigns",ig:"@saravprint",public:true,rank:5,badge:"verified",lon:16.37,lat:48.21,bio:"I print seasonal décor — Christmas, Easter, Halloween. My shop basically runs itself for 3 months and dies for the other 9.",project:{name:"Seasonal Decor Sets",desc:"Seasonal print collections. Consistent 5-star reviews across 480 orders.",imgs:["https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
+  {id:5,name:"Erik S.",init:"ES",av:"av-b",city:"Stockholm",country:"Sweden",flag:"🇸🇪",tags:["Organizers","Functional"],sales:921,revenue:21183,etsy:"eriksprints",ig:"@eriksprints",public:false,rank:6,badge:"verified",lon:18.07,lat:59.33,bio:"Minimalist at heart. Everything I make fits on a desk. Scandinavian design principles, no unnecessary clutter.",project:{name:"Desk Organizer System",desc:"Modular desk organizers. 15 compatible pieces, all prints in under 3 hours.",imgs:["https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
+  {id:6,name:"Chiara B.",init:"CB",av:"av-r",city:"Milan",country:"Italy",flag:"🇮🇹",tags:["Art","Home decor"],sales:214,revenue:3852,etsy:"chiarabdesign",ig:"@chiarab3d",public:true,rank:7,badge:"new",lon:9.19,lat:45.46,bio:"Architecture student who figured out I could sell prints instead of just making them for studio. Abstract wall panels are my thing.",project:{name:"Abstract Wall Art",desc:"Bold abstract wall panels inspired by Italian design. FDM printed, hand-sanded finish.",imgs:["https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=560&h=220&fit=crop"]},joined:"Apr 2025"},
+  {id:7,name:"Ana P.",init:"AP",av:"av-g",city:"Lisbon",country:"Portugal",flag:"🇵🇹",tags:["Gifts","Custom"],sales:376,revenue:7520,etsy:"anapprints",ig:"@anaprint3d",public:true,rank:8,badge:"verified",lon:-9.14,lat:38.72,bio:"Custom gift boxes for weddings and events. My whole family is now involved in the business whether they like it or not.",project:{name:"Custom Gift Boxes",desc:"Personalized gift packaging with 3D printed lids. Weddings, birthdays, corporate events.",imgs:["https://images.unsplash.com/photo-1513201099705-a9746072f043?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
 ];
-
-const MEMBER_COLORS=['#FF5C00','#22c55e','#3b82f6','#8b5cf6','#eab308','#22c55e','#ef4444','#FF5C00'];
 
 let activePopup=null,currentMember=null,currentImgIdx=0;
 let leafletMap=null,memberMarkers={};
@@ -354,7 +356,18 @@ function memberPopupHtml(m){
   const imgHtml=m.project.imgs&&m.project.imgs.length
     ?`<img src="${m.project.imgs[0]}" class="popup-img" onerror="this.style.display='none'">`
     :`<div class="popup-img-ph">🖨️</div>`;
-  return imgHtml+`<div class="popup-body"><div class="popup-name">${m.name}</div><div class="popup-loc">${m.flag} ${m.city}, ${m.country}</div><div class="popup-tags">${m.tags.map(t=>`<span class="popup-tag">${t}</span>`).join('')}</div><div class="popup-stats"><div class="popup-stat"><div class="popup-stat-n">${m.sales.toLocaleString()}</div><div class="popup-stat-l">Sales</div></div><div class="popup-stat"><div class="popup-stat-n">#${m.rank}</div><div class="popup-stat-l">Ranked</div></div></div><div class="popup-cta"><button class="popup-btn primary" onclick="openModal(${m.id})">See project →</button><button class="popup-btn secondary" onclick="window.open('https://etsy.com/shop/${m.etsy}','_blank')">Etsy</button></div></div>`;
+  const socialHtml=m.public
+    ?`<a href="https://instagram.com/${m.ig.replace('@','')}" target="_blank" rel="noopener" style="color:#FF5C00;text-decoration:none;font-size:11px">${m.ig}</a>`
+    :`<span style="font-size:11px;color:rgba(0,0,0,.35);font-style:italic">Private account</span>`;
+  return imgHtml+`<div class="popup-body">
+    <div class="popup-name">${m.name}</div>
+    <div class="popup-loc">${m.flag} ${m.city}, ${m.country}</div>
+    <div style="font-size:11px;margin:2px 0 7px">${socialHtml}</div>
+    <div style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.5;margin-bottom:8px;font-style:italic">"${m.bio}"</div>
+    <div class="popup-tags">${m.tags.map(t=>`<span class="popup-tag">${t}</span>`).join('')}</div>
+    <div class="popup-stats"><div class="popup-stat"><div class="popup-stat-n">${m.sales.toLocaleString()}</div><div class="popup-stat-l">Sales</div></div><div class="popup-stat"><div class="popup-stat-n">#${m.rank}</div><div class="popup-stat-l">Ranked</div></div></div>
+    <div class="popup-cta"><button class="popup-btn primary" onclick="openModal(${m.id})">See project →</button><button class="popup-btn secondary" onclick="window.open('https://etsy.com/shop/${m.etsy}','_blank')">Etsy</button></div>
+  </div>`;
 }
 
 function initMap(){
@@ -367,9 +380,8 @@ function initMap(){
     activePopup=null;
     document.querySelectorAll('.member-row').forEach(r=>r.classList.remove('active'));
   });
-  MEMBERS.forEach((m,i)=>{
-    const color=MEMBER_COLORS[i]||'#FF5C00';
-    const icon=L.divIcon({className:'mm-pin',html:`<div class="mm-pin-dot" style="background:${color}"></div>`,iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
+  MEMBERS.forEach((m)=>{
+    const icon=L.divIcon({className:'mm-member-pin',html:'<div class="mm-member-pin-inner"></div>',iconSize:[22,28],iconAnchor:[11,28],popupAnchor:[0,-30]});
     const marker=L.marker([m.lat,m.lon],{icon})
       .bindPopup(L.popup({maxWidth:252,className:'mm-popup',closeButton:true}).setContent(memberPopupHtml(m)))
       .addTo(leafletMap);
@@ -482,7 +494,7 @@ function openModal(id){
         <span class="modal-badge member">Since ${m.joined}</span>
       </div>
       <div class="modal-name">${m.name}</div>
-      <div class="modal-loc">${m.flag} ${m.city}, ${m.country} · ${m.ig}</div>
+      <div class="modal-loc">${m.flag} ${m.city}, ${m.country}${m.public?' · '+m.ig:''}</div>
       <div class="modal-project-title">Featured project</div>
       <div class="modal-project-name">${m.project.name}</div>
       <div class="modal-project-desc">${m.project.desc}</div>
@@ -494,7 +506,7 @@ function openModal(id){
       <div class="modal-tags-row">${m.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
       <div class="modal-actions">
         <a href="https://etsy.com/shop/${m.etsy}" target="_blank" rel="noopener" class="modal-action primary">Visit Etsy shop →</a>
-        <a href="https://instagram.com/${m.ig.replace('@','')}" target="_blank" rel="noopener" class="modal-action secondary">Instagram</a>
+        ${m.public?`<a href="https://instagram.com/${m.ig.replace('@','')}" target="_blank" rel="noopener" class="modal-action secondary">Instagram</a>`:''}
       </div>
     </div>`;
   document.getElementById('modal-overlay').classList.add('open');

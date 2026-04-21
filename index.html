@@ -237,7 +237,8 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;li
 .print-checker-preview-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:2px}
 .print-checker-preview-title{font-family:var(--fd);font-size:20px;letter-spacing:.5px;color:var(--t3);line-height:1;margin-bottom:3px}
 .print-checker-preview-platforms{font-size:13px;color:var(--t3)}
-.print-checker-btn{width:100%;background:var(--o);color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:not-allowed;opacity:.85;letter-spacing:.2px}
+.print-checker-btn{width:100%;background:var(--o);color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:pointer;letter-spacing:.2px;text-decoration:none;text-align:center;display:block;transition:background .15s}
+.print-checker-btn:hover{background:var(--od)}
 .freebie-outer{background:#fff5f0}
 /* FREEBIE CARD */
 .freebie-card{background:var(--s1);border:1px solid rgba(255,92,0,.2);border-radius:var(--r);padding:28px 24px;position:relative;overflow:hidden}
@@ -565,19 +566,6 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 </div>
 </div>
 
-<!-- GEAR SECTION -->
-<section class="sec" id="gear-section">
-  <div class="sec-inner">
-    <h1 class="stitle rv">The Tools<br>I Use</h1>
-  </div>
-
-  <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
-  <button class="show-more-btn" id="show-more-btn" style="max-width:600px;margin:0 auto;display:none" onclick="showMorePicks()">See all products ↓</button>
-  <p style="max-width:600px;margin:18px auto 0;font-size:11px;color:var(--t3);text-align:center;letter-spacing:.3px;line-height:1.55">
-    Some links above are affiliate links. If you buy through them I may earn a small commission at no extra cost to you. I only recommend gear I actually use.
-  </p>
-</section>
-
 <!-- PRINT CHECKER -->
 <section class="sec print-checker-outer">
   <div class="sec-inner">
@@ -600,9 +588,22 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
         </div>
       </div>
 
-      <button class="print-checker-btn" disabled>Analyze this print →</button>
+      <a class="print-checker-btn" href="/idea" onclick="track('button_click',{button:'print_checker_cta',href:'/idea'})">Analyze this print →</a>
     </div>
   </div>
+</section>
+
+<!-- GEAR SECTION -->
+<section class="sec" id="gear-section">
+  <div class="sec-inner">
+    <h1 class="stitle rv">The Tools<br>I Use</h1>
+  </div>
+
+  <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>
+  <button class="show-more-btn" id="show-more-btn" style="max-width:600px;margin:0 auto;display:none" onclick="showMorePicks()">See all products ↓</button>
+  <p style="max-width:600px;margin:18px auto 0;font-size:11px;color:var(--t3);text-align:center;letter-spacing:.3px;line-height:1.55">
+    Some links above are affiliate links. If you buy through them I may earn a small commission at no extra cost to you. I only recommend gear I actually use.
+  </p>
 </section>
 
 <!-- FREEBIE -->

@@ -8,10 +8,10 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
 :root{
-  --o:#FF5C00;--bg:#0a0a0a;--s1:#141414;--s2:#1c1c1c;
-  --b:rgba(255,255,255,.07);--b2:rgba(255,255,255,.14);
-  --t:#f0f0f0;--t2:#aaa;--t3:#555;
-  --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;
+  --o:#FF5C00;--bg:#ffffff;--s1:#f5f5f5;--s2:#ebebeb;
+  --b:rgba(0,0,0,.08);--b2:rgba(0,0,0,.14);
+  --t:#0d0d0d;--t2:#555;--t3:#999;
+  --green:#16a34a;--yellow:#d97706;--red:#dc2626;--blue:#2563eb;
   --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
   --r:10px;
 }
@@ -76,7 +76,7 @@ canvas#clickChart{width:100%!important;height:90px!important}
 .funnel-label{font-size:12px;color:var(--t2);width:120px;flex-shrink:0}
 .funnel-bar-wrap{flex:1;height:18px;background:var(--s2);border-radius:3px;overflow:hidden}
 .funnel-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:5px;min-width:0}
-.funnel-fill span{font-size:10px;font-weight:700;color:rgba(255,255,255,.7)}
+.funnel-fill span{font-size:10px;font-weight:700;color:rgba(0,0,0,.65)}
 .funnel-pct{font-size:10px;color:var(--t3);width:26px;text-align:right;flex-shrink:0}
 .recs{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
 .rec{background:var(--s1);border-radius:var(--r);padding:14px;border-left:3px solid transparent}
@@ -677,7 +677,7 @@ function drawChart(clicksByDay){
   const cW = W-pad.l-pad.r, cH = H-pad.t-pad.b;
   const slotW = cW/30, barW = Math.max(1, slotW-2);
 
-  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(0,0,0,0.07)'; ctx.lineWidth=1;
   ctx.beginPath(); ctx.moveTo(pad.l, pad.t+cH/2); ctx.lineTo(pad.l+cW, pad.t+cH/2); ctx.stroke();
 
   vals.forEach((v,i)=>{
@@ -690,7 +690,7 @@ function drawChart(clicksByDay){
     ctx.fill();
   });
 
-  ctx.fillStyle='rgba(255,255,255,0.28)';
+  ctx.fillStyle='rgba(0,0,0,0.4)';
   ctx.font=`9px 'DM Mono',monospace`;
   ctx.textAlign='center';
   [0,14,29].forEach(i=>{

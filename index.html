@@ -612,17 +612,40 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
 <!-- COMMUNITY TEASER -->
 <style>
-.cm-teaser-pulse{animation:cm-pulse 2.2s ease-out infinite;transform-origin:center;transform-box:fill-box}
-@keyframes cm-pulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(2.6);opacity:0}}
+.cm-teaser-pulse{animation:cm-pulse 2.4s ease-out infinite;transform-origin:center;transform-box:fill-box}
+@keyframes cm-pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(3);opacity:0}}
 .cm-teaser-live{animation:cm-live 1.8s ease-in-out infinite}
-@keyframes cm-live{0%,100%{opacity:1}50%{opacity:.3}}
-.cm-teaser-btn-p{background:#FF5C00;color:#fff;border:none;border-radius:6px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:background .15s}
-.cm-teaser-btn-p:hover{background:#cc4900;color:#fff;text-decoration:none}
-.cm-teaser-btn-g{background:transparent;color:rgba(245,245,245,.7);border:1px solid rgba(255,255,255,.18);border-radius:6px;padding:10px 16px;font-size:13px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:border-color .15s,color .15s}
-.cm-teaser-btn-g:hover{border-color:rgba(255,255,255,.4);color:#fff;text-decoration:none}
-.cm-teaser-tt{position:fixed;background:rgba(15,15,15,.95);border:1px solid rgba(255,255,255,.12);border-radius:6px;padding:8px 10px;pointer-events:none;z-index:200;display:none;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
-.cm-tt-name{font-size:12px;font-weight:600;color:#fff;margin-bottom:2px}
-.cm-tt-city{font-size:11px;color:rgba(245,245,245,.55)}
+@keyframes cm-live{0%,100%{opacity:1}50%{opacity:.25}}
+.cm-teaser-btn-p{background:#FF5C00;color:#fff;border:none;border-radius:6px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:background .15s,transform .12s}
+.cm-teaser-btn-p:hover{background:#cc4900;color:#fff;text-decoration:none;transform:translateY(-1px)}
+.cm-teaser-btn-g{background:transparent;color:rgba(245,245,245,.65);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:11px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:border-color .15s,color .15s,transform .12s}
+.cm-teaser-btn-g:hover{border-color:rgba(255,255,255,.45);color:#fff;text-decoration:none;transform:translateY(-1px)}
+/* Map pin card (click popup) */
+.cm-map-card{position:fixed;z-index:60;background:#fff;border-radius:10px;padding:11px 13px;width:158px;pointer-events:none;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.22);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+.cm-map-card.show{display:block}
+.cm-map-card-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;flex-shrink:0}
+.cm-map-card-name{font-size:12px;font-weight:700;color:#111;margin-bottom:2px;display:flex;align-items:center}
+.cm-map-card-city{font-size:11px;color:#999;margin-bottom:5px}
+.cm-map-card-sales{font-size:12px;font-weight:700;color:#FF5C00}
+/* Apply modal */
+.cm-apply-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);padding:20px;overflow-y:auto}
+.cm-apply-ov.open{display:flex;align-items:flex-start;justify-content:center}
+.cm-apply-modal{background:#1a1a1a;border:1px solid rgba(255,255,255,0.1);border-radius:16px;max-width:400px;width:100%;margin:48px auto;padding:32px 28px;position:relative}
+.cm-apply-modal h2{font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;letter-spacing:1px;color:#fff;margin-bottom:6px}
+.cm-apply-modal .cm-apply-sub{font-size:13px;color:rgba(245,245,245,.5);margin-bottom:24px;line-height:1.55}
+.cm-apply-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.cm-apply-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(245,245,245,.45);font-family:'DM Mono',monospace}
+.cm-apply-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:11px 13px;font-size:14px;color:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;outline:none;transition:border-color .15s}
+.cm-apply-input:focus{border-color:rgba(255,92,0,.6)}
+.cm-apply-input::placeholder{color:rgba(245,245,245,.2)}
+.cm-apply-input.err{border-color:#ef4444}
+.cm-apply-submit{width:100%;background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;margin-top:6px;transition:background .15s}
+.cm-apply-submit:hover{background:#cc4900}
+.cm-apply-close{position:absolute;top:14px;right:14px;background:transparent;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.45);width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
+.cm-apply-success{display:none;text-align:center;padding:16px 0}
+.cm-apply-success-icon{font-size:42px;margin-bottom:12px}
+.cm-apply-success-title{font-family:'Bebas Neue','Arial Black',sans-serif;font-size:26px;color:#fff;letter-spacing:1px;margin-bottom:8px}
+.cm-apply-success-text{font-size:13px;color:rgba(245,245,245,.5);line-height:1.55}
 </style>
 
 <section id="community-teaser" style="background:#111;border-top:1px solid rgba(255,255,255,0.06)">
@@ -630,38 +653,79 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
     <!-- 1. Header block -->
     <div style="margin-bottom:28px">
-      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#FF5C00;font-family:'DM Mono',monospace;margin-bottom:10px">3D PRINTER COMMUNITY</div>
-      <div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:clamp(36px,10vw,56px);line-height:.95;letter-spacing:2px;color:#fff;margin-bottom:12px">OUR<br><span style="color:#FF5C00">COMMUNITY</span></div>
-      <div style="font-size:14px;color:rgba(245,245,245,.55);max-width:400px;line-height:1.55">The most active 3D print sellers on the planet featured in front of 93K followers.</div>
+      <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#FF5C00;font-family:'DM Mono',monospace;margin-bottom:10px">MAKERS WORLDWIDE</div>
+      <div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:clamp(36px,10vw,56px);line-height:.95;letter-spacing:2px;color:#fff;margin-bottom:12px">YOUR SHOP<br><span style="color:#FF5C00">ON THE MAP</span></div>
+      <div style="font-size:14px;color:rgba(245,245,245,.6);max-width:420px;line-height:1.6">Every pin is a real seller making money right now. 24 verified members across 12 countries. Free to apply.</div>
     </div>
 
     <!-- 2. Stats row -->
     <div style="display:flex;gap:12px 32px;flex-wrap:wrap">
-      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">24</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Members</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">24</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Verified sellers</div></div>
       <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">12</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Countries</div></div>
-      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">48K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Total Sales</div></div>
-      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">93K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Followers</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">48K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Combined sales</div></div>
+      <div><div style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:28px;color:#FF5C00;line-height:1;letter-spacing:1px">93K</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(245,245,245,.3);text-transform:uppercase;letter-spacing:1.5px;margin-top:3px">Followers reached</div></div>
     </div>
 
   </div>
 
   <!-- 3. Map -->
-  <div style="max-width:600px;margin:0 auto;background:#0d1117;overflow:hidden">
+  <div style="max-width:600px;margin:0 auto;overflow:hidden">
     <svg id="cm-teaser-map" viewBox="0 0 380 200" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;min-height:200px;display:block"></svg>
   </div>
 
-  <!-- Tooltip -->
-  <div class="cm-teaser-tt" id="cm-teaser-tt"><div class="cm-tt-name" id="cm-tt-name"></div><div class="cm-tt-city" id="cm-tt-city"></div></div>
+  <!-- Map pin card -->
+  <div class="cm-map-card" id="cm-map-card">
+    <div class="cm-map-card-name"><span class="cm-map-card-dot" id="cm-card-dot"></span><span id="cm-card-name"></span></div>
+    <div class="cm-map-card-city" id="cm-card-city"></div>
+    <div class="cm-map-card-sales" id="cm-card-sales"></div>
+  </div>
 
   <!-- 4. Footer bar -->
-  <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;gap:12px">
+  <div style="padding:20px 20px 24px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;align-items:center;gap:12px">
     <div style="display:flex;align-items:center;gap:8px">
       <div class="cm-teaser-live" style="width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0"></div>
-      <span style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(245,245,245,.45)">24 members live</span>
+      <span style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(245,245,245,.4)">24 sellers active now</span>
     </div>
-    <a href="https://meshminds.vercel.app/map" class="cm-teaser-btn-p" onclick="track('button_click',{button:'community_teaser_map'})">Explore the community →</a>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+      <button class="cm-teaser-btn-p" onclick="cmOpenApply();track('button_click',{button:'community_teaser_apply'})">Get on the map — it's free →</button>
+      <a href="https://meshminds.vercel.app/map" class="cm-teaser-btn-g" onclick="track('button_click',{button:'community_teaser_map'})">See the full map →</a>
+    </div>
   </div>
 </section>
+
+<!-- APPLY MODAL -->
+<div class="cm-apply-ov" id="cm-apply-ov" onclick="if(event.target===this)cmCloseApply()">
+  <div class="cm-apply-modal">
+    <button class="cm-apply-close" onclick="cmCloseApply()">✕</button>
+    <div id="cm-apply-form-wrap">
+      <h2>GET ON THE MAP</h2>
+      <p class="cm-apply-sub">Free to apply. We review every submission and feature the best sellers in front of 93K followers.</p>
+      <div class="cm-apply-field">
+        <label class="cm-apply-label">Your name *</label>
+        <input class="cm-apply-input" id="cm-f-name" type="text" placeholder="e.g. Lena M.">
+      </div>
+      <div class="cm-apply-field">
+        <label class="cm-apply-label">Your city *</label>
+        <input class="cm-apply-input" id="cm-f-city" type="text" placeholder="e.g. Berlin, Germany">
+      </div>
+      <div class="cm-apply-field">
+        <label class="cm-apply-label">Instagram handle <span style="opacity:.5;font-size:9px;letter-spacing:0">(optional)</span></label>
+        <input class="cm-apply-input" id="cm-f-ig" type="text" placeholder="@yourhandle">
+      </div>
+      <div class="cm-apply-field">
+        <label class="cm-apply-label">Shop link <span style="opacity:.5;font-size:9px;letter-spacing:0">(Etsy, MakerWorld…)</span></label>
+        <input class="cm-apply-input" id="cm-f-shop" type="url" placeholder="https://etsy.com/shop/…">
+      </div>
+      <button class="cm-apply-submit" onclick="cmSubmitApply()">Apply for free →</button>
+      <p style="font-size:11px;color:rgba(245,245,245,.25);text-align:center;margin-top:12px;margin-bottom:0;line-height:1.5">No payment. Manual review. We'll get back within 48h.</p>
+    </div>
+    <div class="cm-apply-success" id="cm-apply-success">
+      <div class="cm-apply-success-icon">📍</div>
+      <div class="cm-apply-success-title">APPLICATION SENT</div>
+      <div class="cm-apply-success-text">We'll review your profile and get back within 48 hours. Welcome to the map!</div>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -679,14 +743,14 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
     var path = d3.geoPath().projection(projection);
 
     var members = [
-      {name:'Lena M.',    city:'Berlin',    lon:13.4,   lat:52.5,   color:'#FF5C00', rank:1, sales:'12K sales'},
-      {name:'Tom K.',     city:'Amsterdam', lon:4.9,    lat:52.37,  color:'#22c55e', rank:2, sales:'9K sales'},
-      {name:'James R.',   city:'London',    lon:-0.12,  lat:51.5,   color:'#3b82f6', rank:3, sales:'7K sales'},
-      {name:'Marc D.',    city:'Paris',     lon:2.35,   lat:48.85,  color:'#8b5cf6',         sales:'6K sales'},
-      {name:'Sara V.',    city:'Vienna',    lon:16.37,  lat:48.21,  color:'#eab308',         sales:'5K sales'},
-      {name:'Erik S.',    city:'Stockholm', lon:18.07,  lat:59.33,  color:'#22c55e',         sales:'4K sales'},
-      {name:'Chiara B.',  city:'Milan',     lon:9.19,   lat:45.46,  color:'#ef4444',         sales:'3K sales'},
-      {name:'Ana P.',     city:'Lisbon',    lon:-9.14,  lat:38.72,  color:'#FF5C00',         sales:'2K sales'},
+      {name:'Lena M.',   city:'Berlin',    lon:13.4,  lat:52.5,  color:'#FF5C00', rank:1, sales:'12K sales'},
+      {name:'Tom K.',    city:'Amsterdam', lon:4.9,   lat:52.37, color:'#22c55e', rank:2, sales:'9K sales'},
+      {name:'James R.',  city:'London',    lon:-0.12, lat:51.5,  color:'#3b82f6', rank:3, sales:'7K sales'},
+      {name:'Marc D.',   city:'Paris',     lon:2.35,  lat:48.85, color:'#8b5cf6',         sales:'6K sales'},
+      {name:'Sara V.',   city:'Vienna',    lon:16.37, lat:48.21, color:'#eab308',         sales:'5K sales'},
+      {name:'Erik S.',   city:'Stockholm', lon:18.07, lat:59.33, color:'#22c55e',         sales:'4K sales'},
+      {name:'Chiara B.', city:'Milan',     lon:9.19,  lat:45.46, color:'#ef4444',         sales:'3K sales'},
+      {name:'Ana P.',    city:'Lisbon',    lon:-9.14, lat:38.72, color:'#FF5C00',         sales:'2K sales'},
     ];
 
     var extraPins = [
@@ -699,63 +763,95 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
       .then(function(r){return r.json();})
       .then(function(world){
         var countries = topojson.feature(world, world.objects.countries);
-        var borders = topojson.mesh(world, world.objects.countries, function(a,b){return a!==b;});
+        var borders   = topojson.mesh(world, world.objects.countries, function(a,b){return a!==b;});
         var svgEl = d3.select('#cm-teaser-map');
 
-        svgEl.append('rect').attr('width',380).attr('height',200).attr('fill','#0d1117');
+        // Apple Maps-style colors: light-blue ocean, warm-cream land
+        svgEl.append('rect').attr('width',380).attr('height',200).attr('fill','#b8d8ea');
 
         svgEl.selectAll('.cm-cty')
           .data(countries.features).enter().append('path')
           .attr('class','cm-cty').attr('d',path)
-          .attr('fill','#1e2433').attr('stroke','none');
+          .attr('fill','#f0e8d8').attr('stroke','none');
 
         svgEl.append('path').datum(borders).attr('d',path)
-          .attr('fill','none').attr('stroke','#2a3045').attr('stroke-width',0.4);
+          .attr('fill','none').attr('stroke','#d4c4ac').attr('stroke-width',0.5);
 
+        // Faint extra pins
         extraPins.forEach(function(c){
           var pt = projection(c);
           if(!pt) return;
-          svgEl.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',1.5)
-            .attr('fill','rgba(255,92,0,0.22)').attr('stroke','none');
+          svgEl.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2)
+            .attr('fill','rgba(255,92,0,0.35)').attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width',0.6);
         });
 
-        var tt  = document.getElementById('cm-teaser-tt');
-        var ttN = document.getElementById('cm-tt-name');
-        var ttC = document.getElementById('cm-tt-city');
+        var card      = document.getElementById('cm-map-card');
+        var cardDot   = document.getElementById('cm-card-dot');
+        var cardName  = document.getElementById('cm-card-name');
+        var cardCity  = document.getElementById('cm-card-city');
+        var cardSales = document.getElementById('cm-card-sales');
 
         members.forEach(function(m){
           var pt = projection([m.lon, m.lat]);
           if(!pt) return;
           var g = svgEl.append('g').style('cursor','pointer');
 
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',6)
-            .attr('fill',m.color).attr('fill-opacity',0.12).attr('stroke','none')
+          // Pulsing outer glow
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',9)
+            .attr('fill',m.color).attr('fill-opacity',0.18).attr('stroke','none')
             .attr('class','cm-teaser-pulse');
 
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',4)
-            .attr('fill','none').attr('stroke',m.color).attr('stroke-width',1.5).attr('stroke-opacity',0.75);
+          // White halo for contrast on light map
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',6)
+            .attr('fill','#fff').attr('stroke','none');
 
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2.5)
+          // Colored dot
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',5)
             .attr('fill',m.color);
 
-          if(m.rank && m.rank<=3){
-            g.append('text').attr('x',pt[0]).attr('y',pt[1]-9)
-              .attr('text-anchor','middle').attr('font-size','6px')
-              .attr('font-family','DM Mono,monospace').attr('fill',m.color)
-              .attr('font-weight','700').text('#'+m.rank);
+          // White inner shine
+          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2)
+            .attr('fill','rgba(255,255,255,0.55)');
+
+          // Rank badge for top 3
+          if(m.rank && m.rank <= 3){
+            g.append('text')
+              .attr('x',pt[0]).attr('y',pt[1]-10)
+              .attr('text-anchor','middle').attr('font-size','7px')
+              .attr('font-family','DM Mono,monospace').attr('font-weight','700')
+              .attr('fill','#111').attr('paint-order','stroke')
+              .attr('stroke','#fff').attr('stroke-width','2.5')
+              .text('#'+m.rank);
           }
 
-          g.on('mouseenter',function(event){
-            ttN.textContent = m.name+' · '+m.sales;
-            ttC.textContent = m.city;
-            tt.style.display = 'block';
-          }).on('mousemove',function(event){
-            tt.style.left = (event.clientX+12)+'px';
-            tt.style.top  = (event.clientY-8)+'px';
+          // Hover: scale pin up
+          g.on('mouseenter',function(){
+            d3.select(this).attr('transform',
+              'translate('+pt[0]+','+pt[1]+') scale(1.4) translate('+(-pt[0])+','+(-pt[1])+')');
           }).on('mouseleave',function(){
-            tt.style.display = 'none';
+            d3.select(this).attr('transform',null);
+          });
+
+          // Click: show card popup
+          g.on('click',function(event){
+            event.stopPropagation();
+            cardDot.style.background  = m.color;
+            cardName.textContent = m.name;
+            cardCity.textContent = m.city;
+            cardSales.textContent = m.sales;
+            var r = svg.getBoundingClientRect();
+            var sx = r.width / 380, sy = r.height / 200;
+            var vx = r.left + pt[0]*sx, vy = r.top + pt[1]*sy;
+            var left = vx + 10;
+            if(left + 160 > window.innerWidth - 8) left = vx - 168;
+            card.style.left = Math.max(8, left) + 'px';
+            card.style.top  = Math.max(8, vy - 18) + 'px';
+            card.classList.add('show');
           });
         });
+
+        // Click anywhere else: hide card
+        svgEl.on('click', function(){ card.classList.remove('show'); });
       })
       .catch(function(){});
   }
@@ -774,6 +870,33 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
   else run();
 })();
+
+window.cmOpenApply = function(){
+  var ov = document.getElementById('cm-apply-ov');
+  ov.classList.add('open');
+  document.body.style.overflow = 'hidden';
+};
+window.cmCloseApply = function(){
+  document.getElementById('cm-apply-ov').classList.remove('open');
+  document.body.style.overflow = '';
+};
+window.cmSubmitApply = function(){
+  var name = (document.getElementById('cm-f-name').value||'').trim();
+  var city = (document.getElementById('cm-f-city').value||'').trim();
+  var ig   = (document.getElementById('cm-f-ig').value||'').trim();
+  var shop = (document.getElementById('cm-f-shop').value||'').trim();
+  var ok = true;
+  ['cm-f-name','cm-f-city'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el.value.trim()){ el.classList.add('err'); ok=false; }
+    else el.classList.remove('err');
+  });
+  if(!ok) return;
+  track('button_click',{button:'community_teaser_apply_submit',city:city,ig:ig,shop:shop});
+  document.getElementById('cm-apply-form-wrap').style.display = 'none';
+  document.getElementById('cm-apply-success').style.display = 'block';
+  setTimeout(cmCloseApply, 3500);
+};
 </script>
 
 <!-- FREEBIE -->

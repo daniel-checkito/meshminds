@@ -228,7 +228,7 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;li
   <div class="logo"><div class="logo-dot"></div>MESHMINDS</div>
   <div class="header-right">
     <div class="live-badge"><div class="live-dot"></div>24 members</div>
-    <a href="#join" class="apply-btn-sm">Get listed →</a>
+    <a href="javascript:void(0)" onclick="openApplyForm()" class="apply-btn-sm">Get listed →</a>
   </div>
 </header>
 
@@ -307,8 +307,8 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;li
       <div class="join-perk">Verified badge on all mentions</div>
       <div class="join-perk">Featured in monthly community posts</div>
     </div>
-    <button class="join-cta-btn" onclick="alert('Apply form coming soon!')">Apply for a spot →</button>
-    <div class="join-price">€9/month · manual approval · cancel anytime</div>
+    <button class="join-cta-btn" onclick="openApplyForm()">Apply for a spot →</button>
+    <div class="join-price">Free to join · Manual review · Pin live within 48h</div>
   </div>
 </div>
 
@@ -785,6 +785,91 @@ style.textContent=`@keyframes pinpulse{0%,100%{opacity:.25;r:11}50%{opacity:.55;
 document.head.appendChild(style);
 
 initMap();
+
+function openApplyForm(){
+  document.getElementById('apply-overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeApplyForm(){
+  document.getElementById('apply-overlay').style.display='none';
+  document.body.style.overflow='';
+  document.getElementById('apply-form-inner').style.display='flex';
+  document.getElementById('apply-thanks').style.display='none';
+  ['af-name','af-city','af-country','af-social','af-etsy','af-desc','af-email'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+}
+
+function submitApplyForm(){
+  const name=document.getElementById('af-name').value.trim();
+  const email=document.getElementById('af-email').value.trim();
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!name){document.getElementById('af-name').style.borderColor='#ef4444';setTimeout(()=>document.getElementById('af-name').style.borderColor='',1500);return;}
+  if(!email||!emailRe.test(email)){document.getElementById('af-email').style.borderColor='#ef4444';setTimeout(()=>document.getElementById('af-email').style.borderColor='',1500);return;}
+  const payload={
+    name, email,
+    city:document.getElementById('af-city').value,
+    country:document.getElementById('af-country').value,
+    social:document.getElementById('af-social').value,
+    etsy:document.getElementById('af-etsy').value,
+    desc:document.getElementById('af-desc').value,
+    type:'map_application',
+    ts:new Date().toISOString(),
+  };
+  fetch('https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec',{
+    method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),keepalive:true
+  }).catch(()=>{});
+  document.getElementById('apply-form-inner').style.display='none';
+  document.getElementById('apply-thanks').style.display='block';
+}
 </script>
+
+<div class="apply-overlay" id="apply-overlay" onclick="if(event.target===this)closeApplyForm()" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:20px;display:none;align-items:center;justify-content:center">
+  <div style="background:#161616;border:1px solid rgba(255,92,0,0.25);border-radius:14px;padding:32px 28px;max-width:420px;width:100%;position:relative;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,92,0,0.08) 0%,transparent 65%)">
+    <button onclick="closeApplyForm()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid rgba(255,255,255,0.14);color:rgba(245,245,245,0.35);width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5C00;font-family:'DM Mono',monospace;margin-bottom:8px">Join the network</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;line-height:1;margin-bottom:20px;color:#f5f5f5">GET LISTED FREE</div>
+    <div id="apply-form-inner" style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Your name</div>
+        <input id="af-name" type="text" placeholder="Lena M." style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">City</div>
+          <input id="af-city" type="text" placeholder="Berlin" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+        </div>
+        <div>
+          <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Country</div>
+          <input id="af-country" type="text" placeholder="Germany" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Instagram or TikTok handle</div>
+        <input id="af-social" type="text" placeholder="@yourhandle" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Etsy shop link (optional)</div>
+        <input id="af-etsy" type="url" placeholder="etsy.com/shop/yourshop" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">What do you print and sell?</div>
+        <input id="af-desc" type="text" placeholder="Custom organizers, lithophanes..." style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Your email</div>
+        <input id="af-email" type="email" placeholder="you@email.com" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <button onclick="submitApplyForm()" style="background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:4px">Send application →</button>
+      <div style="font-size:12px;color:rgba(245,245,245,0.3);text-align:center;line-height:1.5">Free to join · Manual review · Pin live within 48h</div>
+    </div>
+    <div id="apply-thanks" style="display:none;text-align:center;padding:20px 0">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin-bottom:10px;color:#FF5C00">APPLICATION SENT ✓</div>
+      <div style="font-size:14px;color:rgba(245,245,245,0.6);line-height:1.6">Thanks! Daniel will review your application and get back to you within 48 hours. Your pin goes live once approved.</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

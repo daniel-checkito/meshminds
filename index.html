@@ -223,6 +223,21 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;li
 .quiz-outer .qo:hover{background:#fff;border-color:var(--o);box-shadow:0 8px 28px rgba(255,92,0,0.28),0 4px 12px rgba(0,0,0,0.35)}
 .quiz-outer .qo.sel{background:#fff;border-color:var(--o);box-shadow:0 8px 28px rgba(255,92,0,0.32),0 4px 12px rgba(0,0,0,0.35)}
 .quiz-outer .qres.active{background:#fff;border-radius:12px;padding:28px 24px;box-shadow:0 4px 32px rgba(0,0,0,0.4)}
+/* PRINT CHECKER */
+.print-checker-outer{background:#fff;border-top:1px solid var(--b)}
+.print-checker-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--o);margin-bottom:10px}
+.print-checker-sub{font-size:16px;color:var(--t2);margin-bottom:28px}
+.print-checker-card{display:flex;flex-direction:column;gap:10px}
+.print-checker-input-wrap{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--b2);border-radius:var(--r);padding:14px 16px}
+.print-checker-link-icon{font-size:18px;color:var(--t3);flex-shrink:0;font-style:normal;line-height:1}
+.print-checker-input{flex:1;border:none;outline:none;font-family:var(--fb);font-size:15px;color:var(--t);background:transparent;min-width:0}
+.print-checker-input::placeholder{color:var(--t3)}
+.print-checker-preview{display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--b2);border-radius:var(--r);padding:14px 16px}
+.print-checker-preview-icon{width:36px;height:36px;border-radius:50%;background:var(--s2);border:1.5px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--t3);flex-shrink:0;font-family:monospace;line-height:1}
+.print-checker-preview-label{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:2px}
+.print-checker-preview-title{font-family:var(--fd);font-size:20px;letter-spacing:.5px;color:var(--t3);line-height:1;margin-bottom:3px}
+.print-checker-preview-platforms{font-size:13px;color:var(--t3)}
+.print-checker-btn{width:100%;background:var(--o);color:#fff;border:none;border-radius:var(--r);padding:16px;font-family:var(--fb);font-size:16px;font-weight:600;cursor:not-allowed;opacity:.85;letter-spacing:.2px}
 .freebie-outer{background:#fff5f0}
 /* FREEBIE CARD */
 .freebie-card{background:var(--s1);border:1px solid rgba(255,92,0,.2);border-radius:var(--r);padding:28px 24px;position:relative;overflow:hidden}
@@ -561,6 +576,33 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   <p style="max-width:600px;margin:18px auto 0;font-size:11px;color:var(--t3);text-align:center;letter-spacing:.3px;line-height:1.55">
     Some links above are affiliate links. If you buy through them I may earn a small commission at no extra cost to you. I only recommend gear I actually use.
   </p>
+</section>
+
+<!-- PRINT CHECKER -->
+<section class="sec print-checker-outer">
+  <div class="sec-inner">
+    <div class="print-checker-eyebrow rv">KNOW BEFORE YOU PRINT</div>
+    <h2 class="stitle rv" style="margin-bottom:10px">FIND OUT IF YOUR<br>3D PRINT WILL SELL</h2>
+    <p class="print-checker-sub rv">Get demand, competition &amp; profit in seconds.</p>
+
+    <div class="print-checker-card rv">
+      <div class="print-checker-input-wrap">
+        <span class="print-checker-link-icon">⌀</span>
+        <input class="print-checker-input" type="url" placeholder="Paste a MakerWorld or Printables link…" disabled>
+      </div>
+
+      <div class="print-checker-preview">
+        <div class="print-checker-preview-icon">−</div>
+        <div class="print-checker-preview-text">
+          <div class="print-checker-preview-label">READY TO SCAN</div>
+          <div class="print-checker-preview-title">PASTE A LINK ABOVE</div>
+          <div class="print-checker-preview-platforms">MakerWorld · Printables · Cults3D</div>
+        </div>
+      </div>
+
+      <button class="print-checker-btn" disabled>Analyze this print →</button>
+    </div>
+  </div>
 </section>
 
 <!-- FREEBIE -->

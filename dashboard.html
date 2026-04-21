@@ -41,6 +41,19 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);padding-bottom:60
 .dot.loading{background:var(--yellow)}
 @keyframes blink{0%,100%{opacity:.4}50%{opacity:1}}
 .main{padding:16px;max-width:560px;margin:0 auto}
+.dash-grid{display:contents}
+.dash-left,.dash-right{display:contents}
+@media(min-width:900px){
+  .header{padding:16px 40px}
+  .status-bar{padding:8px 40px}
+  .main{max-width:1600px;padding:24px 40px}
+  .stat-row{grid-template-columns:repeat(4,1fr)}
+  .funnel-label{width:150px}
+  .chart-wrap{height:130px}
+  canvas#clickChart{height:130px!important}
+  .dash-grid{display:grid;grid-template-columns:3fr 2fr;gap:0 28px;align-items:start}
+  .dash-left,.dash-right{display:block}
+}
 .section-title{font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin-bottom:12px;color:var(--t)}
 .err-card{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--r);padding:14px;margin-bottom:16px;font-size:13px;color:var(--red);line-height:1.7}
 .err-card code{font-family:var(--fm);font-size:11px;background:rgba(239,68,68,.1);padding:2px 5px;border-radius:3px;word-break:break-all}
@@ -691,10 +704,8 @@ function render(events){
   const deltaCls  = trend>0?'up':trend<0?'down':'flat';
   const recs      = buildRecs(s);
 
-  let html = '';
-
-  // Stats
-  html += `<div class="stat-row">
+  // Stats row (always full width)
+  let statsHtml = `<div class="stat-row">
     <div class="stat-box">
       <div class="sb-label">Visits</div>
       <div class="sb-value">${s.visits}</div>
@@ -717,8 +728,10 @@ function render(events){
     </div>
   </div>`;
 
-  // Chart
-  html += `<div class="section-title">CLICKS · LAST 30 DAYS</div>
+  // Left column: chart + detailed analytics
+  let leftHtml = '';
+
+  leftHtml += `<div class="section-title">CLICKS · LAST 30 DAYS</div>
   <div class="chart-card">
     <div class="chart-header">
       <div>
@@ -733,7 +746,149 @@ function render(events){
     <div class="chart-wrap"><canvas id="clickChart"></canvas></div>
   </div>`;
 
-  // Funnel
+  // ── QUIZ STEP DROP-OFF (left) ──
+  const dropoffPaths = [
+    {label:'Commercial path', steps:['intent','com_level','can_design','com_problem']},
+    {label:'Content path',    steps:['intent','content_stage','content_platform','content_goal']},
+    {label:'Fun path',        steps:['intent','fun_type','fun_printer']},
+  ];
+  const hasAnyStepData = KNOWN_STEPS.some(k => s.stepViews[k] > 0);
+  if(hasAnyStepData){
+    leftHtml += `<div class="section-title">QUIZ STEP DROP-OFF</div>`;
+    dropoffPaths.forEach(path => {
+      const stepsWithData = path.steps.filter(k => s.stepViews[k] > 0);
+      if(!stepsWithData.length) return;
+      const topVal = s.stepViews[path.steps[0]] || 1;
+      leftHtml += `<div style="margin-bottom:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase">${path.label}</div>`;
+      path.steps.forEach((key) => {
+        const entered  = s.stepViews[key] || 0;
+        const answered = Object.values(s.stepAnswers[key]||{}).reduce((a,b)=>a+b,0);
+        const dropped  = Math.max(0, entered - answered);
+        const dropPct  = entered > 0 ? Math.round(dropped/entered*100) : 0;
+        const barW     = Math.round(entered/topVal*100);
+        const meta     = STEP_META.find(m=>m.key===key);
+        const label    = meta ? meta.label : key;
+        if(!entered) return;
+        leftHtml += `<div class="funnel-row" style="margin-bottom:6px">
+          <div class="funnel-label" style="font-size:11px;width:150px">${label}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.45)">
+              <span>${entered} entered</span>
+            </div>
+          </div>
+          <div style="font-size:10px;width:64px;text-align:right;flex-shrink:0;color:${dropPct>30?'var(--red)':dropPct>15?'var(--yellow)':'var(--t3)'}">
+            ${answered} ans · <span style="font-weight:700">${dropPct}% left</span>
+          </div>
+        </div>`;
+      });
+      leftHtml += `</div>`;
+    });
+    leftHtml += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">
+      "Left" = people who reached that step but did not answer. Red ≥ 30%, yellow ≥ 15%.
+    </div>`;
+  }
+
+  // ── QUIZ ANSWER BREAKDOWN (left) ──
+  const stepsWithAnswers = STEP_META.filter(m => {
+    const a = s.stepAnswers[m.key];
+    return a && Object.values(a).some(v=>v>0);
+  });
+  if(stepsWithAnswers.length){
+    leftHtml += `<div class="section-title">QUIZ ANSWER BREAKDOWN</div>`;
+    stepsWithAnswers.forEach(meta => {
+      const ansMap = s.stepAnswers[meta.key] || {};
+      const total  = Object.values(ansMap).reduce((a,b)=>a+b,0);
+      const order  = OPT_ORDER[meta.key] || Object.keys(ansMap);
+      const topCnt = Math.max(...order.map(v=>ansMap[v]||0), 1);
+      leftHtml += `<div style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
+          <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">${meta.label}</div>
+          <div style="font-size:10px;color:var(--t3)">${total} answers</div>
+        </div>`;
+      order.forEach(val => {
+        const cnt  = ansMap[val] || 0;
+        const pct  = total > 0 ? Math.round(cnt/total*100) : 0;
+        const barW = Math.max(2, Math.round(cnt/topCnt*100));
+        const lbl  = (OPT_LABELS[meta.key]||{})[val] || val;
+        leftHtml += `<div class="funnel-row" style="margin-bottom:5px">
+          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${lbl}">${lbl}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(124,58,237,0.45)">
+              <span>${cnt}</span>
+            </div>
+          </div>
+          <div class="funnel-pct">${pct}%</div>
+        </div>`;
+      });
+      leftHtml += `</div>`;
+    });
+    leftHtml += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">% of people who answered that step who chose each option.</div>`;
+  }
+
+  // ── POST-QUIZ OFFER CLICKS (left) ──
+  const pathNames = {commercial:'Commercial path', content:'Content path', fun:'Fun path', help:'Help path'};
+  const postQuizPaths = Object.entries(s.postQuizOffers).filter(([,m])=>Object.keys(m).length>0);
+  if(postQuizPaths.length){
+    leftHtml += `<div class="section-title">OFFERS CLICKED AFTER QUIZ</div>`;
+    postQuizPaths.forEach(([path, offers]) => {
+      const entries = Object.entries(offers).sort((a,b)=>b[1]-a[1]);
+      const pathTotal = entries.reduce((a,[,v])=>a+v,0);
+      const topCnt = entries[0]?.[1] || 1;
+      leftHtml += `<div style="margin-bottom:18px">
+        <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">${pathNames[path]||path} -${pathTotal} clicks</div>`;
+      entries.forEach(([offer, cnt]) => {
+        const pct  = Math.round(cnt/pathTotal*100);
+        const barW = Math.max(4, Math.round(cnt/topCnt*100));
+        leftHtml += `<div class="funnel-row" style="margin-bottom:5px">
+          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${offer}">${offer}</div>
+          <div class="funnel-bar-wrap">
+            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.5)">
+              <span>${cnt}</span>
+            </div>
+          </div>
+          <div class="funnel-pct">${pct}%</div>
+        </div>`;
+      });
+      leftHtml += `</div>`;
+    });
+    leftHtml += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">Offer clicks tracked per user session after quiz completion.</div>`;
+  }
+
+  // Top offers & buttons (left)
+  const btnEntries = Object.entries(s.buttonCounts).sort((a,b)=>b[1]-a[1]);
+  if(btnEntries.length){
+    const topCount = btnEntries[0][1] || 1;
+    leftHtml += `<div class="section-title">TOP OFFERS &amp; BUTTONS</div>
+      <div class="funnel" style="max-height:320px;overflow-y:auto;padding-right:4px">`;
+    btnEntries.forEach(([name, cnt])=>{
+      const rate = (cnt/base*100).toFixed(1);
+      const pct  = Math.max(4, Math.round(cnt/topCount*100));
+      const isOffer = /^(cubee|meshy|makerworld|timeplast|cryogrip|farmloop|bambu|infinity)/i.test(name);
+      const barColor = isOffer ? 'rgba(255,92,0,0.55)' : 'rgba(59,130,246,0.4)';
+      leftHtml += `<div class="funnel-row">
+        <div class="funnel-label" style="font-size:11px;width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${name}">${name}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-fill" style="width:${pct}%;background:${barColor}">
+            <span>${cnt}</span>
+          </div>
+        </div>
+        <div class="funnel-pct" style="width:46px">${rate}%</div>
+      </div>`;
+    });
+    leftHtml += `</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
+        Click rate = clicks ÷ ${s.visits} visits. Offers in orange, other buttons in blue.
+      </div>`;
+  }
+
+  // Changes log (left)
+  leftHtml += renderChangelog(events);
+
+  // Right column: funnel, quiz paths, traffic, countries, recent events
+  let rightHtml = '';
+
+  // Funnel (right)
   const steps = [
     {label:'Visits',          val:s.visits},
     {label:'Quiz completed',  val:s.quizDone},
@@ -741,10 +896,10 @@ function render(events){
     {label:'Offer clicked',   val:s.offerClicks},
   ];
   const fMax = steps[0].val || 1;
-  html += `<div class="section-title">FUNNEL</div><div class="funnel">`;
+  rightHtml += `<div class="section-title">FUNNEL</div><div class="funnel">`;
   steps.forEach(st => {
     const pct = Math.round(st.val/fMax*100);
-    html += `<div class="funnel-row">
+    rightHtml += `<div class="funnel-row">
       <div class="funnel-label">${st.label}</div>
       <div class="funnel-bar-wrap">
         <div class="funnel-fill" style="width:${pct}%;background:rgba(255,92,0,0.4)">
@@ -754,9 +909,9 @@ function render(events){
       <div class="funnel-pct">${pct}%</div>
     </div>`;
   });
-  html += `</div>`;
+  rightHtml += `</div>`;
 
-  // Quiz paths - which path do visitors complete?
+  // Quiz paths (right)
   const pathMap = {
     quiz_commercial: 'Commercial / sell prints',
     quiz_content:    'Content creator',
@@ -769,10 +924,10 @@ function render(events){
     .sort((a,b)=>b[1]-a[1]);
   if(pathEntries.length){
     const pathTotal = pathEntries.reduce((a,[,v])=>a+v, 0);
-    html += `<div class="section-title">QUIZ PATHS COMPLETED</div><div class="funnel">`;
+    rightHtml += `<div class="section-title">QUIZ PATHS COMPLETED</div><div class="funnel">`;
     pathEntries.forEach(([label, cnt])=>{
       const pct = Math.round(cnt/pathTotal*100);
-      html += `<div class="funnel-row">
+      rightHtml += `<div class="funnel-row">
         <div class="funnel-label" style="font-size:11px">${label}</div>
         <div class="funnel-bar-wrap">
           <div class="funnel-fill" style="width:${pct}%;background:rgba(124,58,237,0.45)">
@@ -782,156 +937,20 @@ function render(events){
         <div class="funnel-pct">${pct}%</div>
       </div>`;
     });
-    html += `</div>
+    rightHtml += `</div>
       <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
         ${pathTotal} total completions. % of visitors who finished each path.
       </div>`;
   }
 
-  // ── QUIZ STEP DROP-OFF ──
-  const dropoffPaths = [
-    {label:'Commercial path', steps:['intent','com_level','can_design','com_problem']},
-    {label:'Content path',    steps:['intent','content_stage','content_platform','content_goal']},
-    {label:'Fun path',        steps:['intent','fun_type','fun_printer']},
-  ];
-  const hasAnyStepData = KNOWN_STEPS.some(k => s.stepViews[k] > 0);
-  if(hasAnyStepData){
-    html += `<div class="section-title">QUIZ STEP DROP-OFF</div>`;
-    dropoffPaths.forEach(path => {
-      const stepsWithData = path.steps.filter(k => s.stepViews[k] > 0);
-      if(!stepsWithData.length) return;
-      const topVal = s.stepViews[path.steps[0]] || 1;
-      html += `<div style="margin-bottom:18px">
-        <div style="font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.5px;margin-bottom:8px;text-transform:uppercase">${path.label}</div>`;
-      path.steps.forEach((key, i) => {
-        const entered  = s.stepViews[key] || 0;
-        const answered = Object.values(s.stepAnswers[key]||{}).reduce((a,b)=>a+b,0);
-        const dropped  = Math.max(0, entered - answered);
-        const dropPct  = entered > 0 ? Math.round(dropped/entered*100) : 0;
-        const barW     = Math.round(entered/topVal*100);
-        const meta     = STEP_META.find(m=>m.key===key);
-        const label    = meta ? meta.label : key;
-        if(!entered) return;
-        html += `<div class="funnel-row" style="margin-bottom:6px">
-          <div class="funnel-label" style="font-size:11px;width:150px">${label}</div>
-          <div class="funnel-bar-wrap">
-            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.45)">
-              <span>${entered} entered</span>
-            </div>
-          </div>
-          <div style="font-size:10px;width:64px;text-align:right;flex-shrink:0;color:${dropPct>30?'var(--red)':dropPct>15?'var(--yellow)':'var(--t3)'}">
-            ${answered} ans · <span style="font-weight:700">${dropPct}% left</span>
-          </div>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">
-      "Left" = people who reached that step but did not answer. Red ≥ 30%, yellow ≥ 15%.
-    </div>`;
-  }
-
-  // ── QUIZ ANSWER BREAKDOWN ──
-  const stepsWithAnswers = STEP_META.filter(m => {
-    const a = s.stepAnswers[m.key];
-    return a && Object.values(a).some(v=>v>0);
-  });
-  if(stepsWithAnswers.length){
-    html += `<div class="section-title">QUIZ ANSWER BREAKDOWN</div>`;
-    stepsWithAnswers.forEach(meta => {
-      const ansMap = s.stepAnswers[meta.key] || {};
-      const total  = Object.values(ansMap).reduce((a,b)=>a+b,0);
-      const order  = OPT_ORDER[meta.key] || Object.keys(ansMap);
-      const topCnt = Math.max(...order.map(v=>ansMap[v]||0), 1);
-      html += `<div style="margin-bottom:18px">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px">
-          <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">${meta.label}</div>
-          <div style="font-size:10px;color:var(--t3)">${total} answers</div>
-        </div>`;
-      order.forEach(val => {
-        const cnt  = ansMap[val] || 0;
-        const pct  = total > 0 ? Math.round(cnt/total*100) : 0;
-        const barW = Math.max(2, Math.round(cnt/topCnt*100));
-        const lbl  = (OPT_LABELS[meta.key]||{})[val] || val;
-        html += `<div class="funnel-row" style="margin-bottom:5px">
-          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${lbl}">${lbl}</div>
-          <div class="funnel-bar-wrap">
-            <div class="funnel-fill" style="width:${barW}%;background:rgba(124,58,237,0.45)">
-              <span>${cnt}</span>
-            </div>
-          </div>
-          <div class="funnel-pct">${pct}%</div>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">% of people who answered that step who chose each option.</div>`;
-  }
-
-  // ── POST-QUIZ OFFER CLICKS ──
-  const pathNames = {commercial:'Commercial path', content:'Content path', fun:'Fun path', help:'Help path'};
-  const postQuizPaths = Object.entries(s.postQuizOffers).filter(([,m])=>Object.keys(m).length>0);
-  if(postQuizPaths.length){
-    html += `<div class="section-title">OFFERS CLICKED AFTER QUIZ</div>`;
-    postQuizPaths.forEach(([path, offers]) => {
-      const entries = Object.entries(offers).sort((a,b)=>b[1]-a[1]);
-      const pathTotal = entries.reduce((a,[,v])=>a+v,0);
-      const topCnt = entries[0]?.[1] || 1;
-      html += `<div style="margin-bottom:18px">
-        <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">${pathNames[path]||path} -${pathTotal} clicks</div>`;
-      entries.forEach(([offer, cnt]) => {
-        const pct  = Math.round(cnt/pathTotal*100);
-        const barW = Math.max(4, Math.round(cnt/topCnt*100));
-        html += `<div class="funnel-row" style="margin-bottom:5px">
-          <div class="funnel-label" style="font-size:11px;width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${offer}">${offer}</div>
-          <div class="funnel-bar-wrap">
-            <div class="funnel-fill" style="width:${barW}%;background:rgba(255,92,0,0.5)">
-              <span>${cnt}</span>
-            </div>
-          </div>
-          <div class="funnel-pct">${pct}%</div>
-        </div>`;
-      });
-      html += `</div>`;
-    });
-    html += `<div style="font-size:10px;color:var(--t3);margin-top:2px;margin-bottom:20px">Offer clicks tracked per user session after quiz completion.</div>`;
-  }
-
-  // Top offers & buttons (clicks + click rate, sorted by clicks)
-  const btnEntries = Object.entries(s.buttonCounts).sort((a,b)=>b[1]-a[1]);
-  if(btnEntries.length){
-    const topCount = btnEntries[0][1] || 1;
-    html += `<div class="section-title">TOP OFFERS &amp; BUTTONS</div>
-      <div class="funnel" style="max-height:320px;overflow-y:auto;padding-right:4px">`;
-    btnEntries.forEach(([name, cnt])=>{
-      const rate = (cnt/base*100).toFixed(1);
-      const pct  = Math.max(4, Math.round(cnt/topCount*100));
-      const isOffer = /^(cubee|meshy|makerworld|timeplast|cryogrip|farmloop|bambu|infinity)/i.test(name);
-      const barColor = isOffer ? 'rgba(255,92,0,0.55)' : 'rgba(59,130,246,0.4)';
-      html += `<div class="funnel-row">
-        <div class="funnel-label" style="font-size:11px;width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${name}">${name}</div>
-        <div class="funnel-bar-wrap">
-          <div class="funnel-fill" style="width:${pct}%;background:${barColor}">
-            <span>${cnt}</span>
-          </div>
-        </div>
-        <div class="funnel-pct" style="width:46px">${rate}%</div>
-      </div>`;
-    });
-    html += `</div>
-      <div style="font-size:10px;color:var(--t3);margin-top:6px;margin-bottom:20px">
-        Click rate = clicks ÷ ${s.visits} visits. Offers in orange, other buttons in blue.
-      </div>`;
-  }
-
-  // Traffic sources
+  // Traffic sources (right)
   const srcEntries = Object.entries(s.sources).sort((a,b)=>b[1]-a[1]);
   if(srcEntries.length){
     const srcTotal = srcEntries.reduce((acc,[,v])=>acc+v,0)||1;
-    html += `<div class="section-title">TRAFFIC SOURCES</div><div class="funnel">`;
+    rightHtml += `<div class="section-title">TRAFFIC SOURCES</div><div class="funnel">`;
     srcEntries.forEach(([src,cnt])=>{
       const pct = Math.round(cnt/srcTotal*100);
-      html += `<div class="funnel-row">
+      rightHtml += `<div class="funnel-row">
         <div class="funnel-label">${src}</div>
         <div class="funnel-bar-wrap">
           <div class="funnel-fill" style="width:${pct}%;background:rgba(59,130,246,0.4)">
@@ -941,17 +960,17 @@ function render(events){
         <div class="funnel-pct">${pct}%</div>
       </div>`;
     });
-    html += `</div>`;
+    rightHtml += `</div>`;
   }
 
-  // Countries
+  // Countries (right)
   const countryEntries = Object.entries(s.countries).sort((a,b)=>b[1]-a[1]).slice(0,8);
   if(countryEntries.length){
     const cTotal = countryEntries.reduce((acc,[,v])=>acc+v,0)||1;
-    html += `<div class="section-title">VISITOR LOCATIONS</div><div class="funnel">`;
+    rightHtml += `<div class="section-title">VISITOR LOCATIONS</div><div class="funnel">`;
     countryEntries.forEach(([country,cnt])=>{
       const pct = Math.round(cnt/cTotal*100);
-      html += `<div class="funnel-row">
+      rightHtml += `<div class="funnel-row">
         <div class="funnel-label" style="font-size:11px">${country}</div>
         <div class="funnel-bar-wrap">
           <div class="funnel-fill" style="width:${pct}%;background:rgba(34,197,94,0.4)">
@@ -961,13 +980,36 @@ function render(events){
         <div class="funnel-pct">${pct}%</div>
       </div>`;
     });
-    html += `</div>`;
+    rightHtml += `</div>`;
   }
 
-  // Recommendations
-  html += `<div class="section-title">RECOMMENDATIONS</div><div class="recs">`;
+  // Recent events (right)
+  const recent = [...events].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);
+  rightHtml += `<div class="section-title">RECENT EVENTS</div>`;
+  if(recent.length){
+    rightHtml += `<table class="events-table">
+      <thead><tr><th>Time</th><th>Action</th><th>Country</th><th>Source</th></tr></thead><tbody>`;
+    recent.forEach(e => {
+      const d   = e.ts ? new Date(e.ts) : null;
+      const t   = d ? d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '';
+      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,14):'';
+      const loc = e.city && e.country ? e.city+', '+e.country : e.country || e.city || '';
+      rightHtml += `<tr>
+        <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${t}</td>
+        <td>${e.action||''}</td>
+        <td style="color:var(--t3);font-size:11px">${loc}</td>
+        <td style="color:var(--t3)">${src}</td>
+      </tr>`;
+    });
+    rightHtml += `</tbody></table>`;
+  } else {
+    rightHtml += `<div class="empty">No events yet.</div>`;
+  }
+
+  // Recommendations (full width below grid)
+  let bottomHtml = `<div class="section-title">RECOMMENDATIONS</div><div class="recs">`;
   recs.forEach(r => {
-    html += `<div class="rec ${r.type}">
+    bottomHtml += `<div class="rec ${r.type}">
       <div class="rec-header">
         <span class="rec-icon">${r.icon}</span>
         <div class="rec-title">${r.title}</div>
@@ -977,33 +1019,11 @@ function render(events){
       <div style="font-size:12px;color:var(--t2);margin-top:8px;line-height:1.6">${r.steps}</div>
     </div>`;
   });
-  html += `</div>`;
+  bottomHtml += `</div>`;
 
-  // Changes log
-  html += renderChangelog(events);
-
-  // Recent events
-  const recent = [...events].sort((a,b)=>new Date(b.ts)-new Date(a.ts)).slice(0,20);
-  html += `<div class="section-title">RECENT EVENTS</div>`;
-  if(recent.length){
-    html += `<table class="events-table">
-      <thead><tr><th>Time</th><th>Action</th><th>Country</th><th>Source</th></tr></thead><tbody>`;
-    recent.forEach(e => {
-      const d   = e.ts ? new Date(e.ts) : null;
-      const t   = d ? d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})+' '+d.toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit'}) : '';
-      const src = e.source.includes('instagram')?'Instagram':e.source.includes('tiktok')?'TikTok':e.source==='(direct)'?'Direct':e.source?e.source.slice(0,14):'';
-      const loc = e.city && e.country ? e.city+', '+e.country : e.country || e.city || '';
-      html += `<tr>
-        <td style="font-family:var(--fm);font-size:11px;color:var(--t3)">${t}</td>
-        <td>${e.action||''}</td>
-        <td style="color:var(--t3);font-size:11px">${loc}</td>
-        <td style="color:var(--t3)">${src}</td>
-      </tr>`;
-    });
-    html += `</tbody></table>`;
-  } else {
-    html += `<div class="empty">No events yet.</div>`;
-  }
+  const html = statsHtml +
+    `<div class="dash-grid"><div class="dash-left">${leftHtml}</div><div class="dash-right">${rightHtml}</div></div>` +
+    bottomHtml;
 
   document.getElementById('dashboard-content').innerHTML = html;
   document.getElementById('last-update').textContent = new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});

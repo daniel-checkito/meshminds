@@ -4,7 +4,7 @@ const ALL_PICKS = [
     id:'cubee3d',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
     brand:'Cubee3D', name:'Commercial STL License',
-    desc:'1,000+ designs, unlimited prints, no IP risk.',
+    desc:'Unlimited prints. Zero IP risk.',
     ic:'📜', badge:'Most Popular', badgeClass:'orange',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
@@ -14,7 +14,7 @@ const ALL_PICKS = [
     id:'meshy',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg',
     brand:'Meshy', name:'AI 3D Model Generator',
-    desc:'Type a prompt, get a print-ready 3D model. No CAD skills needed.',
+    desc:'No CAD skills needed.',
     ic:'🤖',
     url:'https://www.meshy.ai?via=meshminds',
     tap:'Try free →'
@@ -22,8 +22,8 @@ const ALL_PICKS = [
   {
     id:'makerworld',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%285%29.jpg',
-    brand:'MakerWorld', name:'My Free Bestseller Models',
-    desc:'My bestsellers, free to download with a commercial license.',
+    brand:'MakerWorld', name:'My Bestseller Models',
+    desc:'Commercial license included.',
     ic:'🎁',
     badge:'FREE', badgeClass:'green',
     url:'https://makerworld.com/de/collections/9383161-my-bestsellers',
@@ -33,7 +33,7 @@ const ALL_PICKS = [
     id:'timeplast',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2811%29.jpg',
     brand:'Timeplast', name:'Soap Filament',
-    desc:'Prints like PLA, dissolves like soap. Premium eco story for gift markets.',
+    desc:'Dissolves in water. Great for gift markets.',
     ic:'🧵', badge:'HIDDEN GEM', badgeClass:'orange',
     url:'https://timeplast.com/?ref=meshminds',
     tap:'Shop Timeplast →'
@@ -51,7 +51,7 @@ const ALL_PICKS = [
     id:'farmloop',
     img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Untitled%20design%20%2810%29.jpg',
     brand:'3D Farmers', name:'Automate Your Printer',
-    desc:'Auto-ejects, starts the next job. Run your printer all day unattended.',
+    desc:'Runs all day unattended.',
     ic:'🏭', badge:'AUTO PRINT', badgeClass:'orange',
     url:'https://3d-farmers.com/#farmloop-section',
     tap:'Automate now →'

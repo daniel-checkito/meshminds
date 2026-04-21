@@ -645,8 +645,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
   </div>
 
-  <!-- 3. Map — full width, no side padding -->
-  <div style="background:#0d1117;overflow:hidden">
+  <!-- 3. Map -->
+  <div style="max-width:600px;margin:0 auto;background:#0d1117;overflow:hidden">
     <svg id="cm-teaser-map" viewBox="0 0 380 200" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;min-height:200px;display:block"></svg>
   </div>
 
@@ -660,8 +660,7 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
       <span style="font-family:'DM Mono',monospace;font-size:12px;color:rgba(245,245,245,.45)">24 members live</span>
     </div>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <a href="/community" class="cm-teaser-btn-p" onclick="track('button_click',{button:'community_teaser_map'})">Explore the community →</a>
-      <a href="/community#join" class="cm-teaser-btn-g" onclick="track('button_click',{button:'community_teaser_join'})">Get listed · €9/mo</a>
+      <a href="https://meshminds.vercel.app/map" class="cm-teaser-btn-p" onclick="track('button_click',{button:'community_teaser_map'})">Explore the community →</a>
     </div>
   </div>
 </section>

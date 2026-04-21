@@ -611,22 +611,28 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 </section>
 
 <!-- COMMUNITY TEASER -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-.cm-teaser-pulse{animation:cm-pulse 2.4s ease-out infinite;transform-origin:center;transform-box:fill-box}
-@keyframes cm-pulse{0%{transform:scale(1);opacity:.5}100%{transform:scale(3);opacity:0}}
+/* Leaflet pin + popup overrides for teaser */
+.cm-lf-pin{background:transparent!important;border:none!important;display:flex;align-items:center;justify-content:center}
+.cm-lf-dot{border-radius:50%;border:2.5px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.4);transition:transform .15s;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cm-lf-pin:hover .cm-lf-dot{transform:translate(-50%,-50%) scale(1.4)}
+.cm-lf-popup .leaflet-popup-content-wrapper{background:#1a1a1a;border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.7);padding:0;overflow:hidden}
+.cm-lf-popup .leaflet-popup-tip{background:#1a1a1a}
+.cm-lf-popup .leaflet-popup-content{margin:0;width:160px!important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
+.cm-lf-popup .leaflet-popup-close-button{color:rgba(255,255,255,.5)!important;top:6px!important;right:7px!important;font-size:14px!important}
+.cm-lf-popup .leaflet-popup-close-button:hover{color:#fff!important}
+.cm-lf-card{padding:10px 12px}
+.cm-lf-card-name{font-size:12px;font-weight:700;color:#f5f5f5;margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.cm-lf-card-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cm-lf-card-city{font-size:11px;color:rgba(245,245,245,.45);margin-bottom:4px}
+.cm-lf-card-sales{font-size:12px;font-weight:700;color:#FF5C00}
 .cm-teaser-live{animation:cm-live 1.8s ease-in-out infinite}
 @keyframes cm-live{0%,100%{opacity:1}50%{opacity:.25}}
 .cm-teaser-btn-p{background:#FF5C00;color:#fff;border:none;border-radius:6px;padding:11px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:background .15s,transform .12s}
 .cm-teaser-btn-p:hover{background:#cc4900;color:#fff;text-decoration:none;transform:translateY(-1px)}
 .cm-teaser-btn-g{background:transparent;color:rgba(245,245,245,.65);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:11px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;text-decoration:none;display:inline-flex;align-items:center;white-space:nowrap;transition:border-color .15s,color .15s,transform .12s}
 .cm-teaser-btn-g:hover{border-color:rgba(255,255,255,.45);color:#fff;text-decoration:none;transform:translateY(-1px)}
-/* Map pin card (click popup) */
-.cm-map-card{position:fixed;z-index:60;background:#fff;border-radius:10px;padding:11px 13px;width:158px;pointer-events:none;display:none;box-shadow:0 6px 24px rgba(0,0,0,0.22);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif}
-.cm-map-card.show{display:block}
-.cm-map-card-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle;flex-shrink:0}
-.cm-map-card-name{font-size:12px;font-weight:700;color:#111;margin-bottom:2px;display:flex;align-items:center}
-.cm-map-card-city{font-size:11px;color:#999;margin-bottom:5px}
-.cm-map-card-sales{font-size:12px;font-weight:700;color:#FF5C00}
 /* Apply modal */
 .cm-apply-ov{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.82);backdrop-filter:blur(10px);padding:20px;overflow-y:auto}
 .cm-apply-ov.open{display:flex;align-items:flex-start;justify-content:center}
@@ -669,15 +675,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
   </div>
 
   <!-- 3. Map -->
-  <div style="max-width:600px;margin:0 auto;overflow:hidden">
-    <svg id="cm-teaser-map" viewBox="0 0 380 200" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;min-height:200px;display:block"></svg>
-  </div>
-
-  <!-- Map pin card -->
-  <div class="cm-map-card" id="cm-map-card">
-    <div class="cm-map-card-name"><span class="cm-map-card-dot" id="cm-card-dot"></span><span id="cm-card-name"></span></div>
-    <div class="cm-map-card-city" id="cm-card-city"></div>
-    <div class="cm-map-card-sales" id="cm-card-sales"></div>
+  <div style="max-width:600px;margin:0 auto;overflow:hidden;border-radius:10px">
+    <div id="cm-teaser-map" style="width:100%;height:220px"></div>
   </div>
 
   <!-- 4. Footer bar -->
@@ -729,145 +728,58 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 
 <script>
 (function(){
-  function loadScript(src, cb){
-    var s = document.createElement('script');
-    s.src = src; s.onload = cb; s.onerror = cb;
+  var members = [
+    {name:'Lena M.',   city:'Berlin',    lon:13.4,  lat:52.5,  color:'#FF5C00', sales:'12K sales'},
+    {name:'Tom K.',    city:'Amsterdam', lon:4.9,   lat:52.37, color:'#22c55e', sales:'9K sales'},
+    {name:'James R.',  city:'London',    lon:-0.12, lat:51.5,  color:'#3b82f6', sales:'7K sales'},
+    {name:'Marc D.',   city:'Paris',     lon:2.35,  lat:48.85, color:'#8b5cf6', sales:'6K sales'},
+    {name:'Sara V.',   city:'Vienna',    lon:16.37, lat:48.21, color:'#eab308', sales:'5K sales'},
+    {name:'Erik S.',   city:'Stockholm', lon:18.07, lat:59.33, color:'#22c55e', sales:'4K sales'},
+    {name:'Chiara B.', city:'Milan',     lon:9.19,  lat:45.46, color:'#ef4444', sales:'3K sales'},
+    {name:'Ana P.',    city:'Lisbon',    lon:-9.14, lat:38.72, color:'#FF5C00', sales:'2K sales'},
+  ];
+
+  var extraPins = [
+    [-74.0,40.7],[-87.6,41.8],[151.2,-33.8],[103.8,1.35],[55.3,25.2],
+    [37.6,55.75],[126.9,37.5],[-43.2,-22.9],[29.0,41.0],[139.7,35.7],
+    [-3.7,40.4],[23.7,37.98],[174.8,-36.9],[-99.1,19.4],[72.8,19.1]
+  ];
+
+  function initTeaserMap(){
+    if(!window.L || !document.getElementById('cm-teaser-map')) return;
+    var map = L.map('cm-teaser-map',{
+      center:[50,12], zoom:3, minZoom:2, maxZoom:8,
+      scrollWheelZoom:false, zoomControl:true, attributionControl:false
+    });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{
+      subdomains:'abcd', maxZoom:19
+    }).addTo(map);
+
+    extraPins.forEach(function(c){
+      var icon = L.divIcon({className:'cm-lf-pin',html:'<div class="cm-lf-dot" style="background:rgba(255,92,0,0.4);width:8px;height:8px;border:1.5px solid rgba(255,255,255,0.5)"></div>',iconSize:[8,8],iconAnchor:[4,4]});
+      L.marker([c[1],c[0]],{icon:icon,interactive:false}).addTo(map);
+    });
+
+    members.forEach(function(m){
+      var icon = L.divIcon({className:'cm-lf-pin',html:'<div class="cm-lf-dot" style="background:'+m.color+';width:14px;height:14px"></div>',iconSize:[20,20],iconAnchor:[10,10],popupAnchor:[0,-12]});
+      var popupHtml = '<div class="cm-lf-card"><div class="cm-lf-card-name"><span class="cm-lf-card-dot" style="background:'+m.color+'"></span>'+m.name+'</div><div class="cm-lf-card-city">'+m.city+'</div><div class="cm-lf-card-sales">'+m.sales+'</div></div>';
+      L.marker([m.lat,m.lon],{icon:icon}).bindPopup(L.popup({maxWidth:160,className:'cm-lf-popup',closeButton:false}).setContent(popupHtml)).addTo(map);
+    });
+  }
+
+  function loadLeaflet(cb){
+    if(window.L){cb();return;}
+    var s=document.createElement('script');
+    s.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    s.onload=cb; s.onerror=cb;
     document.head.appendChild(s);
   }
 
-  function initTeaserMap(){
-    var svg = document.getElementById('cm-teaser-map');
-    if(!svg || !window.d3 || !window.topojson) return;
-
-    var projection = d3.geoNaturalEarth1().scale(60).translate([190, 100]);
-    var path = d3.geoPath().projection(projection);
-
-    var members = [
-      {name:'Lena M.',   city:'Berlin',    lon:13.4,  lat:52.5,  color:'#FF5C00', rank:1, sales:'12K sales'},
-      {name:'Tom K.',    city:'Amsterdam', lon:4.9,   lat:52.37, color:'#22c55e', rank:2, sales:'9K sales'},
-      {name:'James R.',  city:'London',    lon:-0.12, lat:51.5,  color:'#3b82f6', rank:3, sales:'7K sales'},
-      {name:'Marc D.',   city:'Paris',     lon:2.35,  lat:48.85, color:'#8b5cf6',         sales:'6K sales'},
-      {name:'Sara V.',   city:'Vienna',    lon:16.37, lat:48.21, color:'#eab308',         sales:'5K sales'},
-      {name:'Erik S.',   city:'Stockholm', lon:18.07, lat:59.33, color:'#22c55e',         sales:'4K sales'},
-      {name:'Chiara B.', city:'Milan',     lon:9.19,  lat:45.46, color:'#ef4444',         sales:'3K sales'},
-      {name:'Ana P.',    city:'Lisbon',    lon:-9.14, lat:38.72, color:'#FF5C00',         sales:'2K sales'},
-    ];
-
-    var extraPins = [
-      [-74.0,40.7],[-87.6,41.8],[151.2,-33.8],[103.8,1.35],[55.3,25.2],
-      [37.6,55.75],[126.9,37.5],[-43.2,-22.9],[29.0,41.0],[139.7,35.7],
-      [-3.7,40.4],[23.7,37.98],[174.8,-36.9],[-99.1,19.4],[72.8,19.1]
-    ];
-
-    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-      .then(function(r){return r.json();})
-      .then(function(world){
-        var countries = topojson.feature(world, world.objects.countries);
-        var borders   = topojson.mesh(world, world.objects.countries, function(a,b){return a!==b;});
-        var svgEl = d3.select('#cm-teaser-map');
-
-        // Apple Maps-style colors: light-blue ocean, warm-cream land
-        svgEl.append('rect').attr('width',380).attr('height',200).attr('fill','#b8d8ea');
-
-        svgEl.selectAll('.cm-cty')
-          .data(countries.features).enter().append('path')
-          .attr('class','cm-cty').attr('d',path)
-          .attr('fill','#f0e8d8').attr('stroke','none');
-
-        svgEl.append('path').datum(borders).attr('d',path)
-          .attr('fill','none').attr('stroke','#d4c4ac').attr('stroke-width',0.5);
-
-        // Faint extra pins
-        extraPins.forEach(function(c){
-          var pt = projection(c);
-          if(!pt) return;
-          svgEl.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2)
-            .attr('fill','rgba(255,92,0,0.35)').attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width',0.6);
-        });
-
-        var card      = document.getElementById('cm-map-card');
-        var cardDot   = document.getElementById('cm-card-dot');
-        var cardName  = document.getElementById('cm-card-name');
-        var cardCity  = document.getElementById('cm-card-city');
-        var cardSales = document.getElementById('cm-card-sales');
-
-        members.forEach(function(m){
-          var pt = projection([m.lon, m.lat]);
-          if(!pt) return;
-          var g = svgEl.append('g').style('cursor','pointer');
-
-          // Pulsing outer glow
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',9)
-            .attr('fill',m.color).attr('fill-opacity',0.18).attr('stroke','none')
-            .attr('class','cm-teaser-pulse');
-
-          // White halo for contrast on light map
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',6)
-            .attr('fill','#fff').attr('stroke','none');
-
-          // Colored dot
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',5)
-            .attr('fill',m.color);
-
-          // White inner shine
-          g.append('circle').attr('cx',pt[0]).attr('cy',pt[1]).attr('r',2)
-            .attr('fill','rgba(255,255,255,0.55)');
-
-          // Rank badge for top 3
-          if(m.rank && m.rank <= 3){
-            g.append('text')
-              .attr('x',pt[0]).attr('y',pt[1]-10)
-              .attr('text-anchor','middle').attr('font-size','7px')
-              .attr('font-family','DM Mono,monospace').attr('font-weight','700')
-              .attr('fill','#111').attr('paint-order','stroke')
-              .attr('stroke','#fff').attr('stroke-width','2.5')
-              .text('#'+m.rank);
-          }
-
-          // Hover: scale pin up
-          g.on('mouseenter',function(){
-            d3.select(this).attr('transform',
-              'translate('+pt[0]+','+pt[1]+') scale(1.4) translate('+(-pt[0])+','+(-pt[1])+')');
-          }).on('mouseleave',function(){
-            d3.select(this).attr('transform',null);
-          });
-
-          // Click: show card popup
-          g.on('click',function(event){
-            event.stopPropagation();
-            cardDot.style.background  = m.color;
-            cardName.textContent = m.name;
-            cardCity.textContent = m.city;
-            cardSales.textContent = m.sales;
-            var r = svg.getBoundingClientRect();
-            var sx = r.width / 380, sy = r.height / 200;
-            var vx = r.left + pt[0]*sx, vy = r.top + pt[1]*sy;
-            var left = vx + 10;
-            if(left + 160 > window.innerWidth - 8) left = vx - 168;
-            card.style.left = Math.max(8, left) + 'px';
-            card.style.top  = Math.max(8, vy - 18) + 'px';
-            card.classList.add('show');
-          });
-        });
-
-        // Click anywhere else: hide card
-        svgEl.on('click', function(){ card.classList.remove('show'); });
-      })
-      .catch(function(){});
-  }
-
   function run(){
-    var d3ok   = typeof window.d3       !== 'undefined';
-    var topoOk = typeof window.topojson !== 'undefined';
-    if(d3ok && topoOk){ setTimeout(initTeaserMap, 50); return; }
-    var need = 0, done = 0;
-    function check(){ if(++done === need) setTimeout(initTeaserMap, 50); }
-    if(!d3ok)  { need++; loadScript('https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js', check); }
-    if(!topoOk){ need++; loadScript('https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js', check); }
-    if(!need) setTimeout(initTeaserMap, 50);
+    loadLeaflet(function(){ setTimeout(initTeaserMap,50); });
   }
 
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run);
   else run();
 })();
 

@@ -173,17 +173,17 @@ tr:last-child td{border-bottom:none}
     <div class="stat-row">
       <div class="stat-box">
         <div class="sb-label">Total Subscribers</div>
-        <div class="sb-value" id="stat-total">—</div>
+        <div class="sb-value" id="stat-total"></div>
         <div class="sb-sub">all time</div>
       </div>
       <div class="stat-box">
         <div class="sb-label">Active</div>
-        <div class="sb-value" id="stat-active">—</div>
+        <div class="sb-value" id="stat-active"></div>
         <div class="sb-sub">receiving emails</div>
       </div>
       <div class="stat-box">
         <div class="sb-label">Emails Sent</div>
-        <div class="sb-value" id="stat-sent">—</div>
+        <div class="sb-value" id="stat-sent"></div>
         <div class="sb-sub">all time</div>
       </div>
     </div>
@@ -194,7 +194,7 @@ tr:last-child td{border-bottom:none}
     <div class="card">
       <div class="card-header">
         <span class="card-title">All subscribers</span>
-        <span class="card-meta" id="sub-count">—</span>
+        <span class="card-meta" id="sub-count"></span>
       </div>
       <table>
         <thead>
@@ -273,7 +273,7 @@ function loadSubscribers(){
 
       document.getElementById('stat-total').textContent = unique.length || '0';
       document.getElementById('stat-active').textContent = unique.length || '0';
-      document.getElementById('stat-sent').textContent = '—';
+      document.getElementById('stat-sent').textContent = '';
       document.getElementById('sub-count').textContent = unique.length + ' total';
 
       const tbody = document.getElementById('subscribers-body');
@@ -282,8 +282,8 @@ function loadSubscribers(){
         return;
       }
       tbody.innerHTML = unique.map(r=>{
-        const src = r.button||r.source||'—';
-        const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}) : '—';
+        const src = r.button||r.source||'';
+        const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}) : '';
         return `<tr>
           <td style="font-family:var(--fm);font-size:11px">${esc(r.email)}</td>
           <td><span class="sub-source">${esc(src)}</span></td>
@@ -312,7 +312,7 @@ function sendNewsletter(){
   const body    = document.getElementById('nl-body').value.trim();
   if(!subject){ toast('Subject is required.','err'); return; }
   if(!body){ toast('Body is required.','err'); return; }
-  toast('Send triggered — integrate your email provider to complete setup.');
+  toast('Send triggered integrate your email provider to complete setup.');
 }
 
 // ── INIT ──

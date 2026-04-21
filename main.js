@@ -2,7 +2,7 @@
 const ALL_PICKS = [
   {
     id:'cubee3d',
-    stat:'1,000+', statSub:'proven designs to sell',
+    img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Unlimited prints. Zero IP risk.',
     ic:'📜', badge:'Most Popular', badgeClass:'orange',

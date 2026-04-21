@@ -1378,5 +1378,73 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.market-grid').forEach(g => observer.observe(g));
 </script>
+
+<!-- FREEBIE EMAIL POPUP -->
+<style>
+#freebie-popup-email::placeholder{color:rgba(255,255,255,0.35)}
+#freebie-popup-email:focus{border-color:#FF5C00;outline:none}
+</style>
+<div id="freebie-popup" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:20px;align-items:center;justify-content:center">
+  <div style="background:#111;border:1px solid rgba(255,92,0,.35);border-radius:14px;padding:32px 28px;max-width:380px;width:100%;position:relative;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,92,0,0.2) 0%,transparent 65%)">
+    <div style="font-size:30px;margin-bottom:12px">📬</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,6vw,30px);letter-spacing:1px;line-height:1.05;color:#fff;margin-bottom:10px">GET THE FREE GUIDE</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:20px;line-height:1.5">What actually sells — based on 11,000+ real Etsy sales. Sent to your inbox instantly.</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input type="email" id="freebie-popup-email" placeholder="your@email.com" aria-label="Email address"
+        style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:13px 16px;font-size:16px;color:#fff;font-family:inherit;width:100%">
+      <button id="freebie-popup-btn" onclick="submitFreebiePopup()" style="background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(255,92,0,0.4)">Send me the guide →</button>
+    </div>
+    <div id="freebie-popup-thanks" style="display:none;font-size:15px;color:#FF5C00;font-weight:600;margin-top:14px;text-align:center">✓ Check your inbox!</div>
+    <button onclick="closeFreebiePopup()" style="background:transparent;border:none;color:rgba(255,255,255,0.28);font-size:13px;cursor:pointer;font-family:inherit;margin-top:16px;width:100%;text-align:center;padding:4px 0">No thanks, I'll just read it here</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'mm_freebie_popup_done';
+  if(localStorage.getItem(KEY)) return;
+  var fired = false;
+  function check(){
+    if(fired) return;
+    var pct = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if(pct > 0.45){
+      fired = true;
+      window.removeEventListener('scroll', check, {passive:true});
+      document.getElementById('freebie-popup').style.display = 'flex';
+    }
+  }
+  window.addEventListener('scroll', check, {passive:true});
+})();
+
+function closeFreebiePopup(){
+  document.getElementById('freebie-popup').style.display = 'none';
+  localStorage.setItem('mm_freebie_popup_done','1');
+}
+
+function submitFreebiePopup(){
+  var input = document.getElementById('freebie-popup-email');
+  var val = input.value.trim();
+  var re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!val || !re.test(val)){
+    input.style.borderColor = '#ef4444';
+    setTimeout(function(){ input.style.borderColor = ''; }, 1500);
+    return;
+  }
+  fetch('https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec', {
+    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify({
+      uid: localStorage.getItem('mm_uid')||'', variant:'a', email:val,
+      type:'email_capture', button:'freebie_popup',
+      referrer: document.referrer||'(direct)',
+      userAgent: navigator.userAgent, screenWidth: screen.width,
+      ts: new Date().toISOString()
+    }), keepalive:true
+  }).catch(function(){});
+  input.style.display = 'none';
+  document.getElementById('freebie-popup-btn').style.display = 'none';
+  document.getElementById('freebie-popup-thanks').style.display = 'block';
+  localStorage.setItem('mm_freebie_popup_done','1');
+  setTimeout(closeFreebiePopup, 2500);
+}
+</script>
 </body>
 </html>

@@ -2,13 +2,13 @@
 const ALL_PICKS = [
   {
     id:'cubee3d',
-    img:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg',
+    stat:'1,000+', statSub:'proven designs to sell',
     brand:'Cubee3D', name:'Commercial STL License',
     desc:'Unlimited prints. Zero IP risk.',
     ic:'📜', badge:'Most Popular', badgeClass:'orange',
     discountCode:'MESHMINDS',
     url:'https://cubee3d.com/?ref=meshminds',
-    tap:'Get licensed →'
+    tap:'Get the commercial license →'
   },
   {
     id:'meshy',
@@ -66,14 +66,18 @@ function buildPickHTML(p){
   const hasCode = !!p.discountCode;
   const hrefAttr = hasCode ? 'javascript:void(0)' : p.url;
   const targetAttr = hasCode ? '' : ' target="_blank" rel="noopener"';
+  const imgArea = p.stat
+    ? '<div class="pick-img pick-img-stat">'
+        + '<div><div class="pstat-num">' + p.stat + '</div><div class="pstat-sub">' + (p.statSub||'') + '</div></div>'
+        + badge + '</div>'
+    : '<div class="pick-img">'
+        + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="hideImg(this)">' : '')
+        + '<span class="ph-ic" style="' + (p.img ? 'display:none' : '') + '">' + p.ic + '</span>'
+        + '<span class="ph-label">' + p.name + '</span>'
+        + badge + '</div>';
   return '<a class="pick rv" href="' + hrefAttr + '"' + targetAttr
     + ' data-id="' + p.id + '" data-url="' + p.url + '" data-code="' + (p.discountCode||'') + '" onclick="trackPick(this)">'
-    + '<div class="pick-img">'
-    + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="hideImg(this)">' : '')
-    + '<span class="ph-ic" style="' + (p.img ? 'display:none' : '') + '">' + p.ic + '</span>'
-    + '<span class="ph-label">' + p.name + '</span>'
-    + badge
-    + '</div>'
+    + imgArea
     + '<div class="pick-body">'
     + '<div class="p-name">' + p.name + '</div>'
     + '<div class="p-desc">' + p.desc + '</div>'
@@ -274,91 +278,83 @@ function showResult(){
 
 function showCommercialResult(){
   const problem = answers['com_problem']||'what';
-  const level   = answers['com_level']||'beginner';
 
-  // Title + diagnosis adapt to problem
   const titles = {
-    what: 'FIND WHAT<br>ACTUALLY SELLS.',
-    sell: 'TURN PRINTS<br>INTO SALES.',
+    what: "MOST SELLERS FAIL<br>FOR THE SAME 3 REASONS.",
+    sell: "YOU HAVE THE DRIVE.<br>HERE'S THE SYSTEM.",
   };
   const diags = {
-    what: "The fastest way to find a winning product is to print what already sells. Cubee gives you 1,000+ licensed commercial designs so you can skip the guesswork, pick a proven niche, and start shipping today.",
-    sell: "Selling starts with having something people already want to buy. Skip the \"will this work?\" gamble by starting with a library of proven designs, then put your energy into listings, photos, and getting in front of buyers.",
+    what: "Most home sellers fail in year one because they pick the wrong products, underprice everything, and print without a commercial license. None of these are hard to fix — but you need to tackle them in the right order.",
+    sell: "Consistent sales start with the right products, priced correctly, with the legal right to sell them. Get the foundation right and the marketing part gets a lot easier.",
   };
 
-  const cubeeHero = `
-    <div style="margin:20px 0 4px">
-      <div style="font-size:11px;color:var(--o);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Start here</div>
-      <div style="font-family:var(--fd);font-size:clamp(20px,5.5vw,26px);letter-spacing:.5px;margin-bottom:12px;line-height:1.1">START WITH 1,000+<br>PROVEN DESIGNS.</div>
-      <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer;border-color:rgba(255,92,0,.45);margin-bottom:0">
-        <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D Commercial STL License" loading="lazy"></div>
-        <div class="res-offer-body">
-          <div class="res-offer-badge">SOLVE THE "WHAT TO SELL" PROBLEM</div>
-          <div class="res-offer-top">
-            <div>
-
-              <div class="res-offer-name">Commercial STL License</div>
-            </div>
-          </div>
-          <div class="res-offer-desc">1,000+ professional designs you can legally sell. Browse proven niches, pick what fits your market, start printing. No IP risk.</div>
-          <div class="res-offer-cta">Get licensed → <span style="font-size:12px;opacity:.6">(tap to reveal your discount code)</span></div>
+  const insightBlocks = `
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:24px">
+      <div style="background:var(--s1);border-radius:var(--r);padding:14px 16px;border-left:3px solid #ef4444;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">🔐</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:3px">Selling without a commercial license = IP risk</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5">Most free STL files online don't include a commercial license. Selling prints from them puts your Etsy shop at risk of takedowns and bans.</div>
         </div>
+      </div>
+      <div style="background:var(--s1);border-radius:var(--r);padding:14px 16px;border-left:3px solid #f59e0b;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">📊</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:3px">Picking products by feel instead of demand data</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5">Printing what looks cool rarely pays. The shops that grow pick products backed by real search demand and proven buyer patterns.</div>
+        </div>
+      </div>
+      <div style="background:var(--s1);border-radius:var(--r);padding:14px 16px;border-left:3px solid #f59e0b;display:flex;gap:12px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">💸</span>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:3px">Pricing too low and destroying your margins</div>
+          <div style="font-size:13px;color:var(--t2);line-height:1.5">Underpricing signals low quality and makes scaling impossible. Most beginners price at material cost + 10% and wonder why they burn out.</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:14px">Here's what I actually use to solve each of these</div>`;
+
+  const cubeeCard = `
+    <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer;border-color:rgba(255,92,0,.45);margin-bottom:10px">
+      <div class="res-offer-body">
+        <div class="res-offer-badge">MOST POPULAR · FIXES #1 &amp; #2</div>
+        <div class="res-offer-name">Cubee3D — Commercial STL License</div>
+        <div style="font-size:12px;color:var(--t3);margin:5px 0 10px;letter-spacing:.3px">1,000+ proven designs &middot; unlimited prints &middot; no IP risk</div>
+        <div class="res-offer-desc">Browse proven niches, pick what fits your market, and print and sell legally. The fastest way to fix the what-to-sell problem.</div>
+        <div class="res-offer-cta">Get the commercial license → <span style="font-size:11px;opacity:.55">(tap to reveal discount code)</span></div>
       </div>
     </div>`;
-
-  const meshyCard = `
-    <a class="res-offer-card" href="https://www.meshy.ai?via=meshminds" target="_blank" rel="noopener" onclick="track('offer_click',{button:'meshy_quiz',href:'https://www.meshy.ai?via=meshminds'})">
-      <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model.jpg" alt="Meshy AI 3D Model Generator" loading="lazy"></div>
-      <div class="res-offer-body">
-        <div class="res-offer-top">
-          <div>
-
-            <div class="res-offer-name">AI 3D Model Generator</div>
-          </div>
-        </div>
-        <div class="res-offer-desc">Type a prompt, get a print-ready file. No CAD skills needed. Generate custom products in minutes and own them outright.</div>
-        <div class="res-offer-cta">Try free →</div>
-      </div>
-    </a>`;
 
   const makerworldCard = `
     <a class="res-offer-card" href="https://makerworld.com/de/collections/9383161-my-bestsellers" target="_blank" rel="noopener" onclick="track('offer_click',{button:'makerworld_commercial',href:'https://makerworld.com/de/collections/9383161-my-bestsellers'})">
       <div class="res-offer-img"><img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%285%29.jpg" alt="Meshminds free models on MakerWorld" loading="lazy"></div>
       <div class="res-offer-body">
-        <div class="res-offer-top">
-          <div>
-
-            <div class="res-offer-name">My Bestseller Models, Free</div>
-          </div>
-        </div>
-        <div class="res-offer-desc">Every model I sold 11,000+ times on Etsy, now free to download. Start selling proven products today. Commercial license available on MakerWorld.</div>
+        <div class="res-offer-badge secondary">FREE</div>
+        <div class="res-offer-name">My Bestseller Models, Free</div>
+        <div class="res-offer-desc">Every model I sold 11,000+ times on Etsy, free on MakerWorld. Start with proven products while you build your license library.</div>
         <div class="res-offer-cta">Download free →</div>
       </div>
     </a>`;
 
   const emailCapture = `
     <div class="email-capture" style="margin-top:8px">
-      <div style="width:100%;border-radius:var(--r);margin-bottom:16px;overflow:hidden">
-        <img src="/freebie-cover.jpg" alt="The 3D Print Money Guide" style="width:100%;display:block" onerror="this.parentElement.style.display='none'">
-      </div>
       <div class="ec-title">WHAT SHOULD I 3D PRINT TO MAKE MONEY?</div>
-      <div class="ec-desc"><strong>THE FREE GUIDE 164,000 ETSY SHOPS WISH THEY HAD.</strong> Free guide with proven products and data that sell.</div>
+      <div class="ec-desc">Free guide based on 11,000+ real Etsy sales. Proven products, pricing strategy, and the platforms that pay.</div>
       <div class="ec-form">
         <input type="email" class="ec-input" placeholder="your@email.com" id="email-commercial" aria-label="Email address">
-        <button class="ec-btn" onclick="submitEmail('commercial')">Send me ideas →</button>
+        <button class="ec-btn" onclick="submitEmail('commercial')">Send me the guide →</button>
       </div>
-      <div class="ec-thanks" id="ec-thanks-commercial">You're in. First edition coming soon.</div>
+      <div class="ec-thanks" id="ec-thanks-commercial">You're in. Sending now.</div>
       <div class="ec-consent">No spam. Unsubscribe anytime.</div>
     </div>`;
 
-  document.getElementById('qr-path').textContent = (level.charAt(0).toUpperCase()+level.slice(1))+' Path';
+  document.getElementById('qr-path').textContent = 'Seller Path';
   document.getElementById('qr-title').innerHTML = titles[problem]||titles.what;
   document.getElementById('qr-diag').innerHTML  = diags[problem]||diags.what;
   document.getElementById('dyn-offer-block').innerHTML =
-    cubeeHero +
-    '<div class="res-offer-grid" style="margin-top:12px">' +
-    meshyCard + makerworldCard +
-    '</div>' + emailCapture;
+    insightBlocks + cubeeCard +
+    '<div class="res-offer-grid" style="margin-top:0">' + makerworldCard + '</div>' +
+    emailCapture;
 
   document.getElementById('res-commercial').classList.add('active');
 }

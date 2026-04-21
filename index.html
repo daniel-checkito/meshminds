@@ -166,6 +166,9 @@ body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:17px;li
 
 /* PICKS GRID */
 .picks-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:24px}
+.pick-img-stat{background:var(--o);display:flex;align-items:center;justify-content:center;flex-direction:column}
+.pstat-num{font-family:var(--fd);font-size:clamp(36px,10vw,52px);color:#fff;letter-spacing:1px;line-height:1;text-align:center}
+.pstat-sub{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.72);text-align:center;margin-top:5px}
 .pick{background:var(--s1);border:1px solid var(--b);border-radius:16px;overflow:hidden;transition:border-color .2s,transform .2s,box-shadow .2s;text-decoration:none;color:var(--t);display:block;box-shadow:0 2px 8px rgba(0,0,0,0.07),0 6px 20px rgba(0,0,0,0.05)}
 .pick:hover{border-color:rgba(255,92,0,.35);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.12),0 12px 36px rgba(0,0,0,0.08)}
 .pick[data-id="cubee3d"]{border:2px solid var(--o);box-shadow:0 2px 8px rgba(255,92,0,0.12),0 6px 24px rgba(255,92,0,0.08)}
@@ -596,7 +599,8 @@ const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8
 <!-- GEAR SECTION -->
 <section class="sec" id="gear-section">
   <div class="sec-inner">
-    <h1 class="stitle rv">The Tools I Use</h1>
+    <h1 class="stitle rv">What I'd Buy<br>Starting Over</h1>
+    <p class="ssub rv">The exact setup behind 11,000+ Etsy sales — no fluff.</p>
   </div>
 
   <div class="picks-grid" id="picks-grid" style="max-width:600px;margin:24px auto 0"></div>

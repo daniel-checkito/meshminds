@@ -204,12 +204,13 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
     <div id="hero-text" style="padding:6px 0 10px;text-align:center">
       <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:4px">Market · Revenue · Legal</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.05;margin-bottom:4px">Will your 3D print sell on Etsy?</div>
-      <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a link — get demand data, profit estimate &amp; legal risk in one report.</div>
+      <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a MakerWorld or Printables link below — we check demand, profit &amp; legal risk in seconds.</div>
     </div>
     <div class="url-row">
       <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
       <input class="url-inp" id="ui" type="text" placeholder="Paste a MakerWorld or Printables link…">
     </div>
+    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.45">e.g. <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span></div>
     <div class="vbar" id="vbar">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">–</div></div>
       <div class="vr">
@@ -234,60 +235,31 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
         </button>
 
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;opacity:.65">
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;opacity:.65">
           <span style="font-size:9px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
           <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:15px;object-fit:contain">
           <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Prusa-Printables.png" style="height:15px;object-fit:contain">
         </div>
 
-        <div class="prev-card">
-          <div class="prev-hd">
-            <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-            Market demand
-          </div>
-          <div class="prev-rows">
-            <div class="prev-row"><span class="prev-lbl">Monthly search volume</span><span class="prev-val">22,200 ↑58%</span></div>
-            <div class="prev-row"><span class="prev-lbl">Etsy listings</span><span class="prev-val">1,428 · avg €22</span></div>
-            <div class="prev-row"><span class="prev-lbl">Top seller sales</span><span class="prev-val">3,241</span></div>
+        <div style="background:#f7f7f7;border-radius:10px;padding:11px 13px;margin-bottom:10px">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:8px">Saves you hours of research</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:8px"><span style="color:var(--good);font-weight:800">✓</span>Real Etsy sales &amp; Google Trends data</div>
+            <div style="font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:8px"><span style="color:var(--good);font-weight:800">✓</span>Etsy Terms of Service — know what gets you banned</div>
+            <div style="font-size:11.5px;color:var(--ink2);display:flex;align-items:center;gap:8px"><span style="color:var(--good);font-weight:800">✓</span>Laws per country so you stay compliant</div>
           </div>
         </div>
 
-        <div class="prev-card">
-          <div class="prev-hd">
-            <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-            Revenue estimate
-          </div>
-          <div class="prev-rows">
-            <div class="prev-row"><span class="prev-lbl">Units per month</span><span class="prev-val">~42 units</span></div>
-            <div class="prev-row"><span class="prev-lbl">Gross revenue</span><span class="prev-val">€940 /mo</span></div>
-            <div class="prev-row"><span class="prev-lbl">Net profit after fees</span><span class="prev-val g">€865 /mo</span></div>
-          </div>
-        </div>
-
-        <div class="prev-card">
-          <div class="prev-hd">
-            <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Legal &amp; copyright
-          </div>
-          <div class="prev-rows">
-            <div class="prev-row"><span class="prev-lbl">Etsy ban risk</span><span class="risk-badge risk-low" style="font-size:9px">LOW</span></div>
-            <div class="prev-row"><span class="prev-lbl">Copyright / IP scan</span><span class="prev-val">No issues found</span></div>
-            <div class="prev-row"><span class="prev-lbl">Country-specific laws</span><span class="prev-val">EU · US · UK</span></div>
-          </div>
-        </div>
-
-        <div class="proof-bar">
+        <div class="proof-bar" style="margin-bottom:8px">
           <div class="proof-stat"><span class="proof-n">14,203</span><span class="proof-l">analyzed</span></div>
           <span class="proof-sep">·</span>
           <div class="proof-stat"><span class="proof-n">★ 4.8</span><span class="proof-l">rating</span></div>
           <span class="proof-sep">·</span>
           <div class="proof-stat"><span class="proof-n">3,800+</span><span class="proof-l">sellers</span></div>
         </div>
-        <div class="proof-quote">"Saved me from listing a trademarked design — worth every second" · Sarah M., Etsy seller</div>
 
-        <div class="eg-label" style="margin-top:4px">Popular prints recently analysed</div>
+        <div class="eg-label" style="margin-top:2px">Popular prints recently analysed</div>
         <div class="eg-grid">
-          <!-- Custom Name Sign 94 -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#fef3c7,#fbbf24)">
               🏷️
@@ -295,7 +267,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             </div>
             <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor · 16.6k ↓</div></div>
           </div>
-          <!-- Geometric Planter 87 -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dcfce7,#86efac)">
               🌿
@@ -303,7 +274,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             </div>
             <div class="eg-info"><div class="eg-name">Geometric Planter Pot</div><div class="eg-meta">Home · 9.2k ↓</div></div>
           </div>
-          <!-- Cable Box 82 -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)">
               🗃️
@@ -311,7 +281,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             </div>
             <div class="eg-info"><div class="eg-name">Cable Management Box</div><div class="eg-meta">Functional · 7.8k ↓</div></div>
           </div>
-          <!-- Articulated Dragon 71 -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#ffedd5,#fdba74)">
               🐉
@@ -319,7 +288,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             </div>
             <div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy/Art · 22.1k ↓</div></div>
           </div>
-          <!-- Disney Cutter 28 copyright flagged -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#fee2e2,#fca5a5)">
               🍪
@@ -327,7 +295,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             </div>
             <div class="eg-info"><div class="eg-name">Disney Cookie Cutter</div><div class="eg-meta eg-flag">⚠️ IP flagged</div></div>
           </div>
-          <!-- Phone Stand 76 -->
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#f5f5f5,#d4d4d4)">
               📱
@@ -336,6 +303,43 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <div class="eg-info"><div class="eg-name">Minimalist Phone Stand</div><div class="eg-meta">Functional · 11.3k ↓</div></div>
           </div>
         </div>
+
+        <div style="margin-top:6px">
+          <div class="prev-card">
+            <div class="prev-hd">
+              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              Market demand
+            </div>
+            <div class="prev-rows">
+              <div class="prev-row"><span class="prev-lbl">Monthly search volume</span><span class="prev-val">22,200 ↑58%</span></div>
+              <div class="prev-row"><span class="prev-lbl">Etsy listings</span><span class="prev-val">1,428 · avg €22</span></div>
+              <div class="prev-row"><span class="prev-lbl">Top seller sales</span><span class="prev-val">3,241</span></div>
+            </div>
+          </div>
+          <div class="prev-card">
+            <div class="prev-hd">
+              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Revenue estimate
+            </div>
+            <div class="prev-rows">
+              <div class="prev-row"><span class="prev-lbl">Units per month</span><span class="prev-val">~42 units</span></div>
+              <div class="prev-row"><span class="prev-lbl">Gross revenue</span><span class="prev-val">€940 /mo</span></div>
+              <div class="prev-row"><span class="prev-lbl">Net profit after fees</span><span class="prev-val g">€865 /mo</span></div>
+            </div>
+          </div>
+          <div class="prev-card">
+            <div class="prev-hd">
+              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Legal &amp; copyright
+            </div>
+            <div class="prev-rows">
+              <div class="prev-row"><span class="prev-lbl">Etsy ban risk</span><span class="risk-badge risk-low" style="font-size:9px">LOW</span></div>
+              <div class="prev-row"><span class="prev-lbl">Copyright / IP scan</span><span class="prev-val">No issues found</span></div>
+              <div class="prev-row"><span class="prev-lbl">Country-specific laws</span><span class="prev-val">EU · US · UK</span></div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
 

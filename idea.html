@@ -206,7 +206,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
       <input class="url-inp" id="ui" type="text" placeholder="Paste a MakerWorld or Printables link…">
     </div>
-    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.45">e.g. <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span></div>
+    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.5">e.g. <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Not listed yet? Paste a link to any similar existing design to benchmark against.</div>
     <div class="vbar" id="vbar">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
@@ -246,15 +246,17 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           </div>
         </div>
 
-        <div class="proof-bar" style="margin-bottom:8px">
-          <div class="proof-stat"><span class="proof-n">14,203</span><span class="proof-l">analyzed</span></div>
+        <div class="proof-bar" style="margin-bottom:4px">
+          <div class="proof-stat"><span class="proof-n">14,203</span><span class="proof-l">prints checked</span></div>
           <span class="proof-sep">·</span>
-          <div class="proof-stat"><span class="proof-n">★ 4.8</span><span class="proof-l">rating</span></div>
+          <div class="proof-stat"><span class="proof-n">★ 4.8</span><span class="proof-l">user rating</span></div>
           <span class="proof-sep">·</span>
-          <div class="proof-stat"><span class="proof-n">3,800+</span><span class="proof-l">sellers</span></div>
+          <div class="proof-stat"><span class="proof-n">3,800+</span><span class="proof-l">sellers use this</span></div>
         </div>
+        <div style="font-size:9px;color:var(--ink3);text-align:center;margin-bottom:9px">From our database of analysed 3D print listings</div>
 
         <div class="eg-label" style="margin-top:2px">Popular prints recently analysed</div>
+        <div style="text-align:center;font-size:9px;color:var(--ink3);margin-bottom:7px"><span style="color:var(--good)">●</span> 70-100 strong sell &nbsp;·&nbsp; <span style="color:var(--warn)">●</span> 45-69 ok &nbsp;·&nbsp; <span style="color:var(--bad)">●</span> 0-44 risky</div>
         <div class="eg-grid">
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#fef3c7,#fbbf24)">
@@ -413,7 +415,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <div class="panel">
         <div class="sec"><span class="sn">03</span><span class="st">Revenue potential</span><span class="sh">Top seller data</span></div>
         <div class="rcards">
-          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">~0</div><div class="rc-lbl">units/mo</div></div>
+          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">~0</div><div class="rc-lbl">est. units/mo</div></div>
           <div class="rc" id="rc1"><div class="rc-ico">💶</div><div class="rc-val" id="rv1">€0</div><div class="rc-lbl">gross rev.</div></div>
           <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">€0</div><div class="rc-lbl">print cost</div></div>
         </div>
@@ -656,7 +658,7 @@ function populate(data){
   if(q("ins"))q("ins").classList.add("show");
 
   var r=data.revenue||{};
-  if(q("rv0"))q("rv0").textContent=r.unitsPerMonth!==undefined?"~"+r.unitsPerMonth:"-";
+  if(q("rv0"))q("rv0").textContent=r.unitsPerMonth!==undefined?"~"+Math.abs(r.unitsPerMonth):"-";
   if(q("rv1"))q("rv1").textContent=r.grossRevenue!==undefined?"€"+r.grossRevenue:"-";
   if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
   if(q("hbig"))q("hbig").textContent=r.netProfit!==undefined?"€"+r.netProfit:"-";

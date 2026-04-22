@@ -200,19 +200,19 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
     <div id="hero-text" style="padding:6px 0 10px;text-align:center">
       <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:4px">Market · Revenue · Legal</div>
       <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.05;margin-bottom:4px">Will your 3D print sell on Etsy?</div>
-      <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a MakerWorld or Printables link below - we check demand, profit &amp; legal risk in seconds.</div>
+      <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a product link <b style="color:var(--ink2)">or describe your idea</b> - we check demand, profit &amp; legal risk in seconds.</div>
     </div>
     <div class="url-row">
       <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      <input class="url-inp" id="ui" type="text" placeholder="Paste a MakerWorld or Printables link…">
+      <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
     </div>
-    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.5">e.g. <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Not listed yet? Paste a link to any similar existing design to benchmark against.</div>
+    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.6">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Idea: <span style="font-style:italic">"custom name wall sign in wood-look PLA"</span></div>
     <div class="vbar" id="vbar">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
         <div class="ve" id="ve">Ready to scan</div>
         <div class="vt" id="vt">Paste a link above</div>
-        <div class="vd" id="vd">MakerWorld · Printables</div>
+        <div class="vd" id="vd">Link or describe your idea</div>
       </div>
     </div>
     <div class="dots" id="dots" style="display:none">
@@ -375,8 +375,9 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
       <!-- STEP 1 -->
       <div class="panel">
-        <div class="sec"><span class="sn">01</span><span class="st">The product</span><span class="sh">What we found</span></div>
-        <div class="browser">
+        <div class="sec"><span class="sn">01</span><span class="st" id="step1-st">The product</span><span class="sh" id="step1-sh">What we found</span></div>
+        <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
+        <div class="browser" id="browser-el">
           <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu">makerworld.com/en/models/2061852</div></div>
           <div class="bbody">
             <div class="bimg"><img src="data:image/jpeg;base64,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" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div>
@@ -531,7 +532,8 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="";
+var step=0,busy=false,lastURL="",lastIsURL=true;
+function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
   score:87,verdict:"Strong seller potential",
@@ -598,8 +600,8 @@ function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track")
 function verdict(state,msg){
   var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
   b.className="vbar";
-  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link above";d.textContent="MakerWorld · Printables";}
-  else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent="Analyzing…";d.textContent="Fetching demand, revenue & legal data";}
+  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="MakerWorld · Printables · or describe your idea";}
+  else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent=lastIsURL?"Analyzing product...":"Researching your idea...";d.textContent="Fetching demand, revenue & legal data";}
   else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
   else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}
 }
@@ -632,6 +634,12 @@ function riskBg(level){
 
 function populate(data){
   var p=data.product||{};
+  /* Show the right panel for URL vs idea mode */
+  if(q("idea-card"))q("idea-card").style.display=lastIsURL?"none":"";
+  if(q("browser-el"))q("browser-el").style.display=lastIsURL?"":"none";
+  if(!lastIsURL&&q("idea-desc-el"))q("idea-desc-el").textContent=lastURL;
+  if(q("step1-st"))q("step1-st").textContent=lastIsURL?"The product":"Your idea";
+  if(q("step1-sh"))q("step1-sh").textContent=lastIsURL?"What we found":"Estimated analysis";
   var buEl=document.querySelector(".bu");
   if(buEl)buEl.textContent=(p.url||lastURL).replace(/^https?:\/\//,"");
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
@@ -713,6 +721,7 @@ function populateCopyright(c){
 
 async function analyze(){
   var url=q("ui").value.trim();
+  lastIsURL=isURL(url);
   if(!url){
     q("ui").focus();
     q("ui").style.borderColor="var(--bad)";
@@ -730,7 +739,7 @@ async function analyze(){
     var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({url:url})
+      body:JSON.stringify(lastIsURL?{url:url}:{description:url,type:"idea"})
     });
     if(!resp.ok)throw new Error("HTTP "+resp.status);
     var data=await resp.json();
@@ -776,7 +785,11 @@ async function runLegalCheck(){
 }
 
 function reset(){
-  step=0;lastURL="";dots(0);slide(0);q("dots").style.display="none";
+  step=0;lastURL="";lastIsURL=true;
+  if(q("idea-card"))q("idea-card").style.display="none";
+  if(q("browser-el"))q("browser-el").style.display="";
+  if(q("step1-st"))q("step1-st").textContent="The product";
+  if(q("step1-sh"))q("step1-sh").textContent="What we found";dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("hero-text").style.display="";
   showFooter(false);setBtn0("Check this print",false);

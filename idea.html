@@ -192,6 +192,12 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .gate-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;margin-bottom:8px}
 .gate-inp:focus{border-color:var(--acc)}
 .gate-trust{font-size:10px;color:var(--ink3);text-align:center;margin-top:9px;line-height:1.4}
+/* Question chips */
+.q-block{margin-bottom:14px}
+.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:6px 11px;border:1.5px solid var(--line);border-radius:20px;font-size:11.5px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;border:1.5px solid var(--line)}
+.chip.on{border-color:var(--acc);color:var(--acc);background:#fff7f4;font-weight:700}
 </style>
 </head>
 <body>
@@ -302,44 +308,114 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           </div>
         </div>
 
-        <div style="margin-top:6px">
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              Market demand
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Monthly search volume</span><span class="prev-val">22,200 ↑58%</span></div>
-              <div class="prev-row"><span class="prev-lbl">Etsy listings</span><span class="prev-val">1,428 · avg €22</span></div>
-              <div class="prev-row"><span class="prev-lbl">Top seller sales</span><span class="prev-val">3,241</span></div>
-            </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">📊</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Demand</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">Are people actually buying this on Etsy right now?</div>
           </div>
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Revenue estimate
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Units per month</span><span class="prev-val">~42 units</span></div>
-              <div class="prev-row"><span class="prev-lbl">Gross revenue</span><span class="prev-val">€940 /mo</span></div>
-              <div class="prev-row"><span class="prev-lbl">Net profit after fees</span><span class="prev-val g">€865 /mo</span></div>
-            </div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">💰</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Profit</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">Est. monthly profit after print costs &amp; Etsy fees</div>
           </div>
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Legal &amp; copyright
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Etsy ban risk</span><span class="risk-badge risk-low" style="font-size:9px">LOW</span></div>
-              <div class="prev-row"><span class="prev-lbl">Copyright / IP scan</span><span class="prev-val">No issues found</span></div>
-              <div class="prev-row"><span class="prev-lbl">Country-specific laws</span><span class="prev-val">EU · US · UK</span></div>
-            </div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">⚖️</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Legal</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">IP, copyright &amp; Etsy ToS risk per your country</div>
           </div>
         </div>
 
       </div>
 
+
+      <!-- STEP 1: Questions -->
+      <div class="panel">
+        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Personalise your report</span></div>
+
+        <div class="q-block">
+          <div class="q-lbl">What category?</div>
+          <div class="chips" id="q-cat">
+            <button class="chip" data-v="decor">🏠 Home decor</button>
+            <button class="chip" data-v="functional">🔧 Functional</button>
+            <button class="chip" data-v="art">🎨 Art / gifts</button>
+            <button class="chip" data-v="gaming">🎮 Gaming / toys</button>
+            <button class="chip" data-v="other">✦ Other</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Target sell price</div>
+          <div class="chips" id="q-price">
+            <button class="chip" data-v="5-15">€5–15</button>
+            <button class="chip" data-v="15-30">€15–30</button>
+            <button class="chip" data-v="30-60">€30–60</button>
+            <button class="chip" data-v="60+">€60+</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Your Etsy experience</div>
+          <div class="chips" id="q-exp">
+            <button class="chip" data-v="new">Just starting</button>
+            <button class="chip" data-v="some">A few sales</button>
+            <button class="chip" data-v="active">Active seller</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="sel-row">
+            <div>
+              <div class="sel-lbl">Selling from</div>
+              <select id="sell-from" class="sel-inp">
+                <option value="">Select country</option>
+                <option value="NL">🇳🇱 Netherlands</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="BE">🇧🇪 Belgium</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="AU">🇦🇺 Australia</option>
+                <option value="SE">🇸🇪 Sweden</option>
+                <option value="CH">🇨🇭 Switzerland</option>
+                <option value="IT">🇮🇹 Italy</option>
+                <option value="ES">🇪🇸 Spain</option>
+                <option value="PL">🇵🇱 Poland</option>
+                <option value="NO">🇳🇴 Norway</option>
+                <option value="DK">🇩🇰 Denmark</option>
+                <option value="AT">🇦🇹 Austria</option>
+                <option value="PT">🇵🇹 Portugal</option>
+                <option value="IE">🇮🇪 Ireland</option>
+                <option value="FI">🇫🇮 Finland</option>
+                <option value="JP">🇯🇵 Japan</option>
+                <option value="SG">🇸🇬 Singapore</option>
+                <option value="KR">🇰🇷 South Korea</option>
+                <option value="CZ">🇨🇿 Czech Republic</option>
+                <option value="NZ">🇳🇿 New Zealand</option>
+                <option value="UA">🇺🇦 Ukraine</option>
+              </select>
+            </div>
+            <div>
+              <div class="sel-lbl">Selling to</div>
+              <select id="sell-to" class="sel-inp">
+                <option value="WORLDWIDE">🌍 Worldwide</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="EU">🇪🇺 European Union</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="AU">🇦🇺 Australia</option>
+                <option value="DE">🇩🇪 Germany</option>
+                <option value="FR">🇫🇷 France</option>
+                <option value="NL">🇳🇱 Netherlands</option>
+                <option value="JP">🇯🇵 Japan</option>
+                <option value="SG">🇸🇬 Singapore</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
 
       <!-- EMAIL GATE -->
       <div class="panel" id="email-panel">
@@ -436,63 +512,13 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <!-- STEP 4 -->
       <div class="panel">
         <div class="sec"><span class="sn">04</span><span class="st">Copyright &amp; Legal</span><span class="sh">Risk check</span></div>
-        <div class="legal-ctx" id="legal-ctx">
-          <div class="legal-intro">Where are you based and where are you selling? We'll check the rules for your specific situation.</div>
-          <div class="sel-row">
-            <div>
-              <div class="sel-lbl">Selling from</div>
-              <select id="sell-from" class="sel-inp">
-                <option value="">- Select -</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="BE">🇧🇪 Belgium</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="SE">🇸🇪 Sweden</option>
-                <option value="CH">🇨🇭 Switzerland</option>
-                <option value="IT">🇮🇹 Italy</option>
-                <option value="ES">🇪🇸 Spain</option>
-                <option value="PL">🇵🇱 Poland</option>
-                <option value="NO">🇳🇴 Norway</option>
-                <option value="DK">🇩🇰 Denmark</option>
-                <option value="AT">🇦🇹 Austria</option>
-                <option value="PT">🇵🇹 Portugal</option>
-                <option value="IE">🇮🇪 Ireland</option>
-                <option value="FI">🇫🇮 Finland</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-                <option value="KR">🇰🇷 South Korea</option>
-                <option value="CZ">🇨🇿 Czech Republic</option>
-                <option value="NZ">🇳🇿 New Zealand</option>
-                <option value="UA">🇺🇦 Ukraine</option>
-              </select>
-            </div>
-            <div>
-              <div class="sel-lbl">Selling to</div>
-              <select id="sell-to" class="sel-inp">
-                <option value="WORLDWIDE">🌍 Worldwide</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="EU">🇪🇺 European Union</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-              </select>
-            </div>
-          </div>
-          <button class="btn" id="btn-legal" style="margin-top:10px">
-            <div class="spin" id="sp-legal" style="display:none"></div>
-            <span id="bl-legal">Run legal check →</span>
-          </button>
+        <div id="verdict-card" style="text-align:center;padding:16px 14px 15px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:14px;background:#fafafa">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Overall verdict</div>
+          <div id="verdict-score" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--good);margin-bottom:2px">87</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:8px">out of 100</div>
+          <div id="verdict-msg" style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--ink);letter-spacing:.02em">Strong seller potential</div>
         </div>
-        <div id="legal-results" style="display:none">
+        <div id="legal-results">
           <div class="ck-item show" id="ck0">
             <div class="ck-ico" id="ck0-ico" style="background:#dcfce7">🏪</div>
             <div style="flex:1;min-width:0">
@@ -532,7 +558,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="";
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -600,7 +626,7 @@ function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track")
 function verdict(state,msg){
   var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
   b.className="vbar";
-  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="MakerWorld · Printables · or describe your idea";}
+  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="Paste a link or describe your idea";}
   else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent=lastIsURL?"Analyzing product...":"Researching your idea...";d.textContent="Fetching demand, revenue & legal data";}
   else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
   else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}
@@ -692,12 +718,16 @@ function populate(data){
 
   var score=scoreNum!==null?scoreNum/100:null;
   var verdictMsg=data.verdict||"Analysis complete";
+  var scoreColor="#15803d";
   if(score!==null){
-    var scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
+    scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
     animRing(score,600,scoreColor);
   }else{
     animRing(0.85,600,"#15803d");
   }
+  if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
+  if(q("verdict-msg"))q("verdict-msg").textContent=verdictMsg;
+  populateCopyright(data.copyright||{});
   verdict("done",verdictMsg);
 }
 
@@ -715,99 +745,93 @@ function populateCopyright(c){
   if(q("ck2-ico"))q("ck2-ico").style.background=riskBg(copy);
   if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
   if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
-  if(q("legal-ctx"))q("legal-ctx").style.display="none";
-  if(q("legal-results"))q("legal-results").style.display="";
 }
 
-async function analyze(){
-  var url=q("ui").value.trim();
-  lastIsURL=isURL(url);
-  if(!url){
+function analyze(){
+  var input=q("ui").value.trim();
+  if(!input){
     q("ui").focus();
     q("ui").style.borderColor="var(--bad)";
     setTimeout(function(){q("ui").style.borderColor="";},1500);
     busy=false;return;
   }
-  lastURL=url;
-  setBtn0("Checking…",true);
+  lastURL=input;
+  lastIsURL=isURL(input);
   q("dots").style.display="flex";
-  verdict("scanning");
   q("hero-text").style.display="none";
-  q("ui").classList.add("active");
+  step=1;dots(1);slide(1);
+  showFooter(true);
+  setBtn2("Analyse now →","",false);
+  busy=false;
+}
+
+async function runAnalysis(){
+  var sellFrom=q("sell-from")?q("sell-from").value:"";
+  var sellTo=q("sell-to")?q("sell-to").value:"WORLDWIDE";
+  setBtn2("Analysing…","",true);
+  verdict("scanning");
   startPulse();
+  var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
+  var payload=Object.assign(base,{category:qCat,priceRange:qPrice,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
   try{
     var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(lastIsURL?{url:url}:{description:url,type:"idea"})
+      body:JSON.stringify(payload)
     });
     if(!resp.ok)throw new Error("HTTP "+resp.status);
     var data=await resp.json();
     stopPulse();
-    q("ui").classList.remove("active");
     populate(data);
-    step=1;dots(1);slide(1);
-    showFooter(false); /* email gate has no footer nav */
+    step=2;dots(2);slide(2);
+    showFooter(false);
   }catch(e){
     stopPulse();
-    q("ui").classList.remove("active");
-    /* Webhook failed or invalid URL - load demo data so the page can be navigated */
     populate(DEMO_DATA);
-    step=1;dots(1);slide(1);
+    step=2;dots(2);slide(2);
     showFooter(false);
   }
   busy=false;
 }
 
-async function runLegalCheck(){
-  var sellFrom=q("sell-from").value;
-  var sellTo=q("sell-to").value;
-  q("sp-legal").style.display="";
-  q("bl-legal").textContent="Checking…";
-  q("btn-legal").disabled=true;
-  try{
-    var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({url:lastURL,sellFrom:sellFrom,sellTo:sellTo,type:"copyright"})
-    });
-    if(!resp.ok)throw new Error("HTTP "+resp.status);
-    var data=await resp.json();
-    populateCopyright(data.copyright||data);
-    showFooter(true);
-    setBtn2("Check another print","dark",false);
-  }catch(e){
-    /* Legal webhook failed - load demo copyright data */
-    populateCopyright(DEMO_DATA.copyright);
-    showFooter(true);
-    setBtn2("Check another print","dark",false);
-  }
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";
+  document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
+  if(q("sell-from"))q("sell-from").value="";
+  if(q("sell-to"))q("sell-to").value="WORLDWIDE";
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
   if(q("step1-st"))q("step1-st").textContent="The product";
-  if(q("step1-sh"))q("step1-sh").textContent="What we found";dots(0);slide(0);q("dots").style.display="none";
+  if(q("step1-sh"))q("step1-sh").textContent="What we found";
+  dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("hero-text").style.display="";
   showFooter(false);setBtn0("Check this print",false);
-  /* Reset email gate */
   if(q("email-inp"))q("email-inp").value="";
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";
   if(q("btn-email"))q("btn-email").disabled=false;
-  /* Reset result panels */
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
-  if(q("legal-ctx"))q("legal-ctx").style.display="";
-  if(q("legal-results"))q("legal-results").style.display="none";
-  if(q("btn-legal")){q("btn-legal").disabled=false;q("sp-legal").style.display="none";q("bl-legal").textContent="Run legal check →";}
 }
+
+document.querySelectorAll(".chips").forEach(function(g){
+  g.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click",function(){
+      g.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
+      c.classList.add("on");
+      var id=g.id;
+      if(id==="q-cat")qCat=c.dataset.v;
+      else if(id==="q-price")qPrice=c.dataset.v;
+      else if(id==="q-exp")qExp=c.dataset.v;
+    });
+  });
+});
 
 q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});
 
@@ -825,18 +849,17 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Reveal results */
-  step=2;dots(2);slide(2);showFooter(true);setBtn2("See market research →","",false);
+  step=3;dots(3);slide(3);showFooter(true);setBtn2("See market research →","",false);
 });
 
 q("btn2").addEventListener("click",function(){
   if(busy)return;
-  /* Results are now panels 2-5 (email gate = 1, results = 2,3,4,5) */
-  if(step===2){step=3;dots(3);slide(3);setBtn2("See revenue potential →","",false);}
-  else if(step===3){step=4;dots(4);slide(4);setBtn2("See legal check →","",false);}
-  else if(step===4){step=5;dots(5);slide(5);showFooter(false);}
+  if(step===1){busy=true;runAnalysis();return;}
+  if(step===3){step=4;dots(4);slide(4);setBtn2("See revenue potential →","",false);}
+  else if(step===4){step=5;dots(5);slide(5);setBtn2("See legal check + verdict →","",false);}
+  else if(step===5){step=6;dots(6);slide(6);showFooter(true);setBtn2("Check another print","dark",false);}
   else{reset();}
 });
-q("btn-legal").addEventListener("click",function(){runLegalCheck();});
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 })();

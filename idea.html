@@ -613,7 +613,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",analysisComplete=false;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",analysisComplete=false,pendingScore=null;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -778,16 +778,13 @@ function populate(data){
   var score=scoreNum!==null?scoreNum/100:null;
   var verdictMsg=data.verdict||"Analysis complete";
   var scoreColor="#15803d";
-  if(score!==null){
-    scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
-    animRing(score,600,scoreColor);
-  }else{
-    animRing(0.85,600,"#15803d");
-  }
+  if(score!==null)scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
   if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
   if(q("verdict-msg")){q("verdict-msg").textContent=verdictMsg;q("verdict-msg").style.fontStyle="";}
   populateCopyright(data.copyright||{});
-  verdict("done",verdictMsg);
+  /* Store score — only reveal ring/vbar after email gate is passed */
+  pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
+  if(step>=3)revealScore();
 }
 
 function populateCopyright(c){
@@ -804,6 +801,14 @@ function populateCopyright(c){
   if(q("ck2-ico"))q("ck2-ico").style.background=riskBg(copy);
   if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
   if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
+}
+
+function revealScore(){
+  if(!pendingScore)return;
+  stopPulse();
+  animRing(pendingScore.score,600,pendingScore.color);
+  verdict("done",pendingScore.msg);
+  pendingScore=null;
 }
 
 function analyze(){
@@ -841,12 +846,10 @@ function runAnalysis(){
     if(!resp.ok)throw new Error("HTTP "+resp.status);
     return resp.json();
   }).then(function(data){
-    stopPulse();
     populate(data);
     analysisComplete=true;
     if(step===6)setBtn2("Check another print","dark",false);
   }).catch(function(){
-    stopPulse();
     populate(DEMO_DATA);
     analysisComplete=true;
     if(step===6)setBtn2("Check another print","dark",false);
@@ -859,7 +862,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";analysisComplete=false;
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";analysisComplete=false;pendingScore=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("sell-to"))q("sell-to").value="WORLDWIDE";
@@ -928,7 +931,7 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Reveal results */
-  step=3;dots(3);slide(3);showFooter(true);setBtn2("See market research →","",false);
+  step=3;dots(3);slide(3);showFooter(true);setBtn2("See market research →","",false);revealScore();
 });
 
 q("btn2").addEventListener("click",function(){

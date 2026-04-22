@@ -567,9 +567,9 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
         <div class="sec"><span class="sn">04</span><span class="st">Copyright &amp; Legal</span><span class="sh">Risk check</span></div>
         <div id="verdict-card" style="text-align:center;padding:16px 14px 15px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:14px;background:#fafafa">
           <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Overall verdict</div>
-          <div id="verdict-score" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--good);margin-bottom:2px">87</div>
+          <div id="verdict-score" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--ink3);margin-bottom:2px">–</div>
           <div style="font-size:9px;color:var(--ink3);margin-bottom:8px">out of 100</div>
-          <div id="verdict-msg" style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--ink);letter-spacing:.02em">Strong seller potential</div>
+          <div id="verdict-msg" style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--ink2);letter-spacing:.02em;font-style:italic">Calculating your score…</div>
         </div>
         <div id="legal-results">
           <div class="ck-item show" id="ck0">
@@ -611,7 +611,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="";
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",analysisComplete=false;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -779,7 +779,7 @@ function populate(data){
     animRing(0.85,600,"#15803d");
   }
   if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
-  if(q("verdict-msg"))q("verdict-msg").textContent=verdictMsg;
+  if(q("verdict-msg")){q("verdict-msg").textContent=verdictMsg;q("verdict-msg").style.fontStyle="";}
   populateCopyright(data.copyright||{});
   verdict("done",verdictMsg);
 }
@@ -818,39 +818,44 @@ function analyze(){
   busy=false;
 }
 
-async function runAnalysis(){
+function runAnalysis(){
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=q("sell-to")?q("sell-to").value:"WORLDWIDE";
-  setBtn2("Analysing…","",true);
   verdict("scanning");
   startPulse();
+  analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
-  try{
-    var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(payload)
-    });
+
+  /* Fire webhook in background — don't block navigation */
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  }).then(function(resp){
     if(!resp.ok)throw new Error("HTTP "+resp.status);
-    var data=await resp.json();
+    return resp.json();
+  }).then(function(data){
     stopPulse();
     populate(data);
-    step=2;dots(2);slide(2);
-    showFooter(false);
-  }catch(e){
+    analysisComplete=true;
+    if(step===6)setBtn2("Check another print","dark",false);
+  }).catch(function(){
     stopPulse();
     populate(DEMO_DATA);
-    step=2;dots(2);slide(2);
-    showFooter(false);
-  }
+    analysisComplete=true;
+    if(step===6)setBtn2("Check another print","dark",false);
+  });
+
+  /* Immediately move to email gate — user fills email while scrape runs */
+  step=2;dots(2);slide(2);
+  showFooter(false);
   busy=false;
 }
 
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";analysisComplete=false;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("sell-to"))q("sell-to").value="WORLDWIDE";
@@ -873,6 +878,8 @@ function reset(){
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
+  if(q("verdict-score")){q("verdict-score").textContent="–";q("verdict-score").style.color="var(--ink3)";}
+  if(q("verdict-msg")){q("verdict-msg").textContent="Calculating your score…";q("verdict-msg").style.fontStyle="italic";}
 }
 
 document.querySelectorAll(".chips").forEach(function(g){
@@ -921,8 +928,12 @@ q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){busy=true;runAnalysis();return;}
   if(step===3){step=4;dots(4);slide(4);setBtn2("See revenue potential →","",false);}
-  else if(step===4){step=5;dots(5);slide(5);setBtn2("See legal check + verdict →","",false);}
-  else if(step===5){step=6;dots(6);slide(6);showFooter(true);setBtn2("Check another print","dark",false);}
+  else if(step===4){step=5;dots(5);slide(5);setBtn2("See verdict →","",false);}
+  else if(step===5){
+    step=6;dots(6);slide(6);showFooter(true);
+    if(analysisComplete){setBtn2("Check another print","dark",false);}
+    else{setBtn2("Calculating verdict…","",true);}
+  }
   else{reset();}
 });
 

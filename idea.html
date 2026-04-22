@@ -192,6 +192,19 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .gate-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;margin-bottom:8px}
 .gate-inp:focus{border-color:var(--acc)}
 .gate-trust{font-size:10px;color:var(--ink3);text-align:center;margin-top:9px;line-height:1.4}
+/* Question chips */
+.q-block{margin-bottom:13px}
+.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.q-opt{font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);opacity:.65;font-family:"DM Sans",sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:5px 10px;border:1.5px solid var(--line);border-radius:20px;font-size:11.5px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;line-height:1.3}
+.chip.on{border-color:var(--acc);color:var(--acc);background:#fff7f4;font-weight:700}
+.chip-eg{font-size:9px;color:var(--ink3);font-weight:400;font-family:"DM Mono",sans-serif;margin-left:3px}
+.chip.on .chip-eg{color:var(--acc);opacity:.7}
+.q-hint{font-size:9.5px;color:var(--ink3);margin-top:5px;line-height:1.45;font-family:"DM Mono",sans-serif}
+.q-toggle{background:none;border:none;border-top:1px solid var(--line);padding:9px 0 4px;margin-top:4px;font-size:11px;color:var(--acc);cursor:pointer;font-family:"DM Sans",sans-serif;display:flex;align-items:center;gap:4px;font-weight:600;width:100%;-webkit-tap-highlight-color:transparent;outline:none;transition:opacity .15s}
+.q-advanced{display:none;padding-top:4px}
+.q-advanced.open{display:block}
 </style>
 </head>
 <body>
@@ -323,6 +336,140 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       </div>
 
 
+      <!-- STEP 1: Questions -->
+      <div class="panel">
+        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Tell us about it</span></div>
+
+        <div class="q-block">
+          <div class="q-lbl">Category</div>
+          <div class="chips" id="q-cat">
+            <button class="chip" data-v="decor">🏠 Home decor</button>
+            <button class="chip" data-v="functional">🔧 Functional</button>
+            <button class="chip" data-v="art">🎨 Art / gifts</button>
+            <button class="chip" data-v="gaming">🎮 Gaming / toys</button>
+            <button class="chip" data-v="miniatures">⚔️ Miniatures</button>
+            <button class="chip" data-v="other">✦ Other</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Where to sell</div>
+          <div class="chips" id="q-market">
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Target sell price</div>
+          <div class="chips" id="q-price">
+            <button class="chip" data-v="5-15">€5–15 <span class="chip-eg">keychains, clips</span></button>
+            <button class="chip" data-v="15-30">€15–30 <span class="chip-eg">★ popular range</span></button>
+            <button class="chip" data-v="30-60">€30–60 <span class="chip-eg">sets, detailed</span></button>
+            <button class="chip" data-v="60+">€60+ <span class="chip-eg">premium, large</span></button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Est. print time <span class="q-opt">optional</span></div>
+          <div class="chips" id="q-time">
+            <button class="chip" data-v="<2h">Under 2h</button>
+            <button class="chip" data-v="2-6h">2–6h</button>
+            <button class="chip" data-v="6-12h">6–12h</button>
+            <button class="chip" data-v="12h+">12h+</button>
+          </div>
+          <div class="q-hint">Helps estimate filament &amp; machine cost — avg €0.03–0.08/hr on an FDM printer</div>
+        </div>
+
+        <div class="q-block">
+          <div class="sel-lbl">Selling from <span class="q-opt" style="font-size:9px;color:var(--ink3);opacity:.65;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:4px">affects VAT &amp; legal</span></div>
+          <select id="sell-from" class="sel-inp">
+            <option value="">Select your country</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="US">🇺🇸 United States</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="BE">🇧🇪 Belgium</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="CH">🇨🇭 Switzerland</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="NO">🇳🇴 Norway</option>
+            <option value="DK">🇩🇰 Denmark</option>
+            <option value="AT">🇦🇹 Austria</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="IE">🇮🇪 Ireland</option>
+            <option value="FI">🇫🇮 Finland</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="CZ">🇨🇿 Czech Republic</option>
+            <option value="NZ">🇳🇿 New Zealand</option>
+            <option value="UA">🇺🇦 Ukraine</option>
+          </select>
+        </div>
+
+        <button class="q-toggle" id="q-adv-toggle">▸ More details <span style="font-weight:400;opacity:.6">(optional)</span></button>
+        <div class="q-advanced" id="q-advanced">
+
+          <div class="q-block" style="margin-top:10px">
+            <div class="q-lbl">Extra production costs</div>
+            <div class="chips" id="q-costs">
+              <button class="chip" data-v="none">None</button>
+              <button class="chip" data-v="painting">🎨 Painting <span class="chip-eg">+€3–6</span></button>
+              <button class="chip" data-v="inserts">🔩 Inserts <span class="chip-eg">+€2–5</span></button>
+              <button class="chip" data-v="packaging">📦 Packaging <span class="chip-eg">+€2–4</span></button>
+            </div>
+            <div class="q-hint">eg. hand-painted miniatures, brass heat-set inserts, branded packaging bags</div>
+          </div>
+
+          <div class="q-block">
+            <div class="q-lbl">Material</div>
+            <div class="chips" id="q-material">
+              <button class="chip" data-v="pla">PLA / PETG</button>
+              <button class="chip" data-v="resin">Resin</button>
+              <button class="chip" data-v="tpu">Flexible (TPU)</button>
+              <button class="chip" data-v="asa">ASA / ABS</button>
+            </div>
+            <div class="q-hint">Resin buyers expect high detail — affects price anchoring &amp; failure rate</div>
+          </div>
+
+          <div class="q-block">
+            <div class="q-lbl">Your experience</div>
+            <div class="chips" id="q-exp">
+              <button class="chip" data-v="new">Just starting</button>
+              <button class="chip" data-v="some">A few sales</button>
+              <button class="chip" data-v="active">Active seller</button>
+            </div>
+          </div>
+
+          <div class="q-block">
+            <div class="sel-lbl">Selling to</div>
+            <select id="sell-to" class="sel-inp">
+              <option value="WORLDWIDE">🌍 Worldwide</option>
+              <option value="US">🇺🇸 United States</option>
+              <option value="EU">🇪🇺 European Union</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
+              <option value="CA">🇨🇦 Canada</option>
+              <option value="AU">🇦🇺 Australia</option>
+              <option value="DE">🇩🇪 Germany</option>
+              <option value="FR">🇫🇷 France</option>
+              <option value="NL">🇳🇱 Netherlands</option>
+              <option value="JP">🇯🇵 Japan</option>
+              <option value="SG">🇸🇬 Singapore</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
       <!-- EMAIL GATE -->
       <div class="panel" id="email-panel">
         <div class="gate-head">
@@ -418,63 +565,13 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <!-- STEP 4 -->
       <div class="panel">
         <div class="sec"><span class="sn">04</span><span class="st">Copyright &amp; Legal</span><span class="sh">Risk check</span></div>
-        <div class="legal-ctx" id="legal-ctx">
-          <div class="legal-intro">Where are you based and where are you selling? We'll check the rules for your specific situation.</div>
-          <div class="sel-row">
-            <div>
-              <div class="sel-lbl">Selling from</div>
-              <select id="sell-from" class="sel-inp">
-                <option value="">- Select -</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="BE">🇧🇪 Belgium</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="SE">🇸🇪 Sweden</option>
-                <option value="CH">🇨🇭 Switzerland</option>
-                <option value="IT">🇮🇹 Italy</option>
-                <option value="ES">🇪🇸 Spain</option>
-                <option value="PL">🇵🇱 Poland</option>
-                <option value="NO">🇳🇴 Norway</option>
-                <option value="DK">🇩🇰 Denmark</option>
-                <option value="AT">🇦🇹 Austria</option>
-                <option value="PT">🇵🇹 Portugal</option>
-                <option value="IE">🇮🇪 Ireland</option>
-                <option value="FI">🇫🇮 Finland</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-                <option value="KR">🇰🇷 South Korea</option>
-                <option value="CZ">🇨🇿 Czech Republic</option>
-                <option value="NZ">🇳🇿 New Zealand</option>
-                <option value="UA">🇺🇦 Ukraine</option>
-              </select>
-            </div>
-            <div>
-              <div class="sel-lbl">Selling to</div>
-              <select id="sell-to" class="sel-inp">
-                <option value="WORLDWIDE">🌍 Worldwide</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="EU">🇪🇺 European Union</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-              </select>
-            </div>
-          </div>
-          <button class="btn" id="btn-legal" style="margin-top:10px">
-            <div class="spin" id="sp-legal" style="display:none"></div>
-            <span id="bl-legal">Run legal check →</span>
-          </button>
+        <div id="verdict-card" style="text-align:center;padding:16px 14px 15px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:14px;background:#fafafa">
+          <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Overall verdict</div>
+          <div id="verdict-score" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--ink3);margin-bottom:2px">–</div>
+          <div style="font-size:9px;color:var(--ink3);margin-bottom:8px">out of 100</div>
+          <div id="verdict-msg" style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--ink2);letter-spacing:.02em;font-style:italic">Calculating your score…</div>
         </div>
-        <div id="legal-results" style="display:none">
+        <div id="legal-results">
           <div class="ck-item show" id="ck0">
             <div class="ck-ico" id="ck0-ico" style="background:#dcfce7">🏪</div>
             <div style="flex:1;min-width:0">
@@ -514,7 +611,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",analysisComplete=false;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -674,12 +771,16 @@ function populate(data){
 
   var score=scoreNum!==null?scoreNum/100:null;
   var verdictMsg=data.verdict||"Analysis complete";
+  var scoreColor="#15803d";
   if(score!==null){
-    var scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
+    scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
     animRing(score,600,scoreColor);
   }else{
     animRing(0.85,600,"#15803d");
   }
+  if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
+  if(q("verdict-msg")){q("verdict-msg").textContent=verdictMsg;q("verdict-msg").style.fontStyle="";}
+  populateCopyright(data.copyright||{});
   verdict("done",verdictMsg);
 }
 
@@ -697,99 +798,112 @@ function populateCopyright(c){
   if(q("ck2-ico"))q("ck2-ico").style.background=riskBg(copy);
   if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
   if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
-  if(q("legal-ctx"))q("legal-ctx").style.display="none";
-  if(q("legal-results"))q("legal-results").style.display="";
 }
 
-async function analyze(){
-  var url=q("ui").value.trim();
-  lastIsURL=isURL(url);
-  if(!url){
+function analyze(){
+  var input=q("ui").value.trim();
+  if(!input){
     q("ui").focus();
     q("ui").style.borderColor="var(--bad)";
     setTimeout(function(){q("ui").style.borderColor="";},1500);
     busy=false;return;
   }
-  lastURL=url;
-  setBtn0("Checking…",true);
+  lastURL=input;
+  lastIsURL=isURL(input);
   q("dots").style.display="flex";
-  verdict("scanning");
   q("hero-text").style.display="none";
-  q("ui").classList.add("active");
-  startPulse();
-  try{
-    var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(lastIsURL?{url:url}:{description:url,type:"idea"})
-    });
-    if(!resp.ok)throw new Error("HTTP "+resp.status);
-    var data=await resp.json();
-    stopPulse();
-    q("ui").classList.remove("active");
-    populate(data);
-    step=1;dots(1);slide(1);
-    showFooter(false); /* email gate has no footer nav */
-  }catch(e){
-    stopPulse();
-    q("ui").classList.remove("active");
-    /* Webhook failed or invalid URL - load demo data so the page can be navigated */
-    populate(DEMO_DATA);
-    step=1;dots(1);slide(1);
-    showFooter(false);
-  }
+  step=1;dots(1);slide(1);
+  showFooter(true);
+  setBtn2("Analyse now →","",false);
   busy=false;
 }
 
-async function runLegalCheck(){
-  var sellFrom=q("sell-from").value;
-  var sellTo=q("sell-to").value;
-  q("sp-legal").style.display="";
-  q("bl-legal").textContent="Checking…";
-  q("btn-legal").disabled=true;
-  try{
-    var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({url:lastURL,sellFrom:sellFrom,sellTo:sellTo,type:"copyright"})
-    });
+function runAnalysis(){
+  var sellFrom=q("sell-from")?q("sell-from").value:"";
+  var sellTo=q("sell-to")?q("sell-to").value:"WORLDWIDE";
+  verdict("scanning");
+  startPulse();
+  analysisComplete=false;
+  var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
+  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
+
+  /* Fire webhook in background — don't block navigation */
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  }).then(function(resp){
     if(!resp.ok)throw new Error("HTTP "+resp.status);
-    var data=await resp.json();
-    populateCopyright(data.copyright||data);
-    showFooter(true);
-    setBtn2("Check another print","dark",false);
-  }catch(e){
-    /* Legal webhook failed - load demo copyright data */
-    populateCopyright(DEMO_DATA.copyright);
-    showFooter(true);
-    setBtn2("Check another print","dark",false);
-  }
+    return resp.json();
+  }).then(function(data){
+    stopPulse();
+    populate(data);
+    analysisComplete=true;
+    if(step===6)setBtn2("Check another print","dark",false);
+  }).catch(function(){
+    stopPulse();
+    populate(DEMO_DATA);
+    analysisComplete=true;
+    if(step===6)setBtn2("Check another print","dark",false);
+  });
+
+  /* Immediately move to email gate — user fills email while scrape runs */
+  step=2;dots(2);slide(2);
+  showFooter(false);
+  busy=false;
+}
+
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";analysisComplete=false;
+  document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
+  if(q("sell-from"))q("sell-from").value="";
+  if(q("sell-to"))q("sell-to").value="WORLDWIDE";
+  if(q("q-advanced")){q("q-advanced").classList.remove("open");}
+  if(q("q-adv-toggle"))q("q-adv-toggle").innerHTML='▸ More details <span style="font-weight:400;opacity:.6">(optional)</span>';
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
   if(q("step1-st"))q("step1-st").textContent="The product";
-  if(q("step1-sh"))q("step1-sh").textContent="What we found";dots(0);slide(0);q("dots").style.display="none";
+  if(q("step1-sh"))q("step1-sh").textContent="What we found";
+  dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("hero-text").style.display="";
   showFooter(false);setBtn0("Check this print",false);
-  /* Reset email gate */
   if(q("email-inp"))q("email-inp").value="";
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";
   if(q("btn-email"))q("btn-email").disabled=false;
-  /* Reset result panels */
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
-  if(q("legal-ctx"))q("legal-ctx").style.display="";
-  if(q("legal-results"))q("legal-results").style.display="none";
-  if(q("btn-legal")){q("btn-legal").disabled=false;q("sp-legal").style.display="none";q("bl-legal").textContent="Run legal check →";}
+  if(q("verdict-score")){q("verdict-score").textContent="–";q("verdict-score").style.color="var(--ink3)";}
+  if(q("verdict-msg")){q("verdict-msg").textContent="Calculating your score…";q("verdict-msg").style.fontStyle="italic";}
 }
+
+document.querySelectorAll(".chips").forEach(function(g){
+  g.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click",function(){
+      g.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
+      c.classList.add("on");
+      var id=g.id;
+      if(id==="q-cat")qCat=c.dataset.v;
+      else if(id==="q-market")qMarketplace=c.dataset.v;
+      else if(id==="q-price")qPrice=c.dataset.v;
+      else if(id==="q-time")qPrintTime=c.dataset.v;
+      else if(id==="q-costs")qExtraCosts=c.dataset.v;
+      else if(id==="q-material")qMaterial=c.dataset.v;
+      else if(id==="q-exp")qExp=c.dataset.v;
+    });
+  });
+});
+
+q("q-adv-toggle").addEventListener("click",function(){
+  var adv=q("q-advanced");
+  var open=adv.classList.toggle("open");
+  this.innerHTML=(open?"▾":"▸")+' More details <span style="font-weight:400;opacity:.6">(optional)</span>';
+});
 
 q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});
 
@@ -807,18 +921,21 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Reveal results */
-  step=2;dots(2);slide(2);showFooter(true);setBtn2("See market research →","",false);
+  step=3;dots(3);slide(3);showFooter(true);setBtn2("See market research →","",false);
 });
 
 q("btn2").addEventListener("click",function(){
   if(busy)return;
-  /* Results are now panels 2-5 (email gate = 1, results = 2,3,4,5) */
-  if(step===2){step=3;dots(3);slide(3);setBtn2("See revenue potential →","",false);}
-  else if(step===3){step=4;dots(4);slide(4);setBtn2("See legal check →","",false);}
-  else if(step===4){step=5;dots(5);slide(5);showFooter(false);}
+  if(step===1){busy=true;runAnalysis();return;}
+  if(step===3){step=4;dots(4);slide(4);setBtn2("See revenue potential →","",false);}
+  else if(step===4){step=5;dots(5);slide(5);setBtn2("See verdict →","",false);}
+  else if(step===5){
+    step=6;dots(6);slide(6);showFooter(true);
+    if(analysisComplete){setBtn2("Check another print","dark",false);}
+    else{setBtn2("Calculating verdict…","",true);}
+  }
   else{reset();}
 });
-q("btn-legal").addEventListener("click",function(){runLegalCheck();});
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 })();

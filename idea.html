@@ -193,11 +193,18 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .gate-inp:focus{border-color:var(--acc)}
 .gate-trust{font-size:10px;color:var(--ink3);text-align:center;margin-top:9px;line-height:1.4}
 /* Question chips */
-.q-block{margin-bottom:14px}
-.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px}
+.q-block{margin-bottom:13px}
+.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.q-opt{font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);opacity:.65;font-family:"DM Sans",sans-serif}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{padding:6px 11px;border:1.5px solid var(--line);border-radius:20px;font-size:11.5px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;border:1.5px solid var(--line)}
+.chip{padding:5px 10px;border:1.5px solid var(--line);border-radius:20px;font-size:11.5px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;line-height:1.3}
 .chip.on{border-color:var(--acc);color:var(--acc);background:#fff7f4;font-weight:700}
+.chip-eg{font-size:9px;color:var(--ink3);font-weight:400;font-family:"DM Mono",sans-serif;margin-left:3px}
+.chip.on .chip-eg{color:var(--acc);opacity:.7}
+.q-hint{font-size:9.5px;color:var(--ink3);margin-top:5px;line-height:1.45;font-family:"DM Mono",sans-serif}
+.q-toggle{background:none;border:none;border-top:1px solid var(--line);padding:9px 0 4px;margin-top:4px;font-size:11px;color:var(--acc);cursor:pointer;font-family:"DM Sans",sans-serif;display:flex;align-items:center;gap:4px;font-weight:600;width:100%;-webkit-tap-highlight-color:transparent;outline:none;transition:opacity .15s}
+.q-advanced{display:none;padding-top:4px}
+.q-advanced.open{display:block}
 </style>
 </head>
 <body>
@@ -331,88 +338,134 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
       <!-- STEP 1: Questions -->
       <div class="panel">
-        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Personalise your report</span></div>
+        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Tell us about it</span></div>
 
         <div class="q-block">
-          <div class="q-lbl">What category?</div>
+          <div class="q-lbl">Category</div>
           <div class="chips" id="q-cat">
             <button class="chip" data-v="decor">🏠 Home decor</button>
             <button class="chip" data-v="functional">🔧 Functional</button>
             <button class="chip" data-v="art">🎨 Art / gifts</button>
             <button class="chip" data-v="gaming">🎮 Gaming / toys</button>
+            <button class="chip" data-v="miniatures">⚔️ Miniatures</button>
             <button class="chip" data-v="other">✦ Other</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Where to sell</div>
+          <div class="chips" id="q-market">
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
           </div>
         </div>
 
         <div class="q-block">
           <div class="q-lbl">Target sell price</div>
           <div class="chips" id="q-price">
-            <button class="chip" data-v="5-15">€5–15</button>
-            <button class="chip" data-v="15-30">€15–30</button>
-            <button class="chip" data-v="30-60">€30–60</button>
-            <button class="chip" data-v="60+">€60+</button>
+            <button class="chip" data-v="5-15">€5–15 <span class="chip-eg">keychains, clips</span></button>
+            <button class="chip" data-v="15-30">€15–30 <span class="chip-eg">★ popular range</span></button>
+            <button class="chip" data-v="30-60">€30–60 <span class="chip-eg">sets, detailed</span></button>
+            <button class="chip" data-v="60+">€60+ <span class="chip-eg">premium, large</span></button>
           </div>
         </div>
 
         <div class="q-block">
-          <div class="q-lbl">Your Etsy experience</div>
-          <div class="chips" id="q-exp">
-            <button class="chip" data-v="new">Just starting</button>
-            <button class="chip" data-v="some">A few sales</button>
-            <button class="chip" data-v="active">Active seller</button>
+          <div class="q-lbl">Est. print time <span class="q-opt">optional</span></div>
+          <div class="chips" id="q-time">
+            <button class="chip" data-v="<2h">Under 2h</button>
+            <button class="chip" data-v="2-6h">2–6h</button>
+            <button class="chip" data-v="6-12h">6–12h</button>
+            <button class="chip" data-v="12h+">12h+</button>
           </div>
+          <div class="q-hint">Helps estimate filament &amp; machine cost — avg €0.03–0.08/hr on an FDM printer</div>
         </div>
 
         <div class="q-block">
-          <div class="sel-row">
-            <div>
-              <div class="sel-lbl">Selling from</div>
-              <select id="sell-from" class="sel-inp">
-                <option value="">Select country</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="BE">🇧🇪 Belgium</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="SE">🇸🇪 Sweden</option>
-                <option value="CH">🇨🇭 Switzerland</option>
-                <option value="IT">🇮🇹 Italy</option>
-                <option value="ES">🇪🇸 Spain</option>
-                <option value="PL">🇵🇱 Poland</option>
-                <option value="NO">🇳🇴 Norway</option>
-                <option value="DK">🇩🇰 Denmark</option>
-                <option value="AT">🇦🇹 Austria</option>
-                <option value="PT">🇵🇹 Portugal</option>
-                <option value="IE">🇮🇪 Ireland</option>
-                <option value="FI">🇫🇮 Finland</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-                <option value="KR">🇰🇷 South Korea</option>
-                <option value="CZ">🇨🇿 Czech Republic</option>
-                <option value="NZ">🇳🇿 New Zealand</option>
-                <option value="UA">🇺🇦 Ukraine</option>
-              </select>
+          <div class="sel-lbl">Selling from <span class="q-opt" style="font-size:9px;color:var(--ink3);opacity:.65;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:4px">affects VAT &amp; legal</span></div>
+          <select id="sell-from" class="sel-inp">
+            <option value="">Select your country</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="US">🇺🇸 United States</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="BE">🇧🇪 Belgium</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="CH">🇨🇭 Switzerland</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="NO">🇳🇴 Norway</option>
+            <option value="DK">🇩🇰 Denmark</option>
+            <option value="AT">🇦🇹 Austria</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="IE">🇮🇪 Ireland</option>
+            <option value="FI">🇫🇮 Finland</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="CZ">🇨🇿 Czech Republic</option>
+            <option value="NZ">🇳🇿 New Zealand</option>
+            <option value="UA">🇺🇦 Ukraine</option>
+          </select>
+        </div>
+
+        <button class="q-toggle" id="q-adv-toggle">▸ More details <span style="font-weight:400;opacity:.6">(optional)</span></button>
+        <div class="q-advanced" id="q-advanced">
+
+          <div class="q-block" style="margin-top:10px">
+            <div class="q-lbl">Extra production costs</div>
+            <div class="chips" id="q-costs">
+              <button class="chip" data-v="none">None</button>
+              <button class="chip" data-v="painting">🎨 Painting <span class="chip-eg">+€3–6</span></button>
+              <button class="chip" data-v="inserts">🔩 Inserts <span class="chip-eg">+€2–5</span></button>
+              <button class="chip" data-v="packaging">📦 Packaging <span class="chip-eg">+€2–4</span></button>
             </div>
-            <div>
-              <div class="sel-lbl">Selling to</div>
-              <select id="sell-to" class="sel-inp">
-                <option value="WORLDWIDE">🌍 Worldwide</option>
-                <option value="US">🇺🇸 United States</option>
-                <option value="EU">🇪🇺 European Union</option>
-                <option value="GB">🇬🇧 United Kingdom</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="AU">🇦🇺 Australia</option>
-                <option value="DE">🇩🇪 Germany</option>
-                <option value="FR">🇫🇷 France</option>
-                <option value="NL">🇳🇱 Netherlands</option>
-                <option value="JP">🇯🇵 Japan</option>
-                <option value="SG">🇸🇬 Singapore</option>
-              </select>
+            <div class="q-hint">eg. hand-painted miniatures, brass heat-set inserts, branded packaging bags</div>
+          </div>
+
+          <div class="q-block">
+            <div class="q-lbl">Material</div>
+            <div class="chips" id="q-material">
+              <button class="chip" data-v="pla">PLA / PETG</button>
+              <button class="chip" data-v="resin">Resin</button>
+              <button class="chip" data-v="tpu">Flexible (TPU)</button>
+              <button class="chip" data-v="asa">ASA / ABS</button>
+            </div>
+            <div class="q-hint">Resin buyers expect high detail — affects price anchoring &amp; failure rate</div>
+          </div>
+
+          <div class="q-block">
+            <div class="q-lbl">Your experience</div>
+            <div class="chips" id="q-exp">
+              <button class="chip" data-v="new">Just starting</button>
+              <button class="chip" data-v="some">A few sales</button>
+              <button class="chip" data-v="active">Active seller</button>
             </div>
           </div>
+
+          <div class="q-block">
+            <div class="sel-lbl">Selling to</div>
+            <select id="sell-to" class="sel-inp">
+              <option value="WORLDWIDE">🌍 Worldwide</option>
+              <option value="US">🇺🇸 United States</option>
+              <option value="EU">🇪🇺 European Union</option>
+              <option value="GB">🇬🇧 United Kingdom</option>
+              <option value="CA">🇨🇦 Canada</option>
+              <option value="AU">🇦🇺 Australia</option>
+              <option value="DE">🇩🇪 Germany</option>
+              <option value="FR">🇫🇷 France</option>
+              <option value="NL">🇳🇱 Netherlands</option>
+              <option value="JP">🇯🇵 Japan</option>
+              <option value="SG">🇸🇬 Singapore</option>
+            </select>
+          </div>
+
         </div>
 
       </div>
@@ -558,7 +611,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="";
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="";
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -772,7 +825,7 @@ async function runAnalysis(){
   verdict("scanning");
   startPulse();
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  var payload=Object.assign(base,{category:qCat,priceRange:qPrice,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
+  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
   try{
     var resp=await fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
       method:"POST",
@@ -797,10 +850,12 @@ async function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("sell-to"))q("sell-to").value="WORLDWIDE";
+  if(q("q-advanced")){q("q-advanced").classList.remove("open");}
+  if(q("q-adv-toggle"))q("q-adv-toggle").innerHTML='▸ More details <span style="font-weight:400;opacity:.6">(optional)</span>';
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
   if(q("step1-st"))q("step1-st").textContent="The product";
@@ -827,10 +882,20 @@ document.querySelectorAll(".chips").forEach(function(g){
       c.classList.add("on");
       var id=g.id;
       if(id==="q-cat")qCat=c.dataset.v;
+      else if(id==="q-market")qMarketplace=c.dataset.v;
       else if(id==="q-price")qPrice=c.dataset.v;
+      else if(id==="q-time")qPrintTime=c.dataset.v;
+      else if(id==="q-costs")qExtraCosts=c.dataset.v;
+      else if(id==="q-material")qMaterial=c.dataset.v;
       else if(id==="q-exp")qExp=c.dataset.v;
     });
   });
+});
+
+q("q-adv-toggle").addEventListener("click",function(){
+  var adv=q("q-advanced");
+  var open=adv.classList.toggle("open");
+  this.innerHTML=(open?"▾":"▸")+' More details <span style="font-weight:400;opacity:.6">(optional)</span>';
 });
 
 q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});

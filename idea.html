@@ -195,18 +195,24 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .gate-inp:focus{border-color:var(--acc)}
 .gate-trust{font-size:10px;color:var(--ink3);text-align:center;margin-top:9px;line-height:1.4}
 /* Question chips */
-.q-block{margin-bottom:13px}
-.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.q-block{margin-bottom:16px}
+.q-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:9px;display:flex;align-items:center;gap:6px}
 .q-opt{font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);opacity:.65;font-family:"DM Sans",sans-serif}
-.chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{padding:5px 10px;border:1.5px solid var(--line);border-radius:20px;font-size:11.5px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;line-height:1.3}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:10px 16px;border:1.5px solid var(--line);border-radius:12px;font-size:13px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;line-height:1.3;touch-action:manipulation}
 .chip.on{border-color:var(--acc);color:var(--acc);background:#fff7f4;font-weight:700}
-.chip-eg{font-size:9px;color:var(--ink3);font-weight:400;font-family:"DM Mono",sans-serif;margin-left:3px}
+.chip-eg{font-size:10px;color:var(--ink3);font-weight:400;font-family:"DM Mono",sans-serif;margin-left:3px}
 .chip.on .chip-eg{color:var(--acc);opacity:.7}
-.q-hint{font-size:9.5px;color:var(--ink3);margin-top:5px;line-height:1.45;font-family:"DM Mono",sans-serif}
-.q-toggle{background:none;border:none;border-top:1px solid var(--line);padding:9px 0 4px;margin-top:4px;font-size:11px;color:var(--acc);cursor:pointer;font-family:"DM Sans",sans-serif;display:flex;align-items:center;gap:4px;font-weight:600;width:100%;-webkit-tap-highlight-color:transparent;outline:none;transition:opacity .15s}
-.q-advanced{display:none;padding-top:4px}
-.q-advanced.open{display:block}
+.q-hint{font-size:9.5px;color:var(--ink3);margin-top:6px;line-height:1.45;font-family:"DM Mono",sans-serif}
+/* Copyright section */
+.cp-banner{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:11px;font-size:12px;font-weight:600;margin-bottom:12px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif}
+.cp-banner.warn{background:#fef9c3;color:#854d0e}
+.cp-banner.bad{background:#fee2e2;color:#991b1b}
+.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.cp-card{border:1.5px solid var(--line);border-radius:10px;padding:10px 7px 9px;text-align:center;background:#fff}
+.cp-risk{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:6px;display:inline-block;margin-bottom:5px}
+.cp-clabel{font-size:10px;color:var(--ink3);font-weight:600;margin-bottom:4px;line-height:1.2}
+.cp-desc{font-size:9.5px;color:var(--ink2);line-height:1.35}
 </style>
 </head>
 <body>
@@ -338,12 +344,12 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       </div>
 
 
-      <!-- STEP 1: Questions -->
+      <!-- STEP 1: Questions Q1 -->
       <div class="panel">
-        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Tell us about it</span></div>
+        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Step 1 of 2</span></div>
 
         <div class="q-block">
-          <div class="q-lbl">Category</div>
+          <div class="q-lbl">What category?</div>
           <div class="chips" id="q-cat">
             <button class="chip" data-v="decor">🏠 Home decor</button>
             <button class="chip" data-v="functional">🔧 Functional</button>
@@ -351,16 +357,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <button class="chip" data-v="gaming">🎮 Gaming / toys</button>
             <button class="chip" data-v="miniatures">⚔️ Miniatures</button>
             <button class="chip" data-v="other">✦ Other</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Where to sell</div>
-          <div class="chips" id="q-market">
-            <button class="chip" data-v="etsy">🛒 Etsy</button>
-            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
-            <button class="chip" data-v="printables">📦 Printables</button>
-            <button class="chip" data-v="own">🏪 Own shop</button>
           </div>
         </div>
 
@@ -382,7 +378,45 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <button class="chip" data-v="6-12h">6–12h</button>
             <button class="chip" data-v="12h+">12h+</button>
           </div>
-          <div class="q-hint">Helps estimate filament &amp; machine cost — avg €0.03–0.08/hr on an FDM printer</div>
+          <div class="q-hint">Helps estimate filament &amp; machine cost — avg €0.03–0.08/hr on FDM</div>
+        </div>
+
+      </div>
+
+      <!-- STEP 2: Questions Q2 -->
+      <div class="panel">
+        <div class="sec"><span class="sn">02</span><span class="st">About you</span><span class="sh">Step 2 of 2</span></div>
+
+        <div class="q-block">
+          <div class="q-lbl">Where do you want to sell?</div>
+          <div class="chips" id="q-market">
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Already active on? <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-active">
+            <button class="chip" data-v="none">Not yet</button>
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Social media? <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-social">
+            <button class="chip" data-v="none">None</button>
+            <button class="chip" data-v="instagram">📸 Instagram</button>
+            <button class="chip" data-v="tiktok">🎵 TikTok</button>
+            <button class="chip" data-v="pinterest">📌 Pinterest</button>
+            <button class="chip" data-v="facebook">👤 Facebook</button>
+          </div>
         </div>
 
         <div class="q-block">
@@ -415,59 +449,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <option value="NZ">🇳🇿 New Zealand</option>
             <option value="UA">🇺🇦 Ukraine</option>
           </select>
-        </div>
-
-        <button class="q-toggle" id="q-adv-toggle">▸ More details <span style="font-weight:400;opacity:.6">(optional)</span></button>
-        <div class="q-advanced" id="q-advanced">
-
-          <div class="q-block" style="margin-top:10px">
-            <div class="q-lbl">Extra production costs</div>
-            <div class="chips" id="q-costs">
-              <button class="chip" data-v="none">None</button>
-              <button class="chip" data-v="painting">🎨 Painting <span class="chip-eg">+€3–6</span></button>
-              <button class="chip" data-v="inserts">🔩 Inserts <span class="chip-eg">+€2–5</span></button>
-              <button class="chip" data-v="packaging">📦 Packaging <span class="chip-eg">+€2–4</span></button>
-            </div>
-            <div class="q-hint">eg. hand-painted miniatures, brass heat-set inserts, branded packaging bags</div>
-          </div>
-
-          <div class="q-block">
-            <div class="q-lbl">Material</div>
-            <div class="chips" id="q-material">
-              <button class="chip" data-v="pla">PLA / PETG</button>
-              <button class="chip" data-v="resin">Resin</button>
-              <button class="chip" data-v="tpu">Flexible (TPU)</button>
-              <button class="chip" data-v="asa">ASA / ABS</button>
-            </div>
-            <div class="q-hint">Resin buyers expect high detail — affects price anchoring &amp; failure rate</div>
-          </div>
-
-          <div class="q-block">
-            <div class="q-lbl">Your experience</div>
-            <div class="chips" id="q-exp">
-              <button class="chip" data-v="new">Just starting</button>
-              <button class="chip" data-v="some">A few sales</button>
-              <button class="chip" data-v="active">Active seller</button>
-            </div>
-          </div>
-
-          <div class="q-block">
-            <div class="sel-lbl">Selling to</div>
-            <select id="sell-to" class="sel-inp">
-              <option value="WORLDWIDE">🌍 Worldwide</option>
-              <option value="US">🇺🇸 United States</option>
-              <option value="EU">🇪🇺 European Union</option>
-              <option value="GB">🇬🇧 United Kingdom</option>
-              <option value="CA">🇨🇦 Canada</option>
-              <option value="AU">🇦🇺 Australia</option>
-              <option value="DE">🇩🇪 Germany</option>
-              <option value="FR">🇫🇷 France</option>
-              <option value="NL">🇳🇱 Netherlands</option>
-              <option value="JP">🇯🇵 Japan</option>
-              <option value="SG">🇸🇬 Singapore</option>
-            </select>
-          </div>
-
         </div>
 
       </div>
@@ -566,37 +547,34 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
       <!-- STEP 4 -->
       <div class="panel">
-        <div class="sec"><span class="sn">04</span><span class="st">Copyright &amp; Legal</span><span class="sh">Risk check</span></div>
+        <div class="sec"><span class="sn">04</span><span class="st">Verdict</span><span class="sh">Your full report</span></div>
         <div id="verdict-card" style="text-align:center;padding:16px 14px 15px;border:1.5px solid var(--line);border-radius:12px;margin-bottom:14px;background:#fafafa">
           <div style="font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Overall verdict</div>
           <div id="verdict-score" style="font-family:'Bebas Neue',sans-serif;font-size:64px;line-height:1;color:var(--ink3);margin-bottom:2px">–</div>
           <div style="font-size:9px;color:var(--ink3);margin-bottom:8px">out of 100</div>
           <div id="verdict-msg" style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--ink2);letter-spacing:.02em;font-style:italic">Calculating your score…</div>
         </div>
-        <div id="legal-results">
-          <div class="ck-item show" id="ck0">
-            <div class="ck-ico" id="ck0-ico" style="background:#dcfce7">🏪</div>
-            <div style="flex:1;min-width:0">
-              <div class="ck-title">Etsy ban risk <span class="risk-badge risk-low" id="ck-etsy-risk">LOW</span></div>
-              <div class="ck-desc" id="ck-etsy-desc"></div>
-            </div>
+
+        <div style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:10px">Copyright &amp; Legal</div>
+        <div class="cp-banner" id="cp-status">✅ No legal issues found — safe to sell</div>
+        <div class="cp-grid">
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+            <div class="cp-clabel">Etsy ban risk</div>
+            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
           </div>
-          <div class="ck-item show" id="ck1">
-            <div class="ck-ico" id="ck1-ico" style="background:#dbeafe">⚖️</div>
-            <div style="flex:1;min-width:0">
-              <div class="ck-title">Legal risk <span class="risk-badge risk-low" id="ck-legal-risk">LOW</span></div>
-              <div class="ck-desc" id="ck-legal-desc"></div>
-            </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+            <div class="cp-clabel">Legal risk</div>
+            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
           </div>
-          <div class="ck-item show" id="ck2">
-            <div class="ck-ico" id="ck2-ico" style="background:#fef9c3">©️</div>
-            <div style="flex:1;min-width:0">
-              <div class="ck-title">Copyright / IP</div>
-              <div class="ck-desc" id="ck-copy-desc"></div>
-            </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+            <div class="cp-clabel">Copyright / IP</div>
+            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
           </div>
-          <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
         </div>
+        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
       </div>
 
     </div>
@@ -613,7 +591,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",analysisComplete=false,pendingScore=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],analysisComplete=false,pendingScore=null;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -784,7 +762,7 @@ function populate(data){
   populateCopyright(data.copyright||{});
   /* Store score — only reveal ring/vbar after email gate is passed */
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
-  if(step>=3)revealScore();
+  if(step>=4)revealScore();
 }
 
 function populateCopyright(c){
@@ -792,15 +770,21 @@ function populateCopyright(c){
   var etsy=(c.etsyBanRisk||"low").toLowerCase();
   var legal=(c.legalRisk||"low").toLowerCase();
   var copy=(c.copyrightRisk||"low").toLowerCase();
-  if(q("ck-etsy-risk")){q("ck-etsy-risk").className="risk-badge "+riskClass(etsy);q("ck-etsy-risk").textContent=etsy.toUpperCase();}
-  if(q("ck0-ico"))q("ck0-ico").style.background=riskBg(etsy);
+  if(q("ck-etsy-risk")){q("ck-etsy-risk").className="cp-risk "+riskClass(etsy);q("ck-etsy-risk").textContent=etsy.toUpperCase();}
   if(q("ck-etsy-desc"))q("ck-etsy-desc").textContent=c.etsyBanReason||"No Etsy policy issues detected.";
-  if(q("ck-legal-risk")){q("ck-legal-risk").className="risk-badge "+riskClass(legal);q("ck-legal-risk").textContent=legal.toUpperCase();}
-  if(q("ck1-ico"))q("ck1-ico").style.background=riskBg(legal);
+  if(q("ck-legal-risk")){q("ck-legal-risk").className="cp-risk "+riskClass(legal);q("ck-legal-risk").textContent=legal.toUpperCase();}
   if(q("ck-legal-desc"))q("ck-legal-desc").textContent=c.legalDesc||"No legal restrictions found.";
-  if(q("ck2-ico"))q("ck2-ico").style.background=riskBg(copy);
+  if(q("ck-copy-risk")){q("ck-copy-risk").className="cp-risk "+riskClass(copy);q("ck-copy-risk").textContent=copy.toUpperCase();}
   if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
   if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
+  var anyHigh=etsy==="high"||legal==="high"||copy==="high";
+  var anyMed=etsy==="medium"||legal==="medium"||copy==="medium";
+  var banner=q("cp-status");
+  if(banner){
+    if(anyHigh){banner.className="cp-banner bad";banner.textContent="🚫 Legal warning — review before listing";}
+    else if(anyMed){banner.className="cp-banner warn";banner.textContent="⚠️ Some risks to be aware of — read details";}
+    else{banner.className="cp-banner";banner.textContent="✅ No legal issues found — safe to sell";}
+  }
 }
 
 function revealScore(){
@@ -825,7 +809,7 @@ function analyze(){
   q("hero-text").style.display="none";
   step=1;dots(1);slide(1);
   showFooter(true);
-  setBtn2("Analyse now →","",false);
+  setBtn2("Continue →","",false);
   busy=false;
 }
 
@@ -836,7 +820,7 @@ function runAnalysis(){
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,sellFrom:sellFrom,sellTo:sellTo});
+  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo});
 
   /* Fire webhook in background — don't block navigation */
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
@@ -848,26 +832,24 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
-    if(step===6)setBtn2("Check another print","dark",false);
+    if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(){
     populate(DEMO_DATA);
     analysisComplete=true;
-    if(step===6)setBtn2("Check another print","dark",false);
+    if(step===7)setBtn2("Check another print","dark",false);
   });
 
   /* Immediately move to email gate — user fills email while scrape runs */
-  step=2;dots(2);slide(2);
+  step=3;dots(2);slide(3);
   showFooter(false);
   busy=false;
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";analysisComplete=false;pendingScore=null;
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];analysisComplete=false;pendingScore=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("sell-to"))q("sell-to").value="WORLDWIDE";
-  if(q("q-advanced")){q("q-advanced").classList.remove("open");}
-  if(q("q-adv-toggle"))q("q-adv-toggle").innerHTML='▸ More details <span style="font-weight:400;opacity:.6">(optional)</span>';
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
   if(q("step1-st"))q("step1-st").textContent="The product";
@@ -893,10 +875,15 @@ function reset(){
 }
 
 document.querySelectorAll(".chips").forEach(function(g){
+  var isMulti=g.classList.contains("chips-multi");
   g.querySelectorAll(".chip").forEach(function(c){
     c.addEventListener("click",function(){
-      g.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
-      c.classList.add("on");
+      if(isMulti){
+        c.classList.toggle("on");
+      } else {
+        g.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
+        c.classList.add("on");
+      }
       var id=g.id;
       if(id==="q-cat")qCat=c.dataset.v;
       else if(id==="q-market")qMarketplace=c.dataset.v;
@@ -905,14 +892,10 @@ document.querySelectorAll(".chips").forEach(function(g){
       else if(id==="q-costs")qExtraCosts=c.dataset.v;
       else if(id==="q-material")qMaterial=c.dataset.v;
       else if(id==="q-exp")qExp=c.dataset.v;
+      else if(id==="q-active")qActiveMarkets=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-social")qSocialMedia=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
     });
   });
-});
-
-q("q-adv-toggle").addEventListener("click",function(){
-  var adv=q("q-advanced");
-  var open=adv.classList.toggle("open");
-  this.innerHTML=(open?"▾":"▸")+' More details <span style="font-weight:400;opacity:.6">(optional)</span>';
 });
 
 q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});
@@ -931,16 +914,17 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Reveal results */
-  step=3;dots(3);slide(3);showFooter(true);setBtn2("See market research →","",false);revealScore();
+  step=4;dots(3);slide(4);showFooter(true);setBtn2("See market research →","",false);revealScore();
 });
 
 q("btn2").addEventListener("click",function(){
   if(busy)return;
-  if(step===1){busy=true;runAnalysis();return;}
-  if(step===3){step=4;dots(4);slide(4);setBtn2("See revenue potential →","",false);}
-  else if(step===4){step=5;dots(5);slide(5);setBtn2("See verdict →","",false);}
-  else if(step===5){
-    step=6;dots(6);slide(6);showFooter(true);
+  if(step===1){step=2;dots(1);slide(2);setBtn2("Start analysis →","",false);return;}
+  if(step===2){busy=true;runAnalysis();return;}
+  if(step===4){step=5;dots(4);slide(5);setBtn2("See revenue potential →","",false);}
+  else if(step===5){step=6;dots(5);slide(6);setBtn2("See verdict →","",false);}
+  else if(step===6){
+    step=7;dots(6);slide(7);showFooter(true);
     if(analysisComplete){setBtn2("Check another print","dark",false);}
     else{setBtn2("Calculating verdict…","",true);}
   }

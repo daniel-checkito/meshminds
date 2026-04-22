@@ -302,39 +302,21 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           </div>
         </div>
 
-        <div style="margin-top:6px">
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--acc)" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              Market demand
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Monthly search volume</span><span class="prev-val">22,200 ↑58%</span></div>
-              <div class="prev-row"><span class="prev-lbl">Etsy listings</span><span class="prev-val">1,428 · avg €22</span></div>
-              <div class="prev-row"><span class="prev-lbl">Top seller sales</span><span class="prev-val">3,241</span></div>
-            </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">📊</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Demand</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">Are people actually buying this on Etsy right now?</div>
           </div>
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-              Revenue estimate
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Units per month</span><span class="prev-val">~42 units</span></div>
-              <div class="prev-row"><span class="prev-lbl">Gross revenue</span><span class="prev-val">€940 /mo</span></div>
-              <div class="prev-row"><span class="prev-lbl">Net profit after fees</span><span class="prev-val g">€865 /mo</span></div>
-            </div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">💰</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Profit</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">Est. monthly profit after print costs &amp; Etsy fees</div>
           </div>
-          <div class="prev-card">
-            <div class="prev-hd">
-              <svg class="prev-hd-ico" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              Legal &amp; copyright
-            </div>
-            <div class="prev-rows">
-              <div class="prev-row"><span class="prev-lbl">Etsy ban risk</span><span class="risk-badge risk-low" style="font-size:9px">LOW</span></div>
-              <div class="prev-row"><span class="prev-lbl">Copyright / IP scan</span><span class="prev-val">No issues found</span></div>
-              <div class="prev-row"><span class="prev-lbl">Country-specific laws</span><span class="prev-val">EU · US · UK</span></div>
-            </div>
+          <div style="border:1px solid var(--line);border-radius:10px;padding:11px 8px 10px;text-align:center">
+            <div style="font-size:20px;margin-bottom:5px">⚖️</div>
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:4px">Legal</div>
+            <div style="font-size:9.5px;color:var(--ink3);line-height:1.4">IP, copyright &amp; Etsy ToS risk per your country</div>
           </div>
         </div>
 
@@ -600,7 +582,7 @@ function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track")
 function verdict(state,msg){
   var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
   b.className="vbar";
-  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="MakerWorld · Printables · or describe your idea";}
+  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="Paste a link or describe your idea";}
   else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent=lastIsURL?"Analyzing product...":"Researching your idea...";d.textContent="Fetching demand, revenue & legal data";}
   else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
   else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}

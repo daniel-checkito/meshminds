@@ -179,7 +179,9 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 /* Email gate */
 .gate-head{text-align:center;padding:14px 0 10px}
-.gate-check{width:46px;height:46px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:22px}
+.gate-check{width:46px;height:46px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:22px;transition:background .4s}
+.gate-check.loading{background:#fff3e0;animation:gate-pulse 1.4s ease-in-out infinite}
+@keyframes gate-pulse{0%,100%{opacity:1}50%{opacity:.55}}
 .gate-title{font-family:"Bebas Neue",sans-serif;font-size:26px;letter-spacing:.02em;margin-bottom:4px}
 .gate-sub{font-size:12px;color:var(--ink3);line-height:1.5}
 .tease-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0 14px}
@@ -473,9 +475,9 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <!-- EMAIL GATE -->
       <div class="panel" id="email-panel">
         <div class="gate-head">
-          <div class="gate-check">✓</div>
-          <div class="gate-title">Your report is ready</div>
-          <div class="gate-sub">Enter your email to unlock the full analysis</div>
+          <div class="gate-check loading" id="gate-check">⏳</div>
+          <div class="gate-title" id="gate-title">Analyzing your idea…</div>
+          <div class="gate-sub" id="gate-sub">Takes ~20 sec — enter your email and we'll show the full results</div>
         </div>
         <div class="tease-grid">
           <div class="tease-card">
@@ -758,6 +760,10 @@ function populate(data){
   if(q("hero")){q("hero").classList.add("show");q("hero").classList.add("fl");}
   if(q("hbd"))q("hbd").classList.add("show");
 
+  /* Update email gate state to "ready" */
+  if(q("gate-check")){q("gate-check").textContent="✓";q("gate-check").className="gate-check";}
+  if(q("gate-title"))q("gate-title").textContent="Your report is ready";
+  if(q("gate-sub"))q("gate-sub").textContent="Enter your email to unlock the full analysis";
   /* Populate email gate teasers with real (blurred) values */
   var scoreNum=data.score!==undefined?data.score:null;
   if(q("tease-score"))q("tease-score").textContent=scoreNum!==null?scoreNum:fmt(m.searchVolume)||"-";
@@ -869,6 +875,9 @@ function reset(){
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("hero-text").style.display="";
   showFooter(false);setBtn0("Check this print",false);
+  if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
+  if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
+  if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec — enter your email and we'll show the full results";
   if(q("email-inp"))q("email-inp").value="";
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";

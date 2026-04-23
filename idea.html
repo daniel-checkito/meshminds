@@ -205,6 +205,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .gate-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 13px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;margin-bottom:10px}
 .gate-inp:focus{border-color:var(--acc)}
 .gate-trust{font-size:11px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
+/* Loading overlay */
+.loading-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink3);transition:color .3s}
+.loading-step.active{color:var(--ink);font-weight:700}
+.loading-step.done{color:var(--good)}
+.ls-dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .3s}
+.loading-step.active .ls-dot{background:var(--acc);animation:ls-pulse .9s ease-in-out infinite}
+.loading-step.done .ls-dot{background:var(--good)}
+@keyframes ls-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 /* Question chips */
 .q-block{margin-bottom:18px}
 .q-lbl{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:10px;display:flex;align-items:center;gap:6px}
@@ -583,6 +591,21 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </button>
           <div class="gate-trust">✓ No spam &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; GDPR compliant</div>
         </div>
+
+        <!-- Loading screen shown while waiting for analysis after email submission -->
+        <div id="loading-overlay" style="display:none;text-align:center;padding:14px 0 6px">
+          <div style="position:relative;width:110px;height:110px;margin:0 auto 14px">
+            <canvas id="loading-ring" width="110" height="110"></canvas>
+            <div id="loading-pct" style="position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;font-family:'DM Mono',sans-serif;color:#f59e0b;letter-spacing:-.02em">0%</div>
+          </div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:5px">Preparing your report…</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:18px" id="loading-phase">Fetching Etsy market data…</div>
+          <div style="display:flex;flex-direction:column;gap:9px;background:#f7f7f7;border-radius:11px;padding:13px 16px">
+            <div class="loading-step" id="ls0"><div class="ls-dot"></div><span>Market demand &amp; search volume</span></div>
+            <div class="loading-step" id="ls1"><div class="ls-dot"></div><span>Revenue &amp; profit modelling</span></div>
+            <div class="loading-step" id="ls2"><div class="ls-dot"></div><span>Legal &amp; copyright check</span></div>
+          </div>
+        </div>
       </div>
 
       <!-- LEGAL & COPYRIGHT CHECK -->
@@ -650,10 +673,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="price-slider-val" id="price-display">€22</div>
           </div>
           <input type="range" id="price-slider" min="5" max="120" value="22" step="1">
-          <div class="price-slider-limits"><span>€5</span><span>€120</span></div>
+          <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
+          <div id="sweet-spot-hint" style="text-align:center;font-size:10.5px;font-weight:700;color:var(--good);font-family:'DM Mono',sans-serif;margin-top:3px;opacity:0;transition:opacity .4s,color .3s"></div>
           <div class="price-margin-row">
-            <span class="price-margin-lbl">Profit margin</span>
+            <span class="price-margin-lbl">Margin</span>
             <span class="price-margin-val" id="margin-val">84%</span>
+            <span class="price-margin-lbl">· Units/mo</span>
+            <span class="price-margin-val" id="margin-units">42</span>
             <span class="price-margin-lbl">· Net/mo</span>
             <span class="price-margin-val" id="margin-net">€789</span>
           </div>
@@ -768,7 +794,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -832,6 +858,68 @@ function startPulse(){
 }
 function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}}
 
+function drawLoadingRing(p,color){
+  var c=q("loading-ring");if(!c)return;
+  var ctx=c.getContext("2d"),cx=55,cy=55,r=44,th=8;
+  ctx.clearRect(0,0,110,110);
+  ctx.beginPath();ctx.lineWidth=th;ctx.lineCap="round";ctx.strokeStyle="#e8e8e8";
+  ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  if(p>0){ctx.beginPath();ctx.strokeStyle=color||"#f59e0b";ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*p);ctx.stroke();}
+  var el=q("loading-pct");
+  if(el){el.textContent=Math.round(p*100)+"%";el.style.color=color||"#f59e0b";}
+}
+
+function startLoadingAnim(){
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  loadingProgress=0;
+  var t0=null;
+  var phases=[
+    {at:0,text:"Fetching Etsy market data…",step:"ls0"},
+    {at:0.32,text:"Calculating revenue potential…",step:"ls1"},
+    {at:0.62,text:"Running legal & copyright check…",step:"ls2"}
+  ];
+  var activePhase=-1;
+  if(q("ls0"))q("ls0").classList.remove("active","done");
+  if(q("ls1"))q("ls1").classList.remove("active","done");
+  if(q("ls2"))q("ls2").classList.remove("active","done");
+  function tick(ts){
+    if(!t0)t0=ts;
+    var elapsed=ts-t0;
+    var p=0.87*(1-Math.exp(-elapsed/9500));
+    loadingProgress=p;
+    drawLoadingRing(p,"#f59e0b");
+    for(var i=phases.length-1;i>=0;i--){
+      if(p>=phases[i].at){
+        if(activePhase!==i){
+          activePhase=i;
+          if(q("loading-phase"))q("loading-phase").textContent=phases[i].text;
+          for(var j=0;j<i;j++){var el=q(phases[j].step);if(el){el.classList.remove("active");el.classList.add("done");}}
+          var cur=q(phases[i].step);if(cur){cur.classList.remove("done");cur.classList.add("active");}
+        }
+        break;
+      }
+    }
+    loadingRaf=requestAnimationFrame(tick);
+  }
+  loadingRaf=requestAnimationFrame(tick);
+}
+
+function completeLoadingAnim(callback){
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el){el.classList.remove("active");el.classList.add("done");}});
+  if(q("loading-phase"))q("loading-phase").textContent="Report ready!";
+  var startP=loadingProgress,t0=null;
+  function tick(ts){
+    if(!t0)t0=ts;
+    var t=Math.min((ts-t0)/700,1),p=startP+(1-startP)*ease(t);
+    var color=t<1?"#f59e0b":"#15803d";
+    drawLoadingRing(p,color);
+    if(t<1)requestAnimationFrame(tick);
+    else{drawLoadingRing(1,"#15803d");setTimeout(callback,350);}
+  }
+  requestAnimationFrame(tick);
+}
+
 function dots(s){for(var i=0;i<8;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
@@ -872,22 +960,53 @@ function riskBg(level){
 
 function recalcRevenue(price){
   if(!baseRevData)return;
-  var U=baseRevData.units,C=baseRevData.printCost;
+  var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units,totalBaseCost=baseRevData.printCost;
+  var costPerUnit=baseUnits>0?totalBaseCost/baseUnits:0;
+  /* Asymmetric demand elasticity:
+     going above optimal price → demand falls sharply (e=1.5)
+     going below optimal price → demand rises gently (e=0.8)
+     This keeps the API-suggested price as the profit-maximising default. */
+  var elasticity=price>=basePrice?1.5:0.8;
+  var U=Math.max(1,Math.round(baseUnits*Math.pow(basePrice/price,elasticity)));
   var gross=Math.round(price*U);
   var fees=Math.round(gross*0.12);
-  var net=gross-C-fees;
-  var margin=gross>0?Math.round((net/gross)*100):0;
-  var marginColor=margin>=60?"var(--good)":margin>=35?"var(--warn)":"var(--bad)";
+  var dynamicCost=Math.round(costPerUnit*U);
+  var net=gross-dynamicCost-fees;
+  var margin=gross>0?Math.round(((price*0.88-costPerUnit)/price)*100):0;
+  var marginColor=margin>=70?"var(--good)":margin>=45?"var(--warn)":"var(--bad)";
+  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
+  var inSweet=price>=sweetLow&&price<=sweetHigh;
+  if(q("rv0"))q("rv0").textContent="~"+U;
   if(q("rv1"))q("rv1").textContent="€"+gross;
   if(q("hbig"))q("hbig").textContent="€"+net;
   if(q("hsub"))q("hsub").textContent="est. monthly net · €"+price+" sell price";
   if(q("hv0"))q("hv0").textContent="~€"+gross;
-  if(q("hv1"))q("hv1").textContent="−€"+C;
+  if(q("hv1"))q("hv1").textContent="−€"+dynamicCost;
   if(q("hv2"))q("hv2").textContent="−€"+fees;
   if(q("hv3"))q("hv3").textContent="~€"+net;
-  if(q("price-display"))q("price-display").textContent="€"+price;
+  if(q("price-display")){
+    q("price-display").textContent="€"+price;
+    q("price-display").style.color=inSweet?"var(--ink)":price>sweetHigh?"var(--warn)":"var(--warn)";
+  }
   if(q("margin-val")){q("margin-val").textContent=margin+"%";q("margin-val").style.color=marginColor;}
+  if(q("margin-units")){q("margin-units").textContent=U;q("margin-units").style.color=marginColor;}
   if(q("margin-net")){q("margin-net").textContent="€"+net;q("margin-net").style.color=marginColor;}
+  var hint=q("sweet-spot-hint");
+  if(hint){
+    if(inSweet){
+      hint.textContent="✓ Sweet spot — €"+sweetLow+"–€"+sweetHigh+" optimal range";
+      hint.style.color="var(--good)";
+      hint.style.opacity="1";
+    } else if(price>sweetHigh){
+      hint.textContent="↑ Above sweet spot (€"+sweetLow+"–€"+sweetHigh+") — fewer buyers";
+      hint.style.color="var(--warn)";
+      hint.style.opacity="1";
+    } else {
+      hint.textContent="↓ Below sweet spot (€"+sweetLow+"–€"+sweetHigh+") — lower margin";
+      hint.style.color="var(--warn)";
+      hint.style.opacity="1";
+    }
+  }
 }
 
 function populate(data){
@@ -932,10 +1051,13 @@ function populate(data){
 
   var r=data.revenue||{};
   var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
-  baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0};
-  if(q("rv0"))q("rv0").textContent=r.unitsPerMonth!==undefined?"~"+Math.abs(r.unitsPerMonth):"-";
+  baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
   if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
-  if(q("price-slider")){q("price-slider").value=Math.round(spNum);}
+  /* Update slider range around the optimal price */
+  var slMin=Math.max(3,Math.round(spNum*0.25)),slMax=Math.max(120,Math.round(spNum*4));
+  if(q("price-slider")){q("price-slider").min=slMin;q("price-slider").max=slMax;q("price-slider").value=Math.round(spNum);}
+  if(q("ps-min"))q("ps-min").textContent="€"+slMin;
+  if(q("ps-max"))q("ps-max").textContent="€"+slMax;
   recalcRevenue(Math.round(spNum));
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
   if(q("hero")){q("hero").classList.add("show");q("hero").classList.add("fl");}
@@ -1039,13 +1161,25 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
-    if(step===5)setBtn2("See full analysis","",false);
+    if(waitingForAnalysis){
+      waitingForAnalysis=false;
+      completeLoadingAnim(function(){
+        step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+        setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+      });
+    } else if(step===5)setBtn2("See full analysis","",false);
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(){
     populate(DEMO_DATA);
     analysisComplete=true;
-    if(step===5)setBtn2("See full analysis","",false);
+    if(waitingForAnalysis){
+      waitingForAnalysis=false;
+      completeLoadingAnim(function(){
+        step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+        setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+      });
+    } else if(step===5)setBtn2("See full analysis","",false);
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   });
@@ -1076,6 +1210,15 @@ function reset(){
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";
   if(q("btn-email"))q("btn-email").disabled=false;
+  /* Reset loading state */
+  waitingForAnalysis=false;
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  loadingProgress=0;
+  if(q("loading-overlay"))q("loading-overlay").style.display="none";
+  if(q("gate-head"))q("gate-head").style.display="";
+  if(q("tease-grid"))q("tease-grid").style.display="";
+  if(q("gate-form"))q("gate-form").style.display="";
+  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   if(q("ins"))q("ins").classList.remove("show");
@@ -1186,13 +1329,24 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
-  /* Save email in background - fire and forget */
+  /* Save email - fire and forget */
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
-  /* Advance to legal & copyright check — analysis follows */
-  step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";if(analysisComplete){setBtn2("See full analysis","",false);}else{setBtn2("Running legal check…","",true);}revealScore();populateLegalCerts();
+  if(analysisComplete){
+    /* Analysis already done — go straight to results */
+    step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+    setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+  } else {
+    /* Show loading screen until analysis finishes */
+    waitingForAnalysis=true;
+    if(q("gate-head"))q("gate-head").style.display="none";
+    if(q("tease-grid"))q("tease-grid").style.display="none";
+    if(q("gate-form"))q("gate-form").style.display="none";
+    if(q("loading-overlay"))q("loading-overlay").style.display="";
+    startLoadingAnim();
+  }
 });
 
 q("btn2").addEventListener("click",function(){

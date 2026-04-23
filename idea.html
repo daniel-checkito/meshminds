@@ -1188,7 +1188,7 @@ function runAnalysis(){
   if(lastProductContext)base.productContext=lastProductContext;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea2",{
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   }).then(function(resp){

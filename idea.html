@@ -1109,10 +1109,31 @@ function analyze(){
   q("btn").style.display="none";
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
-  step=1;dots(1);slide(1);
-  showFooter(true);
-  setBtn2("Continue","",false);
-  busy=false;
+
+  if(lastIsURL){
+    q("vbar").style.display="";
+    q("vbar").className="vbar scanning";
+    q("ve").textContent="Checking link";
+    q("vt").textContent="Verifying URL…";
+    q("vd").textContent="Verifying URL…";
+    rv=0;ring(0,"#f59e0b");q("rn").textContent="0%";q("rn").style.color="#f59e0b";
+    animRing(0.85,1300,"#f59e0b").then(function(){
+      return animRing(1,450,"#15803d");
+    }).then(function(){
+      q("vbar").className="vbar done";
+      q("ve").textContent="Link verified";
+      q("vt").textContent="Ready to analyze";
+      q("vd").textContent="Ready to analyze";
+      setTimeout(function(){
+        step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
+      },500);
+    });
+  } else {
+    step=1;dots(1);slide(1);
+    showFooter(true);
+    setBtn2("Continue","",false);
+    busy=false;
+  }
 }
 
 function runAnalysis(){

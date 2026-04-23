@@ -809,7 +809,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1119,6 +1119,7 @@ function analyze(){
   }
   lastURL=input;
   lastIsURL=isURL(input);
+  lastProductContext=null;
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
@@ -1142,7 +1143,9 @@ function analyze(){
       fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
         method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({url:lastURL})
-      }).catch(function(){});
+      }).then(function(r){return r.ok?r.json():null;})
+        .then(function(d){if(d&&d.productContext)lastProductContext=d.productContext;})
+        .catch(function(){});
       setTimeout(function(){
         step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
       },500);
@@ -1162,6 +1165,7 @@ function runAnalysis(){
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
+  if(lastProductContext)base.productContext=lastProductContext;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   fetch("https://meshminds.app.n8n.cloud/webhook/idea2",{

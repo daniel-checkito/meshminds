@@ -62,13 +62,14 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .s0-sub{font-size:12px;color:var(--ink3);line-height:1.5}
 .eg-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px;text-align:center}
 .eg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
-.eg-card{border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.eg-card{border-radius:10px;overflow:hidden;border:1px solid var(--line)}
 .eg-img{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;font-size:34px}
-.eg-donut{position:absolute;top:5px;left:5px;}
-.eg-info{padding:6px 9px 9px}
-.eg-name{font-size:11.5px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.eg-meta{font-size:10.5px;color:var(--ink3);font-family:"DM Mono",sans-serif}
-.eg-flag{font-size:10px;font-weight:700;color:var(--bad)}
+.eg-donut{position:absolute;top:6px;left:6px;z-index:1}
+.eg-vol{position:absolute;top:7px;right:7px;font-size:9px;font-weight:700;font-family:"DM Mono",sans-serif;background:rgba(0,0,0,.28);color:#fff;padding:2px 6px;border-radius:20px;line-height:1.4;z-index:1}
+.eg-info{position:absolute;bottom:0;left:0;right:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.62))}
+.eg-name{font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eg-meta{font-size:9.5px;color:rgba(255,255,255,.8);font-family:"DM Mono",sans-serif}
+.eg-flag{font-size:9.5px;font-weight:700;color:#fca5a5}
 .sg{color:var(--good)}.sw{color:var(--warn)}.sb{color:var(--bad)}
 
 /* Social proof */
@@ -328,43 +329,48 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <div class="eg-img" style="background:linear-gradient(135deg,#fef3c7,#fbbf24)">
               🏷️
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div>
+              <div class="eg-vol">16.6k</div>
+              <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor · 16.6k ↓</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dcfce7,#86efac)">
               🌿
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div>
+              <div class="eg-vol">9.2k</div>
+              <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Geometric Planter Pot</div><div class="eg-meta">Home · 9.2k ↓</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)">
               🗃️
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div>
+              <div class="eg-vol">7.8k</div>
+              <div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Cable Management Box</div><div class="eg-meta">Functional · 7.8k ↓</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#ffedd5,#fdba74)">
               🐉
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div>
+              <div class="eg-vol">22.1k</div>
+              <div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy/Art · 22.1k ↓</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#fee2e2,#fca5a5)">
               🍪
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#b91c1c" stroke-width="3.5" stroke-dasharray="22.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#b91c1c" font-size="8" font-weight="800" font-family="DM Mono,monospace">28</text></svg></div>
+              <div class="eg-info"><div class="eg-name">Disney Cookie Cutter</div><div class="eg-flag">⚠️ IP flagged</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Disney Cookie Cutter</div><div class="eg-meta eg-flag">⚠️ IP flagged</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#f5f5f5,#d4d4d4)">
               📱
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div>
+              <div class="eg-vol">11.3k</div>
+              <div class="eg-info"><div class="eg-name">Minimalist Phone Stand</div><div class="eg-meta">Functional</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Minimalist Phone Stand</div><div class="eg-meta">Functional · 11.3k ↓</div></div>
           </div>
         </div>
 
@@ -674,43 +680,49 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <div class="eg-img" style="background:linear-gradient(135deg,#fef3c7,#fbbf24)">
               🏷️
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div>
+              <div class="eg-vol">€18 avg</div>
+              <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor · €18 avg</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dcfce7,#86efac)">
               🌿
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div>
+              <div class="eg-vol">€22 avg</div>
+              <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home · €22 avg</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)">
               🗃️
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div>
+              <div class="eg-vol">€14 avg</div>
+              <div class="eg-info"><div class="eg-name">Cable Box</div><div class="eg-meta">Functional</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Cable Box</div><div class="eg-meta">Functional · €14</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#fce7f3,#f9a8d4)">
               🕯️
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div>
+              <div class="eg-vol">€12 avg</div>
+              <div class="eg-info"><div class="eg-name">Tea-light Holder</div><div class="eg-meta">Decor</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Tea-light Holder</div><div class="eg-meta">Decor · €12 avg</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">
               🎮
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="64.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">79</text></svg></div>
+              <div class="eg-vol">€17 avg</div>
+              <div class="eg-info"><div class="eg-name">Controller Stand</div><div class="eg-meta">Functional</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Controller Stand</div><div class="eg-meta">Functional · €17</div></div>
           </div>
           <div class="eg-card">
             <div class="eg-img" style="background:linear-gradient(135deg,#f5f5f5,#d4d4d4)">
               📱
               <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div>
+              <div class="eg-vol">€11 avg</div>
+              <div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div>
             </div>
-            <div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional · €11</div></div>
           </div>
         </div>
 
@@ -1052,32 +1064,32 @@ function reset(){
 
 var CERT_INFO={
   kids:{label:"Children's product safety",icon:"👶",certs:[
-    {name:"CE EN 71",region:"🇪🇺 EU",desc:"Toy safety directive — required for all toys sold in the EU"},
-    {name:"ASTM F963",region:"🇺🇸 USA",desc:"US toy safety standard — required for Etsy sales to US buyers"},
-    {name:"CPSIA",region:"🇺🇸 USA",desc:"Children's Product Certificate needed; lead & phthalate limits apply"}
+    {name:"CE EN 71",region:"🇪🇺 EU",desc:"Toy safety directive — required for all toys sold in the EU",difficulty:"medium",cost:"€500–€2,000",note:"Via accredited testing lab; self-declaration not accepted for toys"},
+    {name:"ASTM F963",region:"🇺🇸 USA",desc:"US toy safety standard — required for Etsy sales to US buyers",difficulty:"medium",cost:"$300–$1,500",note:"Lab test + Children's Product Certificate (CPC) required"},
+    {name:"CPSIA",region:"🇺🇸 USA",desc:"Lead & phthalate limits; tracking label must be on product and packaging",difficulty:"low",cost:"$150–$500",note:"Most PLA filaments pass — get a material data sheet from your supplier"}
   ]},
   electronics:{label:"Electronics / LED",icon:"🔌",certs:[
-    {name:"CE marking",region:"🇪🇺 EU",desc:"Low Voltage & EMC Directives — required for all electronic products"},
-    {name:"FCC / IC",region:"🇺🇸🇨🇦 USA/CA",desc:"Radio frequency certification for electronic devices"},
-    {name:"RoHS",region:"🇪🇺 EU",desc:"Restricts hazardous substances in electrical equipment"}
+    {name:"CE marking",region:"🇪🇺 EU",desc:"Low Voltage & EMC Directives — mandatory for all electronic products in the EU",difficulty:"high",cost:"€1,500–€5,000",note:"Can self-declare for low-risk items but most need a notified body"},
+    {name:"FCC / IC",region:"🇺🇸🇨🇦 USA/CA",desc:"Radio frequency certification for electronic devices",difficulty:"high",cost:"$3,000–$15,000",note:"Required even for Etsy — US Customs can detain non-certified goods"},
+    {name:"RoHS",region:"🇪🇺 EU",desc:"Restricts 10 hazardous substances in electrical equipment",difficulty:"low",cost:"€200–€800",note:"Get a RoHS declaration from your component supplier; keep records"}
   ]},
   food:{label:"Food contact items",icon:"🍽️",certs:[
-    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Food-safe plastics regulation — standard PLA/ABS may not qualify"},
-    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials in contact with food — declaration of compliance needed"},
-    {name:"Note",region:"⚠️",desc:"Layer lines in FDM prints can harbour bacteria — food contact items carry extra risk"}
+    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Food-safe plastics regulation — standard PLA/ABS may not qualify without testing",difficulty:"medium",cost:"$400–$1,200",note:"Food-grade PLA exists but must be verified; standard printing filament is not certified"},
+    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials in contact with food — declaration of compliance required",difficulty:"medium",cost:"€300–€1,000",note:"Material test report + overall migration test needed from an accredited lab"},
+    {name:"⚠️ FDM risk",region:"All markets",desc:"Layer lines in FDM prints harbour bacteria and are very hard to clean safely",difficulty:"high",cost:"N/A",note:"Most food-contact 3D prints carry reputational and liability risk regardless of cert"}
   ]},
   wearable:{label:"Wearables / jewellery",icon:"💍",certs:[
-    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"Substances of Very High Concern — relevant for skin-contact items"},
-    {name:"Nickel Directive",region:"🇪🇺 EU",desc:"Limits nickel release for items in prolonged skin contact"}
+    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"Restricts substances of very high concern in skin-contact items",difficulty:"low",cost:"€100–€500",note:"Request a REACH compliance declaration from your filament supplier"},
+    {name:"Nickel Directive",region:"🇪🇺 EU",desc:"Limits nickel release for items in prolonged skin contact — e.g. earrings, bracelets",difficulty:"low",cost:"€100–€400",note:"PLA/PETG are generally nickel-free; verify with supplier data sheet"}
   ]},
   battery:{label:"Battery / USB products",icon:"🔋",certs:[
-    {name:"UN 38.3",region:"🌍 Global",desc:"Transport safety certification for lithium cells/batteries"},
-    {name:"IEC 62133",region:"🌍 Global",desc:"Safety for portable sealed secondary lithium cells"},
-    {name:"CE / FCC",region:"🇪🇺🇺🇸",desc:"Required for any device with a rechargeable battery"}
+    {name:"UN 38.3",region:"🌍 Global",desc:"Transport safety — required to ship lithium batteries by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"Couriers (DHL, UPS) require proof of compliance; without it shipments are refused"},
+    {name:"IEC 62133",region:"🌍 Global",desc:"Safety standard for portable rechargeable lithium cells",difficulty:"high",cost:"$3,000–$10,000",note:"Lab test by accredited body; often required by marketplaces for battery products"},
+    {name:"CE / FCC",region:"🇪🇺🇺🇸",desc:"Required for any device with a rechargeable battery or wireless function",difficulty:"high",cost:"€2,000–€8,000",note:"Budget 3–6 months lead time for testing and documentation"}
   ]},
   magnetic:{label:"Strong magnets",icon:"🧲",certs:[
-    {name:"EN 71-7",region:"🇪🇺 EU",desc:"Finger trap & ingestion hazard rules for magnetic toys"},
-    {name:"Warning label",region:"🌍 Global",desc:"Mandatory hazard warning required if magnets are accessible to children"}
+    {name:"EN 71-7",region:"🇪🇺 EU",desc:"Finger trap and ingestion hazard rules — applies if magnets could be accessed by children",difficulty:"medium",cost:"€500–€1,500",note:"Magnets > 0.5 T flux index require additional testing and age-restriction labelling"},
+    {name:"Warning label",region:"🌍 Global",desc:"Mandatory hazard warning if strong magnets (N35+) are in a product",difficulty:"low",cost:"<€50",note:"Include choking and pacemaker warnings; keep magnets secured in the design"}
   ]}
 };
 
@@ -1094,9 +1106,18 @@ function populateLegalCerts(){
     html+='<div style="border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden">';
     html+='<div style="background:#fafafa;padding:9px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><span>'+info.icon+'</span><span>'+info.label+'</span></div>';
     info.certs.forEach(function(c){
-      html+='<div style="padding:8px 12px;border-bottom:1px solid #f5f5f5">';
-      html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px"><span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span><span style="font-size:10px;background:#f0f0f0;padding:2px 7px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span></div>';
-      html+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4">'+c.desc+'</div>';
+      var dColor=c.difficulty==="high"?"#b91c1c":c.difficulty==="medium"?"#b45309":"#15803d";
+      var dBg=c.difficulty==="high"?"#fee2e2":c.difficulty==="medium"?"#fef9c3":"#dcfce7";
+      var dLabel=c.difficulty==="high"?"High":c.difficulty==="medium"?"Medium":"Low";
+      html+='<div style="padding:9px 12px;border-bottom:1px solid #f5f5f5">';
+      html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">';
+      html+='<span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span>';
+      html+='<span style="font-size:9.5px;background:#f0f0f0;padding:1px 6px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span>';
+      if(c.difficulty)html+='<span style="font-size:9.5px;background:'+dBg+';color:'+dColor+';padding:1px 6px;border-radius:20px;font-weight:700">'+dLabel+' difficulty</span>';
+      if(c.cost)html+='<span style="font-size:9.5px;background:#f0fdf4;color:#15803d;padding:1px 6px;border-radius:20px;font-weight:700">~'+c.cost+'</span>';
+      html+='</div>';
+      html+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4;margin-bottom:3px">'+c.desc+'</div>';
+      if(c.note)html+='<div style="font-size:10.5px;color:var(--ink3);line-height:1.35;font-style:italic">'+c.note+'</div>';
       html+='</div>';
     });
     html+='</div>';

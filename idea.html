@@ -274,7 +274,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       </div>
       <div style="font-size:11px;color:var(--ink3);padding:3px 2px 6px;line-height:1.55">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Idea: <span style="font-style:italic">"custom name wall sign in wood-look PLA"</span></div>
     </div>
-    <div class="vbar" id="vbar">
+    <div class="vbar" id="vbar" style="display:none">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
         <div class="ve" id="ve">Ready to scan</div>
@@ -288,7 +288,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
     <div class="dots" id="dots" style="display:none">
-      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div>
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div>
     </div>
   </div>
 
@@ -455,7 +455,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
       <!-- STEP 2: Questions Q2 -->
       <div class="panel">
-        <div class="sec"><span class="sn">02</span><span class="st">About you</span><span class="sh">Step 2 of 2</span></div>
+        <div class="sec"><span class="sn">02</span><span class="st">About you</span><span class="sh">Step 2 of 3</span></div>
 
         <div class="q-block">
           <div class="q-lbl">Where do you want to sell?</div>
@@ -489,6 +489,12 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           </div>
         </div>
 
+      </div>
+
+      <!-- STEP 3: Location & Legal -->
+      <div class="panel">
+        <div class="sec"><span class="sn">03</span><span class="st">Location &amp; legal</span><span class="sh">Step 3 of 3</span></div>
+
         <div class="q-block">
           <div class="sel-lbl">Selling from <span class="q-opt" style="font-size:9px;color:var(--ink3);opacity:.65;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:4px">affects VAT &amp; legal</span></div>
           <select id="sell-from" class="sel-inp">
@@ -519,6 +525,32 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <option value="NZ">🇳🇿 New Zealand</option>
             <option value="UA">🇺🇦 Ukraine</option>
           </select>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Selling to <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-sell-to">
+            <button class="chip" data-v="US">🇺🇸 USA</button>
+            <button class="chip" data-v="EU">🇪🇺 Europe</button>
+            <button class="chip" data-v="GB">🇬🇧 UK</button>
+            <button class="chip" data-v="CA">🇨🇦 Canada</button>
+            <button class="chip" data-v="AU">🇦🇺 Australia</button>
+            <button class="chip" data-v="WORLDWIDE">🌍 Worldwide</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Does your product include? <span class="q-opt">select all that apply</span></div>
+          <div class="q-hint" style="margin-bottom:9px">Affects which safety certificates apply to your listing</div>
+          <div class="chips chips-multi" id="q-legal-flags">
+            <button class="chip" data-v="none">Nothing special</button>
+            <button class="chip" data-v="kids">👶 For children</button>
+            <button class="chip" data-v="electronics">🔌 Electronics / LEDs</button>
+            <button class="chip" data-v="food">🍽️ Food contact</button>
+            <button class="chip" data-v="wearable">💍 Wearable / jewellery</button>
+            <button class="chip" data-v="battery">🔋 Battery / USB</button>
+            <button class="chip" data-v="magnetic">🧲 Strong magnets</button>
+          </div>
         </div>
 
       </div>
@@ -577,6 +609,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           </div>
         </div>
         <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
+        <div id="cert-section"></div>
         <div style="font-size:10.5px;color:var(--ink3);text-align:center;margin-top:14px;line-height:1.5">Next up: full market, revenue &amp; profit analysis.</div>
       </div>
 
@@ -717,7 +750,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],analysisComplete=false,pendingScore=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var DEMO_DATA={
@@ -781,7 +814,7 @@ function startPulse(){
 }
 function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}}
 
-function dots(s){for(var i=0;i<7;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function dots(s){for(var i=0;i<8;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
 function verdict(state,msg){
@@ -897,7 +930,7 @@ function populate(data){
   populateCopyright(data.copyright||{});
   /* Store score — only reveal ring/vbar after email gate is passed */
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
-  if(step>=4)revealScore();
+  if(step>=5)revealScore();
 }
 
 function populateCopyright(c){
@@ -943,6 +976,7 @@ function analyze(){
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
+  q("vbar").style.display="";
   /* Scrape card only makes sense for URL input — hide for free-text ideas */
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
@@ -954,12 +988,12 @@ function analyze(){
 
 function runAnalysis(){
   var sellFrom=q("sell-from")?q("sell-from").value:"";
-  var sellTo=q("sell-to")?q("sell-to").value:"WORLDWIDE";
+  var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
   verdict("scanning");
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo});
+  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   /* Fire webhook in background — don't block navigation */
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
@@ -971,35 +1005,35 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
-    if(step===4)setBtn2("See full analysis →","",false);
-    else if(step===5)setBtn2("See winners & STL library →","",false);
-    else if(step===6)setBtn2("Check another print","dark",false);
+    if(step===5)setBtn2("See full analysis →","",false);
+    else if(step===6)setBtn2("See winners & STL library →","",false);
+    else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(){
     populate(DEMO_DATA);
     analysisComplete=true;
-    if(step===4)setBtn2("See full analysis →","",false);
-    else if(step===5)setBtn2("See winners & STL library →","",false);
-    else if(step===6)setBtn2("Check another print","dark",false);
+    if(step===5)setBtn2("See full analysis →","",false);
+    else if(step===6)setBtn2("See winners & STL library →","",false);
+    else if(step===7)setBtn2("Check another print","dark",false);
   });
 
   /* Immediately move to email gate — user fills email while scrape runs */
-  step=3;dots(3);slide(3);
+  step=4;dots(4);slide(4);
   showFooter(false);
   busy=false;
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];analysisComplete=false;pendingScore=null;
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
-  if(q("sell-to"))q("sell-to").value="WORLDWIDE";
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
   if(q("step1-st"))q("step1-st").textContent="The product";
   if(q("step1-sh"))q("step1-sh").textContent="What we found";
   dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
-  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";
+  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";
+  if(q("cert-section"))q("cert-section").innerHTML="";
   showFooter(false);setBtn0("Check this print",false);
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
@@ -1015,6 +1049,61 @@ function reset(){
   if(q("hbd"))q("hbd").classList.remove("show");
   if(q("verdict-score")){q("verdict-score").textContent="–";q("verdict-score").style.color="var(--ink3)";}
   if(q("verdict-msg")){q("verdict-msg").textContent="Calculating your score…";q("verdict-msg").style.fontStyle="italic";}
+}
+
+var CERT_INFO={
+  kids:{label:"Children's product safety",icon:"👶",certs:[
+    {name:"CE EN 71",region:"🇪🇺 EU",desc:"Toy safety directive — required for all toys sold in the EU"},
+    {name:"ASTM F963",region:"🇺🇸 USA",desc:"US toy safety standard — required for Etsy sales to US buyers"},
+    {name:"CPSIA",region:"🇺🇸 USA",desc:"Children's Product Certificate needed; lead & phthalate limits apply"}
+  ]},
+  electronics:{label:"Electronics / LED",icon:"🔌",certs:[
+    {name:"CE marking",region:"🇪🇺 EU",desc:"Low Voltage & EMC Directives — required for all electronic products"},
+    {name:"FCC / IC",region:"🇺🇸🇨🇦 USA/CA",desc:"Radio frequency certification for electronic devices"},
+    {name:"RoHS",region:"🇪🇺 EU",desc:"Restricts hazardous substances in electrical equipment"}
+  ]},
+  food:{label:"Food contact items",icon:"🍽️",certs:[
+    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Food-safe plastics regulation — standard PLA/ABS may not qualify"},
+    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials in contact with food — declaration of compliance needed"},
+    {name:"Note",region:"⚠️",desc:"Layer lines in FDM prints can harbour bacteria — food contact items carry extra risk"}
+  ]},
+  wearable:{label:"Wearables / jewellery",icon:"💍",certs:[
+    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"Substances of Very High Concern — relevant for skin-contact items"},
+    {name:"Nickel Directive",region:"🇪🇺 EU",desc:"Limits nickel release for items in prolonged skin contact"}
+  ]},
+  battery:{label:"Battery / USB products",icon:"🔋",certs:[
+    {name:"UN 38.3",region:"🌍 Global",desc:"Transport safety certification for lithium cells/batteries"},
+    {name:"IEC 62133",region:"🌍 Global",desc:"Safety for portable sealed secondary lithium cells"},
+    {name:"CE / FCC",region:"🇪🇺🇺🇸",desc:"Required for any device with a rechargeable battery"}
+  ]},
+  magnetic:{label:"Strong magnets",icon:"🧲",certs:[
+    {name:"EN 71-7",region:"🇪🇺 EU",desc:"Finger trap & ingestion hazard rules for magnetic toys"},
+    {name:"Warning label",region:"🌍 Global",desc:"Mandatory hazard warning required if magnets are accessible to children"}
+  ]}
+};
+
+function populateLegalCerts(){
+  var el=q("cert-section");if(!el)return;
+  var flags=qLegalFlags.filter(function(f){return f!=="none";});
+  if(flags.length===0){
+    el.innerHTML='<div style="background:#f7f7f7;border-radius:10px;padding:12px 13px;margin-top:12px"><div style="font-size:11.5px;color:var(--ink2);line-height:1.5">✅ <b>No special certificates required</b> for standard 3D printed decorative / functional items. Always double-check if you add electronics or sell to children later.</div></div>';
+    return;
+  }
+  var html='<div style="margin-top:14px"><div style="font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:\'DM Mono\',sans-serif;margin-bottom:10px">Required certificates for your product</div>';
+  flags.forEach(function(f){
+    var info=CERT_INFO[f];if(!info)return;
+    html+='<div style="border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden">';
+    html+='<div style="background:#fafafa;padding:9px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><span>'+info.icon+'</span><span>'+info.label+'</span></div>';
+    info.certs.forEach(function(c){
+      html+='<div style="padding:8px 12px;border-bottom:1px solid #f5f5f5">';
+      html+='<div style="display:flex;align-items:center;gap:7px;margin-bottom:3px"><span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span><span style="font-size:10px;background:#f0f0f0;padding:2px 7px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span></div>';
+      html+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4">'+c.desc+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a local legal advisor before listing.</div></div>';
+  el.innerHTML=html;
 }
 
 document.querySelectorAll(".chips").forEach(function(g){
@@ -1037,6 +1126,8 @@ document.querySelectorAll(".chips").forEach(function(g){
       else if(id==="q-exp")qExp=c.dataset.v;
       else if(id==="q-active")qActiveMarkets=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
       else if(id==="q-social")qSocialMedia=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-sell-to")qSellTo=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-legal-flags")qLegalFlags=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
     });
   });
 });
@@ -1057,15 +1148,16 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Advance to legal & copyright check — analysis follows */
-  step=4;dots(4);slide(4);showFooter(true);if(analysisComplete){setBtn2("See full analysis →","",false);}else{setBtn2("Running legal check…","",true);}revealScore();
+  step=5;dots(5);slide(5);showFooter(true);if(analysisComplete){setBtn2("See full analysis →","",false);}else{setBtn2("Running legal check…","",true);}revealScore();populateLegalCerts();
 });
 
 q("btn2").addEventListener("click",function(){
   if(busy)return;
-  if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis →","",false);return;}
-  if(step===2){busy=true;runAnalysis();return;}
-  if(step===4){step=5;dots(5);slide(5);setBtn2("See winners & STL library →","",false);return;}
-  if(step===5){step=6;dots(6);slide(6);setBtn2("Check another print","dark",false);return;}
+  if(step===1){step=2;dots(2);slide(2);setBtn2("Next →","",false);return;}
+  if(step===2){step=3;dots(3);slide(3);setBtn2("Start analysis →","",false);return;}
+  if(step===3){busy=true;runAnalysis();return;}
+  if(step===5){step=6;dots(6);slide(6);setBtn2("See winners & STL library →","",false);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("Check another print","dark",false);return;}
   else{reset();}
 });
 

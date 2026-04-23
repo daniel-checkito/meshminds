@@ -1097,25 +1097,7 @@ function analyze(){
   q("submit-block").style.display="none";
   q("btn").style.display="none";
 
-  if(lastIsURL){
-    q("vbar").style.display="";
-    q("vbar").className="vbar scanning";
-    q("ve").textContent="Checking link";
-    q("vt").textContent="Verifying URL…";
-    q("vd").textContent="Verifying URL…";
-    rv=0;ring(0,"#f59e0b");q("rn").textContent="0%";q("rn").style.color="#f59e0b";
-    animRing(0.85,1300,"#f59e0b").then(function(){
-      return animRing(1,450,"#15803d");
-    }).then(function(){
-      q("vbar").style.display="none";
-      step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
-    });
-  } else {
-    step=1;dots(1);slide(1);
-    showFooter(true);
-    setBtn2("Continue","",false);
-    busy=false;
-  }
+  step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
 }
 
 function runAnalysis(){

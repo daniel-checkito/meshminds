@@ -420,7 +420,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
 
         <!-- Demo note: both modes are visible so you can test each flow -->
-        <div class="scrape-hint" id="scrape-hint">💡 <b>Demo:</b> scraped preview (above) and manual fallback (below) are both shown. In production only one appears, depending on whether the link could be scraped.</div>
+        <div class="scrape-hint" id="scrape-hint">💡 The scraped preview shows your product details automatically. You can also describe it manually below.</div>
 
         <div class="fallback-divider"><span>Manual fallback</span></div>
 
@@ -797,32 +797,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 var step=0,busy=false,lastURL="",lastIsURL=true,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
-var DEMO_DATA={
-  score:87,verdict:"Strong seller potential",
-  product:{
-    title:"Layered Initial & Name Sign",author:"JCGil",
-    description:"Personalised wood-look PLA name sign with layered letters — modern, minimal, ideal for nurseries, desks and gifts.",
-    printTime:"6h 32m",material:"42g PLA",sourceHost:"makerworld.com/…",
-    tags:["Decor","Personalised","Gift"],
-    likes:5000,saves:12006,downloads:"16.6k",prints:"7.5k",
-    note:"<b>Top 3% on MakerWorld.</b> 16.6k downloads &amp; 7.5k prints - strong proof of demand."
-  },
-  market:{
-    searchVolume:22200,searchTrend:"↑ 58% YoY",
-    etsyListings:1428,etsyAvgPrice:"€22",
-    topSellerSales:3241,printTime:"~3.5 hrs",unitsPerDay:"≈2 units/day",
-    insight:"<b>Low competition, real demand.</b> Only 1,428 listings but 22k monthly searches - a clear gap in the market."
-  },
-  revenue:{
-    unitsPerMonth:42,grossRevenue:940,printCost:38,etsyFees:113,netProfit:789,sellPrice:"€22.40"
-  },
-  copyright:{
-    etsyBanRisk:"low",etsyBanReason:"No policy violations detected. Original design with no brand ties.",
-    legalRisk:"low",legalDesc:"No country-specific restrictions found for personalised name signs.",
-    copyrightRisk:"low",copyrightDesc:"Fully original design - no trademarks or IP issues identified.",
-    insight:"<b>Clear to sell.</b> This design has no IP conflicts and is safe to list worldwide."
-  }
-};
 var q=id=>document.getElementById(id);
 var ease=t=>1-Math.pow(1-t,3);
 
@@ -1170,17 +1144,15 @@ function runAnalysis(){
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(){
-    populate(DEMO_DATA);
     analysisComplete=true;
     if(waitingForAnalysis){
       waitingForAnalysis=false;
-      completeLoadingAnim(function(){
-        step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-        setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
-      });
-    } else if(step===5)setBtn2("See full analysis","",false);
-    else if(step===6)setBtn2("See winners & STL library","",false);
-    else if(step===7)setBtn2("Check another print","dark",false);
+      if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+      if(q("loading-overlay"))q("loading-overlay").style.display="none";
+    }
+    reset();
+    verdict("error","Something went wrong. Please try again.");
+    q("vbar").style.display="";
   });
 
   /* Immediately move to email gate — user fills email while scrape runs */

@@ -217,21 +217,48 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .res-sec-hd{display:flex;align-items:center;gap:7px;margin-bottom:10px;padding:7px 0 8px;border-bottom:1.5px solid var(--line)}
 .res-sec-ico{font-size:14px}
 .res-sec-lbl{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.02em;color:var(--ink)}
+
+/* Scraped product card (step 1) */
+.scrape-card{border:1.5px solid rgba(21,128,61,.25);border-radius:11px;padding:11px;margin-bottom:12px;background:linear-gradient(135deg,#f0fdf4,#fafafa)}
+.scrape-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.scrape-eye{font-size:9px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif}
+.scrape-src{font-size:9px;color:var(--ink3);font-family:"DM Mono",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.scrape-row{display:grid;grid-template-columns:92px 1fr;gap:10px}
+.scrape-img{width:92px;height:92px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.scrape-img img{width:100%;height:100%;object-fit:cover;display:block}
+.scrape-body{min-width:0}
+.scrape-title{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.25;margin-bottom:3px}
+.scrape-desc{font-size:10.5px;color:var(--ink2);line-height:1.42;margin-bottom:7px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.scrape-facts{display:flex;gap:5px;flex-wrap:wrap}
+.scrape-fact{font-size:9.5px;color:var(--ink2);font-weight:500;background:#fff;border:1px solid var(--line);border-radius:5px;padding:3px 6px;font-family:"DM Mono",sans-serif;display:inline-flex;align-items:center;gap:3px}
+.scrape-fact b{color:var(--ink);font-weight:700}
+.scrape-note{font-size:10px;color:var(--ink3);margin-top:9px;line-height:1.4;padding-top:9px;border-top:1px dashed var(--line)}
+.scrape-hint{font-size:10px;color:var(--ink3);background:#fff7ed;border:1px dashed rgba(255,92,0,.3);border-radius:8px;padding:7px 10px;margin-bottom:12px;line-height:1.45}
+.fallback-divider{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.fallback-divider::before,.fallback-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.fallback-divider span{font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.09em;font-family:"DM Mono",sans-serif;white-space:nowrap}
 </style>
 </head>
 <body>
 <div class="phone">
   <div class="hdr">
-    <div id="hero-text" style="padding:6px 0 10px;text-align:center">
-      <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:4px">Market · Revenue · Legal</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.05;margin-bottom:4px">Will your 3D print sell on Etsy?</div>
-      <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a product link <b style="color:var(--ink2)">or describe your idea</b> - we check demand, profit &amp; legal risk in seconds.</div>
+    <div id="submit-block">
+      <div id="hero-text" style="padding:6px 0 10px;text-align:center">
+        <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:4px">Market · Revenue · Legal</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1.05;margin-bottom:4px">Will your 3D print sell on Etsy?</div>
+        <div style="font-size:11.5px;color:var(--ink3);line-height:1.45">Paste a product link <b style="color:var(--ink2)">or describe your idea</b> - we check demand, profit &amp; legal risk in seconds.</div>
+      </div>
+      <div class="url-row">
+        <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
+      </div>
+      <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.6">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Idea: <span style="font-style:italic">"custom name wall sign in wood-look PLA"</span></div>
+      <button class="btn" id="btn" style="margin-top:4px;margin-bottom:2px">
+        <div class="spin" id="sp" style="display:none"></div>
+        <span id="bl">Check this print</span>
+        <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
     </div>
-    <div class="url-row">
-      <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-      <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
-    </div>
-    <div style="font-size:10px;color:var(--ink3);padding:2px 2px 5px;line-height:1.6">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Idea: <span style="font-style:italic">"custom name wall sign in wood-look PLA"</span></div>
     <div class="vbar" id="vbar">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
@@ -241,7 +268,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       </div>
     </div>
     <div class="dots" id="dots" style="display:none">
-      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div>
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div>
     </div>
   </div>
 
@@ -250,12 +277,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 
       <!-- STEP 0 -->
       <div class="panel">
-        <button class="btn" id="btn" style="margin-bottom:10px">
-          <div class="spin" id="sp" style="display:none"></div>
-          <span id="bl">Check this print</span>
-          <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </button>
-
         <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;opacity:.65">
           <span style="font-size:9px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
           <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:15px;object-fit:contain">
@@ -351,6 +372,31 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
       <!-- STEP 1: Questions Q1 -->
       <div class="panel">
         <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Step 1 of 2</span></div>
+
+        <!-- Scraped product data (shown when the link is recognized) -->
+        <div class="scrape-card" id="scrape-card">
+          <div class="scrape-head">
+            <span class="scrape-eye">✓ Scraped from link</span>
+            <span class="scrape-src" id="scrape-src">makerworld.com/…</span>
+          </div>
+          <div class="scrape-row">
+            <div class="scrape-img" id="scrape-img-wrap"><span id="scrape-img-ph">🏷️</span><img id="scrape-img" alt="" style="display:none"></div>
+            <div class="scrape-body">
+              <div class="scrape-title" id="scrape-title">Layered Initial &amp; Name Sign</div>
+              <div class="scrape-desc" id="scrape-desc">Personalised wood-look PLA name sign with layered letters — modern, minimal, ideal for nurseries, desks and gifts.</div>
+              <div class="scrape-facts">
+                <div class="scrape-fact">⏱ <b id="scrape-time">6h 32m</b></div>
+                <div class="scrape-fact">🧵 <b id="scrape-mat">42g PLA</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="scrape-note">Data auto-filled from the listing. Correct it below if anything's off.</div>
+        </div>
+
+        <!-- Demo note: both modes are visible so you can test each flow -->
+        <div class="scrape-hint" id="scrape-hint">💡 <b>Demo:</b> scraped preview (above) and manual fallback (below) are both shown. In production only one appears, depending on whether the link could be scraped.</div>
+
+        <div class="fallback-divider"><span>Manual fallback</span></div>
 
         <div class="q-block">
           <div class="q-lbl">What category?</div>
@@ -489,6 +535,31 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
         </div>
       </div>
 
+      <!-- LEGAL & COPYRIGHT CHECK -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
+        <div class="cp-banner" id="cp-status">✅ No legal issues found — safe to sell</div>
+        <div class="cp-grid">
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+            <div class="cp-clabel">Etsy ban risk</div>
+            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+            <div class="cp-clabel">Legal risk</div>
+            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+            <div class="cp-clabel">Copyright / IP</div>
+            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
+          </div>
+        </div>
+        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
+        <div style="font-size:10.5px;color:var(--ink3);text-align:center;margin-top:14px;line-height:1.5">Next up: full market, revenue &amp; profit analysis.</div>
+      </div>
+
       <!-- RESULTS: Consolidated analysis -->
       <div class="panel">
         <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
@@ -539,26 +610,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
             <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3"></span></div>
           </div>
         </div>
-        <div class="res-sec-hd" style="margin-top:16px"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright</span></div>
-        <div class="cp-banner" id="cp-status">✅ No legal issues found — safe to sell</div>
-        <div class="cp-grid">
-          <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
-            <div class="cp-clabel">Etsy ban risk</div>
-            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
-          </div>
-          <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
-            <div class="cp-clabel">Legal risk</div>
-            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
-          </div>
-          <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
-            <div class="cp-clabel">Copyright / IP</div>
-            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
-          </div>
-        </div>
-        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
       </div>
 
     </div>
@@ -582,6 +633,8 @@ var DEMO_DATA={
   score:87,verdict:"Strong seller potential",
   product:{
     title:"Layered Initial & Name Sign",author:"JCGil",
+    description:"Personalised wood-look PLA name sign with layered letters — modern, minimal, ideal for nurseries, desks and gifts.",
+    printTime:"6h 32m",material:"42g PLA",sourceHost:"makerworld.com/…",
     tags:["Decor","Personalised","Gift"],
     likes:5000,saves:12006,downloads:"16.6k",prints:"7.5k",
     note:"<b>Top 3% on MakerWorld.</b> 16.6k downloads &amp; 7.5k prints - strong proof of demand."
@@ -637,7 +690,7 @@ function startPulse(){
 }
 function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}}
 
-function dots(s){for(var i=0;i<5;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function dots(s){for(var i=0;i<6;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
 function verdict(state,msg){
@@ -683,6 +736,13 @@ function populate(data){
   if(!lastIsURL&&q("idea-desc-el"))q("idea-desc-el").textContent=lastURL;
   if(q("step1-st"))q("step1-st").textContent=lastIsURL?"The product":"Your idea";
   if(q("step1-sh"))q("step1-sh").textContent=lastIsURL?"What we found":"Estimated analysis";
+  /* Scraped card on step 1 */
+  if(q("scrape-title")&&p.title)q("scrape-title").textContent=p.title;
+  if(q("scrape-desc")&&p.description)q("scrape-desc").textContent=p.description;
+  if(q("scrape-time")&&p.printTime)q("scrape-time").textContent=p.printTime;
+  if(q("scrape-mat")&&p.material)q("scrape-mat").textContent=p.material;
+  if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||p.url||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
+  if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
   var buEl=document.querySelector(".bu");
   if(buEl)buEl.textContent=(p.url||lastURL).replace(/^https?:\/\//,"");
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
@@ -790,7 +850,10 @@ function analyze(){
   lastURL=input;
   lastIsURL=isURL(input);
   q("dots").style.display="flex";
-  q("hero-text").style.display="none";
+  q("submit-block").style.display="none";
+  /* Scrape card only makes sense for URL input — hide for free-text ideas */
+  if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
+  if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
   step=1;dots(1);slide(1);
   showFooter(true);
   setBtn2("Continue →","",false);
@@ -816,11 +879,13 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
-    if(step===4)setBtn2("Check another print","dark",false);
+    if(step===4)setBtn2("See full analysis →","",false);
+    else if(step===5)setBtn2("Check another print","dark",false);
   }).catch(function(){
     populate(DEMO_DATA);
     analysisComplete=true;
-    if(step===4)setBtn2("Check another print","dark",false);
+    if(step===4)setBtn2("See full analysis →","",false);
+    else if(step===5)setBtn2("Check another print","dark",false);
   });
 
   /* Immediately move to email gate — user fills email while scrape runs */
@@ -840,7 +905,7 @@ function reset(){
   if(q("step1-sh"))q("step1-sh").textContent="What we found";
   dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
-  q("ui").value="";verdict("idle");q("hero-text").style.display="";
+  q("ui").value="";verdict("idle");q("submit-block").style.display="";
   showFooter(false);setBtn0("Check this print",false);
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
@@ -897,14 +962,15 @@ q("btn-email").addEventListener("click",function(){
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
-  /* Reveal results */
-  step=4;dots(4);slide(4);showFooter(true);if(analysisComplete){setBtn2("Check another print","dark",false);}else{setBtn2("Loading results…","",true);}revealScore();
+  /* Advance to legal & copyright check — analysis follows */
+  step=4;dots(4);slide(4);showFooter(true);if(analysisComplete){setBtn2("See full analysis →","",false);}else{setBtn2("Running legal check…","",true);}revealScore();
 });
 
 q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){step=2;dots(1);slide(2);setBtn2("Start analysis →","",false);return;}
   if(step===2){busy=true;runAnalysis();return;}
+  if(step===4){step=5;dots(5);slide(5);setBtn2("Check another print","dark",false);return;}
   else{reset();}
 });
 

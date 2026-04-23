@@ -1133,13 +1133,9 @@ function analyze(){
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
-  /* Scrape card only makes sense for URL input — hide for free-text ideas */
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
-  step=1;dots(1);slide(1);
-  showFooter(true);
-  setBtn2("Continue","",false);
-  busy=false;
+  runAnalysis();
 }
 
 function runAnalysis(){

@@ -976,7 +976,6 @@ function analyze(){
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
-  q("vbar").style.display="";
   /* Scrape card only makes sense for URL input — hide for free-text ideas */
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
@@ -1148,7 +1147,7 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   /* Advance to legal & copyright check — analysis follows */
-  step=5;dots(5);slide(5);showFooter(true);if(analysisComplete){setBtn2("See full analysis →","",false);}else{setBtn2("Running legal check…","",true);}revealScore();populateLegalCerts();
+  step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";if(analysisComplete){setBtn2("See full analysis →","",false);}else{setBtn2("Running legal check…","",true);}revealScore();populateLegalCerts();
 });
 
 q("btn2").addEventListener("click",function(){

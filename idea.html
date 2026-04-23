@@ -419,27 +419,26 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Step 1 of 2</span></div>
 
         <!-- Scraped product data (shown when the link is recognized) -->
-        <div class="scrape-card" id="scrape-card">
+        <div class="scrape-card" id="scrape-card" style="display:none">
           <div class="scrape-head">
             <span class="scrape-eye">✓ Scraped from link</span>
-            <span class="scrape-src" id="scrape-src">makerworld.com/…</span>
+            <span class="scrape-src" id="scrape-src"></span>
           </div>
           <div class="scrape-row">
             <div class="scrape-img" id="scrape-img-wrap"><span id="scrape-img-ph">🏷️</span><img id="scrape-img" alt="" style="display:none"></div>
             <div class="scrape-body">
-              <div class="scrape-title" id="scrape-title">Layered Initial &amp; Name Sign</div>
-              <div class="scrape-desc" id="scrape-desc">Personalised wood-look PLA name sign with layered letters  -  modern, minimal, ideal for nurseries, desks and gifts.</div>
-              <div class="scrape-facts">
-                <div class="scrape-fact">⏱ <b id="scrape-time">6h 32m</b></div>
-                <div class="scrape-fact">🧵 <b id="scrape-mat">42g PLA</b></div>
+              <div class="scrape-title" id="scrape-title">Fetching product data…</div>
+              <div class="scrape-desc" id="scrape-desc"></div>
+              <div class="scrape-facts" id="scrape-facts" style="display:none">
+                <div class="scrape-fact">⏱ <b id="scrape-time"></b></div>
+                <div class="scrape-fact">🧵 <b id="scrape-mat"></b></div>
               </div>
             </div>
           </div>
           <div class="scrape-note">Data auto-filled from the listing. Correct it below if anything's off.</div>
         </div>
 
-        <!-- Demo note: both modes are visible so you can test each flow -->
-        <div class="scrape-hint" id="scrape-hint">💡 The scraped preview shows your product details automatically. You can also describe it manually below.</div>
+        <div class="scrape-hint" id="scrape-hint" style="display:none">💡 The scraped preview shows your product details automatically. You can also describe it manually below.</div>
 
         <div class="fallback-divider"><span>Manual fallback</span></div>
 
@@ -658,25 +657,25 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
         <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
         <div class="browser" id="browser-el">
-          <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu">makerworld.com/en/models/2061852</div></div>
+          <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu"></div></div>
           <div class="bbody">
-            <div class="bimg"><img src="data:image/jpeg;base64,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" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+            <div class="bimg"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none"></div>
             <div>
-              <div class="btitle" id="btitle-el">Layered Initial &amp; Name Sign</div>
-              <div class="bauth"><span id="bauth-el">JCGil</span> <span class="bfol">Follow</span></div>
-              <div class="btags" id="btags-el"><span class="btag">Decor</span><span class="btag">Personal</span></div>
+              <div class="btitle" id="btitle-el"></div>
+              <div class="bauth"><span id="bauth-el"></span> <span class="bfol">Follow</span></div>
+              <div class="btags" id="btags-el"></div>
               <div class="sg4">
-                <div class="si2"><div class="sk">👍 Likes</div><div class="sv hi" id="sv0">5,000</div></div>
-                <div class="si2"><div class="sk">🔖 Saves</div><div class="sv hi" id="sv1">12,006</div></div>
-                <div class="si2"><div class="sk">⬇ Downloads</div><div class="sv" id="sv2">16.6k</div></div>
-                <div class="si2"><div class="sk">🖨 Prints</div><div class="sv" id="sv3">7.5k</div></div>
+                <div class="si2"><div class="sk">👍 Likes</div><div class="sv hi" id="sv0"></div></div>
+                <div class="si2"><div class="sk">🔖 Saves</div><div class="sv hi" id="sv1"></div></div>
+                <div class="si2"><div class="sk">⬇ Downloads</div><div class="sv" id="sv2"></div></div>
+                <div class="si2"><div class="sk">🖨 Prints</div><div class="sv" id="sv3"></div></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="note" style="margin-bottom:16px">
+        <div class="note" id="note-div" style="margin-bottom:16px;display:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span id="note-text"><b>Top 3% on MakerWorld.</b> 16.6k downloads &amp; 7.5k prints strong proof of demand.</span>
+          <span id="note-text"></span>
         </div>
         <div class="res-sec-hd"><span class="res-sec-ico">📊</span><span class="res-sec-lbl">Market Demand</span></div>
         <div class="sgrid">
@@ -1018,12 +1017,18 @@ function populate(data){
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
   if(q("bauth-el"))q("bauth-el").textContent=p.author||"-";
   if(q("btags-el")&&p.tags)q("btags-el").innerHTML=(p.tags||[]).map(function(t){return'<span class="btag">'+t+'</span>';}).join("");
-  if(p.image){var img=document.querySelector(".bimg img");if(img)img.src=p.image;}
+  if(p.image){var img=document.querySelector(".bimg img");if(img){img.src=p.image;img.style.display="";}}
   if(q("sv0"))q("sv0").textContent=fmt(p.likes);
   if(q("sv1"))q("sv1").textContent=fmt(p.saves);
   if(q("sv2"))q("sv2").textContent=p.downloads||"-";
   if(q("sv3"))q("sv3").textContent=p.prints||"-";
-  if(q("note-text"))q("note-text").innerHTML=p.note||"";
+  if(q("note-text")&&p.note){q("note-text").innerHTML=p.note;if(q("note-div"))q("note-div").style.display="";}
+  /* Also update scrape-card with real data from full analysis */
+  if(p.title&&q("scrape-title"))q("scrape-title").textContent=p.title;
+  if(p.description&&q("scrape-desc"))q("scrape-desc").textContent=p.description;
+  if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+  if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+  if(p.sourceHost&&q("scrape-src"))q("scrape-src").textContent=p.sourceHost.replace(/^https?:\/\//,"").slice(0,48);
 
   var m=data.market||{};
   if(q("msv0"))q("msv0").textContent=m.searchVolume!==undefined?fmt(m.searchVolume)+" /mo":"-";
@@ -1144,7 +1149,19 @@ function analyze(){
         method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({url:lastURL})
       }).then(function(r){return r.ok?r.json():null;})
-        .then(function(d){if(d&&d.productContext)lastProductContext=d.productContext;})
+        .then(function(d){
+          if(!d)return;
+          if(d.productContext)lastProductContext=d.productContext;
+          if(d.product){
+            var p=d.product;
+            if(p.title&&q("scrape-title"))q("scrape-title").textContent=p.title;
+            if(p.description&&q("scrape-desc"))q("scrape-desc").textContent=p.description;
+            if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+            if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+            if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
+            if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
+          }
+        })
         .catch(function(){});
       setTimeout(function(){
         step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;

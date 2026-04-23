@@ -284,13 +284,12 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div id="hero-text" style="padding:6px 0 10px;text-align:center">
         <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.18em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Make money with 3d printing</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:1;letter-spacing:.01em;margin-bottom:8px">Will your 3D print<br>actually sell?</div>
-        <div style="font-size:14px;color:var(--ink3);line-height:1.5">Paste a product link <b style="color:var(--ink2)">or describe your idea</b>  -  we check demand, profit &amp; legal risk in seconds.</div>
+        <div style="font-size:14px;color:var(--ink3);line-height:1.5">Paste a link to a 3d model  -  we check demand, profit &amp; legal risk in seconds.</div>
       </div>
       <div class="url-row">
         <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
       </div>
-      <div style="font-size:10.5px;color:var(--ink3);padding:3px 2px 6px;line-height:1.55">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span></div>
     </div>
     <div class="vbar" id="vbar" style="display:none">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
@@ -360,7 +359,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <span style="font-size:15px;flex-shrink:0;margin-top:1px">🚨</span>
           <div>
             <div style="font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:2px">1 in 4 ideas flags a legal or IP risk</div>
-            <div style="font-size:11px;color:#7f1d1d;line-height:1.45">Selling a flagged design can get your Etsy shop banned or land you in a lawsuit  -  we catch it before you list.</div>
+            <div style="font-size:11px;color:#7f1d1d;line-height:1.45">Selling a flagged design can get your Etsy shop banned or land you in a lawsuit.</div>
           </div>
         </div>
 
@@ -417,30 +416,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- STEP 1: Questions Q1 -->
       <div class="panel">
         <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Step 1 of 2</span></div>
-
-        <!-- Scraped product data (shown when the link is recognized) -->
-        <div class="scrape-card" id="scrape-card" style="display:none">
-          <div class="scrape-head">
-            <span class="scrape-eye">✓ Scraped from link</span>
-            <span class="scrape-src" id="scrape-src"></span>
-          </div>
-          <div class="scrape-row">
-            <div class="scrape-img" id="scrape-img-wrap"><span id="scrape-img-ph">🏷️</span><img id="scrape-img" alt="" style="display:none"></div>
-            <div class="scrape-body">
-              <div class="scrape-title" id="scrape-title">Fetching product data…</div>
-              <div class="scrape-desc" id="scrape-desc"></div>
-              <div class="scrape-facts" id="scrape-facts" style="display:none">
-                <div class="scrape-fact">⏱ <b id="scrape-time"></b></div>
-                <div class="scrape-fact">🧵 <b id="scrape-mat"></b></div>
-              </div>
-            </div>
-          </div>
-          <div class="scrape-note">Data auto-filled from the listing. Correct it below if anything's off.</div>
-        </div>
-
-        <div class="scrape-hint" id="scrape-hint" style="display:none">💡 The scraped preview shows your product details automatically. You can also describe it manually below.</div>
-
-        <div class="fallback-divider"><span>Manual fallback</span></div>
 
         <div class="q-block">
           <div class="q-lbl">What category?</div>
@@ -1005,13 +980,6 @@ function populate(data){
   if(!lastIsURL&&q("idea-desc-el"))q("idea-desc-el").textContent=lastURL;
   if(q("step1-st"))q("step1-st").textContent=lastIsURL?"The product":"Your idea";
   if(q("step1-sh"))q("step1-sh").textContent=lastIsURL?"What we found":"Estimated analysis";
-  /* Scraped card on step 1 */
-  if(q("scrape-title")&&p.title)q("scrape-title").textContent=p.title;
-  if(q("scrape-desc")&&p.description)q("scrape-desc").textContent=p.description;
-  if(q("scrape-time")&&p.printTime)q("scrape-time").textContent=p.printTime;
-  if(q("scrape-mat")&&p.material)q("scrape-mat").textContent=p.material;
-  if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||p.url||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
-  if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
   var buEl=document.querySelector(".bu");
   if(buEl)buEl.textContent=(p.url||lastURL).replace(/^https?:\/\//,"");
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
@@ -1023,13 +991,6 @@ function populate(data){
   if(q("sv2"))q("sv2").textContent=p.downloads||"-";
   if(q("sv3"))q("sv3").textContent=p.prints||"-";
   if(q("note-text")&&p.note){q("note-text").innerHTML=p.note;if(q("note-div"))q("note-div").style.display="";}
-  /* Also update scrape-card with real data from full analysis */
-  if(p.title&&q("scrape-title"))q("scrape-title").textContent=p.title;
-  if(p.description&&q("scrape-desc"))q("scrape-desc").textContent=p.description;
-  if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-  if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-  if(p.sourceHost&&q("scrape-src"))q("scrape-src").textContent=p.sourceHost.replace(/^https?:\/\//,"").slice(0,48);
-
   var m=data.market||{};
   if(q("msv0"))q("msv0").textContent=m.searchVolume!==undefined?fmt(m.searchVolume)+" /mo":"-";
   if(q("msub0"))q("msub0").textContent=m.searchTrend||"";
@@ -1128,8 +1089,6 @@ function analyze(){
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
-  if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
-  if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
 
   if(lastIsURL){
     q("vbar").style.display="";
@@ -1141,34 +1100,8 @@ function analyze(){
     animRing(0.85,1300,"#f59e0b").then(function(){
       return animRing(1,450,"#15803d");
     }).then(function(){
-      q("vbar").className="vbar done";
-      q("ve").textContent="Link verified";
-      q("vt").textContent="Ready to analyze";
-      q("vd").textContent="Ready to analyze";
-      fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({url:lastURL})
-      }).then(function(r){return r.ok?r.json():null;})
-        .then(function(d){
-          if(!d||!d.product||!d.product.title){
-            if(q("scrape-card"))q("scrape-card").style.display="none";
-            if(q("scrape-hint"))q("scrape-hint").style.display="none";
-            if(d&&d.productContext)lastProductContext=d.productContext;
-            return;
-          }
-          if(d.productContext)lastProductContext=d.productContext;
-          var p=d.product;
-          if(q("scrape-title"))q("scrape-title").textContent=p.title;
-          if(q("scrape-desc"))q("scrape-desc").textContent=p.description||"";
-          if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-          if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-          if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
-          if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
-        })
-        .catch(function(){if(q("scrape-card"))q("scrape-card").style.display="none";});
-      setTimeout(function(){
-        step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
-      },500);
+      q("vbar").style.display="none";
+      step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
     });
   } else {
     step=1;dots(1);slide(1);
@@ -1188,7 +1121,7 @@ function runAnalysis(){
   if(lastProductContext)base.productContext=lastProductContext;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea2",{
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   }).then(function(resp){

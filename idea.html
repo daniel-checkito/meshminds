@@ -1176,8 +1176,8 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Next","",false);return;}
   if(step===2){step=3;dots(3);slide(3);setBtn2("Start analysis","",false);return;}
   if(step===3){busy=true;runAnalysis();return;}
-  if(step===5){step=6;dots(6);slide(6);setBtn2("See winners & STL library","",false);return;}
-  if(step===6){step=7;dots(7);slide(7);setBtn2("Check another print","dark",false);return;}
+  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);return;}
+  if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("Check another print","dark",false);return;}
   else{reset();}
 });
 

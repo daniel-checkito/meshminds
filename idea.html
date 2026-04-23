@@ -1135,7 +1135,14 @@ function analyze(){
   q("btn").style.display="none";
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
-  runAnalysis();
+  if(lastIsURL){
+    step=1;dots(1);slide(1);
+    showFooter(true);
+    setBtn2("Continue","",false);
+    busy=false;
+  } else {
+    runAnalysis();
+  }
 }
 
 function runAnalysis(){

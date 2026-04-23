@@ -1129,7 +1129,13 @@ function runAnalysis(){
     method:"POST",headers:{"Content-Type":"application/json"},
     body:JSON.stringify(payload)
   }).then(function(resp){
-    if(!resp.ok)throw new Error("HTTP "+resp.status);
+    if(!resp.ok){
+      return resp.text().then(function(text){
+        var msg="HTTP "+resp.status;
+        try{var j=JSON.parse(text);if(j.message||j.error)msg=j.message||j.error;}catch(e){}
+        throw new Error(msg);
+      });
+    }
     return resp.json();
   }).then(function(data){
     populate(data);
@@ -1143,15 +1149,22 @@ function runAnalysis(){
     } else if(step===5)setBtn2("See full analysis","",false);
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
-  }).catch(function(){
-    analysisComplete=true;
-    if(waitingForAnalysis){
-      waitingForAnalysis=false;
-      if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
-      if(q("loading-overlay"))q("loading-overlay").style.display="none";
+  }).catch(function(err){
+    var saved=lastURL;
+    var msg="Could not complete the analysis. Please try again.";
+    if(err&&err.message){
+      if(/^HTTP 5/.test(err.message))msg="Analysis service error ("+err.message+") — please try again in a moment.";
+      else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+") — check your link and try again.";
+      else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the analysis service — check your connection and try again.";
+      else msg=err.message;
     }
+    waitingForAnalysis=false;
+    if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+    loadingProgress=0;
+    if(q("loading-overlay"))q("loading-overlay").style.display="none";
     reset();
-    verdict("error","Something went wrong. Please try again.");
+    if(q("ui"))q("ui").value=saved;
+    verdict("error",msg);
     q("vbar").style.display="";
   });
 

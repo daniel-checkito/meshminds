@@ -1103,6 +1103,25 @@ function analyze(){
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
 }
 
+function showGateError(msg){
+  var errEl=q("gate-error");
+  if(!errEl){
+    errEl=document.createElement("div");
+    errEl.id="gate-error";
+    errEl.style.cssText="margin-top:12px;background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:10px 13px;font-size:12.5px;color:#b91c1c;line-height:1.5;text-align:center";
+    var gf=q("email-panel").querySelector(".gate-form");
+    if(gf)gf.appendChild(errEl);
+  }
+  errEl.textContent=msg;
+  errEl.style.display="";
+  if(q("loading-overlay"))q("loading-overlay").style.display="none";
+  if(q("gate-head"))q("gate-head").style.display="";
+  if(q("tease-grid"))q("tease-grid").style.display="";
+  if(q("gate-form"))q("gate-form").style.display="";
+  if(q("bl-email"))q("bl-email").textContent="Try again →";
+  if(q("btn-email"))q("btn-email").disabled=false;
+}
+
 function runAnalysis(){
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
@@ -1110,11 +1129,12 @@ function runAnalysis(){
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  if(lastProductContext)base.productContext=lastProductContext;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-    method:"POST",headers:{"Content-Type":"application/json"},
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    keepalive:true,
     body:JSON.stringify(payload)
   }).then(function(resp){
     if(!resp.ok){
@@ -1128,6 +1148,7 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
+    var errEl=q("gate-error");if(errEl)errEl.style.display="none";
     if(waitingForAnalysis){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
@@ -1138,25 +1159,20 @@ function runAnalysis(){
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(err){
-    var saved=lastURL;
-    var msg="Could not complete the analysis. Please try again.";
+    var msg="Analysis failed – please try again.";
     if(err&&err.message){
-      if(/^HTTP 5/.test(err.message))msg="Analysis service error ("+err.message+")  -  please try again in a moment.";
-      else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+")  -  check your link and try again.";
-      else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the analysis service  -  check your connection and try again.";
+      if(/^HTTP 5/.test(err.message))msg="Service error ("+err.message+") – try again in a moment.";
+      else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+") – check your link.";
+      else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
       else msg=err.message;
     }
     waitingForAnalysis=false;
     if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
     loadingProgress=0;
-    if(q("loading-overlay"))q("loading-overlay").style.display="none";
-    reset();
-    if(q("ui"))q("ui").value=saved;
-    verdict("error",msg);
-    q("vbar").style.display="";
+    showGateError(msg);
   });
 
-  /* Immediately move to email gate  -  user fills email while scrape runs */
+  /* Immediately move to email gate – user fills email while analysis runs */
   step=4;dots(4);slide(4);
   showFooter(false);
   busy=false;
@@ -1294,6 +1310,16 @@ q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();
 if(q("price-slider"))q("price-slider").addEventListener("input",function(){recalcRevenue(parseInt(this.value));});
 
 q("btn-email").addEventListener("click",function(){
+  /* Retry path: analysis failed, user clicks "Try again →" */
+  var errEl=q("gate-error");
+  if(errEl&&errEl.style.display!=="none"){
+    errEl.style.display="none";
+    if(q("bl-email"))q("bl-email").textContent="Get my free report →";
+    busy=true;
+    runAnalysis();
+    return;
+  }
+
   var email=q("email-inp").value.trim();
   if(!email||!email.includes("@")){
     q("email-inp").style.borderColor="var(--bad)";
@@ -1304,6 +1330,7 @@ q("btn-email").addEventListener("click",function(){
   /* Save email - fire and forget */
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",headers:{"Content-Type":"application/json"},
+    keepalive:true,
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   if(analysisComplete){

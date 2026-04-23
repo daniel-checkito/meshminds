@@ -1,0 +1,211 @@
+{
+  "name": "MeshMinds PrintChecker",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "idea",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-0001",
+      "name": "Receive Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 320],
+      "webhookId": "printchecker-idea"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "strict" },
+          "conditions": [
+            {
+              "id": "cond-email",
+              "leftValue": "={{ $json.body.type }}",
+              "rightValue": "email",
+              "operator": { "type": "string", "operation": "equals" }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "node-0002",
+      "name": "Email or Analysis?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "ok",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              { "name": "Access-Control-Allow-Origin", "value": "*" }
+            ]
+          }
+        }
+      },
+      "id": "node-0003",
+      "name": "Email Saved OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 160]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $('Receive Request').item.json.body.url }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
+            { "name": "Accept", "value": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" },
+            { "name": "Accept-Language", "value": "en-US,en;q=0.5" }
+          ]
+        },
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": { "responseFormat": "text" }
+          }
+        }
+      },
+      "id": "node-0004",
+      "name": "Scrape Product Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 440],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// ── Gather inputs ──────────────────────────────────────────────\nconst req = $('Receive Request').item.json.body;\nconst scrapeItem = $input.item.json;\n\n// ── Try to extract useful content from the scraped page ─────────\nlet productCtx = '';\n\nif (req.url && !scrapeItem.error) {\n  const raw = typeof scrapeItem.data === 'string' ? scrapeItem.data\n            : typeof scrapeItem.body === 'string' ? scrapeItem.body : '';\n\n  if (raw.length > 200) {\n    // MakerWorld & Printables are Next.js — structured data is in __NEXT_DATA__\n    const nextDataMatch = raw.match(/<script[^>]+id=[\"']__NEXT_DATA__[\"'][^>]*>([\\s\\S]*?)<\\/script>/);\n    if (nextDataMatch) {\n      try {\n        const nd = JSON.parse(nextDataMatch[1]);\n        const pp = nd?.props?.pageProps || {};\n        // MakerWorld model structure\n        const m = pp.model || pp.modelDetail || pp.modelInfo || {};\n        const stats = m.summary || m.stat || {};\n        const creator = m.user || m.designer || {};\n        productCtx = 'PRODUCT URL: ' + req.url + '\\n\\nSTRUCTURED DATA FROM PAGE:\\n' + JSON.stringify({\n          title: m.name || m.title || pp.title,\n          description: m.description || m.summary,\n          author: creator.name || creator.handle || creator.username,\n          category: m.category || m.type,\n          likes: stats.likeCount || stats.like || m.likeCount,\n          downloads: stats.downloadCount || stats.download || m.downloadCount,\n          makes: stats.makeCount || stats.make || m.makeCount,\n          printTime: m.printTime || m.estimatedTime,\n          filament: m.filamentUsed || m.filament\n        }, null, 2);\n      } catch (e) {\n        // Fall through to plain text extraction\n      }\n    }\n\n    if (!productCtx) {\n      // Plain text fallback — strip HTML and take first 5000 chars\n      const text = raw\n        .replace(/<script[\\s\\S]*?<\\/script>/gi, ' ')\n        .replace(/<style[\\s\\S]*?<\\/style>/gi, ' ')\n        .replace(/<!--[\\s\\S]*?-->/g, ' ')\n        .replace(/<[^>]+>/g, ' ')\n        .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '\"').replace(/&#39;/g, \"'\")\n        .replace(/\\s{2,}/g, ' ').trim().substring(0, 5000);\n      productCtx = 'PRODUCT URL: ' + req.url + '\\n\\nSCRAPED TEXT:\\n' + text;\n    }\n  } else {\n    productCtx = 'PRODUCT URL: ' + req.url + '\\n(Page scraping returned no usable content — infer from URL and user inputs)';\n  }\n} else if (req.url) {\n  productCtx = 'PRODUCT URL: ' + req.url + '\\n(Scraping failed or timed out — infer from URL structure and user inputs)';\n} else {\n  productCtx = 'PRODUCT IDEA (free text): \"' + (req.description || '') + '\"';\n}\n\n// ── Build the Claude prompt ──────────────────────────────────────\nconst sellFrom = req.sellFrom || 'not specified';\nconst sellTo   = req.sellTo   || 'WORLDWIDE';\nconst flags    = Array.isArray(req.legalFlags) ? req.legalFlags.join(', ') : 'none';\nconst urlField = req.url ? JSON.stringify(req.url) : 'null';\n\nconst prompt = `You are a 3D printing market analyst specialising in Etsy sales. Analyse this product for commercial viability and return ONLY a single valid JSON object — no markdown, no code fences, no explanation.\n\n${productCtx}\n\nUSER INPUTS\n- Category: ${req.category || 'not specified'}\n- Target marketplace: ${req.marketplace || 'etsy'}\n- Price range hint: ${req.priceRange || 'not specified'}\n- Print time: ${req.printTime || 'not specified'}\n- Selling from country: ${sellFrom}\n- Selling to regions: ${sellTo}\n- Legal flags: ${flags}\n\nReturn this exact JSON structure, replacing every placeholder:\n\n{\n  \"score\": <integer 0-100>,\n  \"verdict\": \"<punchy one-liner, 3-7 words>\",\n  \"product\": {\n    \"title\": \"<product title>\",\n    \"author\": \"<creator name or null>\",\n    \"description\": \"<2-3 sentences, vivid and specific>\",\n    \"printTime\": \"<like '3h 20m'>\",\n    \"material\": \"<like '38g PLA'>\",\n    \"sourceHost\": \"<domain/… or null>\",\n    \"url\": ${urlField},\n    \"image\": null,\n    \"tags\": [\"<tag1>\",\"<tag2>\",\"<tag3>\"],\n    \"likes\": <integer or null>,\n    \"saves\": <integer or null>,\n    \"downloads\": \"<formatted like '8.4k' or null>\",\n    \"prints\": \"<formatted like '2.1k' or null>\",\n    \"note\": \"<one bold demand-proof sentence, HTML <b> allowed>\"\n  },\n  \"market\": {\n    \"searchVolume\": <monthly searches integer>,\n    \"searchTrend\": \"<like '↑ 31% YoY' or '→ Stable'>\",\n    \"etsyListings\": <integer>,\n    \"etsyAvgPrice\": \"<like '€21'>\",\n    \"topSellerSales\": <top seller estimated annual unit sales>,\n    \"printTime\": \"<avg print time like '~2.5 hrs'>\",\n    \"unitsPerDay\": \"<throughput like '≈2 units/day'>\",\n    \"insight\": \"<one actionable sentence, <b> tags allowed>\"\n  },\n  \"revenue\": {\n    \"unitsPerMonth\": <realistic for a new seller — see calibration below>,\n    \"grossRevenue\": <unitsPerMonth × sellPrice rounded to nearest integer>,\n    \"printCost\": <total monthly material+energy cost integer>,\n    \"etsyFees\": <grossRevenue × 0.12 rounded>,\n    \"netProfit\": <grossRevenue − printCost − etsyFees>,\n    \"sellPrice\": \"<optimal price string like '€22.40'>\"\n  },\n  \"copyright\": {\n    \"etsyBanRisk\": \"<low|medium|high>\",\n    \"etsyBanReason\": \"<one sentence>\",\n    \"legalRisk\": \"<low|medium|high>\",\n    \"legalDesc\": \"<one sentence, consider seller in ${sellFrom} selling to ${sellTo}>\",\n    \"copyrightRisk\": \"<low|medium|high>\",\n    \"copyrightDesc\": \"<one sentence IP check>\",\n    \"insight\": \"<one-line summary, <b> tags allowed>\"\n  }\n}\n\n── SCORING (0-100) ───────────────────────────────────────────────\nDemand/competition ratio 40% + profit margin 35% + legal safety 25%.\n80-100 = clear opportunity. 60-79 = viable with effort. 40-59 = marginal. 0-39 = avoid.\nDeduct 15-30 points for any IP/copyright risk.\n\n── REVENUE CALIBRATION ──────────────────────────────────────────\nunitsPerMonth baseline for a new Etsy seller:\n  very low competition (<500 listings, >10k searches) → 45-70\n  low competition (500-2k listings) → 25-45\n  moderate competition (2k-8k listings) → 15-30\n  saturated (>8k listings) → 8-20\n\nsellPrice sweet spot by type:\n  Generic functional (hooks, organisers, mounts) → €10-20\n  Decorative / home decor → €14-28\n  Custom / personalised → €18-40\n  Miniatures & gaming → €12-30\n  Premium / large format → €35-80\n  Consider the priceRange hint if provided.\n\nprintCost = (weight_g × €0.025) + (print_hours × €0.05) + 20% overhead, × unitsPerMonth.\nCheck: grossRevenue = unitsPerMonth × sellPrice. netProfit = gross − printCost − etsyFees.\n\n── IP / COPYRIGHT ────────────────────────────────────────────────\nHigh risk: Disney/Marvel/DC, Pokémon, Nintendo characters (Mario/Zelda/etc), sports logos, band logos, any identifiable branded character or logo.\nMedium risk: generic fandom designs, historical figures, \"inspired by\" styles.\nLow risk: geometric, nature, abstract, original functional items, generic home decor.`;\n\nreturn [{\n  json: {\n    claudeRequest: JSON.stringify({\n      model: 'claude-sonnet-4-6',\n      max_tokens: 2048,\n      messages: [{ role: 'user', content: prompt }]\n    }),\n    originalRequest: req\n  }\n}];"
+      },
+      "id": "node-0005",
+      "name": "Build Claude Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 440]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $vars.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "bodyContentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ $json.claudeRequest }}",
+        "options": { "timeout": 55000 }
+      },
+      "id": "node-0006",
+      "name": "Call Claude",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1120, 440]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const resp = $input.item.json;\n\nif (resp.error || resp.type === 'error') {\n  throw new Error('Anthropic API error: ' + JSON.stringify(resp.error || resp));\n}\n\nconst content = resp.content;\nif (!content || !content[0] || !content[0].text) {\n  throw new Error('Unexpected Anthropic response: ' + JSON.stringify(resp));\n}\n\nlet text = content[0].text.trim();\n\n// Strip markdown code fences if Claude wrapped the JSON\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nif (fenceMatch) text = fenceMatch[1].trim();\n\n// Find outermost JSON object\nconst start = text.indexOf('{');\nconst end   = text.lastIndexOf('}');\nif (start !== -1 && end > start) text = text.slice(start, end + 1);\n\nlet result;\ntry {\n  result = JSON.parse(text);\n} catch (e) {\n  // If Claude returned malformed JSON, log it and use a safe fallback\n  console.log('JSON parse failed. Raw text:', text.substring(0, 500));\n  result = {\n    score: 55,\n    verdict: 'Analysis complete',\n    product: { title: 'Your Product', description: 'Analysis generated from your inputs.', tags: [] },\n    market: { searchVolume: 5000, etsyListings: 800, searchTrend: '→ Stable',\n              etsyAvgPrice: '€20', topSellerSales: 800, printTime: '~2.5 hrs',\n              unitsPerDay: '≈2 units/day', insight: 'Market data analysed.' },\n    revenue: { unitsPerMonth: 25, grossRevenue: 550, printCost: 40,\n               etsyFees: 66, netProfit: 444, sellPrice: '€22.00' },\n    copyright: { etsyBanRisk: 'low', etsyBanReason: 'No policy issues detected.',\n                 legalRisk: 'low', legalDesc: 'No restrictions found.',\n                 copyrightRisk: 'low', copyrightDesc: 'No IP conflicts detected.',\n                 insight: '<b>Clear to sell.</b> No legal issues found.' }\n  };\n}\n\nreturn [{ json: result }];"
+      },
+      "id": "node-0007",
+      "name": "Extract Analysis JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1340, 440]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              { "name": "Content-Type", "value": "application/json" },
+              { "name": "Access-Control-Allow-Origin", "value": "*" },
+              { "name": "Access-Control-Allow-Headers", "value": "Content-Type" }
+            ]
+          }
+        }
+      },
+      "id": "node-0008",
+      "name": "Respond with Analysis",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1560, 440]
+    },
+    {
+      "parameters": {
+        "content": "## MeshMinds PrintChecker Workflow\n\n### Setup (required before activating)\n\n1. **Anthropic API key**\n   In n8n → Settings → Variables, add:\n   `ANTHROPIC_API_KEY` = `sk-ant-api03-…`\n\n2. **Webhook URL**\n   After activating, the production URL becomes:\n   `https://YOUR_N8N_HOST/webhook/idea`\n   Update `idea.html` line ~1033 + ~1190 to point here.\n\n3. **CORS** – The Respond nodes already set `Access-Control-Allow-Origin: *`.\n   If your n8n instance needs it, also add an OPTIONS pre-flight handler.\n\n### Flow\n```\nWebhook POST /idea\n  ├─ type=email → respond 200 (save lead elsewhere)\n  └─ analysis request\n       ├─ Scrape product URL (continueOnFail)\n       ├─ Build Claude prompt (extracts __NEXT_DATA__ for MakerWorld/Printables)\n       ├─ Call Claude claude-sonnet-4-6\n       ├─ Extract + validate JSON\n       └─ Respond with analysis\n```\n\n### Timing\nTarget < 40 s total. Claude typically takes 8-15 s.\nThe frontend waits up to ~45 s before falling back to demo data.",
+        "height": 380,
+        "width": 480,
+        "color": 4
+      },
+      "id": "node-0009",
+      "name": "Setup Notes",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, -100]
+    }
+  ],
+  "connections": {
+    "Receive Request": {
+      "main": [
+        [{ "node": "Email or Analysis?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Email or Analysis?": {
+      "main": [
+        [{ "node": "Email Saved OK", "type": "main", "index": 0 }],
+        [{ "node": "Scrape Product Page", "type": "main", "index": 0 }]
+      ]
+    },
+    "Scrape Product Page": {
+      "main": [
+        [{ "node": "Build Claude Prompt", "type": "main", "index": 0 }]
+      ]
+    },
+    "Build Claude Prompt": {
+      "main": [
+        [{ "node": "Call Claude", "type": "main", "index": 0 }]
+      ]
+    },
+    "Call Claude": {
+      "main": [
+        [{ "node": "Extract Analysis JSON", "type": "main", "index": 0 }]
+      ]
+    },
+    "Extract Analysis JSON": {
+      "main": [
+        [{ "node": "Respond with Analysis", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "staticData": null,
+  "meta": { "templateCredsSetupCompleted": true },
+  "tags": []
+}

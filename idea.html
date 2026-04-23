@@ -1150,19 +1150,22 @@ function analyze(){
         body:JSON.stringify({url:lastURL})
       }).then(function(r){return r.ok?r.json():null;})
         .then(function(d){
-          if(!d)return;
-          if(d.productContext)lastProductContext=d.productContext;
-          if(d.product){
-            var p=d.product;
-            if(p.title&&q("scrape-title"))q("scrape-title").textContent=p.title;
-            if(p.description&&q("scrape-desc"))q("scrape-desc").textContent=p.description;
-            if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-            if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
-            if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
-            if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
+          if(!d||!d.product||!d.product.title){
+            if(q("scrape-card"))q("scrape-card").style.display="none";
+            if(q("scrape-hint"))q("scrape-hint").style.display="none";
+            if(d&&d.productContext)lastProductContext=d.productContext;
+            return;
           }
+          if(d.productContext)lastProductContext=d.productContext;
+          var p=d.product;
+          if(q("scrape-title"))q("scrape-title").textContent=p.title;
+          if(q("scrape-desc"))q("scrape-desc").textContent=p.description||"";
+          if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+          if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+          if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
+          if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
         })
-        .catch(function(){});
+        .catch(function(){if(q("scrape-card"))q("scrape-card").style.display="none";});
       setTimeout(function(){
         step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
       },500);

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newsletter Admin · Meshminds</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root{
+  --o:#FF5C00;--bg:#ffffff;--s1:#f5f5f5;--s2:#ebebeb;
+  --b:rgba(0,0,0,.08);--b2:rgba(0,0,0,.14);
+  --t:#0d0d0d;--t2:#555;--t3:#999;
+  --green:#16a34a;--yellow:#d97706;--red:#dc2626;--blue:#2563eb;
+  --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --r:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+#gate{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.gate-box{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:32px 28px;width:280px;text-align:center}
+.gate-logo{font-family:var(--fd);font-size:22px;letter-spacing:1px;margin-bottom:4px}
+.gate-logo span{color:var(--o)}
+.gate-sub{font-size:11px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:24px}
+.gate-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:18px;letter-spacing:4px;text-align:center;padding:10px;margin-bottom:10px;outline:none}
+.gate-input:focus{border-color:var(--o)}
+.gate-input.shake{animation:shake .35s ease}
+.gate-btn{width:100%;background:var(--o);color:#fff;border:none;font-family:var(--fb);font-size:14px;font-weight:700;padding:10px;border-radius:6px;cursor:pointer}
+.gate-err{font-size:12px;color:var(--red);margin-top:8px;min-height:16px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);padding-bottom:60px}
+.header{padding:16px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:10}
+.logo{font-family:var(--fd);font-size:18px;letter-spacing:1px}
+.logo span{color:var(--o)}
+.logo-sub{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase}
+.nav-btn{background:var(--s2);border:1px solid var(--b2);color:var(--t2);font-family:var(--fb);font-size:12px;font-weight:600;padding:7px 12px;border-radius:var(--r);cursor:pointer;text-decoration:none;display:inline-block}
+.nav-btn:hover{border-color:var(--o);color:var(--t)}
+.main{padding:16px;max-width:640px;margin:0 auto}
+.section-title{font-family:var(--fd);font-size:20px;letter-spacing:.5px;margin:24px 0 12px;color:var(--t)}
+.section-title:first-child{margin-top:0}
+.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:4px}
+.stat-box{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:14px}
+.sb-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.sb-value{font-family:var(--fd);font-size:30px;line-height:1;color:var(--t)}
+.sb-sub{font-size:11px;color:var(--t3);margin-top:3px}
+.card{background:var(--s1);border:1px solid var(--b);border-radius:var(--r);padding:14px;margin-bottom:4px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:600}
+.card-meta{font-size:11px;color:var(--t3)}
+table{width:100%;border-collapse:collapse}
+th{font-size:10px;color:var(--t3);text-align:left;padding:5px 8px;border-bottom:1px solid var(--b);text-transform:uppercase;letter-spacing:.5px;font-weight:500}
+td{padding:9px 8px;font-size:12px;border-bottom:1px solid var(--b)}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--fm)}
+.badge.active{background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.25)}
+.badge.pending{background:rgba(217,119,6,.1);color:var(--yellow);border:1px solid rgba(217,119,6,.25)}
+.badge.inactive{background:var(--s2);color:var(--t3);border:1px solid var(--b)}
+.compose-form{display:flex;flex-direction:column;gap:12px}
+.form-row{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.form-input,.form-textarea{background:var(--bg);border:1px solid var(--b2);border-radius:6px;color:var(--t);font-family:var(--fb);font-size:13px;padding:10px 12px;outline:none;width:100%}
+.form-input:focus,.form-textarea:focus{border-color:var(--o)}
+.form-textarea{min-height:160px;resize:vertical;line-height:1.6}
+.form-actions{display:flex;gap:8px;justify-content:flex-end}
+.btn-primary{background:var(--o);color:#fff;border:none;font-family:var(--fb);font-size:13px;font-weight:700;padding:9px 18px;border-radius:6px;cursor:pointer}
+.btn-primary:hover{opacity:.9}
+.btn-secondary{background:transparent;color:var(--t2);border:1px solid var(--b2);font-family:var(--fb);font-size:13px;font-weight:600;padding:9px 18px;border-radius:6px;cursor:pointer}
+.btn-secondary:hover{border-color:var(--b2);color:var(--t)}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--s2);color:var(--t3);margin-right:4px;font-family:var(--fm)}
+.sub-source{font-size:11px;color:var(--t3)}
+.loading-state{text-align:center;padding:60px 16px;color:var(--t3);font-size:13px}
+.empty{text-align:center;padding:32px 16px;color:var(--t3);font-size:13px}
+.toaster{position:fixed;bottom:24px;right:24px;background:var(--t);color:#fff;font-size:13px;font-weight:600;padding:12px 18px;border-radius:var(--r);z-index:999;transform:translateY(80px);opacity:0;transition:all .25s ease;pointer-events:none}
+.toaster.show{transform:translateY(0);opacity:1}
+.toaster.ok{border-left:3px solid var(--green)}
+.toaster.err{border-left:3px solid var(--red)}
+
+/* ── DESKTOP LAYOUT ── */
+@media(min-width:900px){
+  .header{padding:16px 40px}
+  .main{
+    max-width:none;width:100%;margin:0;padding:24px 40px;
+    display:grid;
+    grid-template-columns:1fr 340px;
+    grid-template-areas:
+      "compose  overview"
+      "campaigns subscribers";
+    column-gap:28px;
+    align-items:start;
+  }
+  .nl-compose-section{grid-area:compose}
+  .nl-campaigns-section{grid-area:campaigns}
+  .nl-overview-section{grid-area:overview}
+  .nl-subscribers-section{grid-area:subscribers}
+  .stat-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-box">
+    <div class="gate-logo"><span>MESH</span>MINDS</div>
+    <div class="gate-sub">Newsletter · Admin only</div>
+    <input class="gate-input" id="gate-input" type="password" placeholder="····" maxlength="20"
+      onkeydown="if(event.key==='Enter')checkPassword()">
+    <button class="gate-btn" onclick="checkPassword()">Enter →</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+</div>
+
+<div class="header">
+  <div>
+    <div class="logo"><span>MESH</span>MINDS</div>
+    <div class="logo-sub">Newsletter Admin</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <a href="/dashboard" class="nav-btn">← Analytics</a>
+  </div>
+</div>
+
+<div class="main" id="nl-content">
+
+  <div class="nl-compose-section">
+    <div class="section-title" style="margin-top:0">Compose</div>
+    <div class="card">
+      <div class="compose-form">
+        <div class="form-row">
+          <div class="form-label">Subject</div>
+          <input class="form-input" id="nl-subject" type="text" placeholder="e.g. Your 3D print business update">
+        </div>
+        <div class="form-row">
+          <div class="form-label">Body</div>
+          <textarea class="form-textarea" id="nl-body" placeholder="Write your newsletter here…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-label">Send to</div>
+          <select class="form-input" id="nl-audience">
+            <option value="all">All subscribers</option>
+            <option value="quiz_commercial">Quiz → Commercial path</option>
+            <option value="quiz_fun">Quiz → Fun path</option>
+            <option value="freebie">Freebie download</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary" onclick="saveDraft()">Save draft</button>
+          <button class="btn-primary" onclick="sendNewsletter()">Send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nl-campaigns-section">
+    <div class="section-title">Recent Campaigns</div>
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Sent</th>
+            <th>Opens</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="campaigns-body">
+          <tr><td colspan="4" class="empty">No campaigns yet</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="nl-overview-section">
+    <div class="section-title" style="margin-top:0">Overview</div>
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="sb-label">Total Subscribers</div>
+        <div class="sb-value" id="stat-total"></div>
+        <div class="sb-sub">all time</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-label">Active</div>
+        <div class="sb-value" id="stat-active"></div>
+        <div class="sb-sub">receiving emails</div>
+      </div>
+      <div class="stat-box">
+        <div class="sb-label">Emails Sent</div>
+        <div class="sb-value" id="stat-sent"></div>
+        <div class="sb-sub">all time</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nl-subscribers-section">
+    <div class="section-title">Subscribers</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">All subscribers</span>
+        <span class="card-meta" id="sub-count"></span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Source</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="subscribers-body">
+          <tr><td colspan="4" class="loading-state" style="padding:24px">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toaster" id="toaster"></div>
+
+<script>
+// ── PASSWORD GATE ──
+(function(){
+  if(sessionStorage.getItem('mm_auth')==='1') document.getElementById('gate').style.display='none';
+  else document.getElementById('gate').style.display='flex';
+})();
+function checkPassword(){
+  const val = document.getElementById('gate-input').value;
+  if(val.toUpperCase() === 'MESH'){
+    sessionStorage.setItem('mm_auth','1');
+    document.getElementById('gate').style.display='none';
+    loadSubscribers();
+  } else {
+    const inp = document.getElementById('gate-input');
+    document.getElementById('gate-err').textContent = 'Wrong password.';
+    inp.classList.remove('shake');
+    void inp.offsetWidth;
+    inp.classList.add('shake');
+    inp.value='';
+  }
+}
+
+// ── TOAST ──
+function toast(msg, type='ok'){
+  const el = document.getElementById('toaster');
+  el.textContent = msg;
+  el.className = 'toaster show ' + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>el.className='toaster', 2800);
+}
+
+// ── LOAD SUBSCRIBERS ──
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec';
+
+function normaliseRow(row){
+  return {
+    timestamp: row['Timestamp'] || '',
+    email:     row['email']     || '',
+    action:    (row['Action']   || '').toLowerCase().trim(),
+    button:    row['Button']    || '',
+    source:    row['Where do they come from?'] || '',
+  };
+}
+
+function loadSubscribers(){
+  fetch(SHEETS_URL)
+    .then(r=>r.json())
+    .then(data=>{
+      const rows = (data.rows||[]).map(normaliseRow).filter(r=>r.action==='email_capture' && r.email);
+      const seen = new Set();
+      const unique = rows.filter(r=>{
+        if(seen.has(r.email)) return false;
+        seen.add(r.email); return true;
+      });
+
+      document.getElementById('stat-total').textContent = unique.length || '0';
+      document.getElementById('stat-active').textContent = unique.length || '0';
+      document.getElementById('stat-sent').textContent = '';
+      document.getElementById('sub-count').textContent = unique.length + ' total';
+
+      const tbody = document.getElementById('subscribers-body');
+      if(!unique.length){
+        tbody.innerHTML = '<tr><td colspan="4" class="empty">No subscribers yet</td></tr>';
+        return;
+      }
+      tbody.innerHTML = unique.map(r=>{
+        const src = r.button||r.source||'';
+        const date = r.timestamp ? new Date(r.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}) : '';
+        return `<tr>
+          <td style="font-family:var(--fm);font-size:11px">${esc(r.email)}</td>
+          <td><span class="sub-source">${esc(src)}</span></td>
+          <td style="color:var(--t3);font-size:11px">${date}</td>
+          <td><span class="badge active">active</span></td>
+        </tr>`;
+      }).join('');
+    })
+    .catch(()=>{
+      document.getElementById('subscribers-body').innerHTML =
+        '<tr><td colspan="4" class="empty">Failed to load subscribers</td></tr>';
+    });
+}
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── COMPOSE ACTIONS ──
+function saveDraft(){
+  const subject = document.getElementById('nl-subject').value.trim();
+  if(!subject){ toast('Add a subject first.','err'); return; }
+  toast('Draft saved locally.');
+}
+
+function sendNewsletter(){
+  const subject = document.getElementById('nl-subject').value.trim();
+  const body    = document.getElementById('nl-body').value.trim();
+  if(!subject){ toast('Subject is required.','err'); return; }
+  if(!body){ toast('Body is required.','err'); return; }
+  toast('Send triggered integrate your email provider to complete setup.');
+}
+
+// ── INIT ──
+if(sessionStorage.getItem('mm_auth')==='1') loadSubscribers();
+</script>
+</body>
+</html>

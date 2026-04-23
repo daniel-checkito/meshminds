@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrintChecker</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#999;--line:#e8e8e8;--good:#15803d;--bad:#b91c1c;--warn:#b45309}
+html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
+
+.phone{width:100%;max-width:430px;height:100%;margin:0 auto;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+
+.hdr{padding:10px 14px 8px;flex-shrink:0}
+.hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.logo{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:.04em;display:flex;align-items:center;gap:5px}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--acc)}
+.tag{font-size:10.5px;color:var(--ink3);font-weight:600}
+
+.url-row{position:relative;margin-bottom:8px}
+.url-inp{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 12px 12px 34px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fafafa;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:border-color .2s}
+.url-inp::placeholder{font-size:14px;color:var(--ink3)}
+.url-inp.active{border-color:var(--acc)}
+.url-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--ink3)}
+
+.vbar{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;border:1.5px solid var(--line);background:#f7f7f7;transition:all .35s}
+.vbar.scanning{border-color:rgba(180,83,9,.3);background:#fef9ec}
+.vbar.done{border-color:rgba(21,128,61,.3);background:#f0fdf4}
+.ring-wrap{position:relative;width:44px;height:44px;flex-shrink:0}
+.ring-wrap canvas{display:block}
+.ring-n{position:absolute;inset:0;display:grid;place-items:center;font-weight:700;font-size:12px;letter-spacing:-.02em;transition:color .3s}
+.vr{flex:1;min-width:0}
+.ve{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-family:"DM Mono",sans-serif;color:var(--ink3);transition:color .3s}
+.vbar.scanning .ve{color:var(--warn)}.vbar.done .ve{color:var(--good)}
+.vt{font-family:"Bebas Neue",sans-serif;font-size:22px;line-height:1;color:var(--ink3);transition:color .3s}
+.vbar.scanning .vt{color:var(--warn)}.vbar.done .vt{color:var(--good)}
+.vd{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.35}
+
+.dots{display:flex;justify-content:center;gap:6px;padding:8px 0 0}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .3s}
+.dot.on{background:var(--acc);transform:scale(1.35)}.dot.done{background:#10b981}
+
+.scroll{flex:1;overflow:hidden;min-height:0;position:relative}
+.track{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1)}
+.panel{min-width:100%;width:100%;height:100%;overflow-y:auto;flex-shrink:0;padding:14px 14px 10px}
+.panel::-webkit-scrollbar{display:none}
+
+.foot{padding:10px 14px;border-top:1px solid var(--line);flex-shrink:0}
+.btn{width:100%;padding:15px 14px;border-radius:10px;background:var(--acc);color:#fff;font-weight:700;font-size:15px;font-family:"DM Sans",sans-serif;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,transform .1s;letter-spacing:.01em;min-height:48px}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.75;pointer-events:none}
+.btn.green{background:var(--good)}.btn.dark{background:#111}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+
+/* STEP 0 */
+.s0-head{padding:10px 0 12px;text-align:center}
+.s0-eye{font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;font-family:"DM Mono",sans-serif;margin-bottom:4px}
+.s0-h{font-family:"Bebas Neue",sans-serif;font-size:33px;line-height:1.02;margin-bottom:5px}
+.s0-sub{font-size:12px;color:var(--ink3);line-height:1.5}
+.eg-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:7px;text-align:center}
+.eg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}
+.eg-card{border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.eg-img{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;font-size:34px}
+.eg-donut{position:absolute;top:6px;left:6px;z-index:1}
+.eg-vol{position:absolute;top:7px;right:7px;font-size:9px;font-weight:700;font-family:"DM Mono",sans-serif;background:rgba(0,0,0,.28);color:#fff;padding:2px 6px;border-radius:20px;line-height:1.4;z-index:1}
+.eg-info{position:absolute;bottom:0;left:0;right:0;padding:22px 8px 7px;background:linear-gradient(transparent,rgba(0,0,0,.62))}
+.eg-name{font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eg-meta{font-size:9.5px;color:rgba(255,255,255,.8);font-family:"DM Mono",sans-serif}
+.eg-flag{font-size:9.5px;font-weight:700;color:#fca5a5}
+.sg{color:var(--good)}.sw{color:var(--warn)}.sb{color:var(--bad)}
+
+/* Social proof */
+.proof-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 10px;background:#f7f7f7;border-radius:10px;margin-bottom:8px}
+.proof-stat{display:flex;flex-direction:column;align-items:center;gap:2px}
+.proof-n{font-size:14.5px;font-weight:800;color:var(--ink);font-family:"DM Mono",sans-serif;line-height:1}
+.proof-l{font-size:9.5px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;text-align:center;line-height:1.2}
+.proof-sep{font-size:18px;color:#ddd;line-height:1}
+.proof-quote{font-size:11.5px;color:var(--ink2);font-style:italic;text-align:center;line-height:1.5;padding:0 2px;margin-bottom:10px}
+.plat{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f7f7f7;border-radius:9px;flex-wrap:wrap}
+.pl{font-size:11px;color:var(--ink3);font-weight:600}
+.pc{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;border:1px solid var(--line);color:var(--ink2);background:#fff}
+
+/* STEP 1 */
+.sec{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.sn{font-size:10.5px;font-weight:700;color:#fff;background:var(--acc);padding:3px 8px;border-radius:5px;font-family:"DM Mono",sans-serif;letter-spacing:.05em}
+.st{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.01em}
+.sh{font-size:11px;color:var(--ink3);margin-left:auto}
+.browser{border-radius:10px;overflow:hidden;border:1px solid #1e1e1e;background:#0a0a0a}
+.bb{display:flex;align-items:center;gap:5px;padding:6px 8px;background:#141414;border-bottom:1px solid #1e1e1e}
+.bds{display:flex;gap:4px}.bd{width:7px;height:7px;border-radius:50%;background:#2a2a2a}
+.bu{flex:1;background:#0a0a0a;border-radius:4px;padding:3px 7px;font-size:9px;color:#555;font-family:"DM Mono",sans-serif;display:flex;align-items:center;gap:4px;border:1px solid #1a1a1a;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bu::before{content:"";width:4px;height:4px;border-radius:50%;background:#22c55e;flex-shrink:0}
+.bbody{display:grid;grid-template-columns:100px 1fr;gap:9px;padding:9px}
+.bimg{width:100px;height:100px;border-radius:7px;overflow:hidden;border:1px solid #1e1e1e;flex-shrink:0;background:#161616;display:flex;align-items:center;justify-content:center;font-size:36px}
+.btitle{font-weight:600;font-size:12.5px;color:#ddd;line-height:1.3;margin-bottom:5px}
+.bauth{font-size:10.5px;color:#555;display:flex;align-items:center;gap:3px;margin-bottom:6px}
+.bfol{background:#22c55e;color:#000;padding:1px 5px;border-radius:2px;font-size:9px;font-weight:700}
+.btags{display:flex;gap:4px;margin-bottom:8px}
+.btag{padding:2px 7px;background:#0e0e0e;border:1px solid #1e1e1e;border-radius:3px;font-size:10px;color:#888}
+.sg4{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.si2{padding:6px 7px;background:#0c0c0c;border:1px solid #181818;border-radius:4px}
+.sk{font-size:10px;color:#666;font-family:"DM Mono",sans-serif;margin-bottom:2px}
+.sv{font-size:12.5px;color:#fff;font-weight:700}.sv.hi{color:#22c55e}
+.note{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:10px 12px;background:#f7f7f7;border-radius:9px}
+.note svg{flex-shrink:0;margin-top:1px}
+.note span{font-size:12px;color:var(--ink2);line-height:1.45}
+.note b{color:var(--ink)}
+
+/* STEP 2 */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.sc{padding:12px 11px 13px;border:1px solid var(--line);border-radius:10px;position:relative;overflow:hidden;opacity:0;transform:translateY(7px) scale(.97);transition:opacity .3s,transform .36s cubic-bezier(.34,1.2,.64,1)}
+.sc.show{opacity:1;transform:none}
+.sc::before{content:"";position:absolute;top:0;left:0;right:0;height:2.5px}
+.sc:nth-child(1)::before{background:#6366f1}.sc:nth-child(2)::before{background:#f59e0b}
+.sc:nth-child(3)::before{background:#10b981}.sc:nth-child(4)::before{background:#3b82f6}
+.sc-ir{display:flex;align-items:center;gap:4px;margin-bottom:5px}
+.sc-ico{width:11px;height:11px;flex-shrink:0}
+.sc:nth-child(1) .sc-ico{color:#6366f1}.sc:nth-child(2) .sc-ico{color:#f59e0b}
+.sc:nth-child(3) .sc-ico{color:#10b981}.sc:nth-child(4) .sc-ico{color:#3b82f6}
+.sc-lbl{font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif}
+.sc-val{font-size:22px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.sc-sub{font-size:11.5px;font-weight:600}
+.up{color:var(--good)}.nc{color:var(--ink3)}
+.ins{display:flex;align-items:flex-start;gap:8px;padding:9px 10px;background:#f7f7f7;border-radius:9px;opacity:0;transition:opacity .4s .1s}
+.ins.show{opacity:1}
+.ins-dot{width:7px;height:7px;border-radius:50%;background:var(--acc);flex-shrink:0;margin-top:3px}
+.ins span{font-size:12px;color:var(--ink2);line-height:1.45}
+.ins b{color:var(--ink)}
+
+/* STEP 3 */
+.rcards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px}
+.rc{border:1px solid var(--line);border-radius:9px;padding:12px 6px 11px;text-align:center;opacity:0;transform:translateY(5px);transition:opacity .26s,transform .3s}
+.rc.show{opacity:1;transform:none}
+.rc-ico{font-size:18px;margin-bottom:3px}
+.rc-val{font-size:19px;font-weight:700;font-family:"DM Mono",sans-serif;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:3px}
+.rc-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;font-family:"DM Mono",sans-serif;line-height:1.2}
+.hero{padding:17px 14px 15px;text-align:center;border:1.5px solid rgba(21,128,61,.35);border-radius:11px;background:linear-gradient(155deg,#f0fdf4,#dcfce7);opacity:0;transform:scale(.93) translateY(6px);transition:opacity .4s,transform .48s cubic-bezier(.34,1.3,.64,1)}
+.hero.show{opacity:1;transform:none}
+.h-eye{font-size:10.5px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.12em;font-family:"DM Mono",sans-serif;margin-bottom:5px}
+.h-big{font-family:"Bebas Neue",sans-serif;font-size:54px;color:var(--good);line-height:1;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.h-sub{font-size:11.5px;color:var(--good);opacity:.75;margin-bottom:10px}
+.h-bd{background:#fff;border-radius:8px;border:1px solid rgba(21,128,61,.18);padding:10px 11px;opacity:0;transition:opacity .4s .2s}
+.h-bd.show{opacity:1}
+.h-row{display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0}
+.h-row+.h-row{border-top:1px solid #f0f0f0}
+.h-lbl{color:var(--ink3)}.h-val{font-weight:700;font-family:"DM Mono",sans-serif}
+.h-val.p{color:var(--good)}.h-val.n{color:var(--bad)}
+@keyframes fg{0%{background:rgba(21,128,61,.2)}100%{background:linear-gradient(155deg,#f0fdf4,#dcfce7)}}
+.fl{animation:fg .5s ease forwards}
+.price-slider-wrap{background:#f7f7f7;border-radius:11px;padding:12px 13px 10px;margin-bottom:14px}
+.price-slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.price-slider-lbl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif}
+.price-slider-val{font-size:22px;font-weight:800;color:var(--ink);font-family:"DM Mono",sans-serif;font-variant-numeric:tabular-nums;line-height:1}
+input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cursor:pointer}
+.price-slider-limits{display:flex;justify-content:space-between;font-size:10px;color:var(--ink3);margin-top:5px;font-family:"DM Mono",sans-serif}
+.price-margin-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--line)}
+.price-margin-lbl{font-size:11.5px;color:var(--ink2)}
+.price-margin-val{font-size:13px;font-weight:800;color:var(--good);font-family:"DM Mono",sans-serif}
+
+/* STEP 4 - Copyright */
+.sel-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.sel-lbl{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:5px}
+.sel-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 12px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fafafa;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;cursor:pointer;min-height:46px}
+.sel-inp:focus{border-color:var(--acc)}
+.ck-item{display:flex;align-items:flex-start;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:9px;margin-bottom:8px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .35s cubic-bezier(.34,1.2,.64,1)}
+.ck-item.show{opacity:1;transform:none}
+.ck-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;transition:background .3s}
+.ck-title{font-weight:700;font-size:12px;margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ck-desc{font-size:11px;color:var(--ink2);line-height:1.45}
+.risk-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700;font-family:"DM Mono",sans-serif;letter-spacing:.04em}
+.risk-low{background:#dcfce7;color:#15803d}.risk-medium{background:#fef9c3;color:#b45309}.risk-high{background:#fee2e2;color:#b91c1c}
+
+/* Step 0 feature preview cards */
+.prev-card{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:8px}
+.prev-hd{display:flex;align-items:center;gap:7px;padding:9px 12px 8px;background:#fafafa;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
+.prev-hd-ico{width:16px;height:16px;flex-shrink:0}
+.prev-rows{padding:3px 0}
+.prev-row{display:flex;justify-content:space-between;align-items:center;padding:5px 12px}
+.prev-row+.prev-row{border-top:1px solid #f5f5f5}
+.prev-lbl{font-size:11px;color:var(--ink3)}
+.prev-val{font-size:11px;font-weight:700;font-family:"DM Mono",sans-serif}
+.prev-val.g{color:var(--good)}
+
+/* Step 4 legal context box */
+.legal-ctx{background:#f7f7f7;border-radius:11px;padding:12px;margin-bottom:12px}
+.legal-intro{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-bottom:10px}
+
+/* Email gate */
+.gate-head{text-align:center;padding:16px 0 12px}
+.gate-check{width:52px;height:52px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;transition:background .4s}
+.gate-check.loading{background:#fff3e0;animation:gate-pulse 1.4s ease-in-out infinite}
+@keyframes gate-pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.gate-title{font-family:"Bebas Neue",sans-serif;font-size:28px;letter-spacing:.02em;margin-bottom:5px}
+.gate-sub{font-size:13px;color:var(--ink3);line-height:1.5}
+.tease-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 16px}
+.tease-card{border:1px solid var(--line);border-radius:9px;padding:11px 6px;text-align:center;background:#fafafa}
+.tease-lbl{font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-family:"DM Mono",sans-serif;margin-bottom:6px;line-height:1.2}
+.tease-val{font-size:19px;font-weight:800;font-family:"DM Mono",sans-serif;filter:blur(5px);user-select:none;transition:filter .5s}
+.tease-val.g{color:var(--good)}.tease-val.w{color:var(--warn)}.tease-val.b{color:var(--bad)}
+.gate-form{background:#f7f7f7;border-radius:11px;padding:16px}
+.gate-form-lbl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:9px}
+.gate-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 13px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;margin-bottom:10px}
+.gate-inp:focus{border-color:var(--acc)}
+.gate-trust{font-size:11px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
+/* Loading overlay */
+.loading-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink3);transition:color .3s}
+.loading-step.active{color:var(--ink);font-weight:700}
+.loading-step.done{color:var(--good)}
+.ls-dot{width:7px;height:7px;border-radius:50%;background:var(--line);flex-shrink:0;transition:background .3s}
+.loading-step.active .ls-dot{background:var(--acc);animation:ls-pulse .9s ease-in-out infinite}
+.loading-step.done .ls-dot{background:var(--good)}
+@keyframes ls-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+/* Question chips */
+.q-block{margin-bottom:18px}
+.q-lbl{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.q-opt{font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink3);opacity:.7;font-family:"DM Sans",sans-serif}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:12px 18px;border:1.5px solid var(--line);border-radius:12px;font-size:14px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fff;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent;outline:none;line-height:1.3;touch-action:manipulation;min-height:44px}
+.chip.on{border-color:var(--acc);color:var(--acc);background:#fff7f4;font-weight:700}
+.chip-eg{font-size:11px;color:var(--ink3);font-weight:400;font-family:"DM Mono",sans-serif;margin-left:3px}
+.chip.on .chip-eg{color:var(--acc);opacity:.7}
+.q-hint{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.45;font-family:"DM Mono",sans-serif}
+/* Copyright section */
+.cp-banner{display:flex;align-items:center;gap:9px;padding:12px 14px;border-radius:11px;font-size:13px;font-weight:600;margin-bottom:14px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif;line-height:1.4}
+.cp-banner.warn{background:#fef9c3;color:#854d0e}
+.cp-banner.bad{background:#fee2e2;color:#991b1b}
+.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.cp-card{border:1.5px solid var(--line);border-radius:10px;padding:11px 7px 10px;text-align:center;background:#fff}
+.cp-risk{font-size:10.5px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 9px;border-radius:6px;display:inline-block;margin-bottom:6px;letter-spacing:.04em}
+.cp-clabel{font-size:11px;color:var(--ink3);font-weight:700;margin-bottom:5px;line-height:1.2}
+.cp-desc{font-size:11px;color:var(--ink2);line-height:1.4}
+/* Consolidated results section headers */
+.res-sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:11px;padding:8px 0 9px;border-bottom:1.5px solid var(--line)}
+.res-sec-ico{font-size:16px}
+.res-sec-lbl{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.02em;color:var(--ink)}
+
+/* Scraped product card (step 1) */
+.scrape-card{border:1.5px solid rgba(21,128,61,.25);border-radius:11px;padding:11px;margin-bottom:12px;background:linear-gradient(135deg,#f0fdf4,#fafafa)}
+.scrape-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.scrape-eye{font-size:9px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif}
+.scrape-src{font-size:10px;color:var(--ink3);font-family:"DM Mono",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+.scrape-row{display:grid;grid-template-columns:92px 1fr;gap:10px}
+.scrape-img{width:92px;height:92px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
+.scrape-img img{width:100%;height:100%;object-fit:cover;display:block}
+.scrape-body{min-width:0}
+.scrape-title{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:4px}
+.scrape-desc{font-size:11.5px;color:var(--ink2);line-height:1.42;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.scrape-facts{display:flex;gap:6px;flex-wrap:wrap}
+.scrape-fact{font-size:11px;color:var(--ink2);font-weight:500;background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 7px;font-family:"DM Mono",sans-serif;display:inline-flex;align-items:center;gap:4px}
+.scrape-fact b{color:var(--ink);font-weight:700}
+.scrape-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.45;padding-top:10px;border-top:1px dashed var(--line)}
+.scrape-hint{font-size:11px;color:var(--ink2);background:#fff7ed;border:1px dashed rgba(255,92,0,.3);border-radius:8px;padding:9px 11px;margin-bottom:14px;line-height:1.5}
+.fallback-divider{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fallback-divider::before,.fallback-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+.fallback-divider span{font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;white-space:nowrap}
+
+/* Final page: winners + offer */
+.cta-intro{font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:12px}
+.cubee-card{border:2px solid var(--acc);border-radius:14px;overflow:hidden;margin-bottom:12px;background:#fff;box-shadow:0 4px 14px rgba(255,92,0,.1),0 10px 30px rgba(255,92,0,.06)}
+.cubee-img-wrap{position:relative;aspect-ratio:16/9;background:linear-gradient(135deg,#fff7ed,#ffedd5);overflow:hidden}
+.cubee-img-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.cubee-badge{position:absolute;top:10px;left:10px;background:var(--acc);color:#fff;font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:4px 9px;border-radius:4px;font-family:"DM Mono",sans-serif}
+.cubee-body{padding:14px 14px 16px}
+.cubee-brand{font-size:10.5px;color:var(--acc);font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:4px;font-family:"DM Mono",sans-serif}
+.cubee-name{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:.02em;line-height:1.05;margin-bottom:6px;border-left:3px solid var(--acc);padding-left:8px}
+.cubee-desc{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-bottom:12px}
+.cubee-pts{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;background:#fafafa;border-radius:9px;padding:11px 12px}
+.cubee-pts div{font-size:12px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.cubee-pts div::before{content:"✓";color:var(--good);font-weight:800;flex-shrink:0}
+.cubee-cta{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:10px;background:var(--acc);color:#fff;font-weight:700;font-size:15px;text-decoration:none;transition:background .15s,transform .1s;letter-spacing:.01em;min-height:48px}
+.cubee-cta:active{transform:scale(.98)}
+.cubee-cta:hover{background:#e64d00}
+.cubee-code{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
+.cubee-code b{font-family:"DM Mono",sans-serif;background:#fff7ed;color:var(--acc);padding:2px 7px;border-radius:4px;font-weight:800;letter-spacing:.05em;border:1px dashed rgba(255,92,0,.35)}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="hdr">
+    <div id="submit-block">
+      <div id="hero-text" style="padding:6px 0 10px;text-align:center">
+        <div style="font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.18em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Make money with 3d printing</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:46px;line-height:1;letter-spacing:.01em;margin-bottom:8px">Will your 3D print<br>actually sell?</div>
+        <div style="font-size:14px;color:var(--ink3);line-height:1.5">Paste a product link <b style="color:var(--ink2)">or describe your idea</b>  -  we check demand, profit &amp; legal risk in seconds.</div>
+      </div>
+      <div class="url-row">
+        <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
+      </div>
+      <div style="font-size:10.5px;color:var(--ink3);padding:3px 2px 6px;line-height:1.55">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span></div>
+    </div>
+    <div class="vbar" id="vbar" style="display:none">
+      <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
+      <div class="vr">
+        <div class="ve" id="ve">Ready to scan</div>
+        <div class="vt" id="vt">Paste a link above</div>
+        <div class="vd" id="vd">Link or describe your idea</div>
+      </div>
+    </div>
+    <button class="btn" id="btn" style="margin-top:8px;margin-bottom:2px">
+      <div class="spin" id="sp" style="display:none"></div>
+      <span id="bl">Check this print</span>
+      <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
+    <div style="font-size:10px;color:var(--ink3);text-align:center;padding:4px 4px 2px;line-height:1.5">By submitting a URL, you confirm you own the rights to analyze it.</div>
+    <div class="dots" id="dots" style="display:none">
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div>
+    </div>
+  </div>
+
+  <div class="scroll">
+    <div class="track" id="track">
+
+      <!-- STEP 0 -->
+      <div class="panel">
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;opacity:.7;padding-bottom:12px;border-bottom:1px solid var(--line)">
+          <span style="font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
+          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:16px;object-fit:contain">
+          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Prusa-Printables.png" style="height:16px;object-fit:contain">
+        </div>
+
+        <div style="background:#f7f7f7;border-radius:10px;padding:12px 14px;margin-bottom:10px">
+          <div style="font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:10px">What we check in 20 seconds</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:9px">
+              <span style="color:var(--good);font-weight:800;font-size:13px;margin-top:1px;flex-shrink:0">✓</span>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:2px">Market Research <span style="font-size:10px;font-weight:600;color:var(--ink3);font-family:'DM Mono',sans-serif">· saves ~45 min</span></div>
+                <div style="font-size:11.5px;color:var(--ink3);line-height:1.4">Search volume &amp; marketplace demand to see if anyone is actually buying this.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:9px">
+              <span style="color:var(--good);font-weight:800;font-size:13px;margin-top:1px;flex-shrink:0">✓</span>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:2px">Copyright &amp; Legal <span style="font-size:10px;font-weight:600;color:var(--ink3);font-family:'DM Mono',sans-serif">· saves ~30 min</span></div>
+                <div style="font-size:11.5px;color:var(--ink3);line-height:1.4">Local laws, platform ToS, and IP checks so you don't get banned or sued.</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:9px">
+              <span style="color:var(--good);font-weight:800;font-size:13px;margin-top:1px;flex-shrink:0">✓</span>
+              <div>
+                <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;margin-bottom:2px">Profitability Check <span style="font-size:10px;font-weight:600;color:var(--ink3);font-family:'DM Mono',sans-serif">· saves ~45 min</span></div>
+                <div style="font-size:11.5px;color:var(--ink3);line-height:1.4">Print cost, margins, and scale potential  -  is it actually worth your time?</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="proof-bar" style="margin-bottom:4px">
+          <div class="proof-stat"><span class="proof-n">14,203</span><span class="proof-l">prints checked</span></div>
+          <span class="proof-sep">·</span>
+          <div class="proof-stat"><span class="proof-n">94%</span><span class="proof-l">of prints never sell</span></div>
+          <span class="proof-sep">·</span>
+          <div class="proof-stat"><span class="proof-n">★ 4.8</span><span class="proof-l">3,800+ sellers</span></div>
+        </div>
+        <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px">
+          <span style="font-size:15px;flex-shrink:0;margin-top:1px">🚨</span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#b91c1c;margin-bottom:2px">1 in 4 ideas flags a legal or IP risk</div>
+            <div style="font-size:11px;color:#7f1d1d;line-height:1.45">Selling a flagged design can get your Etsy shop banned or land you in a lawsuit  -  we catch it before you list.</div>
+          </div>
+        </div>
+
+        <div class="eg-label" style="margin-top:4px">Popular prints recently analysed</div>
+
+        <div class="eg-grid">
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div>
+              <div class="eg-vol">16.6k</div>
+              <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div>
+              <div class="eg-vol">9.2k</div>
+              <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div>
+              <div class="eg-vol">7.8k</div>
+              <div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div>
+              <div class="eg-vol">22.1k</div>
+              <div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-12-29_d08591307f16a8.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#b91c1c" stroke-width="3.5" stroke-dasharray="22.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#b91c1c" font-size="8" font-weight="800" font-family="DM Mono,monospace">28</text></svg></div>
+              <div class="eg-info"><div class="eg-name">Disney Cookie Cutter</div><div class="eg-flag">⚠️ IP flagged</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div>
+              <div class="eg-vol">11.3k</div>
+              <div class="eg-info"><div class="eg-name">Minimalist Phone Stand</div><div class="eg-meta">Functional</div></div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+
+
+      <!-- STEP 1: Questions Q1 -->
+      <div class="panel">
+        <div class="sec"><span class="sn">01</span><span class="st">Your print</span><span class="sh">Step 1 of 2</span></div>
+
+        <!-- Scraped product data (shown when the link is recognized) -->
+        <div class="scrape-card" id="scrape-card" style="display:none">
+          <div class="scrape-head">
+            <span class="scrape-eye">✓ Scraped from link</span>
+            <span class="scrape-src" id="scrape-src"></span>
+          </div>
+          <div class="scrape-row">
+            <div class="scrape-img" id="scrape-img-wrap"><span id="scrape-img-ph">🏷️</span><img id="scrape-img" alt="" style="display:none"></div>
+            <div class="scrape-body">
+              <div class="scrape-title" id="scrape-title">Fetching product data…</div>
+              <div class="scrape-desc" id="scrape-desc"></div>
+              <div class="scrape-facts" id="scrape-facts" style="display:none">
+                <div class="scrape-fact">⏱ <b id="scrape-time"></b></div>
+                <div class="scrape-fact">🧵 <b id="scrape-mat"></b></div>
+              </div>
+            </div>
+          </div>
+          <div class="scrape-note">Data auto-filled from the listing. Correct it below if anything's off.</div>
+        </div>
+
+        <div class="scrape-hint" id="scrape-hint" style="display:none">💡 The scraped preview shows your product details automatically. You can also describe it manually below.</div>
+
+        <div class="fallback-divider"><span>Manual fallback</span></div>
+
+        <div class="q-block">
+          <div class="q-lbl">What category?</div>
+          <div class="chips" id="q-cat">
+            <button class="chip" data-v="decor">🏠 Home decor</button>
+            <button class="chip" data-v="functional">🔧 Functional</button>
+            <button class="chip" data-v="art">🎨 Art / gifts</button>
+            <button class="chip" data-v="gaming">🎮 Gaming / toys</button>
+            <button class="chip" data-v="miniatures">⚔️ Miniatures</button>
+            <button class="chip" data-v="other">✦ Other</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Target sell price</div>
+          <div class="chips" id="q-price">
+            <button class="chip" data-v="5-15">€5–15 <span class="chip-eg">keychains, clips</span></button>
+            <button class="chip" data-v="15-30">€15–30 <span class="chip-eg">★ popular range</span></button>
+            <button class="chip" data-v="30-60">€30–60 <span class="chip-eg">sets, detailed</span></button>
+            <button class="chip" data-v="60+">€60+ <span class="chip-eg">premium, large</span></button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Est. print time <span class="q-opt">optional</span></div>
+          <div class="chips" id="q-time">
+            <button class="chip" data-v="<2h">Under 2h</button>
+            <button class="chip" data-v="2-6h">2–6h</button>
+            <button class="chip" data-v="6-12h">6–12h</button>
+            <button class="chip" data-v="12h+">12h+</button>
+          </div>
+          <div class="q-hint">Helps estimate filament &amp; machine cost  -  avg €0.03–0.08/hr on FDM</div>
+        </div>
+
+      </div>
+
+      <!-- STEP 2: Questions Q2 -->
+      <div class="panel">
+        <div class="sec"><span class="sn">02</span><span class="st">About you</span><span class="sh">Step 2 of 3</span></div>
+
+        <div class="q-block">
+          <div class="q-lbl">Where do you want to sell?</div>
+          <div class="chips" id="q-market">
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Already active on? <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-active">
+            <button class="chip" data-v="none">Not yet</button>
+            <button class="chip" data-v="etsy">🛒 Etsy</button>
+            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
+            <button class="chip" data-v="printables">📦 Printables</button>
+            <button class="chip" data-v="own">🏪 Own shop</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Social media? <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-social">
+            <button class="chip" data-v="none">None</button>
+            <button class="chip" data-v="instagram">📸 Instagram</button>
+            <button class="chip" data-v="tiktok">🎵 TikTok</button>
+            <button class="chip" data-v="pinterest">📌 Pinterest</button>
+            <button class="chip" data-v="facebook">👤 Facebook</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STEP 3: Location & Legal -->
+      <div class="panel">
+        <div class="sec"><span class="sn">03</span><span class="st">Location &amp; legal</span><span class="sh">Step 3 of 3</span></div>
+
+        <div class="q-block">
+          <div class="sel-lbl">Selling from <span class="q-opt" style="font-size:9px;color:var(--ink3);opacity:.65;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:4px">affects VAT &amp; legal</span></div>
+          <select id="sell-from" class="sel-inp">
+            <option value="">Select your country</option>
+            <option value="NL">🇳🇱 Netherlands</option>
+            <option value="US">🇺🇸 United States</option>
+            <option value="GB">🇬🇧 United Kingdom</option>
+            <option value="DE">🇩🇪 Germany</option>
+            <option value="FR">🇫🇷 France</option>
+            <option value="BE">🇧🇪 Belgium</option>
+            <option value="CA">🇨🇦 Canada</option>
+            <option value="AU">🇦🇺 Australia</option>
+            <option value="SE">🇸🇪 Sweden</option>
+            <option value="CH">🇨🇭 Switzerland</option>
+            <option value="IT">🇮🇹 Italy</option>
+            <option value="ES">🇪🇸 Spain</option>
+            <option value="PL">🇵🇱 Poland</option>
+            <option value="NO">🇳🇴 Norway</option>
+            <option value="DK">🇩🇰 Denmark</option>
+            <option value="AT">🇦🇹 Austria</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="IE">🇮🇪 Ireland</option>
+            <option value="FI">🇫🇮 Finland</option>
+            <option value="JP">🇯🇵 Japan</option>
+            <option value="SG">🇸🇬 Singapore</option>
+            <option value="KR">🇰🇷 South Korea</option>
+            <option value="CZ">🇨🇿 Czech Republic</option>
+            <option value="NZ">🇳🇿 New Zealand</option>
+            <option value="UA">🇺🇦 Ukraine</option>
+          </select>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Selling to <span class="q-opt">select all that apply</span></div>
+          <div class="chips chips-multi" id="q-sell-to">
+            <button class="chip" data-v="US">🇺🇸 USA</button>
+            <button class="chip" data-v="EU">🇪🇺 Europe</button>
+            <button class="chip" data-v="GB">🇬🇧 UK</button>
+            <button class="chip" data-v="CA">🇨🇦 Canada</button>
+            <button class="chip" data-v="AU">🇦🇺 Australia</button>
+            <button class="chip" data-v="WORLDWIDE">🌍 Worldwide</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Does your product include? <span class="q-opt">select all that apply</span></div>
+          <div class="q-hint" style="margin-bottom:9px">Affects which safety certificates apply to your listing</div>
+          <div class="chips chips-multi" id="q-legal-flags">
+            <button class="chip" data-v="none">Nothing special</button>
+            <button class="chip" data-v="kids">👶 For children</button>
+            <button class="chip" data-v="electronics">🔌 Electronics / LEDs</button>
+            <button class="chip" data-v="food">🍽️ Food contact</button>
+            <button class="chip" data-v="wearable">💍 Wearable / jewellery</button>
+            <button class="chip" data-v="battery">🔋 Battery / USB</button>
+            <button class="chip" data-v="magnetic">🧲 Strong magnets</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- EMAIL GATE -->
+      <div class="panel" id="email-panel">
+        <div class="gate-head">
+          <div class="gate-check loading" id="gate-check">⏳</div>
+          <div class="gate-title" id="gate-title">Analyzing your idea…</div>
+          <div class="gate-sub" id="gate-sub">Takes ~20 sec  -  enter your email and we'll show the full results</div>
+        </div>
+        <div class="tease-grid">
+          <div class="tease-card">
+            <div class="tease-lbl">Market score</div>
+            <div class="tease-val" id="tease-score">82</div>
+          </div>
+          <div class="tease-card">
+            <div class="tease-lbl">Net profit/mo</div>
+            <div class="tease-val g" id="tease-rev">€865</div>
+          </div>
+          <div class="tease-card">
+            <div class="tease-lbl">Legal risk</div>
+            <div class="tease-val g" id="tease-risk">LOW</div>
+          </div>
+        </div>
+        <div class="gate-form">
+          <div class="gate-form-lbl">Unlock your free report</div>
+          <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
+          <button class="btn" id="btn-email">
+            <div class="spin" id="sp-email" style="display:none"></div>
+            <span id="bl-email">Get my free report →</span>
+          </button>
+          <div class="gate-trust">✓ No spam &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; GDPR compliant</div>
+        </div>
+
+        <!-- Loading screen shown while waiting for analysis after email submission -->
+        <div id="loading-overlay" style="display:none;text-align:center;padding:14px 0 6px">
+          <div style="position:relative;width:110px;height:110px;margin:0 auto 14px">
+            <canvas id="loading-ring" width="110" height="110"></canvas>
+            <div id="loading-pct" style="position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;font-family:'DM Mono',sans-serif;color:#f59e0b;letter-spacing:-.02em">0%</div>
+          </div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:5px">Preparing your report…</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:18px" id="loading-phase">Fetching Etsy market data…</div>
+          <div style="display:flex;flex-direction:column;gap:9px;background:#f7f7f7;border-radius:11px;padding:13px 16px">
+            <div class="loading-step" id="ls0"><div class="ls-dot"></div><span>Market demand &amp; search volume</span></div>
+            <div class="loading-step" id="ls1"><div class="ls-dot"></div><span>Revenue &amp; profit modelling</span></div>
+            <div class="loading-step" id="ls2"><div class="ls-dot"></div><span>Legal &amp; copyright check</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEGAL & COPYRIGHT CHECK -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
+        <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
+        <div class="cp-grid">
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+            <div class="cp-clabel">Etsy ban risk</div>
+            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+            <div class="cp-clabel">Legal risk</div>
+            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+            <div class="cp-clabel">Copyright / IP</div>
+            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
+          </div>
+        </div>
+        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
+        <div id="cert-section"></div>
+        <div style="font-size:10.5px;color:var(--ink3);text-align:center;margin-top:14px;line-height:1.5">Next up: full market, revenue &amp; profit analysis.</div>
+      </div>
+
+      <!-- RESULTS: Consolidated analysis -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
+        <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
+        <div class="browser" id="browser-el">
+          <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu"></div></div>
+          <div class="bbody">
+            <div class="bimg"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none"></div>
+            <div>
+              <div class="btitle" id="btitle-el"></div>
+              <div class="bauth"><span id="bauth-el"></span> <span class="bfol">Follow</span></div>
+              <div class="btags" id="btags-el"></div>
+              <div class="sg4">
+                <div class="si2"><div class="sk">👍 Likes</div><div class="sv hi" id="sv0"></div></div>
+                <div class="si2"><div class="sk">🔖 Saves</div><div class="sv hi" id="sv1"></div></div>
+                <div class="si2"><div class="sk">⬇ Downloads</div><div class="sv" id="sv2"></div></div>
+                <div class="si2"><div class="sk">🖨 Prints</div><div class="sv" id="sv3"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="note" id="note-div" style="margin-bottom:16px;display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="note-text"></span>
+        </div>
+        <div class="res-sec-hd"><span class="res-sec-ico">📊</span><span class="res-sec-lbl">Market Demand</span></div>
+        <div class="sgrid">
+          <div class="sc" id="mc0"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><div class="sc-lbl">Search vol.</div></div><div class="sc-val" id="msv0"></div><div class="sc-sub up" id="msub0"></div></div>
+          <div class="sc" id="mc1"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div class="sc-lbl">Etsy listings</div></div><div class="sc-val" id="msv1"></div><div class="sc-sub nc" id="msub1"></div></div>
+          <div class="sc" id="mc2"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div class="sc-lbl">Top seller</div></div><div class="sc-val" id="msv2"></div><div class="sc-sub up" id="msub2"></div></div>
+          <div class="sc" id="mc3"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="sc-lbl">Print time</div></div><div class="sc-val" id="msv3"></div><div class="sc-sub up" id="msub3"></div></div>
+        </div>
+        <div class="ins" id="ins" style="margin-bottom:16px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
+        <div class="price-slider-wrap">
+          <div class="price-slider-row">
+            <div class="price-slider-lbl">Your sell price</div>
+            <div class="price-slider-val" id="price-display">€22</div>
+          </div>
+          <input type="range" id="price-slider" min="5" max="120" value="22" step="1">
+          <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
+          <div id="sweet-spot-hint" style="text-align:center;font-size:10.5px;font-weight:700;color:var(--good);font-family:'DM Mono',sans-serif;margin-top:3px;opacity:0;transition:opacity .4s,color .3s"></div>
+          <div class="price-margin-row">
+            <span class="price-margin-lbl">Margin</span>
+            <span class="price-margin-val" id="margin-val">84%</span>
+            <span class="price-margin-lbl">· Units/mo</span>
+            <span class="price-margin-val" id="margin-units">42</span>
+            <span class="price-margin-lbl">· Net/mo</span>
+            <span class="price-margin-val" id="margin-net">€789</span>
+          </div>
+        </div>
+        <div class="res-sec-hd"><span class="res-sec-ico">💰</span><span class="res-sec-lbl">Revenue Potential</span></div>
+        <div class="rcards">
+          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">~0</div><div class="rc-lbl">est. units/mo</div></div>
+          <div class="rc" id="rc1"><div class="rc-ico">💶</div><div class="rc-val" id="rv1">€0</div><div class="rc-lbl">gross rev.</div></div>
+          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">€0</div><div class="rc-lbl">print cost</div></div>
+        </div>
+        <div class="hero" id="hero">
+          <div class="h-eye">Est. monthly profit</div>
+          <div class="h-big" id="hbig">€0</div>
+          <div class="h-sub" id="hsub">before Etsy fees · avg €22.40 sell price</div>
+          <div class="h-bd" id="hbd">
+            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0"></span></div>
+            <div class="h-row"><span class="h-lbl">Material &amp; energy</span><span class="h-val n" id="hv1"></span></div>
+            <div class="h-row"><span class="h-lbl">Etsy fees (~12%)</span><span class="h-val n" id="hv2"></span></div>
+            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINAL: inspiration + STL library offer -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">⭐</span><span class="res-sec-lbl">Winners to inspire your next print</span></div>
+        <div class="cta-intro">Prints that scored <b style="color:var(--good)">75+</b> in our database. Use them as a benchmark for what sells  -  or pick a niche and go make your version.</div>
+        <div class="eg-grid" style="margin-bottom:18px">
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div>
+              <div class="eg-vol">€18 avg</div>
+              <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div>
+              <div class="eg-vol">€22 avg</div>
+              <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div>
+              <div class="eg-vol">€14 avg</div>
+              <div class="eg-info"><div class="eg-name">Cable Box</div><div class="eg-meta">Functional</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:linear-gradient(135deg,#fce7f3,#f9a8d4)">
+              🕯️
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div>
+              <div class="eg-vol">€12 avg</div>
+              <div class="eg-info"><div class="eg-name">Tea-light Holder</div><div class="eg-meta">Decor</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">
+              🎮
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="64.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">79</text></svg></div>
+              <div class="eg-vol">€17 avg</div>
+              <div class="eg-info"><div class="eg-name">Controller Stand</div><div class="eg-meta">Functional</div></div>
+            </div>
+          </div>
+          <div class="eg-card">
+            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat">
+              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div>
+              <div class="eg-vol">€11 avg</div>
+              <div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Can't design your own models?</span></div>
+        <div class="cta-intro">Skip the Fusion 360 learning curve. Get a library of commercial-safe STLs you can list today  -  zero IP risk.</div>
+        <div class="cubee-card">
+          <div class="cubee-img-wrap">
+            <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D commercial STL library" loading="lazy" onerror="this.style.display='none'">
+            <span class="cubee-badge">Most popular</span>
+          </div>
+          <div class="cubee-body">
+            <div class="cubee-brand">Cubee3D</div>
+            <div class="cubee-name">Commercial STL License</div>
+            <div class="cubee-desc">Unlimited prints. Zero IP risk. A growing library of sell-ready STL files with a full commercial licence  -  no per-model fees.</div>
+            <div class="cubee-pts">
+              <div>1,000+ ready-to-print STL files, curated for Etsy</div>
+              <div>Full commercial licence  -  sell prints without legal worry</div>
+              <div>New models added every week</div>
+            </div>
+            <a href="https://cubee3d.com/?ref=meshminds" target="_blank" rel="noopener" class="cubee-cta">Get the commercial license →</a>
+            <div class="cubee-code">Members-only code: <b>MESHMINDS</b>  -  copy &amp; paste at checkout</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot" id="foot" style="display:none">
+    <button class="btn" id="btn2">
+      <div class="spin" id="sp2" style="display:none"></div>
+      <span id="bl2">Continue</span>
+      <svg id="ba2" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
+function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
+
+var q=id=>document.getElementById(id);
+var ease=t=>1-Math.pow(1-t,3);
+
+var rc=q("ring"),cx=rc.getContext("2d"),CX=22,CY=22,R=17,TH=4.5,rv=0;
+function ring(p,c){
+  cx.clearRect(0,0,44,44);
+  cx.beginPath();cx.lineWidth=TH;cx.lineCap="round";cx.strokeStyle="#e8e8e8";cx.arc(CX,CY,R,0,Math.PI*2);cx.stroke();
+  if(p>0){cx.beginPath();cx.strokeStyle=c;cx.arc(CX,CY,R,-Math.PI/2,-Math.PI/2+Math.PI*2*p);cx.stroke();}
+}
+ring(0,"#ccc");
+
+function animRing(to,dur,c){
+  return new Promise(res=>{
+    var from=rv,t0=null;
+    (function tick(ts){
+      if(!t0)t0=ts;
+      var t=Math.min((ts-t0)/dur,1),p=from+(to-from)*ease(t);
+      rv=p;ring(p,c);q("rn").textContent=Math.round(p*100)+"%";q("rn").style.color=c;
+      if(t<1)requestAnimationFrame(tick);else res();
+    })(performance.now());
+  });
+}
+
+var pulseRaf=null;
+function startPulse(){
+  var t0=performance.now();
+  (function tick(ts){
+    var p=0.15+0.1*Math.sin((ts-t0)/600);
+    ring(p,"#f59e0b");
+    q("rn").textContent="…";q("rn").style.color="#f59e0b";
+    pulseRaf=requestAnimationFrame(tick);
+  })(t0);
+}
+function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}}
+
+function drawLoadingRing(p,color){
+  var c=q("loading-ring");if(!c)return;
+  var ctx=c.getContext("2d"),cx=55,cy=55,r=44,th=8;
+  ctx.clearRect(0,0,110,110);
+  ctx.beginPath();ctx.lineWidth=th;ctx.lineCap="round";ctx.strokeStyle="#e8e8e8";
+  ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+  if(p>0){ctx.beginPath();ctx.strokeStyle=color||"#f59e0b";ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*p);ctx.stroke();}
+  var el=q("loading-pct");
+  if(el){el.textContent=Math.round(p*100)+"%";el.style.color=color||"#f59e0b";}
+}
+
+function startLoadingAnim(){
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  loadingProgress=0;
+  var t0=null;
+  var phases=[
+    {at:0,text:"Fetching Etsy market data…",step:"ls0"},
+    {at:0.32,text:"Calculating revenue potential…",step:"ls1"},
+    {at:0.62,text:"Running legal & copyright check…",step:"ls2"}
+  ];
+  var activePhase=-1;
+  if(q("ls0"))q("ls0").classList.remove("active","done");
+  if(q("ls1"))q("ls1").classList.remove("active","done");
+  if(q("ls2"))q("ls2").classList.remove("active","done");
+  function tick(ts){
+    if(!t0)t0=ts;
+    var elapsed=ts-t0;
+    var p=0.87*(1-Math.exp(-elapsed/9500));
+    loadingProgress=p;
+    drawLoadingRing(p,"#f59e0b");
+    for(var i=phases.length-1;i>=0;i--){
+      if(p>=phases[i].at){
+        if(activePhase!==i){
+          activePhase=i;
+          if(q("loading-phase"))q("loading-phase").textContent=phases[i].text;
+          for(var j=0;j<i;j++){var el=q(phases[j].step);if(el){el.classList.remove("active");el.classList.add("done");}}
+          var cur=q(phases[i].step);if(cur){cur.classList.remove("done");cur.classList.add("active");}
+        }
+        break;
+      }
+    }
+    loadingRaf=requestAnimationFrame(tick);
+  }
+  loadingRaf=requestAnimationFrame(tick);
+}
+
+function completeLoadingAnim(callback){
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el){el.classList.remove("active");el.classList.add("done");}});
+  if(q("loading-phase"))q("loading-phase").textContent="Report ready!";
+  var startP=loadingProgress,t0=null;
+  function tick(ts){
+    if(!t0)t0=ts;
+    var t=Math.min((ts-t0)/700,1),p=startP+(1-startP)*ease(t);
+    var color=t<1?"#f59e0b":"#15803d";
+    drawLoadingRing(p,color);
+    if(t<1)requestAnimationFrame(tick);
+    else{drawLoadingRing(1,"#15803d");setTimeout(callback,350);}
+  }
+  requestAnimationFrame(tick);
+}
+
+function dots(s){for(var i=0;i<8;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
+
+function verdict(state,msg){
+  var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
+  b.className="vbar";
+  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="Paste a link or describe your idea";}
+  else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent=lastIsURL?"Analyzing product...":"Researching your idea...";d.textContent="Fetching demand, revenue & legal data";}
+  else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
+  else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}
+}
+
+function setBtn0(label,spinning){
+  q("sp").style.display=spinning?"":"none";q("ba").style.display=spinning?"none":"";
+  q("bl").textContent=label;q("btn").disabled=!!spinning;q("btn").className="btn";
+}
+function setBtn2(label,cls,spinning){
+  q("sp2").style.display=spinning?"":"none";q("ba2").style.display=spinning?"none":"";
+  q("bl2").textContent=label;q("btn2").disabled=!!spinning;q("btn2").className="btn "+(cls||"");
+}
+function showFooter(show){q("foot").style.display=show?"":"none";}
+
+function fmt(n){
+  if(n===null||n===undefined||n==="")return"";
+  if(typeof n==="string")return n;
+  if(n>=1000000)return(n/1000000).toFixed(1)+"M";
+  if(n>=1000)return(n/1000).toFixed(1)+"k";
+  return n.toLocaleString();
+}
+function riskClass(level){
+  var l=(level||"low").toLowerCase();
+  return l==="high"?"risk-high":l==="medium"||l==="med"?"risk-medium":"risk-low";
+}
+function riskBg(level){
+  var l=(level||"low").toLowerCase();
+  return l==="high"?"#fee2e2":l==="medium"||l==="med"?"#fef9c3":"#dcfce7";
+}
+
+function recalcRevenue(price){
+  if(!baseRevData)return;
+  var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units,totalBaseCost=baseRevData.printCost;
+  var costPerUnit=baseUnits>0?totalBaseCost/baseUnits:0;
+  /* Asymmetric demand elasticity:
+     going above optimal price → demand falls sharply (e=1.5)
+     going below optimal price → demand rises gently (e=0.8)
+     This keeps the API-suggested price as the profit-maximising default. */
+  var elasticity=price>=basePrice?1.5:0.8;
+  var U=Math.max(1,Math.round(baseUnits*Math.pow(basePrice/price,elasticity)));
+  var gross=Math.round(price*U);
+  var fees=Math.round(gross*0.12);
+  var dynamicCost=Math.round(costPerUnit*U);
+  var net=gross-dynamicCost-fees;
+  var margin=gross>0?Math.round(((price*0.88-costPerUnit)/price)*100):0;
+  var marginColor=margin>=70?"var(--good)":margin>=45?"var(--warn)":"var(--bad)";
+  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
+  var inSweet=price>=sweetLow&&price<=sweetHigh;
+  if(q("rv0"))q("rv0").textContent="~"+U;
+  if(q("rv1"))q("rv1").textContent="€"+gross;
+  if(q("hbig"))q("hbig").textContent="€"+net;
+  if(q("hsub"))q("hsub").textContent="est. monthly net · €"+price+" sell price";
+  if(q("hv0"))q("hv0").textContent="~€"+gross;
+  if(q("hv1"))q("hv1").textContent="−€"+dynamicCost;
+  if(q("hv2"))q("hv2").textContent="−€"+fees;
+  if(q("hv3"))q("hv3").textContent="~€"+net;
+  if(q("price-display")){
+    q("price-display").textContent="€"+price;
+    q("price-display").style.color=inSweet?"var(--ink)":price>sweetHigh?"var(--warn)":"var(--warn)";
+  }
+  if(q("margin-val")){q("margin-val").textContent=margin+"%";q("margin-val").style.color=marginColor;}
+  if(q("margin-units")){q("margin-units").textContent=U;q("margin-units").style.color=marginColor;}
+  if(q("margin-net")){q("margin-net").textContent="€"+net;q("margin-net").style.color=marginColor;}
+  var hint=q("sweet-spot-hint");
+  if(hint){
+    if(inSweet){
+      hint.textContent="✓ Sweet spot  -  €"+sweetLow+"–€"+sweetHigh+" optimal range";
+      hint.style.color="var(--good)";
+      hint.style.opacity="1";
+    } else if(price>sweetHigh){
+      hint.textContent="↑ Above sweet spot (€"+sweetLow+"–€"+sweetHigh+")  -  fewer buyers";
+      hint.style.color="var(--warn)";
+      hint.style.opacity="1";
+    } else {
+      hint.textContent="↓ Below sweet spot (€"+sweetLow+"–€"+sweetHigh+")  -  lower margin";
+      hint.style.color="var(--warn)";
+      hint.style.opacity="1";
+    }
+  }
+}
+
+function populate(data){
+  var p=data.product||{};
+  /* Show the right panel for URL vs idea mode */
+  if(q("idea-card"))q("idea-card").style.display=lastIsURL?"none":"";
+  if(q("browser-el"))q("browser-el").style.display=lastIsURL?"":"none";
+  if(!lastIsURL&&q("idea-desc-el"))q("idea-desc-el").textContent=lastURL;
+  if(q("step1-st"))q("step1-st").textContent=lastIsURL?"The product":"Your idea";
+  if(q("step1-sh"))q("step1-sh").textContent=lastIsURL?"What we found":"Estimated analysis";
+  /* Scraped card on step 1 */
+  if(q("scrape-title")&&p.title)q("scrape-title").textContent=p.title;
+  if(q("scrape-desc")&&p.description)q("scrape-desc").textContent=p.description;
+  if(q("scrape-time")&&p.printTime)q("scrape-time").textContent=p.printTime;
+  if(q("scrape-mat")&&p.material)q("scrape-mat").textContent=p.material;
+  if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||p.url||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
+  if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
+  var buEl=document.querySelector(".bu");
+  if(buEl)buEl.textContent=(p.url||lastURL).replace(/^https?:\/\//,"");
+  if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
+  if(q("bauth-el"))q("bauth-el").textContent=p.author||"-";
+  if(q("btags-el")&&p.tags)q("btags-el").innerHTML=(p.tags||[]).map(function(t){return'<span class="btag">'+t+'</span>';}).join("");
+  if(p.image){var img=document.querySelector(".bimg img");if(img){img.src=p.image;img.style.display="";}}
+  if(q("sv0"))q("sv0").textContent=fmt(p.likes);
+  if(q("sv1"))q("sv1").textContent=fmt(p.saves);
+  if(q("sv2"))q("sv2").textContent=p.downloads||"-";
+  if(q("sv3"))q("sv3").textContent=p.prints||"-";
+  if(q("note-text")&&p.note){q("note-text").innerHTML=p.note;if(q("note-div"))q("note-div").style.display="";}
+  /* Also update scrape-card with real data from full analysis */
+  if(p.title&&q("scrape-title"))q("scrape-title").textContent=p.title;
+  if(p.description&&q("scrape-desc"))q("scrape-desc").textContent=p.description;
+  if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+  if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+  if(p.sourceHost&&q("scrape-src"))q("scrape-src").textContent=p.sourceHost.replace(/^https?:\/\//,"").slice(0,48);
+
+  var m=data.market||{};
+  if(q("msv0"))q("msv0").textContent=m.searchVolume!==undefined?fmt(m.searchVolume)+" /mo":"-";
+  if(q("msub0"))q("msub0").textContent=m.searchTrend||"";
+  if(q("msv1"))q("msv1").textContent=fmt(m.etsyListings);
+  if(q("msub1"))q("msub1").textContent=m.etsyAvgPrice?"avg "+m.etsyAvgPrice:"";
+  if(q("msv2"))q("msv2").textContent=fmt(m.topSellerSales);
+  if(q("msub2"))q("msub2").textContent=m.topSellerSales?"sales · active":"";
+  if(q("msv3"))q("msv3").textContent=m.printTime||"-";
+  if(q("msub3"))q("msub3").textContent=m.unitsPerDay||"";
+  ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
+  if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
+  if(q("ins"))q("ins").classList.add("show");
+
+  var r=data.revenue||{};
+  var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
+  baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
+  if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
+  /* Update slider range around the optimal price */
+  var slMin=Math.max(3,Math.round(spNum*0.25)),slMax=Math.max(120,Math.round(spNum*4));
+  if(q("price-slider")){q("price-slider").min=slMin;q("price-slider").max=slMax;q("price-slider").value=Math.round(spNum);}
+  if(q("ps-min"))q("ps-min").textContent="€"+slMin;
+  if(q("ps-max"))q("ps-max").textContent="€"+slMax;
+  recalcRevenue(Math.round(spNum));
+  ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
+  if(q("hero")){q("hero").classList.add("show");q("hero").classList.add("fl");}
+  if(q("hbd"))q("hbd").classList.add("show");
+
+  /* Update email gate state to "ready" */
+  if(q("gate-check")){q("gate-check").textContent="✓";q("gate-check").className="gate-check";}
+  if(q("gate-title"))q("gate-title").textContent="Your report is ready";
+  if(q("gate-sub"))q("gate-sub").textContent="Enter your email to unlock the full analysis";
+  /* Populate email gate teasers with real (blurred) values */
+  var scoreNum=data.score!==undefined?data.score:null;
+  if(q("tease-score"))q("tease-score").textContent=scoreNum!==null?scoreNum:fmt(m.searchVolume)||"-";
+  if(q("tease-rev"))q("tease-rev").textContent=r.netProfit!==undefined?"€"+r.netProfit:"-";
+  var etsyRisk=(((data.copyright||{}).etsyBanRisk)||"LOW").toUpperCase();
+  var tv=q("tease-risk");
+  if(tv){
+    tv.textContent=etsyRisk;
+    tv.className="tease-val"+(etsyRisk==="LOW"?" g":etsyRisk==="HIGH"?" b":" w");
+  }
+
+  var score=scoreNum!==null?scoreNum/100:null;
+  var verdictMsg=data.verdict||"Analysis complete";
+  var scoreColor="#15803d";
+  if(score!==null)scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
+  if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
+  if(q("verdict-msg")){q("verdict-msg").textContent=verdictMsg;q("verdict-msg").style.fontStyle="";}
+  populateCopyright(data.copyright||{});
+  /* Store score  -  only reveal ring/vbar after email gate is passed */
+  pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
+  if(step>=5)revealScore();
+}
+
+function populateCopyright(c){
+  c=c||{};
+  var etsy=(c.etsyBanRisk||"low").toLowerCase();
+  var legal=(c.legalRisk||"low").toLowerCase();
+  var copy=(c.copyrightRisk||"low").toLowerCase();
+  if(q("ck-etsy-risk")){q("ck-etsy-risk").className="cp-risk "+riskClass(etsy);q("ck-etsy-risk").textContent=etsy.toUpperCase();}
+  if(q("ck-etsy-desc"))q("ck-etsy-desc").textContent=c.etsyBanReason||"No Etsy policy issues detected.";
+  if(q("ck-legal-risk")){q("ck-legal-risk").className="cp-risk "+riskClass(legal);q("ck-legal-risk").textContent=legal.toUpperCase();}
+  if(q("ck-legal-desc"))q("ck-legal-desc").textContent=c.legalDesc||"No legal restrictions found.";
+  if(q("ck-copy-risk")){q("ck-copy-risk").className="cp-risk "+riskClass(copy);q("ck-copy-risk").textContent=copy.toUpperCase();}
+  if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
+  if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
+  var anyHigh=etsy==="high"||legal==="high"||copy==="high";
+  var anyMed=etsy==="medium"||legal==="medium"||copy==="medium";
+  var banner=q("cp-status");
+  if(banner){
+    if(anyHigh){banner.className="cp-banner bad";banner.textContent="🚫 Legal warning  -  review before listing";}
+    else if(anyMed){banner.className="cp-banner warn";banner.textContent="⚠️ Some risks to be aware of  -  read details";}
+    else{banner.className="cp-banner";banner.textContent="✅ No legal issues found  -  safe to sell";}
+  }
+}
+
+function revealScore(){
+  if(!pendingScore)return;
+  stopPulse();
+  animRing(pendingScore.score,600,pendingScore.color);
+  verdict("done",pendingScore.msg);
+  pendingScore=null;
+}
+
+function analyze(){
+  var input=q("ui").value.trim();
+  if(!input){
+    q("ui").focus();
+    q("ui").style.borderColor="var(--bad)";
+    setTimeout(function(){q("ui").style.borderColor="";},1500);
+    busy=false;return;
+  }
+  lastURL=input;
+  lastIsURL=isURL(input);
+  lastProductContext=null;
+  q("dots").style.display="flex";
+  q("submit-block").style.display="none";
+  q("btn").style.display="none";
+  if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
+  if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
+
+  if(lastIsURL){
+    q("vbar").style.display="";
+    q("vbar").className="vbar scanning";
+    q("ve").textContent="Checking link";
+    q("vt").textContent="Verifying URL…";
+    q("vd").textContent="Verifying URL…";
+    rv=0;ring(0,"#f59e0b");q("rn").textContent="0%";q("rn").style.color="#f59e0b";
+    animRing(0.85,1300,"#f59e0b").then(function(){
+      return animRing(1,450,"#15803d");
+    }).then(function(){
+      q("vbar").className="vbar done";
+      q("ve").textContent="Link verified";
+      q("vt").textContent="Ready to analyze";
+      q("vd").textContent="Ready to analyze";
+      fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({url:lastURL})
+      }).then(function(r){return r.ok?r.json():null;})
+        .then(function(d){
+          if(!d||!d.product||!d.product.title){
+            if(q("scrape-card"))q("scrape-card").style.display="none";
+            if(q("scrape-hint"))q("scrape-hint").style.display="none";
+            if(d&&d.productContext)lastProductContext=d.productContext;
+            return;
+          }
+          if(d.productContext)lastProductContext=d.productContext;
+          var p=d.product;
+          if(q("scrape-title"))q("scrape-title").textContent=p.title;
+          if(q("scrape-desc"))q("scrape-desc").textContent=p.description||"";
+          if(p.printTime&&q("scrape-time")){q("scrape-time").textContent=p.printTime;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+          if(p.material&&q("scrape-mat")){q("scrape-mat").textContent=p.material;if(q("scrape-facts"))q("scrape-facts").style.display="";}
+          if(q("scrape-src"))q("scrape-src").textContent=(p.sourceHost||lastURL||"").replace(/^https?:\/\//,"").slice(0,48);
+          if(p.image&&q("scrape-img")){q("scrape-img").src=p.image;q("scrape-img").style.display="";if(q("scrape-img-ph"))q("scrape-img-ph").style.display="none";}
+        })
+        .catch(function(){if(q("scrape-card"))q("scrape-card").style.display="none";});
+      setTimeout(function(){
+        step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
+      },500);
+    });
+  } else {
+    step=1;dots(1);slide(1);
+    showFooter(true);
+    setBtn2("Continue","",false);
+    busy=false;
+  }
+}
+
+function runAnalysis(){
+  var sellFrom=q("sell-from")?q("sell-from").value:"";
+  var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
+  verdict("scanning");
+  startPulse();
+  analysisComplete=false;
+  var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
+  if(lastProductContext)base.productContext=lastProductContext;
+  var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
+
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea2",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify(payload)
+  }).then(function(resp){
+    if(!resp.ok){
+      return resp.text().then(function(text){
+        var msg="HTTP "+resp.status;
+        try{var j=JSON.parse(text);if(j.message||j.error)msg=j.message||j.error;}catch(e){}
+        throw new Error(msg);
+      });
+    }
+    return resp.json();
+  }).then(function(data){
+    populate(data);
+    analysisComplete=true;
+    if(waitingForAnalysis){
+      waitingForAnalysis=false;
+      completeLoadingAnim(function(){
+        step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+        setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+      });
+    } else if(step===5)setBtn2("See full analysis","",false);
+    else if(step===6)setBtn2("See winners & STL library","",false);
+    else if(step===7)setBtn2("Check another print","dark",false);
+  }).catch(function(err){
+    var saved=lastURL;
+    var msg="Could not complete the analysis. Please try again.";
+    if(err&&err.message){
+      if(/^HTTP 5/.test(err.message))msg="Analysis service error ("+err.message+")  -  please try again in a moment.";
+      else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+")  -  check your link and try again.";
+      else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the analysis service  -  check your connection and try again.";
+      else msg=err.message;
+    }
+    waitingForAnalysis=false;
+    if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+    loadingProgress=0;
+    if(q("loading-overlay"))q("loading-overlay").style.display="none";
+    reset();
+    if(q("ui"))q("ui").value=saved;
+    verdict("error",msg);
+    q("vbar").style.display="";
+  });
+
+  /* Immediately move to email gate  -  user fills email while scrape runs */
+  step=4;dots(4);slide(4);
+  showFooter(false);
+  busy=false;
+}
+
+function reset(){
+  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;
+  document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
+  if(q("sell-from"))q("sell-from").value="";
+  if(q("idea-card"))q("idea-card").style.display="none";
+  if(q("browser-el"))q("browser-el").style.display="";
+  if(q("step1-st"))q("step1-st").textContent="The product";
+  if(q("step1-sh"))q("step1-sh").textContent="What we found";
+  dots(0);slide(0);q("dots").style.display="none";
+  stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
+  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";
+  if(q("cert-section"))q("cert-section").innerHTML="";
+  showFooter(false);setBtn0("Check this print",false);
+  if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
+  if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
+  if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec  -  enter your email and we'll show the full results";
+  if(q("email-inp"))q("email-inp").value="";
+  if(q("bl-email"))q("bl-email").textContent="Get my free report →";
+  if(q("sp-email"))q("sp-email").style.display="none";
+  if(q("btn-email"))q("btn-email").disabled=false;
+  /* Reset loading state */
+  waitingForAnalysis=false;
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  loadingProgress=0;
+  if(q("loading-overlay"))q("loading-overlay").style.display="none";
+  if(q("gate-head"))q("gate-head").style.display="";
+  if(q("tease-grid"))q("tease-grid").style.display="";
+  if(q("gate-form"))q("gate-form").style.display="";
+  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
+  ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
+  ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
+  if(q("ins"))q("ins").classList.remove("show");
+  if(q("hero"))q("hero").className="hero";
+  if(q("hbd"))q("hbd").classList.remove("show");
+  if(q("verdict-score")){q("verdict-score").textContent="–";q("verdict-score").style.color="var(--ink3)";}
+  if(q("verdict-msg")){q("verdict-msg").textContent="Calculating your score…";q("verdict-msg").style.fontStyle="italic";}
+}
+
+var CERT_INFO={
+  kids:{label:"Children's product safety",icon:"👶",certs:[
+    {name:"CE EN 71",region:"🇪🇺 EU",desc:"Toy safety directive  -  required for all toys sold in the EU",difficulty:"medium",cost:"€500–€2,000",note:"Via accredited testing lab; self-declaration not accepted for toys"},
+    {name:"ASTM F963",region:"🇺🇸 USA",desc:"US toy safety standard  -  required for Etsy sales to US buyers",difficulty:"medium",cost:"$300–$1,500",note:"Lab test + Children's Product Certificate (CPC) required"},
+    {name:"CPSIA",region:"🇺🇸 USA",desc:"Lead & phthalate limits; tracking label must be on product and packaging",difficulty:"low",cost:"$150–$500",note:"Most PLA filaments pass  -  get a material data sheet from your supplier"}
+  ]},
+  electronics:{label:"Electronics / LED",icon:"🔌",certs:[
+    {name:"CE marking",region:"🇪🇺 EU",desc:"Low Voltage & EMC Directives  -  mandatory for all electronic products in the EU",difficulty:"high",cost:"€1,500–€5,000",note:"Can self-declare for low-risk items but most need a notified body"},
+    {name:"FCC / IC",region:"🇺🇸🇨🇦 USA/CA",desc:"Radio frequency certification for electronic devices",difficulty:"high",cost:"$3,000–$15,000",note:"Required even for Etsy  -  US Customs can detain non-certified goods"},
+    {name:"RoHS",region:"🇪🇺 EU",desc:"Restricts 10 hazardous substances in electrical equipment",difficulty:"low",cost:"€200–€800",note:"Get a RoHS declaration from your component supplier; keep records"}
+  ]},
+  food:{label:"Food contact items",icon:"🍽️",certs:[
+    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Food-safe plastics regulation  -  standard PLA/ABS may not qualify without testing",difficulty:"medium",cost:"$400–$1,200",note:"Food-grade PLA exists but must be verified; standard printing filament is not certified"},
+    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials in contact with food  -  declaration of compliance required",difficulty:"medium",cost:"€300–€1,000",note:"Material test report + overall migration test needed from an accredited lab"},
+    {name:"⚠️ FDM risk",region:"All markets",desc:"Layer lines in FDM prints harbour bacteria and are very hard to clean safely",difficulty:"high",cost:"N/A",note:"Most food-contact 3D prints carry reputational and liability risk regardless of cert"}
+  ]},
+  wearable:{label:"Wearables / jewellery",icon:"💍",certs:[
+    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"Restricts substances of very high concern in skin-contact items",difficulty:"low",cost:"€100–€500",note:"Request a REACH compliance declaration from your filament supplier"},
+    {name:"Nickel Directive",region:"🇪🇺 EU",desc:"Limits nickel release for items in prolonged skin contact  -  e.g. earrings, bracelets",difficulty:"low",cost:"€100–€400",note:"PLA/PETG are generally nickel-free; verify with supplier data sheet"}
+  ]},
+  battery:{label:"Battery / USB products",icon:"🔋",certs:[
+    {name:"UN 38.3",region:"🌍 Global",desc:"Transport safety  -  required to ship lithium batteries by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"Couriers (DHL, UPS) require proof of compliance; without it shipments are refused"},
+    {name:"IEC 62133",region:"🌍 Global",desc:"Safety standard for portable rechargeable lithium cells",difficulty:"high",cost:"$3,000–$10,000",note:"Lab test by accredited body; often required by marketplaces for battery products"},
+    {name:"CE / FCC",region:"🇪🇺🇺🇸",desc:"Required for any device with a rechargeable battery or wireless function",difficulty:"high",cost:"€2,000–€8,000",note:"Budget 3–6 months lead time for testing and documentation"}
+  ]},
+  magnetic:{label:"Strong magnets",icon:"🧲",certs:[
+    {name:"EN 71-7",region:"🇪🇺 EU",desc:"Finger trap and ingestion hazard rules  -  applies if magnets could be accessed by children",difficulty:"medium",cost:"€500–€1,500",note:"Magnets > 0.5 T flux index require additional testing and age-restriction labelling"},
+    {name:"Warning label",region:"🌍 Global",desc:"Mandatory hazard warning if strong magnets (N35+) are in a product",difficulty:"low",cost:"<€50",note:"Include choking and pacemaker warnings; keep magnets secured in the design"}
+  ]}
+};
+
+function populateLegalCerts(){
+  var el=q("cert-section");if(!el)return;
+  var flags=qLegalFlags.filter(function(f){return f!=="none";});
+  if(flags.length===0){
+    el.innerHTML='<div style="background:#f7f7f7;border-radius:10px;padding:12px 13px;margin-top:12px"><div style="font-size:11.5px;color:var(--ink2);line-height:1.5">✅ <b>No special certificates required</b> for standard 3D printed decorative / functional items. Always double-check if you add electronics or sell to children later.</div></div>';
+    return;
+  }
+  var html='<div style="margin-top:14px"><div style="font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:\'DM Mono\',sans-serif;margin-bottom:10px">Required certificates for your product</div>';
+  flags.forEach(function(f){
+    var info=CERT_INFO[f];if(!info)return;
+    html+='<div style="border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden">';
+    html+='<div style="background:#fafafa;padding:9px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><span>'+info.icon+'</span><span>'+info.label+'</span></div>';
+    info.certs.forEach(function(c){
+      var dColor=c.difficulty==="high"?"#b91c1c":c.difficulty==="medium"?"#b45309":"#15803d";
+      var dBg=c.difficulty==="high"?"#fee2e2":c.difficulty==="medium"?"#fef9c3":"#dcfce7";
+      var dLabel=c.difficulty==="high"?"High":c.difficulty==="medium"?"Medium":"Low";
+      html+='<div style="padding:9px 12px;border-bottom:1px solid #f5f5f5">';
+      html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">';
+      html+='<span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span>';
+      html+='<span style="font-size:9.5px;background:#f0f0f0;padding:1px 6px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span>';
+      if(c.difficulty)html+='<span style="font-size:9.5px;background:'+dBg+';color:'+dColor+';padding:1px 6px;border-radius:20px;font-weight:700">'+dLabel+' difficulty</span>';
+      if(c.cost)html+='<span style="font-size:9.5px;background:#f0fdf4;color:#15803d;padding:1px 6px;border-radius:20px;font-weight:700">~'+c.cost+'</span>';
+      html+='</div>';
+      html+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4;margin-bottom:3px">'+c.desc+'</div>';
+      if(c.note)html+='<div style="font-size:10.5px;color:var(--ink3);line-height:1.35;font-style:italic">'+c.note+'</div>';
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a local legal advisor before listing.</div></div>';
+  el.innerHTML=html;
+}
+
+document.querySelectorAll(".chips").forEach(function(g){
+  var isMulti=g.classList.contains("chips-multi");
+  g.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click",function(){
+      if(isMulti){
+        c.classList.toggle("on");
+      } else {
+        g.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});
+        c.classList.add("on");
+      }
+      var id=g.id;
+      if(id==="q-cat")qCat=c.dataset.v;
+      else if(id==="q-market")qMarketplace=c.dataset.v;
+      else if(id==="q-price")qPrice=c.dataset.v;
+      else if(id==="q-time")qPrintTime=c.dataset.v;
+      else if(id==="q-costs")qExtraCosts=c.dataset.v;
+      else if(id==="q-material")qMaterial=c.dataset.v;
+      else if(id==="q-exp")qExp=c.dataset.v;
+      else if(id==="q-active")qActiveMarkets=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-social")qSocialMedia=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-sell-to")qSellTo=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+      else if(id==="q-legal-flags")qLegalFlags=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
+    });
+  });
+});
+
+q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});
+if(q("price-slider"))q("price-slider").addEventListener("input",function(){recalcRevenue(parseInt(this.value));});
+
+q("btn-email").addEventListener("click",function(){
+  var email=q("email-inp").value.trim();
+  if(!email||!email.includes("@")){
+    q("email-inp").style.borderColor="var(--bad)";
+    q("email-inp").focus();
+    setTimeout(function(){q("email-inp").style.borderColor="";},1500);
+    return;
+  }
+  /* Save email - fire and forget */
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
+    method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({type:"email",email:email,url:lastURL})
+  }).catch(function(){});
+  if(analysisComplete){
+    /* Analysis already done  -  go straight to results */
+    step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+    setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+  } else {
+    /* Show loading screen until analysis finishes */
+    waitingForAnalysis=true;
+    if(q("gate-head"))q("gate-head").style.display="none";
+    if(q("tease-grid"))q("tease-grid").style.display="none";
+    if(q("gate-form"))q("gate-form").style.display="none";
+    if(q("loading-overlay"))q("loading-overlay").style.display="";
+    startLoadingAnim();
+  }
+});
+
+q("btn2").addEventListener("click",function(){
+  if(busy)return;
+  if(step===1){step=2;dots(2);slide(2);setBtn2("Next","",false);return;}
+  if(step===2){step=3;dots(3);slide(3);setBtn2("Start analysis","",false);return;}
+  if(step===3){busy=true;runAnalysis();return;}
+  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);return;}
+  if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("Check another print","dark",false);return;}
+  else{reset();}
+});
+
+verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
+})();
+</script>
+</body>
+</html>

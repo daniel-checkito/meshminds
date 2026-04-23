@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The 3D Print Money Guide meshminds3d</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #FF6B35;
+  --orange-dark: #E8340A;
+  --black: #0A0A0A;
+  --dark: #111111;
+  --dark2: #1A1A1A;
+  --grey: #2A2A2A;
+  --lgrey: #888888;
+  --border: #E2E2E2;
+  --white: #FFFFFF;
+  --offwhite: #F5F5F3;
+  --green: #16A34A;
+  --green-light: #DCFCE7;
+  --amber: #D97706;
+  --amber-light: #FEF3C7;
+  --red: #DC2626;
+  --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --card-shadow-hover: 0 8px 32px rgba(0,0,0,0.14);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--offwhite);
+  color: var(--black);
+  line-height: 1.6;
+}
+
+/* ── HERO ── */
+.hero {
+  background: var(--dark);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bar {
+  background: var(--orange);
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.hero-bar .brand { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: white; letter-spacing: 2px; }
+.hero-bar .handle { font-size: 12px; color: rgba(0,0,0,0.7); font-weight: 600; }
+.hero-inner { padding: 56px 32px 48px; max-width: 780px; margin: 0 auto; }
+.hero-eyebrow { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; }
+.hero-h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(52px, 10vw, 88px); line-height: 0.95; color: white; margin-bottom: 20px; }
+.hero-h1 span { color: var(--orange); }
+.hero-sub { font-size: 18px; color: #AAAAAA; margin-bottom: 32px; max-width: 520px; line-height: 1.5; }
+.hero-promise { background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); border-left: 4px solid var(--orange); padding: 16px 20px; border-radius: 8px; margin-bottom: 32px; }
+.hero-promise p { font-size: 13px; color: #CCCCCC; line-height: 1.6; }
+.hero-promise strong { color: white; }
+.hero-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--grey); border: 1px solid var(--grey); border-radius: 10px; overflow: hidden; }
+.hero-stat { background: #1A1A1A; padding: 18px 12px; text-align: center; }
+.hero-stat .val { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--orange); display: block; }
+.hero-stat .lbl { font-size: 10px; color: var(--lgrey); text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── NAV ── */
+.sticky-nav {
+  position: sticky; top: 0; z-index: 100;
+  background: white;
+  border-bottom: 2px solid var(--orange);
+  padding: 0 32px;
+  display: flex; align-items: center; gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+.nav-btn {
+  padding: 12px 16px;
+  font-size: 12px; font-weight: 600;
+  color: var(--lgrey);
+  white-space: nowrap;
+  cursor: pointer;
+  border: none; background: none;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  font-family: 'DM Sans', sans-serif;
+}
+.nav-btn:hover, .nav-btn.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ── SECTIONS ── */
+.section { padding: 48px 32px; max-width: 780px; margin: 0 auto; }
+.section-label { font-size: 10px; font-weight: 700; letter-spacing: 3px; color: var(--orange); text-transform: uppercase; margin-bottom: 8px; }
+.section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px, 6vw, 52px); line-height: 1; margin-bottom: 8px; color: var(--black); }
+.section-title span { color: var(--orange); }
+.section-sub { font-size: 15px; color: var(--lgrey); margin-bottom: 32px; max-width: 520px; }
+
+/* ── CARDS ── */
+.card {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.2s, transform 0.2s;
+  overflow: hidden;
+}
+.card:hover { box-shadow: var(--card-shadow-hover); transform: translateY(-2px); }
+
+/* ── MARKET CHART ── */
+.market-grid { display: grid; gap: 12px; }
+.market-row { display: grid; grid-template-columns: 140px 1fr 80px 80px; align-items: center; gap: 12px; padding: 14px 16px; background: white; border-radius: 10px; border: 1px solid var(--border); }
+.market-row:first-child { background: #FFF4F0; border-color: var(--orange); }
+.market-keyword { font-weight: 600; font-size: 13px; }
+.market-bar-wrap { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.market-bar { height: 100%; background: var(--orange); border-radius: 4px; transition: width 1s ease; }
+.market-searches { font-size: 12px; color: var(--lgrey); text-align: right; }
+.market-competition { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-align: center; }
+.comp-low { background: var(--green-light); color: var(--green); }
+.comp-med { background: var(--amber-light); color: var(--amber); }
+.comp-high { background: #FEE2E2; color: var(--red); }
+.market-header { display: grid; grid-template-columns: 140px 1fr 80px 80px; gap: 12px; padding: 8px 16px; }
+.market-header span { font-size: 10px; font-weight: 700; color: var(--lgrey); text-transform: uppercase; letter-spacing: 1px; }
+.market-header span:last-child { text-align: center; }
+
+/* ── PRODUCT SELECTOR ── */
+.selector-wrap { background: white; border-radius: 14px; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--card-shadow); }
+.selector-header { background: var(--dark); padding: 24px; }
+.selector-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: white; }
+.selector-header p { font-size: 13px; color: #888; margin-top: 4px; }
+.selector-body { padding: 24px; }
+.question { display: none; }
+.question.active { display: block; }
+.q-label { font-size: 11px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.q-text { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--black); margin-bottom: 20px; }
+.q-options { display: grid; gap: 10px; }
+.q-option {
+  padding: 14px 18px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600; font-size: 14px;
+  transition: all 0.2s;
+  background: white;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+}
+.q-option:hover { border-color: var(--orange); background: #FFF4F0; color: var(--orange); }
+.q-option.selected { border-color: var(--orange); background: var(--orange); color: white; }
+.selector-progress { display: flex; gap: 6px; margin-bottom: 24px; }
+.prog-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+.prog-dot.done { background: var(--orange); }
+.result-card { background: var(--dark); border-radius: 12px; padding: 24px; display: none; }
+.result-card.show { display: block; }
+.result-eyebrow { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.result-product { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: white; margin-bottom: 8px; }
+.result-reason { font-size: 13px; color: #AAAAAA; margin-bottom: 16px; line-height: 1.6; }
+.result-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--grey); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+.result-stat { background: #1A1A1A; padding: 12px; text-align: center; }
+.result-stat .v { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange); }
+.result-stat .l { font-size: 9px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.restart-btn { background: var(--orange); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+/* ── PRODUCT CARDS ── */
+.product-card { background: white; border-radius: 14px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin-bottom: 24px; overflow: hidden; }
+.product-card-header { padding: 24px 24px 0; display: flex; align-items: flex-start; gap: 16px; }
+.product-num { font-family: 'Bebas Neue', sans-serif; font-size: 56px; color: var(--orange); line-height: 1; flex-shrink: 0; }
+.product-title-block {}
+.product-cat { font-size: 10px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.product-name { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--black); line-height: 1.1; }
+.product-tagline { font-size: 13px; color: var(--lgrey); margin-top: 2px; }
+.product-divider { height: 2px; background: linear-gradient(90deg, var(--orange), transparent); margin: 16px 24px; border-radius: 2px; }
+.product-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1px; background: var(--border); margin: 0 24px; border-radius: 10px; overflow: hidden; }
+.product-stat { background: var(--offwhite); padding: 14px 10px; text-align: center; }
+.product-stat .v { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--orange); display: block; }
+.product-stat .l { font-size: 9px; color: var(--lgrey); text-transform: uppercase; letter-spacing: 1px; }
+.product-body { padding: 20px 24px; font-size: 14px; color: #333; line-height: 1.7; }
+.insight-box { margin: 0 24px 16px; background: #F0FAF4; border-left: 4px solid var(--green); border-radius: 0 10px 10px 0; padding: 14px 16px; }
+.insight-box .i-label { font-size: 9px; font-weight: 700; color: var(--green); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.insight-box .i-head { font-weight: 700; font-size: 14px; color: var(--black); margin-bottom: 4px; }
+.insight-box .i-body { font-size: 13px; color: #444; line-height: 1.5; }
+.tip-box { margin: 0 24px 16px; background: #FFF4F0; border-left: 4px solid var(--orange); border-radius: 0 10px 10px 0; padding: 14px 16px; }
+.tip-box .t-label { font-size: 9px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.tip-box .t-body { font-size: 13px; color: #333; line-height: 1.5; }
+.prompt-box { margin: 0 24px 24px; background: #F9F9F9; border: 1px solid var(--border); border-left: 4px solid var(--orange); border-radius: 0 10px 10px 0; padding: 14px 16px; position: relative; }
+.prompt-box .p-label { font-size: 9px; font-weight: 700; color: var(--orange); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.prompt-box .p-text { font-family: 'DM Mono', monospace; font-size: 12px; color: #333; line-height: 1.6; }
+.copy-btn { position: absolute; top: 12px; right: 12px; background: var(--orange); color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
+.copy-btn:hover { opacity: 0.85; }
+.aff-row { margin: 0 24px 16px; display: flex; align-items: center; gap: 8px; }
+.aff-label { font-size: 9px; font-weight: 700; color: var(--lgrey); letter-spacing: 2px; text-transform: uppercase; flex-shrink: 0; }
+.aff-link { font-size: 13px; font-weight: 700; color: var(--orange); }
+
+/* ── CALCULATOR ── */
+.calc-wrap { background: white; border-radius: 14px; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; }
+.calc-header { background: var(--dark); padding: 24px; }
+.calc-header h3 { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: white; }
+.calc-header p { font-size: 13px; color: #888; margin-top: 4px; }
+.calc-body { padding: 28px; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.calc-field label { font-size: 11px; font-weight: 700; color: var(--lgrey); letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.calc-field input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 16px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--black);
+  transition: border-color 0.2s;
+  background: var(--offwhite);
+}
+.calc-field input:focus { outline: none; border-color: var(--orange); background: white; }
+.calc-results { background: var(--dark); border-radius: 12px; padding: 24px; }
+.calc-result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--grey); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+.calc-result-item { background: #1A1A1A; padding: 16px; text-align: center; }
+.calc-result-item .rv { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--orange); }
+.calc-result-item .rl { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+.calc-breakdown { font-size: 12px; color: #666; }
+.calc-breakdown div { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--grey); }
+.calc-breakdown div:last-child { border: none; }
+.calc-breakdown .total { color: var(--orange); font-weight: 700; font-size: 13px; }
+.calc-warning { background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 12px; color: #AAAAAA; }
+.calc-warning strong { color: var(--orange); }
+
+/* ── WEEK PLAN ── */
+.week-grid { display: grid; gap: 8px; }
+.day-row { display: grid; grid-template-columns: 60px 1fr; gap: 0; background: white; border-radius: 10px; border: 1px solid var(--border); overflow: hidden; transition: box-shadow 0.2s; }
+.day-row:hover { box-shadow: var(--card-shadow-hover); }
+.day-num { background: var(--dark); color: var(--orange); font-family: 'Bebas Neue', sans-serif; font-size: 22px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0; padding: 16px 8px; }
+.day-num span { font-size: 9px; color: #666; letter-spacing: 1px; text-transform: uppercase; font-family: 'DM Sans', sans-serif; font-weight: 700; }
+.day-content { padding: 14px 18px; }
+.day-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; }
+.day-desc { font-size: 12px; color: var(--lgrey); line-height: 1.5; }
+.day-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; flex-shrink: 0; transition: all 0.2s; margin: auto 16px auto 0; }
+.day-check.checked { background: var(--green); border-color: var(--green); position: relative; }
+.day-check.checked::after { content: '✓'; color: white; font-size: 11px; font-weight: 700; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); }
+.day-row { display: grid; grid-template-columns: 60px 1fr 40px; }
+
+/* ── MISTAKES ── */
+.mistake-grid { display: grid; gap: 12px; }
+.mistake-card { background: white; border-radius: 12px; border: 1px solid var(--border); border-left: 5px solid; padding: 18px 20px; }
+.mistake-card.danger { border-left-color: var(--red); }
+.mistake-card.warning { border-left-color: var(--amber); }
+.mistake-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: var(--lgrey); margin-bottom: 4px; }
+.mistake-title { font-weight: 700; font-size: 15px; margin-bottom: 6px; }
+.mistake-desc { font-size: 13px; color: #555; line-height: 1.5; }
+.mistake-fix { margin-top: 10px; padding: 8px 12px; background: var(--green-light); border-radius: 6px; font-size: 12px; color: var(--green); font-weight: 600; }
+
+/* ── MONTH PROJECTIONS ── */
+.projection-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.proj-tab { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 2px solid var(--border); background: white; color: var(--lgrey); font-family: 'DM Sans', sans-serif; transition: all 0.2s; }
+.proj-tab.active { border-color: var(--orange); background: var(--orange); color: white; }
+.proj-content { display: none; }
+.proj-content.active { display: block; }
+.proj-timeline { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.proj-month { background: white; border-radius: 12px; border: 1px solid var(--border); padding: 20px; text-align: center; position: relative; overflow: hidden; }
+.proj-month::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--orange); }
+.proj-month .m-label { font-size: 10px; font-weight: 700; color: var(--lgrey); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.proj-month .m-revenue { font-family: 'Bebas Neue', sans-serif; font-size: 36px; color: var(--black); }
+.proj-month .m-profit { font-size: 13px; color: var(--green); font-weight: 700; margin-bottom: 12px; }
+.proj-month .m-details { font-size: 11px; color: var(--lgrey); line-height: 1.6; }
+.proj-month.highlight { border-color: var(--orange); }
+.proj-month.highlight .m-revenue { color: var(--orange); }
+.proj-reality { background: var(--amber-light); border: 1px solid var(--amber); border-radius: 10px; padding: 14px 18px; margin-top: 16px; font-size: 13px; color: #7c5200; }
+.proj-reality strong { font-weight: 700; }
+
+/* ── FOOTER ── */
+.footer { background: var(--dark); padding: 40px 32px; text-align: center; }
+.footer .f-brand { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--orange); margin-bottom: 8px; }
+.footer .f-handle { font-size: 14px; color: #666; margin-bottom: 16px; }
+.footer .f-note { font-size: 12px; color: #444; }
+
+/* ── UTILITY ── */
+.orange-hr { height: 3px; background: linear-gradient(90deg, var(--orange), transparent); border: none; margin: 0 0 24px; border-radius: 2px; }
+.divider { height: 1px; background: var(--border); margin: 48px 0; }
+.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.badge-orange { background: var(--orange); color: white; }
+.badge-green { background: var(--green-light); color: var(--green); }
+.badge-amber { background: var(--amber-light); color: var(--amber); }
+
+@keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+.animate { animation: fadeUp 0.5s ease forwards; }
+
+@media (max-width: 640px) {
+  .hero-inner { padding: 32px 18px 36px; }
+  .hero-h1 { font-size: 52px; }
+  .hero-sub { font-size: 15px; }
+  .hero-stats { grid-template-columns: repeat(2,1fr); }
+  .hero-stat .val { font-size: 24px; }
+  .sticky-nav { padding: 0 8px; }
+  .nav-btn { padding: 10px 8px; font-size: 10px; }
+  .section { padding: 32px 16px; }
+  .section-title { font-size: 34px; }
+  .market-header { grid-template-columns: 90px 1fr 54px; padding: 6px 10px; }
+  .market-header span:nth-child(4) { display: none; }
+  .market-row { grid-template-columns: 90px 1fr 54px; padding: 10px; gap: 8px; }
+  .market-row > div:last-child { display: none; }
+  .market-keyword { font-size: 11px; }
+  .market-searches { font-size: 10px; }
+  .selector-header { padding: 16px; }
+  .selector-body { padding: 16px; }
+  .q-text { font-size: 20px; }
+  .q-option { font-size: 13px; padding: 11px 13px; }
+  .product-card-header { padding: 16px 16px 0; gap: 10px; }
+  .product-num { font-size: 40px; }
+  .product-name { font-size: 20px; }
+  .product-stats { grid-template-columns: repeat(2,1fr); margin: 0 16px; }
+  .product-body { padding: 14px 16px; font-size: 13px; }
+  .insight-box, .tip-box, .prompt-box, .aff-row { margin-left: 16px; margin-right: 16px; }
+  .product-divider { margin: 10px 16px; }
+  .p-text { font-size: 11px; }
+  .calc-header { padding: 16px; }
+  .calc-body { padding: 16px; }
+  .calc-grid { grid-template-columns: 1fr; gap: 10px; }
+  .calc-result-item .rv { font-size: 20px; }
+  .day-row { grid-template-columns: 46px 1fr 34px; }
+  .day-num { font-size: 16px; padding: 10px 4px; }
+  .day-num span { font-size: 7px; }
+  .day-content { padding: 10px 12px; }
+  .day-title { font-size: 13px; }
+  .day-desc { font-size: 11px; }
+  .mistake-card { padding: 14px; }
+  .mistake-title { font-size: 13px; }
+  .mistake-desc, .mistake-fix { font-size: 12px; }
+  .projection-tabs { gap: 5px; }
+  .proj-tab { font-size: 11px; padding: 6px 10px; }
+  .proj-timeline { grid-template-columns: 1fr; gap: 10px; }
+  .proj-month .m-revenue { font-size: 28px; }
+  .calc-breakdown div { font-size: 11px; }
+  .aff-grid { grid-template-columns: 1fr !important; }
+  .cta-grid { grid-template-columns: 1fr !important; }
+  #gear .card { /* affiliate cards */ }
+  #gear > div > div:first-child + div { grid-template-columns: 1fr !important; }
+  .hero-bar { padding: 8px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bar">
+    <span class="brand">MESHMINDS</span>
+    <span class="handle">@meshminds3d</span>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Free Guide · 2026 Edition</div>
+    <h1 class="hero-h1">THE 3D PRINT<br><span>MONEY</span><br>GUIDE</h1>
+    <p class="hero-sub">Real margins. Real mistakes. Real prompts you can copy in 60 seconds.</p>
+    <div class="hero-promise">
+      <p>I analysed <strong>164,000 Etsy shops</strong> and tracked what actually sells in 2026. This guide tells you which product to print first, what you'll realistically make, and the exact prompt to write your first listing. No fluff. No guessing.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="val">10</span><span class="lbl">Products</span></div>
+      <div class="hero-stat"><span class="val">€0.05</span><span class="lbl">Min Cost</span></div>
+      <div class="hero-stat"><span class="val">98%</span><span class="lbl">Max Margin</span></div>
+      <div class="hero-stat"><span class="val">7</span><span class="lbl">Day Plan</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav class="sticky-nav">
+  <button class="nav-btn active" onclick="scrollTo('market')">📊 Market</button>
+  <button class="nav-btn" onclick="scrollTo('selector')">🎯 Find Your Product</button>
+  <button class="nav-btn" onclick="scrollTo('products')">📦 All Products</button>
+  <button class="nav-btn" onclick="scrollTo('calculator')">🧮 Pricing</button>
+  <button class="nav-btn" onclick="scrollTo('week')">📅 Week 1 Plan</button>
+  <button class="nav-btn" onclick="scrollTo('mistakes')">⚠️ Mistakes</button>
+  <button class="nav-btn" onclick="scrollTo('projections')">📈 Month 1–3</button>
+  <button class="nav-btn" onclick="scrollTo('gear')">🛒 Gear</button>
+</nav>
+
+<!-- ── MARKET DATA ── -->
+<div class="section" id="market">
+  <div class="section-label">Etsy Market Data · 2026</div>
+  <h2 class="section-title">WHAT PEOPLE ARE<br><span>SEARCHING FOR</span></h2>
+  <p class="section-sub">Monthly search volume on Etsy for 3D printed products. Green = low competition. Opportunity = high search + low competition.</p>
+
+  <div class="market-header">
+    <span>Keyword</span>
+    <span>Search Volume</span>
+    <span style="text-align:right">Searches/mo</span>
+    <span>Competition</span>
+  </div>
+  <div class="market-grid">
+    <div class="market-row">
+      <div class="market-keyword">🏆 Lithophane gift</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:92%"></div></div>
+      <div class="market-searches">48,200</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Custom organizer</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:85%"></div></div>
+      <div class="market-searches">41,500</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Birth flower ring</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:78%"></div></div>
+      <div class="market-searches">38,900</div>
+      <div><span class="market-competition comp-med">MEDIUM</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Articulated dragon</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:72%"></div></div>
+      <div class="market-searches">35,100</div>
+      <div><span class="market-competition comp-high">HIGH</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Gameboy holder</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:58%"></div></div>
+      <div class="market-searches">28,400</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Cable clips desk</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:52%"></div></div>
+      <div class="market-searches">25,600</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Pet memorial gift</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:44%"></div></div>
+      <div class="market-searches">21,800</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Replacement part</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:38%"></div></div>
+      <div class="market-searches">18,700</div>
+      <div><span class="market-competition comp-low">LOW</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Phone stand</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:95%"></div></div>
+      <div class="market-searches">52,000</div>
+      <div><span class="market-competition comp-high">HIGH</span></div>
+    </div>
+    <div class="market-row">
+      <div class="market-keyword">Cookie cutter</div>
+      <div class="market-bar-wrap"><div class="market-bar" style="width:88%"></div></div>
+      <div class="market-searches">45,300</div>
+      <div><span class="market-competition comp-high">HIGH</span></div>
+    </div>
+  </div>
+  <div style="margin-top:16px; padding:14px 18px; background:white; border-radius:10px; border:1px solid var(--border);">
+    <p style="font-size:13px; color:var(--lgrey);">💡 <strong style="color:var(--black)">The opportunity formula:</strong> High search + Low competition = your sweet spot. Lithophane gifts and cable clips both hit this. Phone stands and cookie cutters are oversaturated stay away.</p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── SELECTOR ── -->
+<div class="section" id="selector">
+  <div class="section-label">3 Questions · 60 Seconds</div>
+  <h2 class="section-title">FIND YOUR<br><span>PERFECT PRODUCT</span></h2>
+  <p class="section-sub">Answer 3 questions. Get your exact starting product. No guessing.</p>
+
+  <div class="selector-wrap">
+    <div class="selector-header">
+      <h3>THE PRODUCT SELECTOR</h3>
+      <p>Takes 60 seconds. Gives you one clear answer.</p>
+    </div>
+    <div class="selector-body">
+      <div class="selector-progress">
+        <div class="prog-dot done" id="dot-1"></div>
+        <div class="prog-dot" id="dot-2"></div>
+        <div class="prog-dot" id="dot-3"></div>
+      </div>
+
+      <div class="question active" id="q1">
+        <div class="q-label">Question 1 of 3</div>
+        <div class="q-text">WHAT PRINTER DO YOU HAVE?</div>
+        <div class="q-options">
+          <button class="q-option" onclick="answer(1,'fdm')">🖨️ FDM printer (Bambu, Creality, Prusa)</button>
+          <button class="q-option" onclick="answer(1,'resin')">💧 Resin printer (Elegoo, Anycubic)</button>
+          <button class="q-option" onclick="answer(1,'both')">🖨️💧 Both FDM and Resin</button>
+        </div>
+      </div>
+
+      <div class="question" id="q2">
+        <div class="q-label">Question 2 of 3</div>
+        <div class="q-text">WHAT DO YOU WANT?</div>
+        <div class="q-options">
+          <button class="q-option" onclick="answer(2,'passive')">😴 Passive income minimal daily effort</button>
+          <button class="q-option" onclick="answer(2,'active')">💪 Active income I'm okay with orders daily</button>
+          <button class="q-option" onclick="answer(2,'b2b')">🏢 B2B I want recurring business clients</button>
+        </div>
+      </div>
+
+      <div class="question" id="q3">
+        <div class="q-label">Question 3 of 3</div>
+        <div class="q-text">CAN YOU DESIGN YOUR OWN MODELS?</div>
+        <div class="q-options">
+          <button class="q-option" onclick="answer(3,'yes')">✅ Yes I use Fusion 360 / Blender</button>
+          <button class="q-option" onclick="answer(3,'learning')">📚 Learning basic skills only</button>
+          <button class="q-option" onclick="answer(3,'no')">❌ No I need ready-to-print files</button>
+        </div>
+      </div>
+
+      <div class="result-card" id="result">
+        <div class="result-eyebrow">YOUR PERFECT STARTING PRODUCT</div>
+        <div class="result-product" id="result-name"></div>
+        <div class="result-reason" id="result-reason"></div>
+        <div class="result-stats" id="result-stats"></div>
+        <div style="font-size:12px; color:#666; margin-bottom:16px;" id="result-tip"></div>
+        <button class="restart-btn" onclick="restart()">↩ Start Over</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── PRODUCTS ── -->
+<div class="section" id="products">
+  <div class="section-label">10 Products · Full Breakdown</div>
+  <h2 class="section-title">THE COMPLETE<br><span>PRODUCT GUIDE</span></h2>
+  <p class="section-sub">Every product. Real numbers. One insight that makes it work. One prompt you can use today.</p>
+
+  <!-- Product 01 -->
+  <div class="product-card">
+    <div class="product-card-header">
+      <div class="product-num">01</div>
+      <div class="product-title-block">
+        <div class="product-cat">HOME / OFFICE</div>
+        <div class="product-name">Cable Management Clips</div>
+        <div class="product-tagline">The most boring product. Also one of the most profitable.</div>
+      </div>
+    </div>
+    <div class="product-divider"></div>
+    <div class="product-stats">
+      <div class="product-stat"><span class="v">€0.05</span><span class="l">Cost</span></div>
+      <div class="product-stat"><span class="v">€8–15</span><span class="l">Sale Price</span></div>
+      <div class="product-stat"><span class="v">15 min</span><span class="l">Per Unit</span></div>
+      <div class="product-stat"><span class="v">95%+</span><span class="l">Margin</span></div>
+    </div>
+    <div class="product-body">Cable clips print in 15 minutes, cost almost nothing, and sell in packs of 10–20. The B2B angle is where it gets interesting one coworking space order can be worth €200+. Free files exist on Printables. No design skills needed to start.</div>
+    <div class="insight-box">
+      <div class="i-label">🔑 The Unlock</div>
+      <div class="i-head">The "Custom Size" Service</div>
+      <div class="i-body">Generic clips exist everywhere. The moment you offer "send me your cable diameter and I'll print the exact size" you become the only option. That is worth 3× the price and zero extra effort.</div>
+    </div>
+    <div class="tip-box">
+      <div class="t-label">💡 Pro Tip</div>
+      <div class="t-body">Bundle 3 sizes into a "starter pack" at €12. Most customers buy more than one size anyway you're just making that decision easy for them.</div>
+    </div>
+    <div class="aff-row">
+      <span class="aff-label">Tool</span>
+      <span class="aff-link">Polymaker PETG for functional prints → polymaker.com</span>
+    </div>
+    <div class="prompt-box">
+      <div class="p-label">📋 Copy-Paste Prompt</div>
+      <div class="p-text">"Write 5 Etsy listing titles for custom 3D printed cable management clips. Target home office buyers. Include: custom size, cable organizer, desk setup, set of 10. Make them feel specific and premium, not generic."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    </div>
+  </div>
+
+  <!-- Product 02 -->
+  <div class="product-card">
+    <div class="product-card-header">
+      <div class="product-num">02</div>
+      <div class="product-title-block">
+        <div class="product-cat">GIFTS / PERSONALIZED</div>
+        <div class="product-name">Lithophane Photo Panels</div>
+        <div class="product-tagline">Customers send you a photo. You ship them something that makes them cry.</div>
+      </div>
+    </div>
+    <div class="product-divider"></div>
+    <div class="product-stats">
+      <div class="product-stat"><span class="v">€0.80</span><span class="l">Cost</span></div>
+      <div class="product-stat"><span class="v">€15–40</span><span class="l">Sale Price</span></div>
+      <div class="product-stat"><span class="v">2 hrs</span><span class="l">Per Unit</span></div>
+      <div class="product-stat"><span class="v">97%+</span><span class="l">Margin</span></div>
+    </div>
+    <div class="product-body">Print in white PLA, backlight it, image appears inside. Customer sends any photo wedding, baby, pet. Fully automatable once you have the workflow. Etsy search volume for "lithophane" spikes 3× every December. The workflow: photo → free lithophane generator → slicer → print → ship.</div>
+    <div class="insight-box">
+      <div class="i-label">🔑 The Unlock</div>
+      <div class="i-head">Pet Memorial = Never Negotiate on Price</div>
+      <div class="i-body">Pet memorial lithophanes sell for €35–60 each. Grieving pet owners search Etsy specifically for this. They never negotiate. They leave 5-star reviews. They send friends. This is the single most loyal buyer segment in 3D printing.</div>
+    </div>
+    <div class="tip-box">
+      <div class="t-label">💡 Pro Tip</div>
+      <div class="t-body">Add an €8 LED light base upsell at checkout. Half of buyers take it. That is €8 extra per order for zero extra print time you just order the base from Amazon.</div>
+    </div>
+    <div class="aff-row">
+      <span class="aff-label">Tool</span>
+      <span class="aff-link">Meshy AI generate lithophane STLs instantly → meshy.ai</span>
+    </div>
+    <div class="prompt-box">
+      <div class="p-label">📋 Copy-Paste Prompt</div>
+      <div class="p-text">"Write a product description for a pet memorial lithophane night light sold on Etsy. Emotional but not overdone. Under 120 words. Include: personalized, made from your photo, unique memorial gift, ships in 3–5 days."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    </div>
+  </div>
+
+  <!-- Product 03 -->
+  <div class="product-card">
+    <div class="product-card-header">
+      <div class="product-num">03</div>
+      <div class="product-title-block">
+        <div class="product-cat">NICHE / B2B</div>
+        <div class="product-name">Replacement Parts</div>
+        <div class="product-tagline">People pay a premium to fix something they love.</div>
+      </div>
+    </div>
+    <div class="product-divider"></div>
+    <div class="product-stats">
+      <div class="product-stat"><span class="v">€1–3</span><span class="l">Cost</span></div>
+      <div class="product-stat"><span class="v">€20–80</span><span class="l">Sale Price</span></div>
+      <div class="product-stat"><span class="v">varies</span><span class="l">Per Unit</span></div>
+      <div class="product-stat"><span class="v">90%+</span><span class="l">Margin</span></div>
+    </div>
+    <div class="product-body">Vintage appliances, discontinued electronics, old hobby equipment. The part does not exist anywhere else. You are the only option. No competition because nobody thinks the market exists but one Facebook group post can generate 20 orders in a day.</div>
+    <div class="insight-box">
+      <div class="i-label">🔑 The Unlock</div>
+      <div class="i-head">EU Repair Clause 2025 Legal Green Light</div>
+      <div class="i-body">Since May 2025, EU law explicitly allows printing spare parts that restore a product's original appearance. This removed the last legal grey area. The market is now completely open and legally protected in the EU.</div>
+    </div>
+    <div class="tip-box">
+      <div class="t-label">💡 Pro Tip</div>
+      <div class="t-body">Search "[product name] broken clip" or "[product name] broken part" on Facebook groups. That exact phrase tells you what people cannot find anywhere. Those are your first products.</div>
+    </div>
+    <div class="aff-row">
+      <span class="aff-label">Tool</span>
+      <span class="aff-link">eSUN PETG for durable functional parts → esun3d.com</span>
+    </div>
+    <div class="prompt-box">
+      <div class="p-label">📋 Copy-Paste Prompt</div>
+      <div class="p-text">"I 3D print replacement parts for discontinued products. Write a Facebook group post for [vintage appliance] enthusiasts offering printed replacement [part name]. Friendly tone, not salesy. Mention: worldwide shipping, exact fit guaranteed, link to my Etsy shop."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    </div>
+  </div>
+
+  <!-- Product 04 -->
+  <div class="product-card">
+    <div class="product-card-header">
+      <div class="product-num">04</div>
+      <div class="product-title-block">
+        <div class="product-cat">COLLECTIBLES / GAMING</div>
+        <div class="product-name">Retro Gaming Accessories</div>
+        <div class="product-tagline">Passionate audience. Almost zero competition. Real money.</div>
+      </div>
+    </div>
+    <div class="product-divider"></div>
+    <div class="product-stats">
+      <div class="product-stat"><span class="v">€0.50</span><span class="l">Cost</span></div>
+      <div class="product-stat"><span class="v">€12–30</span><span class="l">Sale Price</span></div>
+      <div class="product-stat"><span class="v">1–3 hrs</span><span class="l">Per Unit</span></div>
+      <div class="product-stat"><span class="v">95%+</span><span class="l">Margin</span></div>
+    </div>
+    <div class="product-body">Gameboy holders, N64 stands, PS1 cases, MiniDisc storage. Eric Murray built a $38K Etsy shop starting with a Gameboy holder he designed for his own kids. The less mainstream the format, the less competition and the more loyal the buyers.</div>
+    <div class="insight-box">
+      <div class="i-label">🔑 The Unlock</div>
+      <div class="i-head">Obsolete Media is Completely Untapped</div>
+      <div class="i-body">MiniDisc cases, cassette tape holders, floppy disk stands almost nobody prints for these formats. But the collector communities are passionate and active on Reddit and Facebook. Search "[format name] collector" to find 10,000+ potential customers instantly.</div>
+    </div>
+    <div class="tip-box">
+      <div class="t-label">⚠️ Legal Note</div>
+      <div class="t-body">Do not print Nintendo, Sony, or Sega logos on products. The organizer is legal. The branding is trademark infringement. Keep it clean.</div>
+    </div>
+    <div class="aff-row">
+      <span class="aff-label">Tool</span>
+      <span class="aff-link">Hive by Cubee 1,000+ proven commercial designs → cubee3d.com</span>
+    </div>
+    <div class="prompt-box">
+      <div class="p-label">📋 Copy-Paste Prompt</div>
+      <div class="p-text">"List 5 retro media formats from the 1980s–2000s with active collector communities in 2026. For each: suggest one 3D printable storage or display accessory that does not exist on Etsy. Be specific about dimensions and what makes it useful."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    </div>
+  </div>
+
+  <!-- Product 05 -->
+  <div class="product-card">
+    <div class="product-card-header">
+      <div class="product-num">05</div>
+      <div class="product-title-block">
+        <div class="product-cat">HOME / CUSTOM</div>
+        <div class="product-name">Custom Kitchen Organizers</div>
+        <div class="product-tagline">One seller makes €12,000/month. The secret is one word: "custom".</div>
+      </div>
+    </div>
+    <div class="product-divider"></div>
+    <div class="product-stats">
+      <div class="product-stat"><span class="v">€2–4</span><span class="l">Cost</span></div>
+      <div class="product-stat"><span class="v">€35–80</span><span class="l">Sale Price</span></div>
+      <div class="product-stat"><span class="v">3–6 hrs</span><span class="l">Per Unit</span></div>
+      <div class="product-stat"><span class="v">95%+</span><span class="l">Margin</span></div>
+    </div>
+    <div class="product-body">Standard organizers exist everywhere. Custom-fit organizers for a specific drawer that only you have do not exist. Customer sends measurements and a photo. You design and print. Chinese factories cannot compete because every single order is different.</div>
+    <div class="insight-box">
+      <div class="i-label">🔑 The Unlock</div>
+      <div class="i-head">The €10 Design Fee Nobody Questions</div>
+      <div class="i-body">Add a €10 "custom design fee" to every order. Frame it as: "I design this specifically for your drawer dimensions." 90% of customers pay without question. That is €10 extra per order for 10 minutes of work.</div>
+    </div>
+    <div class="tip-box">
+      <div class="t-label">💡 Pro Tip</div>
+      <div class="t-body">Post a photo of a messy drawer in a Facebook home decor group with "I 3D print custom organizers for any drawer size DM me." Watch the replies come in before you've listed on Etsy.</div>
+    </div>
+    <div class="aff-row">
+      <span class="aff-label">Tool</span>
+      <span class="aff-link">Printago manage print queues when you scale → printago.io</span>
+    </div>
+    <div class="prompt-box">
+      <div class="p-label">📋 Copy-Paste Prompt</div>
+      <div class="p-text">"Write a customer intake message I send after someone buys a custom kitchen organizer on Etsy. Ask for: drawer dimensions (W×D×H in cm), items to store inside, preferred colour, any special requirements like lids. Friendly tone, under 80 words."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)">COPY</button>
+    </div>
+  </div>
+
+  <!-- Products 06–10 condensed for space but functional -->
+  <div style="background:white; border-radius:14px; border:1px solid var(--border); padding:24px; box-shadow:var(--card-shadow);">
+    <div style="font-size:10px; font-weight:700; color:var(--orange); letter-spacing:2px; text-transform:uppercase; margin-bottom:12px;">Products 06–10 · Quick Reference</div>
+    <div style="display:grid; gap:12px;">
+      <div style="padding:16px; background:var(--offwhite); border-radius:10px; border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:15px;">06 · Dental Models</strong>
+          <span style="font-size:12px; color:var(--green); font-weight:700;">70%+ margin</span>
+        </div>
+        <p style="font-size:13px; color:#555; line-height:1.5;">B2B recurring orders. Local dental practices need 24hr turnaround. No Chinese competition they need someone local they can trust. One practice = €500+/month recurring. Requires MSLA resin printer.</p>
+      </div>
+      <div style="padding:16px; background:var(--offwhite); border-radius:10px; border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:15px;">07 · Resin Jewelry</strong>
+          <span style="font-size:12px; color:var(--green); font-weight:700;">98%+ margin</span>
+        </div>
+        <p style="font-size:13px; color:#555; line-height:1.5;">Highest margin product in 3D printing. Birth flower rings hit 12,000+ sales on top Etsy shops. Market growing 21%/year. ⚠️ Always wear gloves one unprotected resin exposure can cause a permanent allergy.</p>
+      </div>
+      <div style="padding:16px; background:var(--offwhite); border-radius:10px; border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:15px;">08 · Fidget Toys</strong>
+          <span style="font-size:12px; color:var(--amber); font-weight:700;">High competition</span>
+        </div>
+        <p style="font-size:13px; color:#555; line-height:1.5;">Wigglitz won Toy of the Year 2026 beating LEGO starting with articulated figures. Works because 3D printing is the only way to make them. Only viable if you have an original design 100 shops sell the same dragon.</p>
+      </div>
+      <div style="padding:16px; background:var(--offwhite); border-radius:10px; border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:15px;">09 · Industrial Vents</strong>
+          <span style="font-size:12px; color:var(--green); font-weight:700;">85%+ margin</span>
+        </div>
+        <p style="font-size:13px; color:#555; line-height:1.5;">Waterproof vents, cable glands for electronics manufacturers. Nobody talks about this niche that's why it works. 500 unit quarterly order at €12 each = €6,000. Repeat orders guaranteed.</p>
+      </div>
+      <div style="padding:16px; background:var(--offwhite); border-radius:10px; border-left:4px solid var(--orange);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <strong style="font-size:15px;">10 · STL File Sales</strong>
+          <span style="font-size:12px; color:var(--green); font-weight:700;">99%+ margin</span>
+        </div>
+        <p style="font-size:13px; color:#555; line-height:1.5;">Design once. Upload once. Sell forever. Zero material cost, zero shipping. MakerWorld pays monthly bonuses on top. Top creators earn €5,000–10,000/month. Patreon subscription model = recurring revenue.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── CALCULATOR ── -->
+<div class="section" id="calculator">
+  <div class="section-label">Interactive Tool</div>
+  <h2 class="section-title">THE PRICING<br><span>CALCULATOR</span></h2>
+  <p class="section-sub">Most sellers lose money because they only count filament. Fill in your numbers and see the real picture.</p>
+
+  <div class="calc-wrap">
+    <div class="calc-header">
+      <h3>WHAT WILL YOU ACTUALLY MAKE?</h3>
+      <p>Enter your numbers. See your real profit. No surprises at tax time.</p>
+    </div>
+    <div class="calc-body">
+      <div class="calc-grid">
+        <div class="calc-field">
+          <label>Filament Used (grams)</label>
+          <input type="number" id="c-grams" value="50" oninput="calcProfit()">
+        </div>
+        <div class="calc-field">
+          <label>Filament Cost (€/kg)</label>
+          <input type="number" id="c-filament" value="22" oninput="calcProfit()">
+        </div>
+        <div class="calc-field">
+          <label>Print Time (hours)</label>
+          <input type="number" id="c-hours" value="2" step="0.5" oninput="calcProfit()">
+        </div>
+        <div class="calc-field">
+          <label>Your Sale Price (€)</label>
+          <input type="number" id="c-price" value="25" oninput="calcProfit()">
+        </div>
+        <div class="calc-field">
+          <label>Electricity Rate (€/kWh)</label>
+          <input type="number" id="c-elec" value="0.32" step="0.01" oninput="calcProfit()">
+        </div>
+        <div class="calc-field">
+          <label>Platform Fees (%)</label>
+          <input type="number" id="c-fees" value="40" oninput="calcProfit()">
+        </div>
+      </div>
+
+      <div class="calc-results">
+        <div class="calc-result-grid">
+          <div class="calc-result-item">
+            <div class="rv" id="r-cost"></div>
+            <div class="rl">Real Cost</div>
+          </div>
+          <div class="calc-result-item">
+            <div class="rv" id="r-profit"></div>
+            <div class="rl">Profit/Unit</div>
+          </div>
+          <div class="calc-result-item">
+            <div class="rv" id="r-margin"></div>
+            <div class="rl">Margin</div>
+          </div>
+        </div>
+        <div class="calc-breakdown">
+          <div><span>Filament cost</span><span id="b-filament"></span></div>
+          <div><span>Electricity</span><span id="b-elec"></span></div>
+          <div><span>Machine wear</span><span id="b-wear"></span></div>
+          <div><span>Failed print buffer (15%)</span><span id="b-fail"></span></div>
+          <div><span>Platform fees</span><span id="b-fees"></span></div>
+          <div class="total"><span>Total real cost</span><span id="b-total"></span></div>
+        </div>
+        <div class="calc-warning" id="calc-warning" style="display:none">
+          <strong>⚠️ Warning:</strong> Your price is too low. You are making less than €3/hour after all costs. Raise your price to at least <span id="warn-price"></span> for a viable margin.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── WEEK 1 ── -->
+<div class="section" id="week">
+  <div class="section-label">Action Plan</div>
+  <h2 class="section-title">YOUR FIRST<br><span>7 DAYS</span></h2>
+  <p class="section-sub">Exactly what to do each day. Check them off as you go. By Day 7 you have a live listing.</p>
+
+  <div class="week-grid">
+    <div class="day-row">
+      <div class="day-num">1<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Pick ONE product. Not two. One.</div>
+        <div class="day-desc">Use the selector above. Read that product's full breakdown. Understand exactly what you're printing and why people buy it.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">2<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Print one test unit. Photograph it properly.</div>
+        <div class="day-desc">Natural light. Clean white background. Hold the product in your hand for one photo. That personal touch converts. Avoid renders Etsy's 2025 policy requires real photos.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">3<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Use the prompt from this guide to write your listing.</div>
+        <div class="day-desc">Paste the prompt into Claude or ChatGPT. Edit the output. Write your first Etsy title, description, and 13 tags. Done in 20 minutes.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">4<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Open your Etsy shop. List the product.</div>
+        <div class="day-desc">Price at 5× material cost minimum. Use the calculator above. If you feel like the price is "too high" it is probably correct. Underpricing is the #1 mistake.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">5<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Share in 2–3 Facebook groups for your niche.</div>
+        <div class="day-desc">Not "buy my product" posts. Show the product, tell the story, include your Etsy link naturally. Example: "Made this for my own desk, listing it now if anyone wants one."</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">6<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Print 5 more units. Improve based on questions.</div>
+        <div class="day-desc">Any question someone asks about your product is a gap in your listing. Answer it in the description. Questions = free market research.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+    <div class="day-row">
+      <div class="day-num">7<span>DAY</span></div>
+      <div class="day-content">
+        <div class="day-title">Review: did anyone buy? Here is what to do.</div>
+        <div class="day-desc">Yes → Print more, respond fast, ask for a review. No → Change the main photo first (that is the biggest conversion lever). Then check your title. Price is the last thing to change.</div>
+      </div>
+      <div class="day-check" onclick="toggleCheck(this)"></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── MISTAKES ── -->
+<div class="section" id="mistakes">
+  <div class="section-label">Read This Before You List</div>
+  <h2 class="section-title">5 MISTAKES THAT<br><span>KILL NEW SELLERS</span></h2>
+  <p class="section-sub">These are the exact mistakes that cause 80% of new shops to make zero sales in month one.</p>
+
+  <div class="mistake-grid">
+    <div class="mistake-card danger">
+      <div class="mistake-num">MISTAKE 01</div>
+      <div class="mistake-title">Pricing on filament cost only</div>
+      <div class="mistake-desc">You spend €2 on filament and charge €5. After Etsy fees (40%), electricity, machine wear, packaging, and your time you made €0.20 and spent 2 hours. You are working for less than minimum wage.</div>
+      <div class="mistake-fix">✅ Fix: Use the calculator above. Price at 5× real cost minimum. If it feels too expensive it is probably correct.</div>
+    </div>
+    <div class="mistake-card danger">
+      <div class="mistake-num">MISTAKE 02</div>
+      <div class="mistake-title">Using renders instead of real photos</div>
+      <div class="mistake-desc">Etsy's 2025 Creativity Standards require real photos of the physical item. Shops using renders or stock images are getting flagged. Real photos also convert 3× better than renders.</div>
+      <div class="mistake-fix">✅ Fix: Print the product. Photograph it in natural light. Hold it in your hand for one photo. Takes 20 minutes. Converts infinitely better.</div>
+    </div>
+    <div class="mistake-card danger">
+      <div class="mistake-num">MISTAKE 03</div>
+      <div class="mistake-title">Selling licensed characters</div>
+      <div class="mistake-desc">Pokemon, Disney, Marvel, Warhammer selling prints of licensed characters is trademark infringement even if you designed it from scratch. Games Workshop has a dedicated legal team searching Etsy. One DMCA notice can delete your entire shop including all reviews.</div>
+      <div class="mistake-fix">✅ Fix: Original designs only. If you use a licensed STL file from Hive by Cubee, that is covered. Anything else design it yourself.</div>
+    </div>
+    <div class="mistake-card warning">
+      <div class="mistake-num">MISTAKE 04</div>
+      <div class="mistake-title">Not drying filament before printing</div>
+      <div class="mistake-desc">PETG absorbs moisture from the air within 24 hours of opening. Wet filament causes bubbling, stringing, and failed prints that look like settings errors. Most sellers spend hours adjusting settings when the real fix costs €15 and 4 hours in a food dehydrator.</div>
+      <div class="mistake-fix">✅ Fix: Dry PETG for 4–6 hours at 65°C in a food dehydrator before printing. Store in vacuum bags with silica gel.</div>
+    </div>
+    <div class="mistake-card warning">
+      <div class="mistake-num">MISTAKE 05</div>
+      <div class="mistake-title">Listing everything instead of one thing</div>
+      <div class="mistake-desc">New sellers list 20 different products hoping something sticks. Etsy's algorithm rewards shops with consistent niche focus. A shop with 5 listings in one niche outranks a shop with 50 listings in 10 different categories.</div>
+      <div class="mistake-fix">✅ Fix: Pick one product. Get 10 reviews on it. Then add one more product in the same niche. Build depth, not width.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── PROJECTIONS ── -->
+<div class="section" id="projections">
+  <div class="section-label">Honest Expectations</div>
+  <h2 class="section-title">WHAT MONTH 1, 2<br><span>AND 3 LOOK LIKE</span></h2>
+  <p class="section-sub">Real numbers based on 164,000 Etsy shop data. Median results, not best-case. Pick your product to see realistic projections.</p>
+
+  <div class="projection-tabs">
+    <button class="proj-tab active" onclick="showProj('clips')">Cable Clips</button>
+    <button class="proj-tab" onclick="showProj('litho')">Lithophanes</button>
+    <button class="proj-tab" onclick="showProj('retro')">Retro Gaming</button>
+    <button class="proj-tab" onclick="showProj('organizer')">Organizers</button>
+    <button class="proj-tab" onclick="showProj('stl')">STL Files</button>
+  </div>
+
+  <div class="proj-content active" id="proj-clips">
+    <div class="proj-timeline">
+      <div class="proj-month">
+        <div class="m-label">Month 1</div>
+        <div class="m-revenue">€45–90</div>
+        <div class="m-profit" style="color:var(--amber)">~€25 profit</div>
+        <div class="m-details">4–8 orders<br>Mostly from Facebook posts<br>Still learning the workflow<br>1–2 product listings</div>
+      </div>
+      <div class="proj-month highlight">
+        <div class="m-label">Month 2</div>
+        <div class="m-revenue">€150–280</div>
+        <div class="m-profit">~€90 profit</div>
+        <div class="m-details">12–20 orders<br>First Etsy organic traffic<br>First repeat customers<br>Added custom size service</div>
+      </div>
+      <div class="proj-month">
+        <div class="m-label">Month 3</div>
+        <div class="m-revenue">€320–580</div>
+        <div class="m-profit">~€200 profit</div>
+        <div class="m-details">25–45 orders<br>First B2B inquiry<br>5-star reviews building<br>Etsy SEO starting to kick in</div>
+      </div>
+    </div>
+    <div class="proj-reality">
+      <strong>Honest reality:</strong> Month 1 will feel slow and underwhelming. Most people quit here. The sellers who push to month 3 are the ones who build a real business. The Etsy algorithm takes 60–90 days to trust a new shop.
+    </div>
+  </div>
+
+  <div class="proj-content" id="proj-litho">
+    <div class="proj-timeline">
+      <div class="proj-month">
+        <div class="m-label">Month 1</div>
+        <div class="m-revenue">€80–160</div>
+        <div class="m-profit" style="color:var(--amber)">~€50 profit</div>
+        <div class="m-details">3–6 orders<br>Gift buyers finding you<br>High review quality<br>Learning the photo workflow</div>
+      </div>
+      <div class="proj-month highlight">
+        <div class="m-label">Month 2</div>
+        <div class="m-revenue">€240–480</div>
+        <div class="m-profit">~€160 profit</div>
+        <div class="m-details">8–16 orders<br>First 5-star reviews in<br>Pet memorial niche hit<br>LED base upsell added</div>
+      </div>
+      <div class="proj-month">
+        <div class="m-label">Month 3</div>
+        <div class="m-revenue">€480–960</div>
+        <div class="m-profit">~€350 profit</div>
+        <div class="m-details">16–32 orders<br>Etsy search ranking built<br>December spike incoming<br>First repeat gift buyers</div>
+      </div>
+    </div>
+    <div class="proj-reality">
+      <strong>Honest reality:</strong> Lithophanes have the best review quality of any 3D print product. People cry when they open them. That emotional response drives organic word-of-mouth that no ad budget can replicate.
+    </div>
+  </div>
+
+  <div class="proj-content" id="proj-retro">
+    <div class="proj-timeline">
+      <div class="proj-month">
+        <div class="m-label">Month 1</div>
+        <div class="m-revenue">€60–120</div>
+        <div class="m-profit" style="color:var(--amber)">~€35 profit</div>
+        <div class="m-details">4–8 orders<br>Reddit & Facebook traffic<br>Niche community response</div>
+      </div>
+      <div class="proj-month highlight">
+        <div class="m-label">Month 2</div>
+        <div class="m-revenue">€180–360</div>
+        <div class="m-profit">~€120 profit</div>
+        <div class="m-details">12–24 orders<br>Community word-of-mouth<br>Added 2nd format</div>
+      </div>
+      <div class="proj-month">
+        <div class="m-label">Month 3</div>
+        <div class="m-revenue">€360–720</div>
+        <div class="m-profit">~€250 profit</div>
+        <div class="m-details">24–48 orders<br>Strong Etsy SEO for niche<br>First wholesale inquiry</div>
+      </div>
+    </div>
+    <div class="proj-reality">
+      <strong>Honest reality:</strong> Retro gaming communities are loyal. Once you are the go-to Gameboy holder shop, buyers recommend you in every relevant thread they see. Organic growth compounds faster here than any other category.
+    </div>
+  </div>
+
+  <div class="proj-content" id="proj-organizer">
+    <div class="proj-timeline">
+      <div class="proj-month">
+        <div class="m-label">Month 1</div>
+        <div class="m-revenue">€140–280</div>
+        <div class="m-profit" style="color:var(--amber)">~€80 profit</div>
+        <div class="m-details">3–6 orders<br>Higher order value<br>Custom design workflow</div>
+      </div>
+      <div class="proj-month highlight">
+        <div class="m-label">Month 2</div>
+        <div class="m-revenue">€350–700</div>
+        <div class="m-profit">~€220 profit</div>
+        <div class="m-details">7–14 orders<br>Design fee added<br>Facebook group traction</div>
+      </div>
+      <div class="proj-month">
+        <div class="m-label">Month 3</div>
+        <div class="m-revenue">€700–1,400</div>
+        <div class="m-profit">~€480 profit</div>
+        <div class="m-details">14–28 orders<br>First repeat customers<br>Interior design community</div>
+      </div>
+    </div>
+    <div class="proj-reality">
+      <strong>Honest reality:</strong> Custom organizers have the highest order value on this list. But each order takes more time design + print + ship. Scale is harder. This is a premium service, not a volume play.
+    </div>
+  </div>
+
+  <div class="proj-content" id="proj-stl">
+    <div class="proj-timeline">
+      <div class="proj-month">
+        <div class="m-label">Month 1</div>
+        <div class="m-revenue">€15–40</div>
+        <div class="m-profit" style="color:var(--amber)">~€15 profit</div>
+        <div class="m-details">3–8 file sales<br>Pure passive income<br>Slow start, no reviews</div>
+      </div>
+      <div class="proj-month highlight">
+        <div class="m-label">Month 2</div>
+        <div class="m-revenue">€60–150</div>
+        <div class="m-profit">~€60 profit</div>
+        <div class="m-details">12–30 file sales<br>MakerWorld bonus kicks in<br>First bundle pack added</div>
+      </div>
+      <div class="proj-month">
+        <div class="m-label">Month 3</div>
+        <div class="m-revenue">€180–450</div>
+        <div class="m-profit">~€180 profit</div>
+        <div class="m-details">36–90 file sales<br>Patreon launched<br>Compounding downloads</div>
+      </div>
+    </div>
+    <div class="proj-reality">
+      <strong>Honest reality:</strong> STL sales start slow but compound hard. Month 6 looks completely different from month 1. This is the only product on this list that makes money while you sleep but only after you invest 3–6 months building the catalogue.
+    </div>
+  </div>
+</div>
+
+
+<div class="divider"></div>
+
+<!-- ── AFFILIATE GEAR ── -->
+<div class="section" id="gear">
+  <div class="section-label">Gear I Actually Use</div>
+  <h2 class="section-title">THE TOOLS THAT<br><span>MAKE IT EASIER</span></h2>
+  <p class="section-sub">These are affiliate links. If you buy through them I earn a small commission at no extra cost to you. I only list things that are genuinely worth it.</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;" class="aff-grid">
+
+    <!-- Bambu A1 -->
+    <div class="card" style="border-top:4px solid var(--orange); overflow:hidden;">
+      <div style="background:var(--dark); padding:18px 18px 14px; position:relative;">
+        <span style="position:absolute;top:12px;left:12px;background:var(--orange);color:white;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;">START HERE</span>
+        <div style="text-align:center;padding-top:16px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--orange);line-height:1;">A1</div>
+          <div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;">Bambu Lab</div>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;border-left:3px solid var(--orange);padding-left:8px;">Bambu Lab A1</div>
+        <p style="font-size:12px;color:#555;line-height:1.6;margin-bottom:12px;">The best FDM printer for sellers in 2026. Fast, reliable, AMS multi-colour ready. I run mine 12+ hours a day. Zero babysitting needed. This is the one I recommend to everyone starting out.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+          <div style="text-align:center;background:var(--offwhite);border-radius:6px;padding:8px 4px;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);">500mm/s</div>
+            <div style="font-size:9px;color:var(--lgrey);text-transform:uppercase;">Speed</div>
+          </div>
+          <div style="text-align:center;background:var(--offwhite);border-radius:6px;padding:8px 4px;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);">4-col</div>
+            <div style="font-size:9px;color:var(--lgrey);text-transform:uppercase;">AMS</div>
+          </div>
+          <div style="text-align:center;background:var(--offwhite);border-radius:6px;padding:8px 4px;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--orange);">~€350</div>
+            <div style="font-size:9px;color:var(--lgrey);text-transform:uppercase;">Price</div>
+          </div>
+        </div>
+        <a href="https://bambulab.com" target="_blank" style="display:block;background:var(--orange);color:white;text-align:center;padding:10px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;">Shop Bambu Lab →</a>
+      </div>
+    </div>
+
+    <!-- Hive Cubee -->
+    <div class="card" style="border-top:4px solid var(--orange); overflow:hidden;">
+      <div style="background:var(--dark); padding:18px 18px 14px; position:relative;">
+        <span style="position:absolute;top:12px;left:12px;background:var(--orange);color:white;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;">#1 MOST CLICKED</span>
+        <div style="text-align:center;padding-top:16px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:white;line-height:1.1;">1,000+<br><span style="color:var(--orange);">DESIGNS</span></div>
+          <div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">To Sell Legally</div>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;border-left:3px solid var(--orange);padding-left:8px;">Hive by Cubee3D</div>
+        <p style="font-size:12px;color:#555;line-height:1.6;margin-bottom:12px;">Commercial licence for 1,000+ professional STL designs. Print and sell legally from day one. Each designer catalogue is limited to 50 sellers worldwide less competition by design. The fastest way to start selling without designing your own files.</p>
+        <div style="background:#FFF4F0;border-radius:6px;padding:8px 10px;margin-bottom:14px;font-size:11px;color:#333;border-left:3px solid var(--orange);">
+          <strong>Seats are limited per catalogue.</strong> Check if spots are still open before you decide on a product niche.
+        </div>
+        <a href="https://cubee3d.com" target="_blank" style="display:block;background:var(--orange);color:white;text-align:center;padding:10px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;">See if spots are open →</a>
+      </div>
+    </div>
+
+    <!-- Elegoo Saturn -->
+    <div class="card" style="border-top:4px solid var(--orange); overflow:hidden;">
+      <div style="background:var(--dark); padding:18px 18px 14px; position:relative;">
+        <span style="position:absolute;top:12px;left:12px;background:var(--green);color:white;font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;">RESIN PICK</span>
+        <div style="text-align:center;padding-top:16px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--orange);line-height:1;">SATURN 4</div>
+          <div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;">Elegoo</div>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;border-left:3px solid var(--orange);padding-left:8px;">Elegoo Saturn 4 Ultra</div>
+        <p style="font-size:12px;color:#555;line-height:1.6;margin-bottom:12px;">Best resin printer for sellers doing jewelry, dental models, or miniatures. Huge build plate, fast cure time, insane detail quality. If you are going into the 98% margin resin jewelry niche this is the machine.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+          <div style="background:var(--offwhite);border-radius:6px;padding:8px;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--orange);">12K res</div>
+            <div style="font-size:9px;color:var(--lgrey);text-transform:uppercase;">Resolution</div>
+          </div>
+          <div style="background:var(--offwhite);border-radius:6px;padding:8px;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--orange);">~€500</div>
+            <div style="font-size:9px;color:var(--lgrey);text-transform:uppercase;">Price</div>
+          </div>
+        </div>
+        <a href="https://elegoo.com" target="_blank" style="display:block;background:var(--orange);color:white;text-align:center;padding:10px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;">Shop Elegoo →</a>
+      </div>
+    </div>
+
+    <!-- Meshy AI -->
+    <div class="card" style="border-top:4px solid var(--orange); overflow:hidden;">
+      <div style="background:var(--dark); padding:18px 18px 14px; position:relative;">
+        <span style="position:absolute;top:12px;left:12px;background:var(--dark2);color:var(--orange);font-size:9px;font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;border:1px solid var(--orange);">NO CAD NEEDED</span>
+        <div style="text-align:center;padding-top:16px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:white;line-height:1.2;">TEXT<br><span style="color:var(--orange);">→ 3D MODEL</span></div>
+          <div style="font-size:11px;color:#888;letter-spacing:2px;text-transform:uppercase;margin-top:4px;">In 2 minutes</div>
+        </div>
+      </div>
+      <div style="padding:16px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;border-left:3px solid var(--orange);padding-left:8px;">Meshy AI</div>
+        <p style="font-size:12px;color:#555;line-height:1.6;margin-bottom:12px;">Type a description, get a print-ready 3D model in under 2 minutes. Now built directly into MakerWorld. If you picked a product in this guide but have no design skills Meshy removes that blocker completely.</p>
+        <div style="background:#FFF4F0;border-radius:6px;padding:8px 10px;margin-bottom:14px;font-size:11px;color:#333;border-left:3px solid var(--orange);">
+          Free tier available. Start for €0, upgrade when you need higher quality exports.
+        </div>
+        <a href="https://meshy.ai" target="_blank" style="display:block;background:var(--orange);color:white;text-align:center;padding:10px;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;">Try Meshy free →</a>
+      </div>
+    </div>
+
+  </div>
+  <p style="font-size:11px;color:var(--lgrey);margin-top:16px;text-align:center;">Some links above are affiliate links. If you buy through them I may earn a small commission at no extra cost to you.</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ── FEATURE CTA ── -->
+<div style="background:var(--dark);padding:0;margin:0;">
+  <div style="max-width:780px;margin:0 auto;padding:48px 24px;text-align:center;">
+    <div style="font-size:10px;font-weight:700;color:var(--orange);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">BUILT SOMETHING COOL?</div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:clamp(32px,6vw,56px);color:white;line-height:0.95;margin-bottom:16px;">I'LL FEATURE YOUR<br><span style="color:var(--orange);">3D PRINT BUSINESS</span><br>TO MY AUDIENCE</h2>
+    <p style="font-size:15px;color:#AAAAAA;max-width:460px;margin:0 auto 28px;line-height:1.6;">I have 93K followers on Instagram and 55K on TikTok. If you have built something interesting with 3D printing a product, a niche, a business model DM me and I will consider featuring it in my next post.</p>
+    <div style="display:inline-flex;align-items:center;gap:16px;background:#1A1A1A;border:1px solid #2A2A2A;border-radius:12px;padding:16px 24px;margin-bottom:24px;flex-wrap:wrap;justify-content:center;">
+      <div style="text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);">93K</div>
+        <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;">Instagram</div>
+      </div>
+      <div style="width:1px;height:32px;background:#2A2A2A;"></div>
+      <div style="text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);">55K</div>
+        <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;">TikTok</div>
+      </div>
+      <div style="width:1px;height:32px;background:#2A2A2A;"></div>
+      <div style="text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--orange);">100M+</div>
+        <div style="font-size:9px;color:#555;text-transform:uppercase;letter-spacing:1px;">Total Views</div>
+      </div>
+    </div>
+    <a href="https://instagram.com/meshminds3d" target="_blank" style="display:inline-block;background:var(--orange);color:white;padding:16px 32px;border-radius:10px;font-family:'Bebas Neue',sans-serif;font-size:22px;text-decoration:none;letter-spacing:1px;">DM @meshminds3d →</a>
+    <p style="font-size:11px;color:#333;margin-top:14px;">I read every DM. No guarantees but if your story is good, I will share it.</p>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<div style="background:var(--dark); margin-top:48px; padding:48px 32px; text-align:center;">
+  <div style="font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--orange); margin-bottom:8px;">MESHMINDS</div>
+  <div style="font-size:14px; color:#555; margin-bottom:16px;">@meshminds3d · Instagram · TikTok</div>
+  <div style="font-size:13px; color:#444; margin-bottom:24px;">Real 3D printing business numbers, every week. No highlight reels.</div>
+  <div style="font-size:11px; color:#333;">Free to share · Not for resale · Numbers marked as placeholder real eRank data coming soon · 2026</div>
+</div>
+
+<script>
+// ── CALCULATOR ──────────────────────────────────────────────────────────────
+function calcProfit() {
+  const grams = parseFloat(document.getElementById('c-grams').value) || 0;
+  const filamentPerKg = parseFloat(document.getElementById('c-filament').value) || 0;
+  const hours = parseFloat(document.getElementById('c-hours').value) || 0;
+  const price = parseFloat(document.getElementById('c-price').value) || 0;
+  const elec = parseFloat(document.getElementById('c-elec').value) || 0;
+  const fees = parseFloat(document.getElementById('c-fees').value) / 100 || 0;
+
+  const filamentCost = (grams / 1000) * filamentPerKg;
+  const electricityCost = hours * 0.35 * elec;
+  const machineCost = hours * 0.08;
+  const failBuffer = filamentCost * 0.15;
+  const feesCost = price * fees;
+  const totalCost = filamentCost + electricityCost + machineCost + failBuffer + feesCost;
+  const profit = price - totalCost;
+  const margin = price > 0 ? ((profit / price) * 100).toFixed(0) : 0;
+
+  document.getElementById('r-cost').textContent = '€' + totalCost.toFixed(2);
+  document.getElementById('r-profit').textContent = '€' + profit.toFixed(2);
+  document.getElementById('r-margin').textContent = margin + '%';
+  document.getElementById('b-filament').textContent = '€' + filamentCost.toFixed(2);
+  document.getElementById('b-elec').textContent = '€' + electricityCost.toFixed(2);
+  document.getElementById('b-wear').textContent = '€' + machineCost.toFixed(2);
+  document.getElementById('b-fail').textContent = '€' + failBuffer.toFixed(2);
+  document.getElementById('b-fees').textContent = '€' + feesCost.toFixed(2);
+  document.getElementById('b-total').textContent = '€' + totalCost.toFixed(2);
+
+  const warn = document.getElementById('calc-warning');
+  const minViable = (totalCost / (1 - fees)) * 3;
+  if (profit < 3 || margin < 30) {
+    warn.style.display = 'block';
+    document.getElementById('warn-price').textContent = '€' + minViable.toFixed(2);
+  } else {
+    warn.style.display = 'none';
+  }
+}
+calcProfit();
+
+// ── SELECTOR ───────────────────────────────────────────────────────────────
+let answers = {};
+const products = {
+  fdm_passive_yes: { name: 'STL File Sales', reason: 'FDM printer + passive income + design skills = pure digital product business. Design files, upload them, earn while you sleep. No material cost, no shipping, 99% margin.', stats: [['€0','Cost'],['€3–30','Per File'],['99%','Margin']], tip: 'Start on MakerWorld for the monthly bonus system, then expand to Cults3D and CGTrader.' },
+  fdm_passive_no: { name: 'Cable Management Clips', reason: 'FDM printer + passive income preference + no design skills = high-volume simple product. Free files on Printables, prints while you sleep, sells on autopilot once listed.', stats: [['€0.05','Cost'],['€8–15','Sale'],['95%','Margin']], tip: 'List on Etsy, share once in a Facebook home office group, then let Etsy SEO do the work.' },
+  fdm_passive_learning: { name: 'Retro Gaming Accessories', reason: 'Simple shapes that are easy to design. Passionate niche audience. Low competition. Perfect for someone building design skills start with free files, graduate to your own designs.', stats: [['€0.50','Cost'],['€12–30','Sale'],['95%','Margin']], tip: 'Start with a Gameboy cartridge holder. It is simple to design, well-searched, and the niche is loyal.' },
+  fdm_active_yes: { name: 'Custom Kitchen Organizers', reason: 'FDM + active order handling + design skills = maximum order value. Every order is unique. No factory can compete. €35–80 per order with a €10 design fee on top.', stats: [['€3','Cost'],['€45–80','Sale'],['95%','Margin']], tip: 'Post a messy drawer photo in a home decor Facebook group before even listing on Etsy.' },
+  fdm_active_no: { name: 'Replacement Parts', reason: 'No design skills needed for basic parts you can measure and trace broken parts. Active order model fits because each order is different. Massive margins because you are the only option.', stats: [['€1–3','Cost'],['€20–80','Sale'],['90%','Margin']], tip: 'Search Facebook groups for [product] broken clip or broken hinge. Those are your first orders.' },
+  fdm_active_learning: { name: 'Lithophane Photo Panels', reason: 'Zero design skills needed the lithophane generator does the work. Active order model fits perfectly. High emotional value = high reviews = Etsy algorithm boost.', stats: [['€0.80','Cost'],['€15–40','Sale'],['97%','Margin']], tip: 'Start with the pet memorial niche. Those buyers leave the best reviews and never negotiate on price.' },
+  fdm_b2b_yes: { name: 'Custom Kitchen Organizers (B2B)', reason: 'Design skills + B2B focus = interior designers and property developers ordering in bulk. One interior designer client can be worth €500/month in repeat orders.', stats: [['€3','Cost'],['€45–80','Sale'],['95%','Margin']], tip: 'Email local interior design studios offering custom organizers for client projects. B2B beats B2C for lifetime value.' },
+  fdm_b2b_no: { name: 'Industrial Vents & Cable Glands', reason: 'No design skills needed for basic enclosure parts dimensions can be measured and recreated. B2B industrial clients order quarterly. One client = €6,000/quarter. Fully repeatable.', stats: [['€1–3','Cost'],['€8–20','Each'],['85%','Margin']], tip: 'Cold email: "Custom 3D printed waterproof vents, 48hr turnaround, free sample." Keep it under 80 words.' },
+  fdm_b2b_learning: { name: 'Dental Models', reason: 'B2B dental practices need local suppliers. 24hr turnaround is your advantage. One practice = €500+/month recurring. Learning CAD helps you customize to each practice\'s requirements.', stats: [['€3','Cost'],['€30–80','Sale'],['70%','Margin']], tip: 'Walk into local dental practices with a printed sample model. That physical demo closes more clients than any email.' },
+  resin_passive_yes: { name: 'STL File Sales Miniatures', reason: 'Resin + passive + design skills = D&D and tabletop miniature files. The highest-earning STL niche by revenue per file. Patreon subscription model creates €500–3,000/month recurring.', stats: [['€0','Cost'],['€10–30','Per File'],['99%','Margin']], tip: 'D&D terrain packs sell for €20–40 as bundles. Subscribers pay monthly for new dungeon tiles.' },
+  resin_passive_no: { name: 'Lithophane Photo Panels', reason: 'Resin produces even higher detail for lithophanes than FDM. Passive because once the workflow is built, orders process themselves. Files are auto-generated.', stats: [['€0.80','Cost'],['€15–40','Sale'],['97%','Margin']], tip: 'Use a food dehydrator as your wash station cover. Keep resin workspace clean and ventilated.' },
+  resin_passive_learning: { name: 'Resin Jewelry Birth Flowers', reason: 'Birth flower designs are simple enough for beginner designers. 12,000+ sales on top Etsy shops. Market growing 21%/year. Learn Blender basics for jewelry and you have a passive income machine.', stats: [['€0.50','Cost'],['€25–50','Sale'],['98%','Margin']], tip: 'Start with one birth flower design per month. By month 12 you have 12 products.' },
+  resin_active_yes: { name: 'Resin Jewelry Custom', reason: 'Resin + active + design skills = fully custom jewelry. Names, dates, custom shapes. Each piece unique. Premium pricing. The personalization is what they pay for, not the resin.', stats: [['€0.50','Cost'],['€25–60','Sale'],['98%','Margin']], tip: '⚠️ Always gloves. One unprotected resin exposure can cause a permanent allergy.' },
+  resin_active_no: { name: 'Dental Models', reason: 'Resin is the correct technology for dental models. Active order model suits recurring B2B dental clients. No design skills needed dentists provide the scan files.', stats: [['€2–5','Cost'],['€30–80','Sale'],['70%','Margin']], tip: 'Ask dental practices for their STL scan files. You print them. They provide the design.' },
+  resin_active_learning: { name: 'Miniature Figurines', reason: 'Resin produces museum-quality miniature detail. Active market on Etsy. Learning Blender opens up fully custom character design. Start with public domain designs while learning.', stats: [['€0.50','Cost'],['€15–40','Sale'],['95%','Margin']], tip: 'Only sell original designs or licensed files. Games Workshop actively hunts unlicensed miniatures.' },
+  resin_b2b_yes: { name: 'Dental Models + Design', reason: 'Resin + B2B + design skills = custom surgical guides and complex orthodontic models. Highest value dental product. Recurring clients pay €80–150 per model.', stats: [['€3–5','Cost'],['€60–150','Sale'],['75%','Margin']], tip: 'Partner with a local orthodontist first. One client gives you a reference for every other practice in the city.' },
+  resin_b2b_no: { name: 'Dental Models', reason: 'Perfect match. Resin technology + B2B dental clients + no design needed (they provide scans). Lowest barrier to entry in B2B 3D printing with the highest recurring revenue.', stats: [['€2–5','Cost'],['€30–80','Sale'],['70%','Margin']], tip: 'Walk into local dental practices with a printed sample model. Physical demos close more clients than emails.' },
+  resin_b2b_learning: { name: 'Hearing Aid Shells', reason: 'Resin + B2B + learning design = hearing aid shells for local audiologists. Niche B2B medical adjacent market. High recurring value. Your local presence is your competitive advantage.', stats: [['€2–4','Cost'],['€40–100','Sale'],['80%','Margin']], tip: 'Contact local audiologists and hearing centres. Ask if they currently outsource to labs you can replace that lab locally.' },
+  both_passive_yes: { name: 'STL File Sales + Miniatures', reason: 'Both printers + passive + design = run FDM for functional STL files and resin for miniature files. Two passive income streams from one design session. Maximum platform diversification.', stats: [['€0','Cost'],['€5–30','Per File'],['99%','Margin']], tip: 'Sell FDM files on MakerWorld, resin miniature files on MyMiniFactory. Different audiences, same design work.' },
+  both_passive_no: { name: 'Lithophane Photo Panels', reason: 'Both printers + passive + no design = lithophanes. FDM for standard panels, resin for ultra-high detail versions at a price premium. Fully automatable once the workflow is set.', stats: [['€0.80','Cost'],['€15–50','Sale'],['97%','Margin']], tip: 'Offer a "premium resin" option at 2× the FDM price. Many buyers choose it immediately.' },
+  both_passive_learning: { name: 'Cable Clips + Resin Jewelry', reason: 'Run both: FDM for cable clips on autopilot, resin for jewelry as you build design skills. Two income streams, two different skill levels, both compounding.', stats: [['€0.50','avg Cost'],['€10–40','avg Sale'],['96%','Margin']], tip: 'List both on Etsy. Cross-promote in your shop: "Also check our jewelry section."' },
+  both_active_yes: { name: 'Custom Organizers + Custom Jewelry', reason: 'Both printers + active + design skills = premium custom service. FDM for organizers, resin for matching jewelry pieces. Package deals. Interior designers love a seller who can do both.', stats: [['€2','avg Cost'],['€40–70','avg Sale'],['96%','Margin']], tip: 'Offer a "new home bundle" custom kitchen organizer + personalized lithophane as a housewarming gift set.' },
+  both_active_no: { name: 'Replacement Parts + Lithophanes', reason: 'Two proven products with free files available. FDM for replacement parts (zero design needed), resin for premium lithophanes. Both active, both high-review, both high-margin.', stats: [['€1','avg Cost'],['€20–40','avg Sale'],['93%','Margin']], tip: 'Build both shops simultaneously. They serve completely different customers no cannibalization.' },
+  both_active_learning: { name: 'Lithophane + Resin Jewelry', reason: 'Learning designers often produce their best first work in jewelry. Meanwhile, lithophanes print on autopilot. Great combination for active sellers building their design portfolio.', stats: [['€0.65','avg Cost'],['€20–45','avg Sale'],['97%','Margin']], tip: 'Post your jewelry design process on Instagram. That content alone can drive Etsy traffic.' },
+  both_b2b_yes: { name: 'Dental Models + Custom Industrial Parts', reason: 'Both printers + B2B + design skills = run dental on resin and custom industrial components on FDM. Two B2B client bases. Both recurring. Combined monthly potential: €2,000+.', stats: [['€3','avg Cost'],['€50–100','avg Sale'],['78%','Margin']], tip: 'One B2B client in each sector covers your full printer investment within 6 months.' },
+  both_b2b_no: { name: 'Dental Models', reason: 'The clearest B2B path that requires zero design skills. Resin for dental, FDM for delivery packaging or model bases. Dentists provide the scan files. You just print.', stats: [['€2–5','Cost'],['€30–80','Sale'],['70%','Margin']], tip: 'Start with one dental practice. Get it right. Then use them as a reference for every other practice.' },
+  both_b2b_learning: { name: 'Dental + Veterinary Models', reason: 'Veterinary practices also need 3D printed anatomical models for surgical planning. Completely untapped niche. Resin for vet models, FDM for dental. Two B2B markets with zero competition.', stats: [['€3–6','Cost'],['€40–120','Sale'],['75%','Margin']], tip: 'Email local veterinary clinics and animal hospitals. Ask if they currently use 3D models in surgical planning.' },
+};
+
+function answer(q, val) {
+  answers[q] = val;
+  document.querySelectorAll(`#q${q} .q-option`).forEach(b => b.classList.remove('selected'));
+  event.target.classList.add('selected');
+  setTimeout(() => {
+    if (q < 3) {
+      document.getElementById(`q${q}`).classList.remove('active');
+      document.getElementById(`q${q+1}`).classList.add('active');
+      document.getElementById(`dot-${q+1}`).classList.add('done');
+    } else {
+      document.getElementById('q3').classList.remove('active');
+      showResult();
+    }
+  }, 300);
+}
+
+function showResult() {
+  const key = `${answers[1]}_${answers[2]}_${answers[3]}`;
+  const p = products[key] || products['fdm_active_no'];
+  document.getElementById('result-name').textContent = p.name;
+  document.getElementById('result-reason').textContent = p.reason;
+  document.getElementById('result-stats').innerHTML = p.stats.map(([v,l]) => `<div class="result-stat"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  document.getElementById('result-tip').innerHTML = `💡 <strong style="color:var(--orange)">First step:</strong> ${p.tip}`;
+  document.getElementById('result').classList.add('show');
+  document.getElementById('dot-3').classList.add('done');
+}
+
+function restart() {
+  answers = {};
+  document.getElementById('result').classList.remove('show');
+  document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+  document.querySelectorAll('.q-option').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('.prog-dot').forEach((d,i) => { d.classList.remove('done'); if(i===0) d.classList.add('done'); });
+  document.getElementById('q1').classList.add('active');
+}
+
+// ── PROJECTIONS ────────────────────────────────────────────────────────────
+function showProj(id) {
+  document.querySelectorAll('.proj-content').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.proj-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('proj-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── WEEK CHECKLIST ─────────────────────────────────────────────────────────
+function toggleCheck(el) {
+  el.classList.toggle('checked');
+}
+
+// ── COPY PROMPT ────────────────────────────────────────────────────────────
+function copyPrompt(btn) {
+  const text = btn.previousElementSibling.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'COPIED!';
+    setTimeout(() => btn.textContent = 'COPY', 2000);
+  });
+}
+
+// ── SCROLL NAV ─────────────────────────────────────────────────────────────
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── ANIMATE BARS ON SCROLL ─────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.market-bar').forEach(b => {
+        const w = b.style.width;
+        b.style.width = '0%';
+        setTimeout(() => b.style.width = w, 100);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.market-grid').forEach(g => observer.observe(g));
+</script>
+
+<!-- FREEBIE EMAIL POPUP -->
+<style>
+#freebie-popup-email::placeholder{color:rgba(255,255,255,0.35)}
+#freebie-popup-email:focus{border-color:#FF5C00;outline:none}
+</style>
+<div id="freebie-popup" style="display:none;position:fixed;inset:0;z-index:700;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:20px;align-items:center;justify-content:center">
+  <div style="background:#111;border:1px solid rgba(255,92,0,.35);border-radius:14px;padding:32px 28px;max-width:380px;width:100%;position:relative;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,92,0,0.2) 0%,transparent 65%)">
+    <div style="font-size:30px;margin-bottom:12px">📬</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:clamp(24px,6vw,30px);letter-spacing:1px;line-height:1.05;color:#fff;margin-bottom:10px">GET THE FREE GUIDE</div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:20px;line-height:1.5">What actually sells based on 11,000+ real Etsy sales. Sent to your inbox instantly.</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <input type="email" id="freebie-popup-email" placeholder="your@email.com" aria-label="Email address"
+        style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:13px 16px;font-size:16px;color:#fff;font-family:inherit;width:100%">
+      <button id="freebie-popup-btn" onclick="submitFreebiePopup()" style="background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(255,92,0,0.4)">Send me the guide →</button>
+    </div>
+    <div id="freebie-popup-thanks" style="display:none;font-size:15px;color:#FF5C00;font-weight:600;margin-top:14px;text-align:center">✓ Check your inbox!</div>
+    <button onclick="closeFreebiePopup()" style="background:transparent;border:none;color:rgba(255,255,255,0.28);font-size:13px;cursor:pointer;font-family:inherit;margin-top:16px;width:100%;text-align:center;padding:4px 0">No thanks, I'll just read it here</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY = 'mm_freebie_popup_done';
+  if(localStorage.getItem(KEY)) return;
+  var fired = false;
+  function check(){
+    if(fired) return;
+    var pct = (window.scrollY + window.innerHeight) / document.documentElement.scrollHeight;
+    if(pct > 0.45){
+      fired = true;
+      window.removeEventListener('scroll', check, {passive:true});
+      document.getElementById('freebie-popup').style.display = 'flex';
+    }
+  }
+  window.addEventListener('scroll', check, {passive:true});
+})();
+
+function closeFreebiePopup(){
+  document.getElementById('freebie-popup').style.display = 'none';
+  localStorage.setItem('mm_freebie_popup_done','1');
+}
+
+function submitFreebiePopup(){
+  var input = document.getElementById('freebie-popup-email');
+  var val = input.value.trim();
+  var re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!val || !re.test(val)){
+    input.style.borderColor = '#ef4444';
+    setTimeout(function(){ input.style.borderColor = ''; }, 1500);
+    return;
+  }
+  fetch('https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec', {
+    method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify({
+      uid: localStorage.getItem('mm_uid')||'', variant:'a', email:val,
+      type:'email_capture', button:'freebie_popup',
+      referrer: document.referrer||'(direct)',
+      userAgent: navigator.userAgent, screenWidth: screen.width,
+      ts: new Date().toISOString()
+    }), keepalive:true
+  }).catch(function(){});
+  input.style.display = 'none';
+  document.getElementById('freebie-popup-btn').style.display = 'none';
+  document.getElementById('freebie-popup-thanks').style.display = 'block';
+  localStorage.setItem('mm_freebie_popup_done','1');
+  setTimeout(closeFreebiePopup, 2500);
+}
+</script>
+</body>
+</html>

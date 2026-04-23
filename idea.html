@@ -273,11 +273,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
         <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
       </div>
       <div style="font-size:11px;color:var(--ink3);padding:3px 2px 6px;line-height:1.55">Link: <span style="font-family:'DM Mono',sans-serif">makerworld.com/en/models/…</span> or <span style="font-family:'DM Mono',sans-serif">printables.com/model/…</span><br>Idea: <span style="font-style:italic">"custom name wall sign in wood-look PLA"</span></div>
-      <button class="btn" id="btn" style="margin-top:4px;margin-bottom:2px">
-        <div class="spin" id="sp" style="display:none"></div>
-        <span id="bl">Check this print</span>
-        <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </button>
     </div>
     <div class="vbar" id="vbar">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
@@ -287,6 +282,11 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
         <div class="vd" id="vd">Link or describe your idea</div>
       </div>
     </div>
+    <button class="btn" id="btn" style="margin-top:8px;margin-bottom:2px">
+      <div class="spin" id="sp" style="display:none"></div>
+      <span id="bl">Check this print</span>
+      <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </button>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div>
     </div>
@@ -301,24 +301,6 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
           <span style="font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
           <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:16px;object-fit:contain">
           <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Prusa-Printables.png" style="height:16px;object-fit:contain">
-        </div>
-
-        <!-- Time-savings comparison — the single biggest reason to use this -->
-        <div style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid rgba(255,92,0,.22);border-radius:12px;padding:14px 13px 13px;margin-bottom:10px">
-          <div style="font-size:10.5px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.11em;font-family:'DM Mono',sans-serif;margin-bottom:9px;text-align:center">360× faster than DIY research</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px">
-            <div style="border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 8px;text-align:center">
-              <div style="font-size:10px;font-weight:700;color:var(--ink3);font-family:'DM Mono',sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">On your own</div>
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--bad);line-height:1;margin-bottom:3px">2 h+</div>
-              <div style="font-size:10.5px;color:var(--ink3);line-height:1.3">per idea · 3 tabs</div>
-            </div>
-            <div style="border:1.5px solid var(--acc);background:#fff;border-radius:10px;padding:10px 8px;text-align:center;box-shadow:0 4px 12px rgba(255,92,0,.1)">
-              <div style="font-size:10px;font-weight:700;color:var(--acc);font-family:'DM Mono',sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">PrintChecker</div>
-              <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--good);line-height:1;margin-bottom:3px">20 s</div>
-              <div style="font-size:10.5px;color:var(--ink3);line-height:1.3">one link · done</div>
-            </div>
-          </div>
-          <div style="font-size:11.5px;color:var(--ink2);line-height:1.45;text-align:center">Average seller tests <b>~8 ideas a month</b> → <b style="color:var(--acc)">~18 hours saved</b> every month</div>
         </div>
 
         <div style="background:#f7f7f7;border-radius:10px;padding:12px 14px;margin-bottom:10px">
@@ -960,6 +942,7 @@ function analyze(){
   lastIsURL=isURL(input);
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
+  q("btn").style.display="none";
   /* Scrape card only makes sense for URL input — hide for free-text ideas */
   if(q("scrape-card"))q("scrape-card").style.display=lastIsURL?"":"none";
   if(q("scrape-hint"))q("scrape-hint").style.display=lastIsURL?"":"none";
@@ -1016,7 +999,7 @@ function reset(){
   if(q("step1-sh"))q("step1-sh").textContent="What we found";
   dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
-  q("ui").value="";verdict("idle");q("submit-block").style.display="";
+  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";
   showFooter(false);setBtn0("Check this print",false);
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";

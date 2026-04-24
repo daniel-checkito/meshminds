@@ -1336,12 +1336,6 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
-  /* Save email - fire and forget */
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-    method:"POST",headers:{"Content-Type":"application/json"},
-    keepalive:true,
-    body:JSON.stringify({type:"email",email:email,url:lastURL})
-  }).catch(function(){});
   if(analysisComplete){
     /* Analysis already done  -  go straight to results */
     step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";

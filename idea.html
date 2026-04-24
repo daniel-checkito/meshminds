@@ -230,11 +230,12 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .cp-banner{display:flex;align-items:center;gap:9px;padding:12px 14px;border-radius:11px;font-size:13px;font-weight:600;margin-bottom:14px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif;line-height:1.4}
 .cp-banner.warn{background:#fef9c3;color:#854d0e}
 .cp-banner.bad{background:#fee2e2;color:#991b1b}
-.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
-.cp-card{border:1.5px solid var(--line);border-radius:10px;padding:11px 7px 10px;text-align:center;background:#fff}
-.cp-risk{font-size:10.5px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 9px;border-radius:6px;display:inline-block;margin-bottom:6px;letter-spacing:.04em}
-.cp-clabel{font-size:11px;color:var(--ink3);font-weight:700;margin-bottom:5px;line-height:1.2}
-.cp-desc{font-size:11px;color:var(--ink2);line-height:1.4}
+.cp-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.cp-card{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:11px}
+.cp-card-left{flex-shrink:0;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:1px}
+.cp-risk{font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 8px;border-radius:6px;display:inline-block;letter-spacing:.04em;text-align:center}
+.cp-clabel{font-size:10.5px;color:var(--ink3);font-weight:700;line-height:1.2;text-align:center}
+.cp-desc{font-size:12px;color:var(--ink2);line-height:1.45;flex:1;padding-top:1px}
 /* Consolidated results section headers */
 .res-sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:11px;padding:8px 0 9px;border-bottom:1.5px solid var(--line)}
 .res-sec-ico{font-size:16px}
@@ -617,18 +618,24 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
         <div class="cp-grid">
           <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
-            <div class="cp-clabel">Etsy ban risk</div>
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+              <div class="cp-clabel">Etsy ban risk</div>
+            </div>
             <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
           </div>
           <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
-            <div class="cp-clabel">Legal risk</div>
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+              <div class="cp-clabel">Legal risk</div>
+            </div>
             <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
           </div>
           <div class="cp-card">
-            <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
-            <div class="cp-clabel">Copyright / IP</div>
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+              <div class="cp-clabel">Copyright / IP</div>
+            </div>
             <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
           </div>
         </div>

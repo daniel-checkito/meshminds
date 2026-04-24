@@ -1,195 +1,69 @@
 {
-  "name": "MeshMinds PrintChecker v2",
+  "name": "MeshMinds PrintChecker v3",
   "nodes": [
     {
       "parameters": {
         "httpMethod": "POST",
         "path": "idea",
         "responseMode": "responseNode",
-        "options": {}
-      },
-      "id": "ba7f702d-7e7c-4494-a0d7-f12901ace6d8",
-      "name": "Webhook: URL Submit",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        240,
-        300
-      ],
-      "webhookId": "printchecker-idea"
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const url = $json.body.url || '';\nif (!url) return [{ json: { productContext: 'No URL provided', product: {} } }];\n\nconst origUrl = url.startsWith('http') ? url : 'https://' + url;\nlet productCtx = '';\nlet productData = {};\n\n// \u2500\u2500 helpers \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nfunction parseOgTags(html) {\n  const get = (prop) => {\n    const m = html.match(new RegExp('<meta[^>]+property=[\"\\']' + prop + '[\"\\'][^>]+content=[\"\\']([^\"\\']+)[\"\\']', 'i'))\n               || html.match(new RegExp('<meta[^>]+content=[\"\\']([^\"\\']+)[\"\\'][^>]+property=[\"\\']' + prop + '[\"\\']', 'i'));\n    return m ? m[1].replace(/&amp;/g,'&').replace(/&#039;/g,\"'\").replace(/&quot;/g,'\"') : null;\n  };\n  return {\n    title: get('og:title') || (html.match(/<title>([^<]+)<\\/title>/i)||[])[1] || null,\n    description: get('og:description'),\n    image: get('og:image')\n  };\n}\n\nasync function fetchOgFallback(pageUrl, sourceHost) {\n  const html = await $helpers.httpRequest({\n    method: 'GET',\n    url: pageUrl,\n    headers: {\n      'User-Agent': 'Mozilla/5.0 (compatible; MeshMindsBot/1.0)',\n      'Accept': 'text/html,application/xhtml+xml',\n      'Accept-Language': 'en-US,en;q=0.9'\n    }\n  });\n  const raw = typeof html === 'string' ? html : '';\n  const og = parseOgTags(raw);\n  if (!og.title) throw new Error('No OG title found');\n  return {\n    productData: {\n      title: og.title,\n      description: og.description ? og.description.substring(0, 200) : null,\n      image: og.image,\n      sourceHost\n    },\n    productCtx: 'SOURCE URL: ' + pageUrl + '\\nPLATFORM: ' + sourceHost + '\\nTITLE: ' + og.title\n                + (og.description ? '\\nDESCRIPTION: ' + og.description.substring(0, 300) : '')\n  };\n}\n\n// \u2500\u2500 main logic \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\ntry {\n\n  // \u2500\u2500 MakerWorld \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  if (origUrl.includes('makerworld.com')) {\n    const idMatch = origUrl.match(/\\/models\\/(\\d+)/);\n    if (idMatch) {\n      let apiOk = false;\n      // Attempt 1: official API with browser-like headers\n      try {\n        const resp = await $helpers.httpRequest({\n          method: 'GET',\n          url: 'https://makerworld.com/api/v1/design-service/design/detail?designId=' + idMatch[1],\n          headers: {\n            'Accept': 'application/json, text/plain, */*',\n            'Accept-Language': 'en-US,en;q=0.9',\n            'Origin': 'https://makerworld.com',\n            'Referer': origUrl,\n            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'\n          }\n        });\n        const m = resp.data || resp || {};\n        if (!m.name && !m.title) throw new Error('Empty API response');\n        const stats = m.summary || m.stat || {};\n        const creator = m.user || m.designer || {};\n        productData = {\n          title: m.name || m.title,\n          description: String(m.description || '').substring(0, 200),\n          author: creator.name || creator.handle || creator.username || null,\n          likes: stats.likeCount || stats.like || null,\n          downloads: stats.downloadCount || stats.download || null,\n          makes: stats.makeCount || stats.make || null,\n          image: m.coverMedia ? 'https://makerworld.bblmake.com/' + m.coverMedia.filePath : null,\n          sourceHost: 'makerworld.com'\n        };\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSTRUCTURED DATA FROM MAKERWORLD API:\\n' + JSON.stringify({\n          title: productData.title,\n          description: String(m.description || '').substring(0, 400),\n          author: productData.author,\n          category: (m.category || {}).name || m.category,\n          likes: productData.likes,\n          downloads: productData.downloads,\n          makes: productData.makes,\n          printTime: m.printTime,\n          filament: m.filamentUsed || m.filament\n        }, null, 2);\n        apiOk = true;\n      } catch (apiErr) { /* fall through to OG scrape */ }\n\n      // Attempt 2: HTML + OG tags\n      if (!apiOk) {\n        try {\n          const og = await fetchOgFallback(origUrl, 'makerworld.com');\n          productData = og.productData;\n          productCtx = og.productCtx;\n        } catch (htmlErr) {\n          productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nMODEL ID: ' + idMatch[1] + '\\n(Fetch failed \u2014 Claude estimates from context)';\n          productData = { sourceHost: 'makerworld.com' };\n        }\n      }\n    } else {\n      const slug = origUrl.split('/models/')[1]?.split('?')[0] || '';\n      try {\n        const og = await fetchOgFallback(origUrl, 'makerworld.com');\n        productData = og.productData;\n        productCtx = og.productCtx;\n      } catch (e) {\n        productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nMODEL SLUG: ' + slug + '\\n(No numeric ID \u2014 Claude infers from slug)';\n        productData = { sourceHost: 'makerworld.com' };\n      }\n    }\n\n  // \u2500\u2500 Printables \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  } else if (origUrl.includes('printables.com')) {\n    const idMatch = origUrl.match(/\\/model\\/(\\d+)/);\n    if (idMatch) {\n      let apiOk = false;\n      try {\n        const resp = await $helpers.httpRequest({\n          method: 'POST',\n          url: 'https://api.printables.com/graphql/',\n          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },\n          body: { query: '{ print(id: ' + idMatch[1] + ') { name description likesCount downloadCount makesCount user { publicUsername } category { name } } }' }\n        });\n        const m = (resp.data || {}).print || {};\n        if (!m.name) throw new Error('Empty Printables response');\n        productData = {\n          title: m.name,\n          description: String(m.description || '').substring(0, 200),\n          author: (m.user || {}).publicUsername || null,\n          likes: m.likesCount || m.likeCount || null,\n          downloads: m.downloadCount || null,\n          makes: m.makesCount || m.makeCount || null,\n          image: null,\n          sourceHost: 'printables.com'\n        };\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSTRUCTURED DATA FROM PRINTABLES API:\\n' + JSON.stringify({\n          title: productData.title,\n          description: String(m.description || '').substring(0, 400),\n          author: productData.author,\n          category: (m.category || {}).name,\n          likes: productData.likes,\n          downloads: productData.downloads,\n          makes: productData.makes\n        }, null, 2);\n        apiOk = true;\n      } catch (apiErr) { /* fall through */ }\n\n      if (!apiOk) {\n        try {\n          const og = await fetchOgFallback(origUrl, 'printables.com');\n          productData = og.productData;\n          productCtx = og.productCtx;\n        } catch (e) {\n          productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: Printables\\nMODEL ID: ' + idMatch[1] + '\\n(Fetch failed \u2014 Claude estimates from context)';\n          productData = { sourceHost: 'printables.com' };\n        }\n      }\n    } else {\n      const slug = origUrl.split('/model/')[1]?.split('?')[0] || '';\n      try {\n        const og = await fetchOgFallback(origUrl, 'printables.com');\n        productData = og.productData;\n        productCtx = og.productCtx;\n      } catch (e) {\n        productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: Printables\\nMODEL SLUG: ' + slug;\n        productData = { sourceHost: 'printables.com' };\n      }\n    }\n\n  // \u2500\u2500 Generic URL \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  } else {\n    const sourceHost = origUrl.replace(/^https?:\\/\\//, '').split('/')[0];\n    try {\n      const og = await fetchOgFallback(origUrl, sourceHost);\n      productData = og.productData;\n      productCtx = og.productCtx;\n    } catch (e) {\n      // Hard HTML scrape fallback\n      try {\n        const html = await $helpers.httpRequest({\n          method: 'GET', url: origUrl,\n          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36', 'Accept': 'text/html' }\n        });\n        const raw = typeof html === 'string' ? html : JSON.stringify(html);\n        if (raw.length > 200) {\n          const text = raw.replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\\s{2,}/g,' ').trim().substring(0,4000);\n          productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSCRAPED TEXT:\\n' + text;\n        } else {\n          productCtx = 'SOURCE URL: ' + origUrl + '\\n(Minimal content returned)';\n        }\n        productData = { sourceHost };\n      } catch (e2) {\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n(Fetch failed \u2014 Claude estimates from URL)';\n        productData = { sourceHost };\n      }\n    }\n  }\n\n} catch (e) {\n  productCtx = 'SOURCE URL: ' + origUrl + '\\n(Error: ' + String(e.message || e).substring(0, 200) + ')';\n}\n\nreturn [{ json: { productContext: productCtx, product: productData } }];"
-      },
-      "id": "a1b2c3d4-0002-0002-0002-000000000002",
-      "name": "Fetch & Extract (idea)",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        480,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ status: 'ok', productContext: $json.productContext, product: $json.product || {} }) }}",
         "options": {
-          "responseCode": 200,
-          "responseHeaders": {
-            "entries": [
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "name": "Access-Control-Allow-Origin",
-                "value": "*"
-              }
-            ]
-          }
+          "allowedOrigins": "*"
         }
       },
-      "id": "ede69106-9419-4125-afc4-9c1374521a74",
-      "name": "Respond: URL Received",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        720,
-        300
-      ]
-    },
-    {
-      "parameters": {
-        "httpMethod": "POST",
-        "path": "idea2",
-        "responseMode": "responseNode",
-        "options": {}
-      },
-      "id": "963f7651-453f-4622-bc08-5e149ab994da",
+      "id": "66fc8ef2-2447-45a0-9a51-98e6923e517b",
       "name": "Webhook: Analysis Request",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
       "position": [
-        240,
-        600
+        14608,
+        3584
       ],
       "webhookId": "printchecker-idea2"
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const body = $json.body;\n\nif (body.productContext) {\n  return [{ json: { productContext: body.productContext, originalRequest: body } }];\n}\n\nif (body.description) {\n  return [{ json: { productContext: 'PRODUCT IDEA (free text): \"' + body.description + '\"', originalRequest: body } }];\n}\n\nreturn [{ json: { productContext: '', originalRequest: body } }];"
-      },
-      "id": "a1b2c3d4-0003-0003-0003-000000000003",
-      "name": "Code: Resolve Context",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        460,
-        600
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "string": [
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "messages": {
+          "values": [
             {
-              "value1": "={{ $json.productContext || '' }}",
-              "value2": "",
-              "operation": "equal"
-            }
-          ]
-        }
-      },
-      "id": "a1b2c3d4-0004-0004-0004-000000000004",
-      "name": "IF: Needs Scrape?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 1,
-      "position": [
-        700,
-        600
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const req = $('Code: Resolve Context').item.json.originalRequest;\nconst url = req.url || '';\nif (!url) return [{ json: { productContext: 'No URL provided', originalRequest: req } }];\n\nconst origUrl = url.startsWith('http') ? url : 'https://' + url;\nlet productCtx = '';\n\nfunction parseOgTags(html) {\n  const get = (prop) => {\n    const m = html.match(new RegExp('<meta[^>]+property=[\"\\']' + prop + '[\"\\'][^>]+content=[\"\\']([^\"\\']+)[\"\\']', 'i'))\n               || html.match(new RegExp('<meta[^>]+content=[\"\\']([^\"\\']+)[\"\\'][^>]+property=[\"\\']' + prop + '[\"\\']', 'i'));\n    return m ? m[1].replace(/&amp;/g,'&').replace(/&#039;/g,\"'\").replace(/&quot;/g,'\"') : null;\n  };\n  return {\n    title: get('og:title') || (html.match(/<title>([^<]+)<\\/title>/i)||[])[1] || null,\n    description: get('og:description'),\n    image: get('og:image')\n  };\n}\n\ntry {\n\n  if (origUrl.includes('makerworld.com')) {\n    const idMatch = origUrl.match(/\\/models\\/(\\d+)/);\n    if (idMatch) {\n      let apiOk = false;\n      try {\n        const resp = await $helpers.httpRequest({\n          method: 'GET',\n          url: 'https://makerworld.com/api/v1/design-service/design/detail?designId=' + idMatch[1],\n          headers: {\n            'Accept': 'application/json, text/plain, */*',\n            'Accept-Language': 'en-US,en;q=0.9',\n            'Origin': 'https://makerworld.com',\n            'Referer': origUrl,\n            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'\n          }\n        });\n        const m = resp.data || resp || {};\n        if (!m.name && !m.title) throw new Error('Empty response');\n        const stats = m.summary || m.stat || {};\n        const creator = m.user || m.designer || {};\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSTRUCTURED DATA FROM MAKERWORLD API:\\n' + JSON.stringify({\n          title: m.name || m.title,\n          description: String(m.description || '').substring(0, 400),\n          author: creator.name || creator.handle || creator.username,\n          category: (m.category || {}).name || m.category,\n          likes: stats.likeCount || stats.like,\n          downloads: stats.downloadCount || stats.download,\n          makes: stats.makeCount || stats.make,\n          printTime: m.printTime,\n          filament: m.filamentUsed || m.filament\n        }, null, 2);\n        apiOk = true;\n      } catch (e) { /* fall through */ }\n\n      if (!apiOk) {\n        try {\n          const html = await $helpers.httpRequest({\n            method: 'GET', url: origUrl,\n            headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MeshMindsBot/1.0)', 'Accept': 'text/html', 'Accept-Language': 'en-US,en;q=0.9' }\n          });\n          const raw = typeof html === 'string' ? html : '';\n          const og = parseOgTags(raw);\n          if (og.title) {\n            productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nTITLE: ' + og.title + (og.description ? '\\nDESCRIPTION: ' + og.description : '');\n          } else {\n            productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nMODEL ID: ' + idMatch[1] + '\\n(Fetch failed \u2014 Claude estimates)';\n          }\n        } catch (e2) {\n          productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nMODEL ID: ' + idMatch[1];\n        }\n      }\n    } else {\n      productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: MakerWorld\\nMODEL SLUG: ' + (origUrl.split('/models/')[1]?.split('?')[0] || '');\n    }\n\n  } else if (origUrl.includes('printables.com')) {\n    const idMatch = origUrl.match(/\\/model\\/(\\d+)/);\n    if (idMatch) {\n      let apiOk = false;\n      try {\n        const resp = await $helpers.httpRequest({\n          method: 'POST',\n          url: 'https://api.printables.com/graphql/',\n          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },\n          body: { query: '{ print(id: ' + idMatch[1] + ') { name description likesCount downloadCount makesCount user { publicUsername } category { name } } }' }\n        });\n        const m = (resp.data || {}).print || {};\n        if (!m.name) throw new Error('Empty');\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSTRUCTURED DATA FROM PRINTABLES API:\\n' + JSON.stringify({\n          title: m.name,\n          description: String(m.description || '').substring(0, 400),\n          author: (m.user || {}).publicUsername,\n          category: (m.category || {}).name,\n          likes: m.likesCount || m.likeCount,\n          downloads: m.downloadCount,\n          makes: m.makesCount || m.makeCount\n        }, null, 2);\n        apiOk = true;\n      } catch (e) { /* fall through */ }\n\n      if (!apiOk) {\n        try {\n          const html = await $helpers.httpRequest({\n            method: 'GET', url: origUrl,\n            headers: { 'User-Agent': 'Mozilla/5.0 (compatible; MeshMindsBot/1.0)', 'Accept': 'text/html', 'Accept-Language': 'en-US,en;q=0.9' }\n          });\n          const raw = typeof html === 'string' ? html : '';\n          const og = parseOgTags(raw);\n          productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: Printables'\n            + (og.title ? '\\nTITLE: ' + og.title : '\\nMODEL ID: ' + idMatch[1])\n            + (og.description ? '\\nDESCRIPTION: ' + og.description : '');\n        } catch (e2) {\n          productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: Printables\\nMODEL ID: ' + idMatch[1];\n        }\n      }\n    } else {\n      productCtx = 'SOURCE URL: ' + origUrl + '\\nPLATFORM: Printables\\nMODEL SLUG: ' + (origUrl.split('/model/')[1]?.split('?')[0] || '');\n    }\n\n  } else {\n    // Generic\n    try {\n      const html = await $helpers.httpRequest({\n        method: 'GET', url: origUrl,\n        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36', 'Accept': 'text/html' }\n      });\n      const raw = typeof html === 'string' ? html : JSON.stringify(html);\n      if (raw.length > 200) {\n        const text = raw.replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\\s{2,}/g,' ').trim().substring(0,4000);\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n\\nSCRAPED TEXT:\\n' + text;\n      } else {\n        productCtx = 'SOURCE URL: ' + origUrl + '\\n(Minimal content)';\n      }\n    } catch (e) {\n      productCtx = 'SOURCE URL: ' + origUrl + '\\n(Fetch failed: ' + String(e.message || e).substring(0, 150) + ')';\n    }\n  }\n\n} catch (e) {\n  productCtx = 'SOURCE URL: ' + origUrl + '\\n(Error: ' + String(e.message || e).substring(0, 200) + ')';\n}\n\nreturn [{ json: { productContext: productCtx, originalRequest: req } }];"
-      },
-      "id": "a1b2c3d4-0006-0006-0006-000000000006",
-      "name": "Fetch & Extract (idea2)",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        940,
-        480
-      ]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const ctx = $input.item.json;\nconst req = ctx.originalRequest;\n\nconst sellFrom      = req.sellFrom      || 'not specified';\nconst sellTo        = req.sellTo        || 'WORLDWIDE';\nconst flags         = Array.isArray(req.legalFlags)     ? req.legalFlags.join(', ')     : 'none';\nconst activeMarkets = Array.isArray(req.activeMarkets)  ? req.activeMarkets.join(', ')  : 'not specified';\nconst socialMedia   = Array.isArray(req.socialMedia)    ? req.socialMedia.join(', ')    : 'none';\nconst urlField      = req.url ? JSON.stringify(req.url) : 'null';\n\nconst prompt = `You are a 3D printing market analyst specialising in Etsy sales. Analyse this product for commercial viability and return ONLY a single valid JSON object - no markdown, no code fences, no explanation.\n\n${ctx.productContext}\n\nUSER INPUTS:\n- Category: ${req.category || 'not specified'}\n- Target marketplace: ${req.marketplace || 'etsy'}\n- Price range hint: ${req.priceRange || 'not specified'}\n- Print time: ${req.printTime || 'not specified'}\n- Material: ${req.material || 'not specified'}\n- Extra costs: ${req.extraCosts || 'none'}\n- Experience level: ${req.experience || 'not specified'}\n- Active selling markets: ${activeMarkets}\n- Social media channels: ${socialMedia}\n- Selling from: ${sellFrom}\n- Selling to: ${sellTo}\n- Legal flags: ${flags}\n\nReturn this exact JSON structure with all fields filled in:\n\n{\n  \"score\": <integer 0-100>,\n  \"verdict\": \"<punchy one-liner, 3-7 words>\",\n  \"product\": {\n    \"title\": \"<product title>\",\n    \"author\": \"<creator name or null>\",\n    \"description\": \"<2-3 sentences, vivid and specific>\",\n    \"printTime\": \"<like '3h 20m'>\",\n    \"material\": \"<like '38g PLA'>\",\n    \"sourceHost\": \"<domain/... or null>\",\n    \"url\": ${urlField},\n    \"image\": null,\n    \"tags\": [\"<tag1>\",\"<tag2>\",\"<tag3>\"],\n    \"likes\": <integer or null>,\n    \"saves\": <integer or null>,\n    \"downloads\": \"<formatted like '8.4k' or null>\",\n    \"prints\": \"<formatted like '2.1k' or null>\",\n    \"note\": \"<one bold demand-proof sentence, HTML <b> tags allowed>\"\n  },\n  \"market\": {\n    \"searchVolume\": <monthly searches integer>,\n    \"searchTrend\": \"<like '\\u2191 31% YoY' or '\\u2192 Stable'>\",\n    \"etsyListings\": <integer>,\n    \"etsyAvgPrice\": \"<like '\\u20ac21'>\",\n    \"topSellerSales\": <top seller estimated annual unit sales>,\n    \"printTime\": \"<avg print time like '~2.5 hrs'>\",\n    \"unitsPerDay\": \"<throughput like '\\u22482 units/day'>\",\n    \"insight\": \"<one actionable sentence, <b> tags allowed>\"\n  },\n  \"revenue\": {\n    \"unitsPerMonth\": <realistic for a new seller - see calibration>,\n    \"grossRevenue\": <unitsPerMonth x sellPrice rounded>,\n    \"printCost\": <total monthly material+energy cost>,\n    \"etsyFees\": <grossRevenue x 0.12 rounded>,\n    \"netProfit\": <grossRevenue - printCost - etsyFees>,\n    \"sellPrice\": \"<optimal price like '\\u20ac22.40'>\"\n  },\n  \"copyright\": {\n    \"etsyBanRisk\": \"<low|medium|high>\",\n    \"etsyBanReason\": \"<one sentence>\",\n    \"legalRisk\": \"<low|medium|high>\",\n    \"legalDesc\": \"<one sentence, consider seller in ${sellFrom} selling to ${sellTo}>\",\n    \"copyrightRisk\": \"<low|medium|high>\",\n    \"copyrightDesc\": \"<one sentence IP check>\",\n    \"insight\": \"<one-line summary, <b> tags allowed>\"\n  }\n}\n\n\u2500\u2500 SCORING (0-100) \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nDemand/competition ratio 40% + profit margin 35% + legal safety 25%.\n80-100 = clear opportunity. 60-79 = viable with effort. 40-59 = marginal. 0-39 = avoid.\nDeduct 15-30 points for any IP/copyright risk.\n\n\u2500\u2500 REVENUE CALIBRATION \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nunitsPerMonth baseline for a new Etsy seller:\n  very low competition (<500 listings, >10k searches) = 45-70\n  low competition (500-2k listings) = 25-45\n  moderate competition (2k-8k listings) = 15-30\n  saturated (>8k listings) = 8-20\n\nsellPrice sweet spot by type:\n  Generic functional (hooks, organisers, mounts) = \\u20ac10-20\n  Decorative / home decor = \\u20ac14-28\n  Custom / personalised = \\u20ac18-40\n  Miniatures & gaming = \\u20ac12-30\n  Premium / large format = \\u20ac35-80\n  Use the priceRange hint if provided.\n\nprintCost = (weight_g x \\u20ac0.025) + (print_hours x \\u20ac0.05) + 20% overhead, x unitsPerMonth\nCheck: netProfit = grossRevenue - printCost - etsyFees\n\n\u2500\u2500 IP / COPYRIGHT \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nHigh risk: Disney/Marvel/DC, Pokemon, Nintendo (Mario/Zelda/etc), sports logos, band logos, any identifiable branded character or logo.\nMedium risk: generic fandom designs, historical figures, inspired-by styles.\nLow risk: geometric, nature, abstract, original functional items, generic home decor.`;\n\nreturn [{\n  json: {\n    claudeRequest: JSON.stringify({\n      model: 'claude-sonnet-4-6',\n      max_tokens: 2048,\n      messages: [{ role: 'user', content: prompt }]\n    })\n  }\n}];"
-      },
-      "id": "b8442248-f62a-4468-a41d-70923de4ba7d",
-      "name": "Build Claude Prompt",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        1180,
-        600
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://api.anthropic.com/v1/messages",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "x-api-key",
-              "value": "={{ $env.ANTHROPIC_API_KEY }}"
-            },
-            {
-              "name": "anthropic-version",
-              "value": "2023-06-01"
-            },
-            {
-              "name": "content-type",
-              "value": "application/json"
+              "content": "=You are an expert Etsy seller and 3D printing business analyst. Your job is to evaluate whether a 3D printed model is worth selling on Etsy.\n\nAnalyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.\n\nProduct data:\n{{ $json.productContext }}\n\nImage URL (use as product.image if valid, otherwise null):\n{{ $json.imageUrl }}\n\nSource URL: {{ $json.sourceUrl }}\n\nSELLER INPUTS (from questionnaire — use these to personalise the analysis):\n- Category: {{ $('Webhook: Analysis Request').item.json.body.category || 'not specified' }}\n- Target marketplace: {{ $('Webhook: Analysis Request').item.json.body.marketplace || 'Etsy' }}\n- Price range: {{ $('Webhook: Analysis Request').item.json.body.priceRange || 'not specified' }}\n- Print time per unit: {{ $('Webhook: Analysis Request').item.json.body.printTime || 'not specified' }}\n- Material / filament: {{ $('Webhook: Analysis Request').item.json.body.material || 'not specified' }}\n- Extra costs (packaging, labour): {{ $('Webhook: Analysis Request').item.json.body.extraCosts || 'none' }}\n- Seller experience level: {{ $('Webhook: Analysis Request').item.json.body.experience || 'not specified' }}\n- Already selling on: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.activeMarkets) ? $('Webhook: Analysis Request').item.json.body.activeMarkets.join(', ') : ($('Webhook: Analysis Request').item.json.body.activeMarkets || 'none') }}\n- Social media channels: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.socialMedia) ? $('Webhook: Analysis Request').item.json.body.socialMedia.join(', ') : ($('Webhook: Analysis Request').item.json.body.socialMedia || 'none') }}\n- Selling from (country): {{ $('Webhook: Analysis Request').item.json.body.sellFrom || 'not specified' }}\n- Selling to (markets): {{ $('Webhook: Analysis Request').item.json.body.sellTo || 'WORLDWIDE' }}\n- Legal / IP flags noted by seller: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.legalFlags) ? $('Webhook: Analysis Request').item.json.body.legalFlags.join(', ') : ($('Webhook: Analysis Request').item.json.body.legalFlags || 'none') }}\n\n---\n\nYour analysis must follow this EXACT JSON schema. Every field is required.\n\n{\n  \"score\": <integer 0–100, overall seller potential>,\n  \"verdict\": <string, actionable verdict — pick the template matching the score: 80-100 → \"Start selling this right now\", 60-79 → \"Good for the right audience\", 40-59 → \"Marginal — needs a unique angle\", 0-39 → \"Don't sell — [2-3 word specific reason e.g. 'too much competition', 'IP violation risk', 'low margin']\"],\n\n  \"product\": {\n    \"title\": <string, product name from page or inferred from URL>,\n    \"description\": <string, 1–2 sentence product description>,\n    \"author\": <string, creator/designer name from page or null>,\n    \"printTime\": <string, use seller input if provided, otherwise estimate e.g. \"4h 20m\">,\n    \"material\": <string, use seller input if provided, otherwise estimate e.g. \"38g PLA\">,\n    \"sourceHost\": <string, hostname + path e.g. \"makerworld.com/en/models/123\">,\n    \"image\": <string URL or null>,\n    \"likes\": <integer, like/heart count from page or null>,\n    \"saves\": <integer, save/bookmark count from page or null>,\n    \"downloads\": <string, download count formatted like \"8.4k\" from page or null>,\n    \"prints\": <string, make/print count formatted like \"2.1k\" from page or null>,\n    \"tags\": [<string>, ...up to 4 relevant tags for the product>,\n    \"note\": <string, one punchy demand-proof sentence using <b> tags e.g. \"<b>8.4k downloads</b> proves consistent buyer interest.\">\n  },\n\n  \"market\": {\n    \"searchVolume\": <integer, estimated monthly Etsy/Google searches for this type of product>,\n    \"searchTrend\": <string, e.g. \"↑ 34% YoY\" or \"→ Stable\" or \"↓ 12% YoY\">,\n    \"etsyListings\": <integer, estimated number of competing Etsy listings>,\n    \"etsyAvgPrice\": <string, e.g. \"€18\" — typical price for this type of product on Etsy>,\n    \"topSellerSales\": <integer, estimated sales of a top Etsy seller in this niche>,\n    \"printTime\": <string, estimated print time for typical competing products>,\n    \"unitsPerDay\": <string, e.g. \"≈3 units/day\" based on top seller monthly estimate>,\n    \"insight\": <string, 1–2 sentence HTML insight using <b> for key point, e.g. \"<b>High demand, low competition.</b> Only 800 listings for 18k monthly searches.\">\n  },\n\n  \"revenue\": {\n    \"unitsPerMonth\": <integer, realistic monthly units for this seller's experience level>,\n    \"grossRevenue\": <integer, unitsPerMonth x sellPrice (numeric only)>,\n    \"printCost\": <integer, total monthly filament + electricity cost using seller's material/print time if provided>,\n    \"etsyFees\": <integer, estimated Etsy fees (listing + transaction + payment processing) per month>,\n    \"netProfit\": <integer, grossRevenue - printCost - etsyFees>,\n    \"sellPrice\": <string, recommended sell price considering seller's price range input e.g. \"€22.40\">\n  },\n\n  \"copyright\": {\n    \"etsyBanRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"etsyBanReason\": <string, 1 sentence explanation>,\n    \"legalRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"legalDesc\": <string, 1 sentence explanation — consider the seller's country and target markets>,\n    \"copyrightRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"copyrightDesc\": <string, 1 sentence explanation>,\n    \"insight\": <string, 1–2 sentence HTML summary using <b>, e.g. \"<b>Clear to sell.</b> No IP conflicts detected.\">\n  }\n}\n\n---\n\nScoring guide for score and verdict:\n- 80-100: Strong niche, good margin, low competition, no IP risk → verdict: \"Start selling this right now\"\n- 60-79: Decent potential but some friction (crowded niche, thin margins, or minor IP concerns) → verdict: \"Good for the right audience\"\n- 40-59: Possible but risky - low demand, high competition, or IP grey area → verdict: \"Marginal — needs a unique angle\"\n- 0-39: Avoid - low margin, oversaturated, or clear IP violation → verdict: \"Don't sell — [specific 2-3 word reason]\"\n\nIMPORTANT:\n- copyright.etsyBanRisk, legalRisk, copyrightRisk must be EXACTLY one of: \"low\", \"medium\", \"high\"\n- All revenue values must be plain integers (no euro symbol, no commas)\n- revenue.sellPrice must include the euro symbol and decimal e.g. \"22.40\"\n- market.insight and copyright.insight must be valid HTML strings (only <b> tags allowed)\n- Adjust revenue.unitsPerMonth based on seller experience: beginner = lower end, experienced = higher end\n- Adjust revenue.printCost using seller-provided print time and material when available\n- Adjust copyright.legalDesc based on seller's country and target markets\n- Extract product.likes, saves, downloads, prints, author from the scraped page data when present; set to null if not found\n- product.tags should reflect the actual product category and use case (e.g. [\"home decor\", \"functional\", \"gift\"])\n- Return ONLY the JSON object. No other text."
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ $json.claudeRequest }}",
-        "options": {
-          "timeout": 55000
-        }
+        "options": {}
       },
-      "id": "f4232850-6028-48a6-879e-dc06a7e88947",
-      "name": "Call Claude",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
       "position": [
-        1420,
-        600
-      ]
+        15280,
+        3584
+      ],
+      "id": "43303869-fc56-4933-bcf1-afd8278ebd71",
+      "name": "Message a model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "BN9V68mlR6Lhibd4",
+          "name": "Anthropic account 2"
+        }
+      }
     },
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const resp = $input.item.json;\n\nif (resp.error || resp.type === 'error') {\n  throw new Error('Anthropic API error: ' + JSON.stringify(resp.error || resp));\n}\n\nconst content = resp.content;\nif (!content || !content[0] || !content[0].text) {\n  throw new Error('Unexpected Anthropic response: ' + JSON.stringify(resp));\n}\n\nlet text = content[0].text.trim();\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nif (fenceMatch) text = fenceMatch[1].trim();\n\nconst start = text.indexOf('{');\nconst end   = text.lastIndexOf('}');\nif (start === -1 || end <= start) {\n  throw new Error('No valid JSON found in Claude response: ' + text.substring(0, 300));\n}\ntext = text.slice(start, end + 1);\n\nlet result;\ntry {\n  result = JSON.parse(text);\n} catch (e) {\n  throw new Error('JSON parse failed: ' + e.message + '\\nRaw: ' + text.substring(0, 500));\n}\n\nreturn [{ json: result }];"
+        "jsCode": "const resp = $input.item.json;\nconst text = (resp.content && resp.content[0] && resp.content[0].text)\n  ? resp.content[0].text.trim()\n  : '';\n\nif (!text) throw new Error('Empty response from Claude');\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  throw new Error('No JSON object found in Claude response: ' + text.substring(0, 200));\n}\n\nlet result;\ntry {\n  result = JSON.parse(clean.slice(start, end + 1));\n} catch (e) {\n  throw new Error('JSON parse failed: ' + e.message + ' | Raw: ' + text.substring(0, 300));\n}\n\nreturn [{ json: result }];"
       },
-      "id": "d430ff92-b297-4204-9d34-71ee6b303881",
-      "name": "Extract Analysis JSON",
+      "id": "5028592e-c3e9-45e0-9538-5ba9a80657f9",
+      "name": "Parse Claude Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1660,
-        600
+        15632,
+        3584
       ]
     },
     {
@@ -216,133 +90,353 @@
           }
         }
       },
-      "id": "6cd46cfc-6576-439d-a56d-b36a45321e82",
-      "name": "Respond: Analysis Complete",
+      "id": "a0a6baba-48c9-429d-bd57-251331c9942d",
+      "name": "Respond: Analysis Complete1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        1900,
-        600
+        15880,
+        3440
       ]
     },
     {
       "parameters": {
-        "content": "## MeshMinds PrintChecker v2\n\n### One-time setup\nSettings \u2192 Environment Variables:\n`ANTHROPIC_API_KEY` = `sk-ant-api03-...`\n\n---\n\n### Why no HTTP Request scraper node?\nMakerWorld and Printables use Cloudflare bot protection \u2014 direct\nHTTP scraping returns 403. Instead, Code nodes use\n`$helpers.httpRequest()` to call their official APIs directly:\n- MakerWorld: `GET /api/v1/design-service/design/detail?designId=ID`\n- Printables:  `POST https://api.printables.com/graphql/`\n- Other URLs:  plain HTML scrape (still attempted)\n\n---\n\n### Flow: POST /idea  (fires when URL is pasted)\n```\nWebhook: URL Submit\n  \u2192 Fetch & Extract (idea)   API call \u2192 structured JSON\n  \u2192 Respond: URL Received    { status, productContext }\n```\nFrontend stores productContext while user fills questionnaire.\n\n### Flow: POST /idea2  (fires on analysis submit)\n```\nWebhook: Analysis Request\n  \u2192 Code: Resolve Context\n      body.productContext \u2192 fast path (already fetched)\n      body.description   \u2192 free-text idea\n      body.url only      \u2192 signal scrape needed\n  \u2192 IF: Needs Scrape?\n      TRUE  \u2192 Fetch & Extract (idea2)  fallback API call\n      FALSE \u2192 skip\n  \u2192 Build Claude Prompt\n  \u2192 Call Claude  (claude-sonnet-4-6)\n  \u2192 Extract Analysis JSON\n  \u2192 Respond: Analysis Complete\n```",
-        "height": 520,
-        "width": 560,
-        "color": 4
+        "operation": "scrape",
+        "url": "={{ $json.body.url.startsWith('http') ? $json.body.url : 'https://' + $json.body.url }}",
+        "scrapeOptions": {
+          "options": {
+            "formats": {
+              "format": [
+                {}
+              ]
+            },
+            "headers": {},
+            "waitFor": 2000,
+            "storeInCache": true
+          }
+        },
+        "requestOptions": {}
       },
-      "id": "55ca9adb-d3ab-49cb-93eb-cd93ddcfcc2d",
-      "name": "Setup Notes",
-      "type": "n8n-nodes-base.stickyNote",
+      "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
       "typeVersion": 1,
       "position": [
-        240,
-        -340
+        14832,
+        3584
+      ],
+      "id": "8999f05d-4131-4e88-afb4-c5653b3bb2e8",
+      "name": "/scrape",
+      "credentials": {
+        "firecrawlApi": {
+          "id": "Ina0nX9suDXJygGI",
+          "name": "Firecrawl API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "productContext",
+              "stringValue": "=URL: {{ $json.data.metadata.sourceURL }}\nTITLE: {{ $json.data.metadata.title }}\nDESCRIPTION: {{ $json.data.metadata.description }}\n\n{{ $json.data.markdown.substring(0, 4000) }}"
+            },
+            {
+              "name": "imageUrl",
+              "stringValue": "={{ $json.data.metadata.ogImage }}"
+            },
+            {
+              "name": "sourceUrl",
+              "stringValue": "={{ $json.data.metadata.sourceURL }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {}
+      },
+      "id": "5fc59ac0-b1b9-4c1a-b191-16ef328d04c4",
+      "name": "Extract Product Context",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        15040,
+        3584
       ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1sbwk2wOg0H5-lQQEkwH403YjyHX2suZf52-u5Bykt1M",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Logs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ new Date().toISOString() }}",
+            "input_url": "={{ ($json.product || {}).sourceHost || '' }}",
+            "score": "={{ $json.score }}",
+            "verdict": "={{ $json.verdict }}",
+            "title": "={{ ($json.product || {}).title || '' }}",
+            "sell_price": "={{ ($json.revenue || {}).sellPrice || '' }}",
+            "net_profit": "={{ ($json.revenue || {}).netProfit || '' }}",
+            "etsy_ban_risk": "={{ ($json.copyright || {}).etsyBanRisk || '' }}",
+            "copyright_risk": "={{ ($json.copyright || {}).copyrightRisk || '' }}",
+            "market_insight": "={{ ($json.market || {}).insight || '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "timestamp",
+              "displayName": "timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "input_url",
+              "displayName": "input_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "score",
+              "displayName": "score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "verdict",
+              "displayName": "verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sell_price",
+              "displayName": "sell_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "net_profit",
+              "displayName": "net_profit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_ban_risk",
+              "displayName": "etsy_ban_risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "copyright_risk",
+              "displayName": "copyright_risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "market_insight",
+              "displayName": "market_insight",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "91af3471-4f5b-45b8-a681-11094175087e",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        15880,
+        3728
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sMwv0H2HObYlX0W7",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "scrape-only-check",
+              "leftValue": "={{ $('Webhook: Analysis Request').item.json.body.scrapeOnly }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals",
+                "name": "boolean:equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-node-scrapeonly",
+      "name": "IF: scrapeOnly?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [15190, 3584]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({productContext: $json.productContext, imageUrl: $json.imageUrl}) }}",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-scrape-complete",
+      "name": "Respond: Scrape Complete",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [15440, 3350]
     }
   ],
+  "pinData": {},
   "connections": {
-    "Webhook: URL Submit": {
-      "main": [
-        [
-          {
-            "node": "Fetch & Extract (idea)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch & Extract (idea)": {
-      "main": [
-        [
-          {
-            "node": "Respond: URL Received",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Webhook: Analysis Request": {
       "main": [
         [
           {
-            "node": "Code: Resolve Context",
+            "node": "/scrape",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Code: Resolve Context": {
+    "Message a model": {
       "main": [
         [
           {
-            "node": "IF: Needs Scrape?",
+            "node": "Parse Claude Response",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "IF: Needs Scrape?": {
+    "Parse Claude Response": {
       "main": [
         [
           {
-            "node": "Fetch & Extract (idea2)",
+            "node": "Respond: Analysis Complete1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "/scrape": {
+      "main": [
+        [
+          {
+            "node": "Extract Product Context",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Product Context": {
+      "main": [
+        [
+          {
+            "node": "IF: scrapeOnly?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: scrapeOnly?": {
+      "main": [
+        [
+          {
+            "node": "Respond: Scrape Complete",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Build Claude Prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Fetch & Extract (idea2)": {
-      "main": [
-        [
-          {
-            "node": "Build Claude Prompt",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Claude Prompt": {
-      "main": [
-        [
-          {
-            "node": "Call Claude",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Call Claude": {
-      "main": [
-        [
-          {
-            "node": "Extract Analysis JSON",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Extract Analysis JSON": {
-      "main": [
-        [
-          {
-            "node": "Respond: Analysis Complete",
+            "node": "Message a model",
             "type": "main",
             "index": 0
           }
@@ -350,17 +444,16 @@
       ]
     }
   },
-  "pinData": {},
+  "active": true,
   "settings": {
     "executionOrder": "v1",
-    "saveManualExecutions": true,
-    "callerPolicy": "workflowsFromSameOwner",
-    "errorWorkflow": ""
+    "binaryMode": "separate"
   },
-  "staticData": null,
+  "versionId": "a30b8625-437e-4950-9e1b-79527ebf29e2",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "9a0cfeb1f137492401d1e3624bf6af3059a07143f49538a24e8680e25b67132d"
   },
+  "id": "UAN5WZtXaomEWrum",
   "tags": []
 }

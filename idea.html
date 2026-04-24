@@ -793,7 +793,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1096,6 +1096,13 @@ function analyze(){
   lastURL=input;
   lastIsURL=isURL(input);
   lastProductContext=null;
+  lastImageUrl=null;
+  if(lastIsURL){
+    fetch("https://meshminds.app.n8n.cloud/webhook/idea",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({url:lastURL,scrapeOnly:true})})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(d){if(d&&d.productContext){lastProductContext=d.productContext;lastImageUrl=d.imageUrl||null;}})
+    .catch(function(){});
+  }
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
@@ -1191,7 +1198,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
@@ -1346,9 +1353,15 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({type:"email",email:email,url:lastURL})
   }).catch(function(){});
   if(analysisComplete){
-    /* Analysis already done  -  go straight to results */
-    step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-    setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+    if(q("gate-head"))q("gate-head").style.display="none";
+    if(q("tease-grid"))q("tease-grid").style.display="none";
+    if(q("gate-form"))q("gate-form").style.display="none";
+    if(q("loading-overlay"))q("loading-overlay").style.display="";
+    loadingProgress=0;
+    completeLoadingAnim(function(){
+      step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+      setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+    });
   } else {
     /* Show loading screen until analysis finishes */
     waitingForAnalysis=true;

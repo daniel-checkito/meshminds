@@ -567,33 +567,35 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- EMAIL GATE -->
       <div class="panel" id="email-panel">
-        <div class="gate-head">
-          <div class="gate-check loading" id="gate-check">⏳</div>
-          <div class="gate-title" id="gate-title">Analyzing your idea…</div>
-          <div class="gate-sub" id="gate-sub">Takes ~20 sec  -  enter your email and we'll show the full results</div>
-        </div>
-        <div class="tease-grid">
-          <div class="tease-card">
-            <div class="tease-lbl">Market score</div>
-            <div class="tease-val" id="tease-score">82</div>
+        <div id="gate-content">
+          <div class="gate-head">
+            <div class="gate-check loading" id="gate-check">⏳</div>
+            <div class="gate-title" id="gate-title">Analyzing your idea…</div>
+            <div class="gate-sub" id="gate-sub">Takes ~20 sec  -  enter your email and we'll show the full results</div>
           </div>
-          <div class="tease-card">
-            <div class="tease-lbl">Net profit/mo</div>
-            <div class="tease-val g" id="tease-rev">€865</div>
+          <div class="tease-grid">
+            <div class="tease-card">
+              <div class="tease-lbl">Market score</div>
+              <div class="tease-val" id="tease-score">82</div>
+            </div>
+            <div class="tease-card">
+              <div class="tease-lbl">Net profit/mo</div>
+              <div class="tease-val g" id="tease-rev">€865</div>
+            </div>
+            <div class="tease-card">
+              <div class="tease-lbl">Legal risk</div>
+              <div class="tease-val g" id="tease-risk">LOW</div>
+            </div>
           </div>
-          <div class="tease-card">
-            <div class="tease-lbl">Legal risk</div>
-            <div class="tease-val g" id="tease-risk">LOW</div>
+          <div class="gate-form">
+            <div class="gate-form-lbl">Unlock your free report</div>
+            <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
+            <button class="btn" id="btn-email">
+              <div class="spin" id="sp-email" style="display:none"></div>
+              <span id="bl-email">Get my free report →</span>
+            </button>
+            <div class="gate-trust">✓ No spam &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; GDPR compliant</div>
           </div>
-        </div>
-        <div class="gate-form">
-          <div class="gate-form-lbl">Unlock your free report</div>
-          <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
-          <button class="btn" id="btn-email">
-            <div class="spin" id="sp-email" style="display:none"></div>
-            <span id="bl-email">Get my free report →</span>
-          </button>
-          <div class="gate-trust">✓ No spam &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; GDPR compliant</div>
         </div>
 
         <!-- Loading screen shown while waiting for analysis after email submission -->
@@ -1131,9 +1133,7 @@ function showGateError(msg){
   errEl.textContent=msg;
   errEl.style.display="";
   if(q("loading-overlay"))q("loading-overlay").style.display="none";
-  if(q("gate-head"))q("gate-head").style.display="";
-  if(q("tease-grid"))q("tease-grid").style.display="";
-  if(q("gate-form"))q("gate-form").style.display="";
+  if(q("gate-content"))q("gate-content").style.display="";
   if(q("bl-email"))q("bl-email").textContent="Try again →";
   if(q("btn-email"))q("btn-email").disabled=false;
 }
@@ -1219,9 +1219,7 @@ function reset(){
   if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
   loadingProgress=0;
   if(q("loading-overlay"))q("loading-overlay").style.display="none";
-  if(q("gate-head"))q("gate-head").style.display="";
-  if(q("tease-grid"))q("tease-grid").style.display="";
-  if(q("gate-form"))q("gate-form").style.display="";
+  if(q("gate-content"))q("gate-content").style.display="";
   ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
@@ -1343,23 +1341,16 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
+  if(q("gate-content"))q("gate-content").style.display="none";
+  if(q("loading-overlay"))q("loading-overlay").style.display="";
   if(analysisComplete){
-    if(q("gate-head"))q("gate-head").style.display="none";
-    if(q("tease-grid"))q("tease-grid").style.display="none";
-    if(q("gate-form"))q("gate-form").style.display="none";
-    if(q("loading-overlay"))q("loading-overlay").style.display="";
     loadingProgress=0;
     completeLoadingAnim(function(){
       step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
       setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
     });
   } else {
-    /* Show loading screen until analysis finishes */
     waitingForAnalysis=true;
-    if(q("gate-head"))q("gate-head").style.display="none";
-    if(q("tease-grid"))q("tease-grid").style.display="none";
-    if(q("gate-form"))q("gate-form").style.display="none";
-    if(q("loading-overlay"))q("loading-overlay").style.display="";
     startLoadingAnim();
   }
 });

@@ -6,7 +6,9 @@
         "httpMethod": "POST",
         "path": "idea",
         "responseMode": "responseNode",
-        "options": {}
+        "options": {
+          "allowedOrigins": "*"
+        }
       },
       "id": "66fc8ef2-2447-45a0-9a51-98e6923e517b",
       "name": "Webhook: Analysis Request",
@@ -29,7 +31,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You are an expert Etsy seller and 3D printing business analyst. Your job is to evaluate whether a 3D printed model is worth selling on Etsy.\n\nAnalyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.\n\nProduct data:\n{{ $json.productContext }}\n\nImage URL (use as product.image if valid, otherwise null):\n{{ $json.imageUrl }}\n\nSource URL: {{ $json.sourceUrl }}\n\nSELLER INPUTS (from questionnaire — use these to personalise the analysis):\n- Category: {{ $('Webhook: Analysis Request').item.json.body.category || 'not specified' }}\n- Target marketplace: {{ $('Webhook: Analysis Request').item.json.body.marketplace || 'Etsy' }}\n- Price range: {{ $('Webhook: Analysis Request').item.json.body.priceRange || 'not specified' }}\n- Print time per unit: {{ $('Webhook: Analysis Request').item.json.body.printTime || 'not specified' }}\n- Material / filament: {{ $('Webhook: Analysis Request').item.json.body.material || 'not specified' }}\n- Extra costs (packaging, labour): {{ $('Webhook: Analysis Request').item.json.body.extraCosts || 'none' }}\n- Seller experience level: {{ $('Webhook: Analysis Request').item.json.body.experience || 'not specified' }}\n- Already selling on: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.activeMarkets) ? $('Webhook: Analysis Request').item.json.body.activeMarkets.join(', ') : ($('Webhook: Analysis Request').item.json.body.activeMarkets || 'none') }}\n- Social media channels: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.socialMedia) ? $('Webhook: Analysis Request').item.json.body.socialMedia.join(', ') : ($('Webhook: Analysis Request').item.json.body.socialMedia || 'none') }}\n- Selling from (country): {{ $('Webhook: Analysis Request').item.json.body.sellFrom || 'not specified' }}\n- Selling to (markets): {{ $('Webhook: Analysis Request').item.json.body.sellTo || 'WORLDWIDE' }}\n- Legal / IP flags noted by seller: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.legalFlags) ? $('Webhook: Analysis Request').item.json.body.legalFlags.join(', ') : ($('Webhook: Analysis Request').item.json.body.legalFlags || 'none') }}\n\n---\n\nYour analysis must follow this EXACT JSON schema. Every field is required.\n\n{\n  \"score\": <integer 0–100, overall seller potential>,\n  \"verdict\": <string, punchy 3–6 word headline e.g. \"Strong seller potential\">,\n\n  \"product\": {\n    \"title\": <string, product name from page or inferred from URL>,\n    \"description\": <string, 1–2 sentence product description>,\n    \"printTime\": <string, use seller input if provided, otherwise estimate e.g. \"4h 20m\">,\n    \"material\": <string, use seller input if provided, otherwise estimate e.g. \"38g PLA\">,\n    \"sourceHost\": <string, hostname + path e.g. \"makerworld.com/en/models/123\">,\n    \"image\": <string URL or null>\n  },\n\n  \"market\": {\n    \"searchVolume\": <integer, estimated monthly Etsy/Google searches for this type of product>,\n    \"searchTrend\": <string, e.g. \"↑ 34% YoY\" or \"→ Stable\" or \"↓ 12% YoY\">,\n    \"etsyListings\": <integer, estimated number of competing Etsy listings>,\n    \"etsyAvgPrice\": <string, e.g. \"€18\" — typical price for this type of product on Etsy>,\n    \"topSellerSales\": <integer, estimated sales of a top Etsy seller in this niche>,\n    \"printTime\": <string, estimated print time for typical competing products>,\n    \"unitsPerDay\": <string, e.g. \"≈3 units/day\" based on top seller monthly estimate>,\n    \"insight\": <string, 1–2 sentence HTML insight using <b> for key point, e.g. \"<b>High demand, low competition.</b> Only 800 listings for 18k monthly searches.\">\n  },\n\n  \"revenue\": {\n    \"unitsPerMonth\": <integer, realistic monthly units for this seller's experience level>,\n    \"grossRevenue\": <integer, unitsPerMonth × sellPrice (numeric only)>,\n    \"printCost\": <integer, total monthly filament + electricity cost using seller's material/print time if provided>,\n    \"etsyFees\": <integer, estimated Etsy fees (listing + transaction + payment processing) per month>,\n    \"netProfit\": <integer, grossRevenue - printCost - etsyFees>,\n    \"sellPrice\": <string, recommended sell price considering seller's price range input e.g. \"€22.40\">\n  },\n\n  \"copyright\": {\n    \"etsyBanRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"etsyBanReason\": <string, 1 sentence explanation>,\n    \"legalRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"legalDesc\": <string, 1 sentence explanation — consider the seller's country and target markets>,\n    \"copyrightRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"copyrightDesc\": <string, 1 sentence explanation>,\n    \"insight\": <string, 1–2 sentence HTML summary using <b>, e.g. \"<b>Clear to sell.</b> No IP conflicts detected.\">\n  }\n}\n\n---\n\nScoring guide for `score`:\n- 80–100: Strong niche, good margin, low competition, no IP risk\n- 60–79: Decent potential but some friction (crowded niche, thin margins, or minor IP concerns)\n- 40–59: Possible but risky — low demand, high competition, or IP grey area\n- 0–39: Avoid — low margin, oversaturated, or clear IP violation\n\nIMPORTANT:\n- `copyright.etsyBanRisk`, `legalRisk`, `copyrightRisk` must be EXACTLY one of: \"low\", \"medium\", \"high\"\n- All revenue values must be plain integers (no € symbol, no commas)\n- `revenue.sellPrice` must include the € symbol and decimal e.g. \"€22.40\"\n- `market.insight` and `copyright.insight` must be valid HTML strings (only <b> tags allowed)\n- Adjust `revenue.unitsPerMonth` based on seller experience: beginner = lower end, experienced = higher end\n- Adjust `revenue.printCost` using seller-provided print time and material when available\n- Adjust `copyright.legalDesc` based on seller's country and target markets\n- Return ONLY the JSON object. No other text."
+              "content": "=You are an expert Etsy seller and 3D printing business analyst. Your job is to evaluate whether a 3D printed model is worth selling on Etsy.\n\nAnalyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.\n\nProduct data:\n{{ $json.productContext }}\n\nImage URL (use as product.image if valid, otherwise null):\n{{ $json.imageUrl }}\n\nSource URL: {{ $json.sourceUrl }}\n\nSELLER INPUTS (from questionnaire — use these to personalise the analysis):\n- Category: {{ $('Webhook: Analysis Request').item.json.body.category || 'not specified' }}\n- Target marketplace: {{ $('Webhook: Analysis Request').item.json.body.marketplace || 'Etsy' }}\n- Price range: {{ $('Webhook: Analysis Request').item.json.body.priceRange || 'not specified' }}\n- Print time per unit: {{ $('Webhook: Analysis Request').item.json.body.printTime || 'not specified' }}\n- Material / filament: {{ $('Webhook: Analysis Request').item.json.body.material || 'not specified' }}\n- Extra costs (packaging, labour): {{ $('Webhook: Analysis Request').item.json.body.extraCosts || 'none' }}\n- Seller experience level: {{ $('Webhook: Analysis Request').item.json.body.experience || 'not specified' }}\n- Already selling on: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.activeMarkets) ? $('Webhook: Analysis Request').item.json.body.activeMarkets.join(', ') : ($('Webhook: Analysis Request').item.json.body.activeMarkets || 'none') }}\n- Social media channels: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.socialMedia) ? $('Webhook: Analysis Request').item.json.body.socialMedia.join(', ') : ($('Webhook: Analysis Request').item.json.body.socialMedia || 'none') }}\n- Selling from (country): {{ $('Webhook: Analysis Request').item.json.body.sellFrom || 'not specified' }}\n- Selling to (markets): {{ $('Webhook: Analysis Request').item.json.body.sellTo || 'WORLDWIDE' }}\n- Legal / IP flags noted by seller: {{ Array.isArray($('Webhook: Analysis Request').item.json.body.legalFlags) ? $('Webhook: Analysis Request').item.json.body.legalFlags.join(', ') : ($('Webhook: Analysis Request').item.json.body.legalFlags || 'none') }}\n\n---\n\nYour analysis must follow this EXACT JSON schema. Every field is required.\n\n{\n  \"score\": <integer 0–100, overall seller potential>,\n  \"verdict\": <string, punchy 3–6 word headline e.g. \"Strong seller potential\">,\n\n  \"product\": {\n    \"title\": <string, product name from page or inferred from URL>,\n    \"description\": <string, 1–2 sentence product description>,\n    \"printTime\": <string, use seller input if provided, otherwise estimate e.g. \"4h 20m\">,\n    \"material\": <string, use seller input if provided, otherwise estimate e.g. \"38g PLA\">,\n    \"sourceHost\": <string, hostname + path e.g. \"makerworld.com/en/models/123\">,\n    \"image\": <string URL or null>\n  },\n\n  \"market\": {\n    \"searchVolume\": <integer, estimated monthly Etsy/Google searches for this type of product>,\n    \"searchTrend\": <string, e.g. \"↑ 34% YoY\" or \"→ Stable\" or \"↓ 12% YoY\">,\n    \"etsyListings\": <integer, estimated number of competing Etsy listings>,\n    \"etsyAvgPrice\": <string, e.g. \"€18\" — typical price for this type of product on Etsy>,\n    \"topSellerSales\": <integer, estimated sales of a top Etsy seller in this niche>,\n    \"printTime\": <string, estimated print time for typical competing products>,\n    \"unitsPerDay\": <string, e.g. \"≈3 units/day\" based on top seller monthly estimate>,\n    \"insight\": <string, 1–2 sentence HTML insight using <b> for key point, e.g. \"<b>High demand, low competition.</b> Only 800 listings for 18k monthly searches.\">\n  },\n\n  \"revenue\": {\n    \"unitsPerMonth\": <integer, realistic monthly units for this seller's experience level>,\n    \"grossRevenue\": <integer, unitsPerMonth x sellPrice (numeric only)>,\n    \"printCost\": <integer, total monthly filament + electricity cost using seller's material/print time if provided>,\n    \"etsyFees\": <integer, estimated Etsy fees (listing + transaction + payment processing) per month>,\n    \"netProfit\": <integer, grossRevenue - printCost - etsyFees>,\n    \"sellPrice\": <string, recommended sell price considering seller's price range input e.g. \"€22.40\">\n  },\n\n  \"copyright\": {\n    \"etsyBanRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"etsyBanReason\": <string, 1 sentence explanation>,\n    \"legalRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"legalDesc\": <string, 1 sentence explanation — consider the seller's country and target markets>,\n    \"copyrightRisk\": <\"low\" | \"medium\" | \"high\">,\n    \"copyrightDesc\": <string, 1 sentence explanation>,\n    \"insight\": <string, 1–2 sentence HTML summary using <b>, e.g. \"<b>Clear to sell.</b> No IP conflicts detected.\">\n  }\n}\n\n---\n\nScoring guide for score:\n- 80-100: Strong niche, good margin, low competition, no IP risk\n- 60-79: Decent potential but some friction (crowded niche, thin margins, or minor IP concerns)\n- 40-59: Possible but risky - low demand, high competition, or IP grey area\n- 0-39: Avoid - low margin, oversaturated, or clear IP violation\n\nIMPORTANT:\n- copyright.etsyBanRisk, legalRisk, copyrightRisk must be EXACTLY one of: \"low\", \"medium\", \"high\"\n- All revenue values must be plain integers (no euro symbol, no commas)\n- revenue.sellPrice must include the euro symbol and decimal e.g. \"22.40\"\n- market.insight and copyright.insight must be valid HTML strings (only <b> tags allowed)\n- Adjust revenue.unitsPerMonth based on seller experience: beginner = lower end, experienced = higher end\n- Adjust revenue.printCost using seller-provided print time and material when available\n- Adjust copyright.legalDesc based on seller's country and target markets\n- Return ONLY the JSON object. No other text."
             }
           ]
         },
@@ -52,41 +54,13 @@
     },
     {
       "parameters": {
-        "fields": {
-          "values": [
-            {
-              "name": "score",
-              "stringValue": "={{ JSON.parse($json.content[0].text).score }}"
-            },
-            {
-              "name": "verdict",
-              "stringValue": "={{ JSON.parse($json.content[0].text).verdict }}"
-            },
-            {
-              "name": "product",
-              "stringValue": "={{ JSON.parse($json.content[0].text).product }}"
-            },
-            {
-              "name": "market",
-              "stringValue": "={{ JSON.parse($json.content[0].text).market }}"
-            },
-            {
-              "name": "revenue",
-              "stringValue": "={{ JSON.parse($json.content[0].text).revenue }}"
-            },
-            {
-              "name": "copyright",
-              "stringValue": "={{ JSON.parse($json.content[0].text).copyright }}"
-            }
-          ]
-        },
-        "include": "none",
-        "options": {}
+        "mode": "runOnceForEachItem",
+        "jsCode": "const resp = $input.item.json;\nconst text = (resp.content && resp.content[0] && resp.content[0].text)\n  ? resp.content[0].text.trim()\n  : '';\n\nif (!text) throw new Error('Empty response from Claude');\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  throw new Error('No JSON object found in Claude response: ' + text.substring(0, 200));\n}\n\nlet result;\ntry {\n  result = JSON.parse(clean.slice(start, end + 1));\n} catch (e) {\n  throw new Error('JSON parse failed: ' + e.message + ' | Raw: ' + text.substring(0, 300));\n}\n\nreturn [{ json: result }];"
       },
       "id": "5028592e-c3e9-45e0-9538-5ba9a80657f9",
-      "name": "Extract Analysis JSON1",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3,
+      "name": "Parse Claude Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         15632,
         3584
@@ -95,7 +69,7 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify($('Extract Analysis JSON1').item.json) }}",
+        "responseBody": "={{ JSON.stringify($json) }}",
         "options": {
           "responseCode": 200,
           "responseHeaders": {
@@ -121,8 +95,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        16080,
-        3584
+        15880,
+        3440
       ]
     },
     {
@@ -205,15 +179,15 @@
           "mappingMode": "defineBelow",
           "value": {
             "timestamp": "={{ new Date().toISOString() }}",
-            "input_url": "={{ JSON.parse($json.product).sourceHost }}",
+            "input_url": "={{ ($json.product || {}).sourceHost || '' }}",
             "score": "={{ $json.score }}",
             "verdict": "={{ $json.verdict }}",
-            "title": "={{ JSON.parse($json.product).title }}",
-            "sell_price": "={{ JSON.parse($json.revenue).sellPrice }}",
-            "net_profit": "={{ JSON.parse($json.revenue).netProfit }}",
-            "etsy_ban_risk": "={{ JSON.parse($json.copyright).etsyBanRisk }}",
-            "copyright_risk": "={{ JSON.parse($json.copyright).copyrightRisk }}",
-            "market_insight": "={{ JSON.parse($json.market).insight }}"
+            "title": "={{ ($json.product || {}).title || '' }}",
+            "sell_price": "={{ ($json.revenue || {}).sellPrice || '' }}",
+            "net_profit": "={{ ($json.revenue || {}).netProfit || '' }}",
+            "etsy_ban_risk": "={{ ($json.copyright || {}).etsyBanRisk || '' }}",
+            "copyright_risk": "={{ ($json.copyright || {}).copyrightRisk || '' }}",
+            "market_insight": "={{ ($json.market || {}).insight || '' }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -318,8 +292,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        15856,
-        3584
+        15880,
+        3728
       ],
       "credentials": {
         "googleSheetsOAuth2Api": {
@@ -346,16 +320,21 @@
       "main": [
         [
           {
-            "node": "Extract Analysis JSON1",
+            "node": "Parse Claude Response",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Extract Analysis JSON1": {
+    "Parse Claude Response": {
       "main": [
         [
+          {
+            "node": "Respond: Analysis Complete1",
+            "type": "main",
+            "index": 0
+          },
           {
             "node": "Log to Google Sheets",
             "type": "main",
@@ -380,17 +359,6 @@
         [
           {
             "node": "Message a model",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Log to Google Sheets": {
-      "main": [
-        [
-          {
-            "node": "Respond: Analysis Complete1",
             "type": "main",
             "index": 0
           }

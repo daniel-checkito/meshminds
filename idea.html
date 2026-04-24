@@ -983,7 +983,11 @@ function recalcRevenue(price){
 }
 
 function populate(data){
-  var p=data.product||{};
+  function obj(v){if(typeof v==="string"){try{return JSON.parse(v);}catch(e){}}return v||{};}
+  var p=obj(data.product);
+  var m=obj(data.market);
+  var r=obj(data.revenue);
+  data.market=m;data.revenue=r;data.copyright=obj(data.copyright);
   /* Show the right panel for URL vs idea mode */
   if(q("idea-card"))q("idea-card").style.display=lastIsURL?"none":"";
   if(q("browser-el"))q("browser-el").style.display=lastIsURL?"":"none";
@@ -1001,7 +1005,6 @@ function populate(data){
   if(q("sv2"))q("sv2").textContent=p.downloads||"-";
   if(q("sv3"))q("sv3").textContent=p.prints||"-";
   if(q("note-text")&&p.note){q("note-text").innerHTML=p.note;if(q("note-div"))q("note-div").style.display="";}
-  var m=data.market||{};
   if(q("msv0"))q("msv0").textContent=m.searchVolume!==undefined?fmt(m.searchVolume)+" /mo":"-";
   if(q("msub0"))q("msub0").textContent=m.searchTrend||"";
   if(q("msv1"))q("msv1").textContent=fmt(m.etsyListings);
@@ -1014,7 +1017,6 @@ function populate(data){
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
 
-  var r=data.revenue||{};
   var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
   baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
   if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";

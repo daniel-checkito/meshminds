@@ -167,28 +167,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .sel-lbl{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:5px}
 .sel-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 12px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fafafa;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;cursor:pointer;min-height:46px}
 .sel-inp:focus{border-color:var(--acc)}
-.ck-item{display:flex;align-items:flex-start;gap:10px;padding:10px 11px;border:1px solid var(--line);border-radius:9px;margin-bottom:8px;opacity:0;transform:translateY(6px);transition:opacity .3s,transform .35s cubic-bezier(.34,1.2,.64,1)}
-.ck-item.show{opacity:1;transform:none}
-.ck-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;transition:background .3s}
-.ck-title{font-weight:700;font-size:12px;margin-bottom:3px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.ck-desc{font-size:11px;color:var(--ink2);line-height:1.45}
 .risk-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700;font-family:"DM Mono",sans-serif;letter-spacing:.04em}
 .risk-low{background:#dcfce7;color:#15803d}.risk-medium{background:#fef9c3;color:#b45309}.risk-high{background:#fee2e2;color:#b91c1c}
-
-/* Step 0 feature preview cards */
-.prev-card{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:8px}
-.prev-hd{display:flex;align-items:center;gap:7px;padding:9px 12px 8px;background:#fafafa;border-bottom:1px solid var(--line);font-weight:700;font-size:12px}
-.prev-hd-ico{width:16px;height:16px;flex-shrink:0}
-.prev-rows{padding:3px 0}
-.prev-row{display:flex;justify-content:space-between;align-items:center;padding:5px 12px}
-.prev-row+.prev-row{border-top:1px solid #f5f5f5}
-.prev-lbl{font-size:11px;color:var(--ink3)}
-.prev-val{font-size:11px;font-weight:700;font-family:"DM Mono",sans-serif}
-.prev-val.g{color:var(--good)}
-
-/* Step 4 legal context box */
-.legal-ctx{background:#f7f7f7;border-radius:11px;padding:12px;margin-bottom:12px}
-.legal-intro{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-bottom:10px}
 
 /* Email gate */
 .gate-head{text-align:center;padding:16px 0 12px}
@@ -242,26 +222,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .res-sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:11px;padding:8px 0 9px;border-bottom:1.5px solid var(--line)}
 .res-sec-ico{font-size:16px}
 .res-sec-lbl{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.02em;color:var(--ink)}
-
-/* Scraped product card (step 1) */
-.scrape-card{border:1.5px solid rgba(21,128,61,.25);border-radius:11px;padding:11px;margin-bottom:12px;background:linear-gradient(135deg,#f0fdf4,#fafafa)}
-.scrape-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
-.scrape-eye{font-size:9px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif}
-.scrape-src{font-size:10px;color:var(--ink3);font-family:"DM Mono",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
-.scrape-row{display:grid;grid-template-columns:92px 1fr;gap:10px}
-.scrape-img{width:92px;height:92px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fafafa;display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0}
-.scrape-img img{width:100%;height:100%;object-fit:cover;display:block}
-.scrape-body{min-width:0}
-.scrape-title{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:4px}
-.scrape-desc{font-size:11.5px;color:var(--ink2);line-height:1.42;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.scrape-facts{display:flex;gap:6px;flex-wrap:wrap}
-.scrape-fact{font-size:11px;color:var(--ink2);font-weight:500;background:#fff;border:1px solid var(--line);border-radius:6px;padding:4px 7px;font-family:"DM Mono",sans-serif;display:inline-flex;align-items:center;gap:4px}
-.scrape-fact b{color:var(--ink);font-weight:700}
-.scrape-note{font-size:11px;color:var(--ink3);margin-top:10px;line-height:1.45;padding-top:10px;border-top:1px dashed var(--line)}
-.scrape-hint{font-size:11px;color:var(--ink2);background:#fff7ed;border:1px dashed rgba(255,92,0,.3);border-radius:8px;padding:9px 11px;margin-bottom:14px;line-height:1.5}
-.fallback-divider{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.fallback-divider::before,.fallback-divider::after{content:"";flex:1;height:1px;background:var(--line)}
-.fallback-divider span{font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;white-space:nowrap}
 
 /* Final page: winners + offer */
 .cta-intro{font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:12px}
@@ -618,12 +578,27 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- RESULTS: Consolidated analysis -->
       <div class="panel">
+
+        <!-- Verdict decision card -->
+        <div id="verdict-card" style="display:none;border-radius:13px;padding:15px 16px 14px;margin-bottom:16px;transition:background .4s">
+          <div style="display:flex;align-items:center;gap:13px">
+            <div id="vc-score-wrap" style="flex-shrink:0;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center">
+              <span id="vc-score" style="font-size:21px;font-weight:800;font-family:'DM Mono',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.02em"></span>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div id="vc-label" style="font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:3px;opacity:.8"></div>
+              <div id="vc-msg" style="font-family:'Bebas Neue',sans-serif;font-size:21px;line-height:1.1;margin-bottom:4px"></div>
+              <div id="vc-note" style="font-size:11.5px;line-height:1.4;opacity:.8"></div>
+            </div>
+          </div>
+        </div>
+
         <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
         <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
         <div class="browser" id="browser-el">
           <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu"></div></div>
           <div class="bbody">
-            <div class="bimg"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none"></div>
+            <div class="bimg"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none'"></div>
             <div>
               <div class="btitle" id="btitle-el"></div>
               <div class="bauth"><span id="bauth-el"></span> <span class="bfol">Follow</span></div>
@@ -1016,7 +991,7 @@ function recalcRevenue(price){
   if(q("hv3"))q("hv3").textContent="~€"+net;
   if(q("price-display")){
     q("price-display").textContent="€"+price;
-    q("price-display").style.color=inSweet?"var(--ink)":price>sweetHigh?"var(--warn)":"var(--warn)";
+    q("price-display").style.color=inSweet?"var(--ink)":price>sweetHigh?"var(--bad)":"var(--warn)";
   }
   if(q("margin-val")){q("margin-val").textContent=margin+"%";q("margin-val").style.color=marginColor;}
   if(q("margin-units")){q("margin-units").textContent=U;q("margin-units").style.color=marginColor;}
@@ -1123,8 +1098,6 @@ function populate(data){
   if(q("idea-card"))q("idea-card").style.display=lastIsURL?"none":"";
   if(q("browser-el"))q("browser-el").style.display=lastIsURL?"":"none";
   if(!lastIsURL&&q("idea-desc-el"))q("idea-desc-el").textContent=lastURL;
-  if(q("step1-st"))q("step1-st").textContent=lastIsURL?"The product":"Your idea";
-  if(q("step1-sh"))q("step1-sh").textContent=lastIsURL?"What we found":"Estimated analysis";
   var buEl=document.querySelector(".bu");
   if(buEl)buEl.textContent=(p.url||lastURL).replace(/^https?:\/\//,"");
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
@@ -1236,8 +1209,24 @@ function populate(data){
   var verdictMsg=data.verdict||"Analysis complete";
   var scoreColor="#15803d";
   if(score!==null)scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
-  if(q("verdict-score")){q("verdict-score").textContent=scoreNum!==null?scoreNum:"?";q("verdict-score").style.color=scoreColor;}
-  if(q("verdict-msg")){q("verdict-msg").textContent=verdictMsg;q("verdict-msg").style.fontStyle="";}
+
+  /* Verdict decision card */
+  if(scoreNum!==null&&q("verdict-card")){
+    var sn=scoreNum;
+    var vcBg=sn>=80?"#f0fdf4":sn>=60?"#fff7ed":sn>=40?"#fefce8":"#fef2f2";
+    var vcFg=sn>=80?"#15803d":sn>=60?"#c2410c":sn>=40?"#a16207":"#b91c1c";
+    var vcLbl=sn>=80?"✅ Go — sell this now":sn>=60?"🟡 Worth testing":sn>=40?"⚠️ Marginal":"🚫 Avoid";
+    var vc=q("verdict-card");
+    vc.style.background=vcBg;
+    var scoreWrap=q("vc-score-wrap");
+    if(scoreWrap)scoreWrap.style.background="rgba(0,0,0,.07)";
+    if(q("vc-score")){q("vc-score").textContent=sn;q("vc-score").style.color=vcFg;}
+    if(q("vc-label")){q("vc-label").textContent=vcLbl;q("vc-label").style.color=vcFg;}
+    if(q("vc-msg")){q("vc-msg").textContent=verdictMsg;q("vc-msg").style.color=vcFg;}
+    if(q("vc-note")&&p.note){q("vc-note").innerHTML=p.note;q("vc-note").style.color=vcFg;}
+    vc.style.display="";
+  }
+
   populateCopyright(data.copyright||{});
   /* Store score  -  only reveal ring/vbar after email gate is passed */
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
@@ -1325,12 +1314,15 @@ function runAnalysis(){
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
+  var fetchAbort=new AbortController();
+  var fetchTimeout=setTimeout(function(){fetchAbort.abort();},30000);
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    keepalive:true,
+    signal:fetchAbort.signal,
     body:JSON.stringify(payload)
   }).then(function(resp){
+    clearTimeout(fetchTimeout);
     if(!resp.ok){
       return resp.text().then(function(text){
         var msg="HTTP "+resp.status;
@@ -1353,8 +1345,10 @@ function runAnalysis(){
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(err){
+    clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
-    if(err&&err.message){
+    if(err&&err.name==="AbortError")msg="Analysis timed out (30 s) – the server is busy, please try again.";
+    else if(err&&err.message){
       if(/^HTTP 5/.test(err.message))msg="Service error ("+err.message+") – try again in a moment.";
       else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+") – check your link.";
       else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
@@ -1378,8 +1372,6 @@ function reset(){
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
   if(q("browser-el"))q("browser-el").style.display="";
-  if(q("step1-st"))q("step1-st").textContent="The product";
-  if(q("step1-sh"))q("step1-sh").textContent="What we found";
   dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";showBack(false);
@@ -1409,8 +1401,7 @@ function reset(){
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
-  if(q("verdict-score")){q("verdict-score").textContent="–";q("verdict-score").style.color="var(--ink3)";}
-  if(q("verdict-msg")){q("verdict-msg").textContent="Calculating your score…";q("verdict-msg").style.fontStyle="italic";}
+  if(q("verdict-card"))q("verdict-card").style.display="none";
 }
 
 var CERT_INFO={
@@ -1549,9 +1540,6 @@ document.querySelectorAll(".chips").forEach(function(g){
       else if(id==="q-market")qMarketplace=c.dataset.v;
       else if(id==="q-price")qPrice=c.dataset.v;
       else if(id==="q-time")qPrintTime=c.dataset.v;
-      else if(id==="q-costs")qExtraCosts=c.dataset.v;
-      else if(id==="q-material")qMaterial=c.dataset.v;
-      else if(id==="q-exp")qExp=c.dataset.v;
       else if(id==="q-active")qActiveMarkets=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
       else if(id==="q-social")qSocialMedia=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
       else if(id==="q-sell-to")qSellTo=Array.from(g.querySelectorAll(".chip.on")).map(function(x){return x.dataset.v;});
@@ -1560,7 +1548,11 @@ document.querySelectorAll(".chips").forEach(function(g){
   });
 });
 
-q("btn").addEventListener("click",function(){if(busy)return;busy=true;analyze();});
+q("btn").addEventListener("click",function(){
+  if(busy)return;busy=true;
+  setBtn0("Checking…",true);
+  setTimeout(function(){setBtn0("Check this print",false);analyze();},380);
+});
 if(q("price-slider"))q("price-slider").addEventListener("input",function(){recalcRevenue(parseInt(this.value));});
 
 q("btn-email").addEventListener("click",function(){
@@ -1581,15 +1573,13 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
-  if(q("gate-content"))q("gate-content").style.display="none";
-  if(q("loading-overlay"))q("loading-overlay").style.display="";
   if(analysisComplete){
-    loadingProgress=0;
-    completeLoadingAnim(function(){
-      step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-      setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
-    });
+    /* Analysis already done — skip loading overlay, go straight to results */
+    step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+    setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
   } else {
+    if(q("gate-content"))q("gate-content").style.display="none";
+    if(q("loading-overlay"))q("loading-overlay").style.display="";
     waitingForAnalysis=true;
     startLoadingAnim();
   }
@@ -1599,7 +1589,7 @@ q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){step=2;dots(2);slide(2);setBtn2("Next","",false);showBack(true);return;}
   if(step===2){step=3;dots(3);slide(3);setBtn2("Start analysis","",false);showBack(true);return;}
-  if(step===3){busy=true;showBack(false);runAnalysis();return;}
+  if(step===3){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(false);return;}
   if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("Check another print","dark",false);showBack(false);return;}
   else{reset();}

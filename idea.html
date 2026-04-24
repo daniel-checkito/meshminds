@@ -616,38 +616,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
       </div>
 
-      <!-- LEGAL & COPYRIGHT CHECK -->
-      <div class="panel">
-        <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
-        <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
-        <div class="cp-grid">
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
-              <div class="cp-clabel">Etsy ban risk</div>
-            </div>
-            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
-          </div>
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
-              <div class="cp-clabel">Legal risk</div>
-            </div>
-            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
-          </div>
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
-              <div class="cp-clabel">Copyright / IP</div>
-            </div>
-            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
-          </div>
-        </div>
-        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
-        <div id="cert-section"></div>
-        <div style="font-size:10.5px;color:var(--ink3);text-align:center;margin-top:14px;line-height:1.5">Next up: full market, revenue &amp; profit analysis.</div>
-      </div>
-
       <!-- RESULTS: Consolidated analysis -->
       <div class="panel">
         <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
@@ -715,6 +683,37 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3"></span></div>
           </div>
         </div>
+      </div>
+
+      <!-- LEGAL & COPYRIGHT CHECK -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
+        <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
+        <div class="cp-grid">
+          <div class="cp-card">
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+              <div class="cp-clabel">Etsy ban risk</div>
+            </div>
+            <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+              <div class="cp-clabel">Legal risk</div>
+            </div>
+            <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
+          </div>
+          <div class="cp-card">
+            <div class="cp-card-left">
+              <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+              <div class="cp-clabel">Copyright / IP</div>
+            </div>
+            <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
+          </div>
+        </div>
+        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
+        <div id="cert-section"></div>
       </div>
 
       <!-- FINAL: inspiration + STL library offer -->
@@ -1176,9 +1175,9 @@ function runAnalysis(){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
         step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-        setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+        setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
       });
-    } else if(step===5)setBtn2("See full analysis","",false);
+    } else if(step===5)setBtn2("Legal & copyright check →","",false);
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(err){
@@ -1354,7 +1353,7 @@ q("btn-email").addEventListener("click",function(){
     loadingProgress=0;
     completeLoadingAnim(function(){
       step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-      setBtn2("See full analysis","",false);revealScore();populateLegalCerts();
+      setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
     });
   } else {
     waitingForAnalysis=true;

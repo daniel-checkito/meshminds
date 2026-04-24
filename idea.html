@@ -648,7 +648,28 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="sc" id="mc2"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div class="sc-lbl">Top seller</div></div><div class="sc-val" id="msv2"></div><div class="sc-sub up" id="msub2"></div></div>
           <div class="sc" id="mc3"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="sc-lbl">Print time</div></div><div class="sc-val" id="msv3"></div><div class="sc-sub up" id="msub3"></div></div>
         </div>
-        <div class="ins" id="ins" style="margin-bottom:16px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
+        <div class="ins" id="ins" style="margin-bottom:12px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
+
+        <!-- Manufacturing Verdict -->
+        <div id="mfg-section" style="display:none;margin-bottom:16px">
+          <div style="border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;background:#fff">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap">
+              <span style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif">Is 3D printing right?</span>
+              <span id="mfg-verdict-badge" style="font-size:9.5px;font-weight:800;padding:2px 9px;border-radius:20px;font-family:'DM Mono',sans-serif;letter-spacing:.04em"></span>
+            </div>
+            <div id="mfg-reason" style="font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:7px"></div>
+            <div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap">
+              <span style="font-size:10.5px;font-weight:700;color:var(--ink3);flex-shrink:0;padding-top:1px">Key advantage:</span>
+              <span id="mfg-advantage" style="font-size:11px;color:var(--ink);font-weight:600;line-height:1.4"></span>
+            </div>
+            <div id="mfg-alt-wrap" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--line)">
+              <span style="font-size:10.5px;font-weight:700;color:var(--ink3)">Consider instead: </span>
+              <span id="mfg-alt-list" style="font-size:11px;color:var(--ink2)"></span>
+            </div>
+            <div id="mfg-breakeven" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--line);font-size:11px;color:var(--ink3);line-height:1.4"></div>
+          </div>
+        </div>
+
         <div class="price-slider-wrap">
           <div class="price-slider-row">
             <div class="price-slider-lbl">Your sell price</div>
@@ -808,7 +829,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qExtraCosts="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
 function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1107,6 +1128,34 @@ function populate(data){
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
 
+  /* Manufacturing verdict */
+  var mfg=obj(data.manufacturing);
+  if(mfg&&mfg.verdict){
+    var isOpt=mfg.is3DPrintingOptimal!==false;
+    var mVerdict=(mfg.verdict||"").toLowerCase();
+    var mColor=isOpt?"#15803d":mVerdict.indexOf("limits")>=0?"#b45309":"#b91c1c";
+    var mBg=isOpt?"#dcfce7":mVerdict.indexOf("limits")>=0?"#fef9c3":"#fee2e2";
+    var badge=q("mfg-verdict-badge");
+    if(badge){badge.textContent=(mfg.verdict||"").toUpperCase();badge.style.background=mBg;badge.style.color=mColor;}
+    if(q("mfg-reason"))q("mfg-reason").innerHTML=mfg.reason||"";
+    if(q("mfg-advantage"))q("mfg-advantage").textContent=mfg.printingAdvantage||"";
+    var altWrap=q("mfg-alt-wrap");
+    var altList=q("mfg-alt-list");
+    if(altList&&mfg.alternatives&&mfg.alternatives.length>0){
+      altList.textContent=mfg.alternatives.join(", ");
+      if(altWrap)altWrap.style.display="";
+    }
+    var beEl=q("mfg-breakeven");
+    if(beEl&&mfg.breakEvenUnits>0){
+      beEl.textContent="3D printing stays competitive up to ~"+mfg.breakEvenUnits+" units/mo — above that, injection-mold tooling starts to pay back.";
+      beEl.style.display="";
+    }
+    if(q("mfg-section"))q("mfg-section").style.display="";
+  }
+
+  /* Store AI certificates for later use in legal step */
+  lastAiCerts=(Array.isArray(data.certificates)&&data.certificates.length>0)?data.certificates:null;
+
   var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
   baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
   if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
@@ -1276,7 +1325,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qExtraCosts="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;lastAiCerts=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
@@ -1287,6 +1336,9 @@ function reset(){
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
   q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";showBack(false);
   if(q("cert-section"))q("cert-section").innerHTML="";
+  if(q("mfg-section"))q("mfg-section").style.display="none";
+  if(q("mfg-alt-wrap"))q("mfg-alt-wrap").style.display="none";
+  if(q("mfg-breakeven"))q("mfg-breakeven").style.display="none";
   showFooter(false);setBtn0("Check this print",false);
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
@@ -1313,65 +1365,122 @@ function reset(){
 
 var CERT_INFO={
   kids:{label:"Children's product safety",icon:"👶",certs:[
-    {name:"CE EN 71",region:"🇪🇺 EU",desc:"Toy safety directive  -  required for all toys sold in the EU",difficulty:"medium",cost:"€500–€2,000",note:"Via accredited testing lab; self-declaration not accepted for toys"},
-    {name:"ASTM F963",region:"🇺🇸 USA",desc:"US toy safety standard  -  required for Etsy sales to US buyers",difficulty:"medium",cost:"$300–$1,500",note:"Lab test + Children's Product Certificate (CPC) required"},
-    {name:"CPSIA",region:"🇺🇸 USA",desc:"Lead & phthalate limits; tracking label must be on product and packaging",difficulty:"low",cost:"$150–$500",note:"Most PLA filaments pass  -  get a material data sheet from your supplier"}
+    {name:"CE EN 71-1/-2/-3",region:"🇪🇺 EU",desc:"EU Toy Safety Directive — mechanical, flammability, and chemical limits for all toys sold in the EU or by EU sellers",difficulty:"medium",cost:"€500–€2,500",note:"Third-party accredited lab test required; self-declaration alone is not accepted for toys. Add GPSR Responsible Person declaration.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Toys Regs 2011)",region:"🇬🇧 UK",desc:"UK Conformity Assessed mark — replaces CE for the GB market since Jan 2023 under the Toys (Safety) Regulations 2011",difficulty:"medium",cost:"£400–£2,000",note:"Keep a Technical File; UKCA does NOT apply in Northern Ireland (use CE there). CE still accepted until further notice.",sellTo:["GB","WORLDWIDE"]},
+    {name:"ASTM F963-23",region:"🇺🇸 USA",desc:"US mandatory toy safety standard — covers mechanical hazards, toxic substances, and flammability for children's toys",difficulty:"medium",cost:"$300–$1,500",note:"Third-party CPSC-accepted lab test required. Issue a Children's Product Certificate (CPC) and keep it on file.",sellTo:["US","WORLDWIDE"]},
+    {name:"CPSIA",region:"🇺🇸 USA",desc:"Consumer Product Safety Improvement Act — lead (<100 ppm), phthalate limits, and mandatory tracking label on product and packaging",difficulty:"low",cost:"$150–$600",note:"Most PLA filaments meet lead limits — request a material data sheet from your filament supplier as supporting evidence.",sellTo:["US","WORLDWIDE"]},
+    {name:"Health Canada SOR/2011-17",region:"🇨🇦 Canada",desc:"Canada Toys Regulations — safety requirements for toys sold to children under 14 in Canada",difficulty:"medium",cost:"C$400–C$1,500",note:"Bilingual English/French labelling required on all consumer products sold in Canada.",sellTo:["CA","WORLDWIDE"]}
   ]},
   electronics:{label:"Electronics / LED",icon:"🔌",certs:[
-    {name:"CE marking",region:"🇪🇺 EU",desc:"Low Voltage & EMC Directives  -  mandatory for all electronic products in the EU",difficulty:"high",cost:"€1,500–€5,000",note:"Can self-declare for low-risk items but most need a notified body"},
-    {name:"FCC / IC",region:"🇺🇸🇨🇦 USA/CA",desc:"Radio frequency certification for electronic devices",difficulty:"high",cost:"$3,000–$15,000",note:"Required even for Etsy  -  US Customs can detain non-certified goods"},
-    {name:"RoHS",region:"🇪🇺 EU",desc:"Restricts 10 hazardous substances in electrical equipment",difficulty:"low",cost:"€200–€800",note:"Get a RoHS declaration from your component supplier; keep records"}
+    {name:"CE (LVD + EMC)",region:"🇪🇺 EU",desc:"Low Voltage Directive 2014/35/EU and EMC Directive 2014/30/EU — mandatory for all electronic products placed on the EU market",difficulty:"high",cost:"€1,500–€6,000",note:"Can self-declare conformity for simple, low-risk devices; higher-risk devices need a Notified Body. Also requires GPSR-compliant documentation and an EU Responsible Person.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (UK Electrical)",region:"🇬🇧 UK",desc:"UK Conformity Assessed — replaces CE for GB market. Covers UK Electrical Equipment (Safety) Regulations 2016 and UK EMC Regulations 2016",difficulty:"high",cost:"£1,200–£5,000",note:"Technical documentation must be held for 10 years. CE marking still accepted in Great Britain under transitional arrangements until further government notice.",sellTo:["GB","WORLDWIDE"]},
+    {name:"FCC Part 15",region:"🇺🇸 USA",desc:"FCC authorization for unintentional radio frequency emitters — covers most electronics that don't intentionally transmit",difficulty:"medium",cost:"$500–$3,000",note:"SDoC (Supplier's Declaration of Conformity) is sufficient for many Part 15 devices. US Customs can detain non-compliant goods even on marketplace orders.",sellTo:["US","WORLDWIDE"]},
+    {name:"FCC ID (Part 15B/C)",region:"🇺🇸 USA",desc:"Mandatory FCC ID for intentional radiators — required for any product with Wi-Fi, Bluetooth, or other wireless transmission",difficulty:"high",cost:"$5,000–$20,000",note:"Requires testing at an FCC-accredited lab and FCC grant of equipment authorization. Budget 6–10 weeks for approval.",sellTo:["US","WORLDWIDE"]},
+    {name:"ISED RSS-Gen / RSS-247",region:"🇨🇦 Canada",desc:"Industry Canada radio equipment standards — applies to wireless/Bluetooth/Wi-Fi devices sold in Canada",difficulty:"high",cost:"C$3,000–C$12,000",note:"Often tested simultaneously with FCC to reduce cost. Canadian certification number must appear on the device label.",sellTo:["CA","WORLDWIDE"]},
+    {name:"RCM Mark",region:"🇦🇺 Australia",desc:"Regulatory Compliance Mark — combines ACMA telecommunications compliance and electrical safety for all electrical/electronic products",difficulty:"high",cost:"A$2,000–A$8,000",note:"Mandatory before placing on the Australian market. Register with the Responsible Supplier Register (RSR).",sellTo:["AU","WORLDWIDE"]},
+    {name:"RoHS 2011/65/EU",region:"🇪🇺 EU",desc:"Restricts 10 hazardous substances (lead, mercury, cadmium, etc.) in electrical and electronic equipment",difficulty:"low",cost:"€200–€600",note:"Obtain a RoHS compliance declaration from your electronic component supplier; keep records for 10 years.",sellTo:["EU","WORLDWIDE"]},
+    {name:"PSE Mark",region:"🇯🇵 Japan",desc:"Product Safety Electrical Appliance mark — diamond PSE for Class A (higher-risk) appliances, circle PSE for Class B",difficulty:"high",cost:"¥150,000–¥500,000",note:"Requires registration with METI (Ministry of Economy, Trade and Industry). Allow 3–4 months for approval.",sellTo:["JP","WORLDWIDE"]}
   ]},
   food:{label:"Food contact items",icon:"🍽️",certs:[
-    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Food-safe plastics regulation  -  standard PLA/ABS may not qualify without testing",difficulty:"medium",cost:"$400–$1,200",note:"Food-grade PLA exists but must be verified; standard printing filament is not certified"},
-    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials in contact with food  -  declaration of compliance required",difficulty:"medium",cost:"€300–€1,000",note:"Material test report + overall migration test needed from an accredited lab"},
-    {name:"⚠️ FDM risk",region:"All markets",desc:"Layer lines in FDM prints harbour bacteria and are very hard to clean safely",difficulty:"high",cost:"N/A",note:"Most food-contact 3D prints carry reputational and liability risk regardless of cert"}
+    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials and articles in contact with food — requires a Declaration of Compliance and migration testing",difficulty:"medium",cost:"€400–€1,500",note:"Material test report + overall and specific migration tests from an accredited lab. Standard PLA may not pass without food-grade certification.",sellTo:["EU","WORLDWIDE"]},
+    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Indirect food additive regulations — food-safe plastics requirements; standard FDM filament typically does not qualify",difficulty:"medium",cost:"$500–$2,000",note:"Food-grade PLA exists (e.g. Taulman Amphora) but must be verified by the supplier. Standard printing filament is NOT food-safe.",sellTo:["US","WORLDWIDE"]},
+    {name:"UK Retained Reg. 10/2011",region:"🇬🇧 UK",desc:"UK-retained version of EU food contact materials regulation — identical requirements post-Brexit for GB market",difficulty:"medium",cost:"£300–£1,200",note:"UK Food Standards Agency (FSA) oversight. Declaration of Compliance and migration test results must be available on request.",sellTo:["GB","WORLDWIDE"]},
+    {name:"⚠️ FDM structural risk",region:"All markets",desc:"FDM/FFF layer lines are micro-crevices that trap bacteria and cannot be safely sanitised — independent of any certification",difficulty:"high",cost:"N/A",note:"This is a physical limitation of the process, not a certification issue. Resin-printed or post-processed items can be safer, but most food-contact 3D prints carry ongoing liability and reputational risk.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
   ]},
   wearable:{label:"Wearables / jewellery",icon:"💍",certs:[
-    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"Restricts substances of very high concern in skin-contact items",difficulty:"low",cost:"€100–€500",note:"Request a REACH compliance declaration from your filament supplier"},
-    {name:"Nickel Directive",region:"🇪🇺 EU",desc:"Limits nickel release for items in prolonged skin contact  -  e.g. earrings, bracelets",difficulty:"low",cost:"€100–€400",note:"PLA/PETG are generally nickel-free; verify with supplier data sheet"}
+    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"REACH Regulation Article 59 — restricts substances of very high concern in articles with skin contact",difficulty:"low",cost:"€100–€400",note:"Request a REACH SVHC declaration of conformity from your filament supplier. PLA and PETG are generally low-risk.",sellTo:["EU","WORLDWIDE"]},
+    {name:"Nickel Directive 94/27/EC",region:"🇪🇺 EU",desc:"Limits nickel release to <0.5 µg/cm²/week for items in prolonged skin contact (earrings, bracelets, rings, clasps)",difficulty:"low",cost:"€100–€500",note:"PLA and PETG are typically nickel-free; confirm with your filament supplier's data sheet. Metal post-processing (electroplating) changes the picture.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UK REACH",region:"🇬🇧 UK",desc:"UK-retained REACH regulation — identical substance restrictions for the GB market post-Brexit",difficulty:"low",cost:"£100–£400",note:"Managed by the Health and Safety Executive (HSE). Filament supplier REACH declaration should cover this.",sellTo:["GB","WORLDWIDE"]},
+    {name:"CPSC 16 CFR 1500",region:"🇺🇸 USA",desc:"CPSC hazardous substance rules for jewellery and wearables — applies especially to children's jewellery (lead limits <100 ppm)",difficulty:"low",cost:"$100–$500",note:"Adult jewellery has lighter requirements; children's jewellery requires third-party testing. California Prop 65 may require additional chemical warnings.",sellTo:["US","WORLDWIDE"]}
   ]},
   battery:{label:"Battery / USB products",icon:"🔋",certs:[
-    {name:"UN 38.3",region:"🌍 Global",desc:"Transport safety  -  required to ship lithium batteries by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"Couriers (DHL, UPS) require proof of compliance; without it shipments are refused"},
-    {name:"IEC 62133",region:"🌍 Global",desc:"Safety standard for portable rechargeable lithium cells",difficulty:"high",cost:"$3,000–$10,000",note:"Lab test by accredited body; often required by marketplaces for battery products"},
-    {name:"CE / FCC",region:"🇪🇺🇺🇸",desc:"Required for any device with a rechargeable battery or wireless function",difficulty:"high",cost:"€2,000–€8,000",note:"Budget 3–6 months lead time for testing and documentation"}
+    {name:"UN 38.3",region:"🌍 Global",desc:"UN Manual of Tests and Criteria Part III section 38.3 — mandatory transport safety certification for lithium batteries shipped by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"All major couriers (DHL, UPS, FedEx) require UN 38.3 test summary. Without it, lithium battery shipments will be refused. Covers both cells and packs.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
+    {name:"IEC 62133-2",region:"🌍 Global",desc:"Safety requirements for portable sealed secondary lithium cells and batteries — the primary safety standard for rechargeable battery packs",difficulty:"high",cost:"$3,000–$12,000",note:"Testing by an accredited lab (e.g. TÜV, UL, SGS) required. Etsy and Amazon increasingly require this for listed battery products.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
+    {name:"CE (LVD + EMC + Battery Reg.)",region:"🇪🇺 EU",desc:"CE marking for devices with rechargeable batteries — covers LVD, EMC, and EU Battery Regulation 2023/1542",difficulty:"high",cost:"€2,000–€9,000",note:"New EU Battery Regulation (June 2023) adds labelling, QR code, and carbon footprint declaration requirements. Budget 3–5 months.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Battery Regs)",region:"🇬🇧 UK",desc:"UK Battery and Accumulators (Placing on the Market) Regulations 2008 — applies to all battery products on the GB market",difficulty:"high",cost:"£1,500–£6,000",note:"Separate from EU requirements post-Brexit. UK Batteries Regulations producer registration required for B2C sales.",sellTo:["GB","WORLDWIDE"]},
+    {name:"UL 2054",region:"🇺🇸 USA",desc:"UL standard for household and commercial batteries — widely required by US retailers and increasingly by Etsy for battery listings",difficulty:"high",cost:"$4,000–$15,000",note:"UL Recognized Component mark is common for battery cells. Full product UL listing is required for direct consumer sales in some states.",sellTo:["US","WORLDWIDE"]}
   ]},
   magnetic:{label:"Strong magnets",icon:"🧲",certs:[
-    {name:"EN 71-7",region:"🇪🇺 EU",desc:"Finger trap and ingestion hazard rules  -  applies if magnets could be accessed by children",difficulty:"medium",cost:"€500–€1,500",note:"Magnets > 0.5 T flux index require additional testing and age-restriction labelling"},
-    {name:"Warning label",region:"🌍 Global",desc:"Mandatory hazard warning if strong magnets (N35+) are in a product",difficulty:"low",cost:"<€50",note:"Include choking and pacemaker warnings; keep magnets secured in the design"}
+    {name:"EN 71-7 (Finger Traps / Ingestion)",region:"🇪🇺 EU",desc:"Toy Safety Directive annex for magnetic toys — strict flux index limit of 0.5 T² mm² for toys accessible to children under 14",difficulty:"medium",cost:"€500–€2,000",note:"Magnets exceeding the flux limit require additional testing, mandatory age-restriction label (14+), and warning text. Applies to any product a child might play with.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Magnetic Toys)",region:"🇬🇧 UK",desc:"UK equivalent of EN 71-7 under the Toys (Safety) Regulations 2011 — same flux index limits apply for GB market",difficulty:"medium",cost:"£400–£1,800",note:"UKCA technical file must document magnet flux measurements. Age warnings must appear on packaging and product listing.",sellTo:["GB","WORLDWIDE"]},
+    {name:"ASTM F963-23 §4.37",region:"🇺🇸 USA",desc:"US toy safety magnetic hazard section — limits on loose or separable magnets accessible to children under 14",difficulty:"medium",cost:"$300–$1,200",note:"High-powered magnets (N35+) sold to adults don't require toy certification, but must carry a choking/ingestion hazard warning label.",sellTo:["US","WORLDWIDE"]},
+    {name:"Hazard warning label",region:"🌍 Global",desc:"Mandatory ingestion and pacemaker hazard warning on all products containing strong magnets (N35 grade or above)",difficulty:"low",cost:"<€30",note:"Warning must appear on both product and packaging: 'Contains strong magnets — keep away from pacemakers and children under 3'. Secure magnets in the design to prevent separation.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
   ]}
 };
+
+function renderCertCard(c){
+  var dColor=c.difficulty==="high"?"#b91c1c":c.difficulty==="medium"?"#b45309":"#15803d";
+  var dBg=c.difficulty==="high"?"#fee2e2":c.difficulty==="medium"?"#fef9c3":"#dcfce7";
+  var dLabel=c.difficulty==="high"?"High":c.difficulty==="medium"?"Medium":"Low";
+  var rColor=c.required==="required"?"#b91c1c":c.required==="recommended"?"#b45309":c.required==="check-with-lawyer"?"#6d28d9":"#6b7280";
+  var rBg=c.required==="required"?"#fee2e2":c.required==="recommended"?"#fef9c3":c.required==="check-with-lawyer"?"#ede9fe":"#f3f4f6";
+  var rLabel=c.required==="required"?"Required":c.required==="recommended"?"Recommended":c.required==="check-with-lawyer"?"Check with lawyer":"N/A";
+  var h='<div style="padding:9px 12px;border-bottom:1px solid #f5f5f5">';
+  h+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">';
+  h+='<span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span>';
+  h+='<span style="font-size:9.5px;background:#f0f0f0;padding:1px 6px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span>';
+  if(c.required)h+='<span style="font-size:9.5px;background:'+rBg+';color:'+rColor+';padding:1px 6px;border-radius:20px;font-weight:700">'+rLabel+'</span>';
+  if(c.difficulty)h+='<span style="font-size:9.5px;background:'+dBg+';color:'+dColor+';padding:1px 6px;border-radius:20px;font-weight:700">'+dLabel+' difficulty</span>';
+  if(c.cost)h+='<span style="font-size:9.5px;background:#f0fdf4;color:#15803d;padding:1px 6px;border-radius:20px;font-weight:700">~'+c.cost+'</span>';
+  h+='</div>';
+  h+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4;margin-bottom:3px">'+c.desc+'</div>';
+  if(c.note)h+='<div style="font-size:10.5px;color:var(--ink3);line-height:1.35;font-style:italic">'+c.note+'</div>';
+  h+='</div>';
+  return h;
+}
 
 function populateLegalCerts(){
   var el=q("cert-section");if(!el)return;
   var flags=qLegalFlags.filter(function(f){return f!=="none";});
+
+  /* Use AI-generated certs if available */
+  if(lastAiCerts&&lastAiCerts.length>0){
+    var html='<div style="margin-top:14px">';
+    html+='<div style="font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:\'DM Mono\',sans-serif;margin-bottom:10px">Certificates for your product &amp; markets</div>';
+    /* Group by flag */
+    var flagGroups={};
+    lastAiCerts.forEach(function(c){var f=c.flag||"other";if(!flagGroups[f])flagGroups[f]=[];flagGroups[f].push(c);});
+    Object.keys(flagGroups).forEach(function(f){
+      var info=CERT_INFO[f];
+      var icon=info?info.icon:"📋";
+      var label=info?info.label:f.charAt(0).toUpperCase()+f.slice(1);
+      html+='<div style="border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden">';
+      html+='<div style="background:#fafafa;padding:9px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><span>'+icon+'</span><span>'+label+'</span></div>';
+      flagGroups[f].forEach(function(c){html+=renderCertCard(c);});
+      html+='</div>';
+    });
+    html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a qualified legal advisor before listing.</div></div>';
+    el.innerHTML=html;
+    return;
+  }
+
+  /* Fallback: static CERT_INFO filtered by country */
   if(flags.length===0){
     el.innerHTML='<div style="background:#f7f7f7;border-radius:10px;padding:12px 13px;margin-top:12px"><div style="font-size:11.5px;color:var(--ink2);line-height:1.5">✅ <b>No special certificates required</b> for standard 3D printed decorative / functional items. Always double-check if you add electronics or sell to children later.</div></div>';
     return;
   }
-  var html='<div style="margin-top:14px"><div style="font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:\'DM Mono\',sans-serif;margin-bottom:10px">Required certificates for your product</div>';
+  var sellFrom=q("sell-from")?q("sell-from").value:"";
+  var sellTo=qSellTo.length>0?qSellTo:["WORLDWIDE"];
+  var includesWorldwide=sellTo.indexOf("WORLDWIDE")>=0;
+  var html='<div style="margin-top:14px"><div style="font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:\'DM Mono\',sans-serif;margin-bottom:10px">Certificates for your product &amp; markets</div>';
   flags.forEach(function(f){
     var info=CERT_INFO[f];if(!info)return;
+    /* Filter certs to only those relevant to the seller's markets */
+    var filtered=info.certs.filter(function(c){
+      if(!c.sellTo)return true;
+      if(includesWorldwide)return true;
+      return c.sellTo.some(function(t){return sellTo.indexOf(t)>=0;});
+    });
+    if(filtered.length===0)return;
     html+='<div style="border:1px solid var(--line);border-radius:10px;margin-bottom:9px;overflow:hidden">';
     html+='<div style="background:#fafafa;padding:9px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--line)"><span>'+info.icon+'</span><span>'+info.label+'</span></div>';
-    info.certs.forEach(function(c){
-      var dColor=c.difficulty==="high"?"#b91c1c":c.difficulty==="medium"?"#b45309":"#15803d";
-      var dBg=c.difficulty==="high"?"#fee2e2":c.difficulty==="medium"?"#fef9c3":"#dcfce7";
-      var dLabel=c.difficulty==="high"?"High":c.difficulty==="medium"?"Medium":"Low";
-      html+='<div style="padding:9px 12px;border-bottom:1px solid #f5f5f5">';
-      html+='<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">';
-      html+='<span style="font-size:12px;font-weight:700;color:var(--ink)">'+c.name+'</span>';
-      html+='<span style="font-size:9.5px;background:#f0f0f0;padding:1px 6px;border-radius:20px;color:var(--ink3);font-weight:600">'+c.region+'</span>';
-      if(c.difficulty)html+='<span style="font-size:9.5px;background:'+dBg+';color:'+dColor+';padding:1px 6px;border-radius:20px;font-weight:700">'+dLabel+' difficulty</span>';
-      if(c.cost)html+='<span style="font-size:9.5px;background:#f0fdf4;color:#15803d;padding:1px 6px;border-radius:20px;font-weight:700">~'+c.cost+'</span>';
-      html+='</div>';
-      html+='<div style="font-size:11.5px;color:var(--ink2);line-height:1.4;margin-bottom:3px">'+c.desc+'</div>';
-      if(c.note)html+='<div style="font-size:10.5px;color:var(--ink3);line-height:1.35;font-style:italic">'+c.note+'</div>';
-      html+='</div>';
+    filtered.forEach(function(c){
+      var displayC=Object.assign({},c,{required:c.difficulty==="high"?"required":c.difficulty==="medium"?"recommended":null});
+      html+=renderCertCard(displayC);
     });
     html+='</div>';
   });
-  html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a local legal advisor before listing.</div></div>';
+  html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a qualified legal advisor before listing.</div></div>';
   el.innerHTML=html;
 }
 

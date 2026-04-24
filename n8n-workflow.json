@@ -312,47 +312,6 @@
           },
           "conditions": [
             {
-              "id": "has-context-check",
-              "leftValue": "={{ !!$json.body.productContext }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "equals",
-                "name": "boolean:equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "if-has-context",
-      "name": "IF: has context?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [14720, 3584]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const body = $('Webhook: Analysis Request').item.json.body;\nreturn [{\n  json: {\n    productContext: body.productContext,\n    imageUrl: body.imageUrl || null,\n    sourceUrl: body.url || ''\n  }\n}];"
-      },
-      "id": "prepare-context",
-      "name": "Prepare Context",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [14950, 3440]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict"
-          },
-          "conditions": [
-            {
               "id": "scrape-only-check",
               "leftValue": "={{ $('Webhook: Analysis Request').item.json.body.scrapeOnly }}",
               "rightValue": true,
@@ -410,36 +369,7 @@
       "main": [
         [
           {
-            "node": "IF: has context?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF: has context?": {
-      "main": [
-        [
-          {
-            "node": "Prepare Context",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
             "node": "/scrape",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Prepare Context": {
-      "main": [
-        [
-          {
-            "node": "Message a model",
             "type": "main",
             "index": 0
           }

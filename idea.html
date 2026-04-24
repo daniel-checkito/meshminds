@@ -1145,8 +1145,6 @@ function runAnalysis(){
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  if(lastProductContext)base.productContext=lastProductContext;
-  if(lastImageUrl)base.imageUrl=lastImageUrl;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{

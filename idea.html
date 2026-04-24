@@ -705,6 +705,26 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3"></span></div>
           </div>
         </div>
+
+        <!-- Strategy & Selling Advice -->
+        <div id="strategy-section" style="display:none;padding-top:4px">
+          <div class="res-sec-hd"><span class="res-sec-ico">🎯</span><span class="res-sec-lbl">Where &amp; How to Sell</span></div>
+          <div style="border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;margin-bottom:10px;background:#fff">
+            <div style="font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:5px">Best starting point</div>
+            <div id="best-platform" style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.3"></div>
+            <div id="platform-advice" style="font-size:12px;color:var(--ink2);line-height:1.5"></div>
+          </div>
+          <div id="example-card" style="display:none;border:1px solid rgba(21,128,61,.2);border-radius:11px;padding:11px 13px;margin-bottom:10px;background:linear-gradient(135deg,#f0fdf4,#fafafa)">
+            <div style="font-size:9px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:5px">🏆 Real-world example</div>
+            <div id="example-name" style="font-size:13px;font-weight:700;margin-bottom:3px"></div>
+            <div id="example-desc" style="font-size:11.5px;color:var(--ink2);line-height:1.42"></div>
+          </div>
+          <div id="tips-section" style="background:#f7f7f7;border-radius:11px;padding:12px 14px">
+            <div style="font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:9px">Top tips for this product</div>
+            <div id="tips-list" style="display:flex;flex-direction:column;gap:9px"></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- LEGAL & COPYRIGHT CHECK -->
@@ -1153,6 +1173,34 @@ function populate(data){
     if(q("mfg-section"))q("mfg-section").style.display="";
   }
 
+  /* Strategy & selling advice */
+  var strat=obj(data.strategy);
+  if(strat&&strat.bestPlatform){
+    if(q("best-platform"))q("best-platform").textContent=strat.bestPlatform;
+    if(q("platform-advice"))q("platform-advice").innerHTML=strat.platformAdvice||"";
+    var ex=strat.realWorldExample||{};
+    if(ex.name&&q("example-card")){
+      var nameEl=q("example-name");
+      if(nameEl){
+        if(ex.url){
+          nameEl.innerHTML='<a href="'+ex.url+'" target="_blank" rel="noopener" style="color:var(--acc);text-decoration:none;font-weight:700">'+ex.name+' ↗</a>';
+        } else {
+          nameEl.textContent=ex.name;
+          nameEl.style.color="var(--ink)";
+        }
+      }
+      if(q("example-desc"))q("example-desc").textContent=ex.whatTheyDo||"";
+      q("example-card").style.display="";
+    }
+    var tipsList=q("tips-list");
+    if(tipsList&&Array.isArray(strat.topTips)&&strat.topTips.length>0){
+      tipsList.innerHTML=strat.topTips.map(function(tip){
+        return '<div style="display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--ink2);line-height:1.45"><span style="color:var(--acc);font-weight:800;flex-shrink:0;margin-top:1px">→</span><span>'+tip+'</span></div>';
+      }).join("");
+    }
+    if(q("strategy-section"))q("strategy-section").style.display="";
+  }
+
   /* Store AI certificates for later use in legal step */
   lastAiCerts=(Array.isArray(data.certificates)&&data.certificates.length>0)?data.certificates:null;
 
@@ -1339,6 +1387,8 @@ function reset(){
   if(q("mfg-section"))q("mfg-section").style.display="none";
   if(q("mfg-alt-wrap"))q("mfg-alt-wrap").style.display="none";
   if(q("mfg-breakeven"))q("mfg-breakeven").style.display="none";
+  if(q("strategy-section"))q("strategy-section").style.display="none";
+  if(q("example-card"))q("example-card").style.display="none";
   showFooter(false);setBtn0("Check this print",false);
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";

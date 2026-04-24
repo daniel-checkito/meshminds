@@ -179,7 +179,7 @@
           "mappingMode": "defineBelow",
           "value": {
             "timestamp": "={{ new Date().toISOString() }}",
-            "input_url": "={{ ($json.product || {}).sourceHost || '' }}",
+            "input_url": "={{ $('Webhook: Analysis Request').item.json.body.url || $('Webhook: Analysis Request').item.json.body.description || '' }}",
             "score": "={{ $json.score }}",
             "verdict": "={{ $json.verdict }}",
             "title": "={{ ($json.product || {}).title || '' }}",

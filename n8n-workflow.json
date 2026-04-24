@@ -29,7 +29,7 @@
           "cachedResultName": "claude-sonnet-4-6"
         },
         "options": {
-          "maxTokensToSample": 5000
+          "maxTokensToSample": 8192
         },
         "messages": {
           "values": [
@@ -57,7 +57,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const text = ($json.content?.[0]?.text || '').trim();\nif (!text) throw new Error('Empty response from Claude');\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  throw new Error('No JSON object found: ' + text.substring(0, 200));\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(clean.slice(start, end + 1));\n} catch (e) {\n  throw new Error('JSON parse failed: ' + e.message);\n}\n\nreturn { json: parsed };"
+        "jsCode": "const raw = $json;\nconst stopReason = raw.stop_reason;\nconst text = (raw.content?.[0]?.text || '').trim();\n\nif (!text) throw new Error('Empty response from Claude');\n\n// Detect token-limit truncation before attempting parse\nif (stopReason === 'max_tokens') {\n  throw new Error('Claude hit the token limit — response was truncated. Increase maxTokensToSample. Response ends with: ...' + text.slice(-120));\n}\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  const truncated = !clean.trimEnd().endsWith('}');\n  if (truncated) throw new Error('Response appears truncated (no closing brace). Last 120 chars: ...' + clean.slice(-120));\n  throw new Error('No JSON object found. Preview: ' + text.substring(0, 300));\n}\n\nlet parsed;\ntry {\n  parsed = JSON.parse(clean.slice(start, end + 1));\n} catch (e) {\n  throw new Error('JSON parse failed: ' + e.message + '. Last 200 chars: ...' + clean.slice(-200));\n}\n\nreturn { json: parsed };"
       },
       "id": "5028592e-c3e9-45e0-9538-5ba9a80657f9",
       "name": "Parse Claude Response",

@@ -1100,17 +1100,6 @@ function analyze(){
   q("submit-block").style.display="none";
   q("btn").style.display="none";
 
-  if(lastIsURL){
-    fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      keepalive:true,
-      body:JSON.stringify({url:lastURL})
-    }).then(function(r){return r.ok?r.json():null;})
-    .then(function(d){if(d&&d.productContext)lastProductContext=d.productContext;})
-    .catch(function(){});
-  }
-
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);busy=false;
 }
 
@@ -1140,10 +1129,9 @@ function runAnalysis(){
   startPulse();
   analysisComplete=false;
   var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
-  if(lastIsURL&&lastProductContext)base.productContext=lastProductContext;
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,extraCosts:qExtraCosts,material:qMaterial,experience:qExp,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea2",{
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     keepalive:true,

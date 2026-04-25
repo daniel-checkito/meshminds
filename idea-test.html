@@ -1951,7 +1951,7 @@ function runAnalysis(){
       });
     } else if(step===5)setBtn2("How to sell it","",false);
     else if(step===6)setBtn2("Check legal status","",false);
-    else if(step===7)setBtn2("See winners & STL library","",false);
+    else if(step===7)setBtn2("Done - share your feedback","",false);
     else if(step===8)setBtn2("Check another print","dark",false);
   }).catch(function(err){
     clearTimeout(fetchTimeout);
@@ -2216,7 +2216,7 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
-  if(step===6){step=7;dots(7);slide(7);setBtn2("See winners & STL library","",false);showBack(true);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("Done - share your feedback","",false);showBack(true);return;}
   if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(false);return;}
   else{reset();}
 });
@@ -2227,7 +2227,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(false);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
-  if(step===8){step=7;dots(7);slide(7);setBtn2("See winners & STL library","",false);showBack(true);return;}
+  if(step===8){step=7;dots(7);slide(7);setBtn2("Done - share your feedback","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

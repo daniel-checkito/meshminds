@@ -727,7 +727,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="price-slider-val" id="price-display">€22</div>
           </div>
           <input type="range" id="price-slider" min="5" max="120" value="22" step="1">
-          <canvas id="rev-chart" width="600" height="68" style="width:100%;height:68px;display:block;margin-top:10px;border-radius:6px"></canvas>
+          <canvas id="rev-chart" style="width:100%;height:68px;display:block;margin-top:10px;border-radius:6px"></canvas>
           <div class="price-slider-limits" style="margin-top:3px"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
           <div id="sweet-spot-hint" style="text-align:center;font-size:10.5px;font-weight:700;color:var(--good);font-family:'DM Mono',sans-serif;margin-top:3px;opacity:0;transition:opacity .4s,color .3s"></div>
           <div class="price-margin-row">
@@ -1094,8 +1094,11 @@ function recalcRevenue(price){
 function drawRevenueChart(currentPrice){
   var canvas=q("rev-chart");
   if(!canvas||!baseRevData)return;
-  var W=600,H=68,pad=6;
+  var dpr=window.devicePixelRatio||1;
+  var W=canvas.offsetWidth||300,H=68,pad=6;
+  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
   var ctx=canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
 
   var slMin=parseInt(q("price-slider")?q("price-slider").min:5)||5;
@@ -1103,7 +1106,6 @@ function drawRevenueChart(currentPrice){
   var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units;
   var costPerUnit=baseUnits>0?baseRevData.printCost/baseUnits:0;
 
-  /* Compute net profit for every integer price in range */
   var pts=[];
   for(var p=slMin;p<=slMax;p++){
     var el=p>=basePrice?1.5:0.8;
@@ -1120,14 +1122,21 @@ function drawRevenueChart(currentPrice){
   function yOf(net){return pad+(maxNet-net)/range*(H-pad*2);}
   var zeroY=yOf(0);
 
-  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
+  /* Smooth bezier path — adds segments without moveTo */
+  function addSmooth(){
+    for(var i=0;i<pts.length-1;i++){
+      var x0=xOf(slMin+i),y0=yOf(pts[i]);
+      var x1=xOf(slMin+i+1),y1=yOf(pts[i+1]);
+      ctx.quadraticCurveTo(x0,y0,(x0+x1)/2,(y0+y1)/2);
+    }
+    ctx.lineTo(xOf(slMax),yOf(pts[pts.length-1]));
+  }
 
-  /* Sweet spot band */
+  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
   var sx1=xOf(Math.max(sweetLow,slMin)),sx2=xOf(Math.min(sweetHigh,slMax));
   ctx.fillStyle="rgba(21,128,61,0.07)";
   ctx.fillRect(sx1,0,sx2-sx1,H);
 
-  /* Zero line */
   if(minNet<0){
     ctx.beginPath();ctx.moveTo(pad,zeroY);ctx.lineTo(W-pad,zeroY);
     ctx.strokeStyle="rgba(0,0,0,0.1)";ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
@@ -1137,7 +1146,8 @@ function drawRevenueChart(currentPrice){
   /* Filled area */
   ctx.beginPath();
   ctx.moveTo(xOf(slMin),zeroY);
-  for(var i=0;i<pts.length;i++)ctx.lineTo(xOf(slMin+i),yOf(pts[i]));
+  ctx.lineTo(xOf(slMin),yOf(pts[0]));
+  addSmooth();
   ctx.lineTo(xOf(slMax),zeroY);
   ctx.closePath();
   var grad=ctx.createLinearGradient(0,0,0,H);
@@ -1145,10 +1155,10 @@ function drawRevenueChart(currentPrice){
   grad.addColorStop(1,"rgba(245,158,11,0.03)");
   ctx.fillStyle=grad;ctx.fill();
 
-  /* Curve */
+  /* Smooth stroke */
   ctx.beginPath();
   ctx.moveTo(xOf(slMin),yOf(pts[0]));
-  for(var i=1;i<pts.length;i++)ctx.lineTo(xOf(slMin+i),yOf(pts[i]));
+  addSmooth();
   ctx.strokeStyle="#f59e0b";ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
 
   /* Current price marker */

@@ -683,20 +683,6 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const ctx = $json.productContext || '';\nconst titleLine = ctx.match(/^TITLE:\\s*(.+)$/m);\nconst rawTitle = titleLine ? titleLine[1].trim() : '';\n\n// Strip site suffixes and generic 3D-print terms from the title\nconst cleaned = rawTitle\n  .replace(/[\\|\\-\u2013\u2014]\\s*(Free\\s+)?(3D\\s+)?(Print(ing)?|Model|File|STL|Design)\\b.*$/i, '')\n  .replace(/[\\|\\-\u2013\u2014].*?(MakerWorld|Printables|Cults3?D|Thingiverse|CGTrader)\\b.*$/i, '')\n  .replace(/\\s+by\\s+\\w.*$/i, '')\n  .trim();\n\nconst keyword = (cleaned || rawTitle).replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\n\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: $json.productContext,\n  imageUrl: $json.imageUrl,\n  sourceUrl: $json.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
-      },
-      "id": "cb517149-75fc-4699-8aab-d058295fd52f",
-      "name": "Extract Keyword",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        11616,
-        2448
-      ]
-    },
-    {
-      "parameters": {
         "operation": "scrape",
         "url": "={{ 'https://www.etsy.com/search?q=' + encodeURIComponent($json.etsyKeyword) + '&explicit=1' }}",
         "scrapeOptions": {
@@ -718,7 +704,7 @@
       "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
       "typeVersion": 1,
       "position": [
-        11840,
+        12288,
         2448
       ],
       "credentials": {
@@ -732,16 +718,64 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Extract Keyword').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsySearchData: etsyMarkdown\n})) }];"
+        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Build Etsy Query').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsySearchData: etsyMarkdown\n})) }];"
       },
       "id": "b9af529a-3454-4118-aa2b-8d6295450b8e",
       "name": "Merge Etsy Data",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        12064,
+        12512,
         2448
       ]
+    },
+    {
+      "id": "2ed7179e-77e4-43ac-9623-d189f71a7368",
+      "name": "LLM: Etsy Keyword",
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        11616,
+        2448
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "BN9V68mlR6Lhibd4",
+          "name": "Anthropic account 2"
+        }
+      },
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-haiku-4-5-20251001",
+          "mode": "list",
+          "cachedResultName": "claude-haiku-4-5-20251001"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You extract Etsy search keywords from 3D print product pages.\n\nReturn ONLY a 2-5 word search phrase that a buyer would type on Etsy to find this type of product. No explanation, no punctuation, just the phrase.\n\nEXAMPLES:\n- dandelion wall art\n- dragon dice tower\n- flexi snake toy\n- cute frog planter\n\nPRODUCT PAGE:\n{{ $json.productContext.substring(0, 1500) }}"
+            }
+          ]
+        },
+        "options": {
+          "maxTokensToSample": 30
+        }
+      }
+    },
+    {
+      "id": "99ce221e-b8df-481f-ac5c-d7c481a6b0bc",
+      "name": "Build Etsy Query",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        11840,
+        2448
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const keyword = ($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nconst upstream = $('Extract Product Context').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
+      }
     }
   ],
   "pinData": {},
@@ -772,7 +806,7 @@
       "main": [
         [
           {
-            "node": "Extract Keyword",
+            "node": "LLM: Etsy Keyword",
             "type": "main",
             "index": 0
           }
@@ -806,17 +840,6 @@
         ]
       ]
     },
-    "Extract Keyword": {
-      "main": [
-        [
-          {
-            "node": "Firecrawl: Etsy Search",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Firecrawl: Etsy Search": {
       "main": [
         [
@@ -833,6 +856,28 @@
         [
           {
             "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM: Etsy Keyword": {
+      "main": [
+        [
+          {
+            "node": "Build Etsy Query",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Etsy Query": {
+      "main": [
+        [
+          {
+            "node": "Firecrawl: Etsy Search",
             "type": "main",
             "index": 0
           }

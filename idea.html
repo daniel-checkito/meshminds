@@ -1401,10 +1401,10 @@ function showGateError(msg){
 }
 
 function runAnalysis(){
-  /* Client-side gate (server enforces the real limits) */
-  var rlMsg=rlCheck();
-  if(rlMsg){showGateError(rlMsg);return;}
-  rlRecord();
+  /* Client-side gate disabled for testing — re-enable before launch */
+  // var rlMsg=rlCheck();
+  // if(rlMsg){showGateError(rlMsg);return;}
+  // rlRecord();
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
   verdict("scanning");

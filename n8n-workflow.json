@@ -718,7 +718,7 @@
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "const item = $input.first().json;\nconst etsyMarkdown = (item.data && item.data.markdown) ? item.data.markdown.substring(0, 3000) : '';\nlet upstream = null;\ntry { upstream = $('Extract Product Context').first().json; } catch(e) {}\nif (!upstream || !upstream.productContext) {\n  try { upstream = $('Build Idea Context').first().json; } catch(e) {}\n}\nif (!upstream) upstream = {};\nconst kw = $('Build Etsy Query').first().json;\nreturn [{ json: {\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: kw.etsyKeyword || '',\n  etsySearchData: etsyMarkdown\n} }];"
+        "jsCode": "const item = $input.first().json;\nconst etsyMarkdown = (item.data && item.data.markdown) ? item.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Extract Product Context').first().json;\nconst kw = $('Build Etsy Query').first().json;\nreturn [{ json: {\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: kw.etsyKeyword || '',\n  etsySearchData: etsyMarkdown\n} }];"
       },
       "id": "b9af529a-3454-4118-aa2b-8d6295450b8e",
       "name": "Merge Etsy Data",
@@ -776,81 +776,6 @@
         "mode": "runOnceForAllItems",
         "jsCode": "const text = $input.first().json.content?.[0]?.text || '';\nconst keyword = text.replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nreturn [{ json: { etsyKeyword: keyword } }];"
       }
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
-          "conditions": [
-            {
-              "id": "e5f6a7b8-c9d0-1234-efab-345678901234",
-              "leftValue": "={{ $json.body.emailCapture }}",
-              "rightValue": true,
-              "operator": { "type": "boolean", "operation": "true", "singleValue": true }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Route: Email Capture?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [10560, 2256]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={\"ok\":true}",
-        "options": {
-          "responseCode": 200,
-          "responseHeaders": {
-            "entries": [
-              { "name": "Content-Type", "value": "application/json" },
-              { "name": "Access-Control-Allow-Origin", "value": "*" }
-            ]
-          }
-        }
-      },
-      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-      "name": "Respond: Email OK",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [10800, 1968]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
-          "conditions": [
-            {
-              "id": "f6a7b8c9-d0e1-2345-fabc-456789012345",
-              "leftValue": "={{ $json.body.type }}",
-              "rightValue": "idea",
-              "operator": { "type": "string", "operation": "equals" }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
-      "name": "Route: Idea vs URL?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [10800, 2352]
-    },
-    {
-      "parameters": {
-        "mode": "runOnceForAllItems",
-        "jsCode": "const body = $input.first().json.body || {};\nconst description = body.description || '';\nconst category = body.category || '';\nconst priceRange = body.priceRange || '';\nconst marketplace = body.marketplace || 'Etsy';\nconst printTime = body.printTime || '';\nconst sellFrom = body.sellFrom || '';\nconst sellTo = body.sellTo || '';\n\nconst productContext = [\n  'TYPE: idea (user described the product — no URL)',\n  'IDEA: ' + description,\n  'CATEGORY: ' + (category || 'not specified'),\n  'TARGET MARKETPLACE: ' + (marketplace || 'Etsy'),\n  'PRICE RANGE: ' + (priceRange || 'not specified'),\n  'PRINT TIME: ' + (printTime || 'not specified'),\n  'SELL FROM: ' + (sellFrom || 'not specified'),\n  'SELL TO: ' + (sellTo || 'not specified'),\n  '',\n  'No scraped page is available. Synthesise product details, demand data, and revenue estimates from your knowledge of comparable products in this category.'\n].join('\\n');\n\nreturn [{ json: {\n  productContext: productContext,\n  imageUrl: null,\n  sourceUrl: null\n} }];"
-      },
-      "id": "d4e5f6a7-b8c9-0123-defa-234567890123",
-      "name": "Build Idea Context",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [11168, 2160]
     }
   ],
   "pinData": {},
@@ -859,54 +784,7 @@
       "main": [
         [
           {
-            "node": "Route: Email Capture?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Route: Email Capture?": {
-      "main": [
-        [
-          {
-            "node": "Respond: Email OK",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Route: Idea vs URL?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Route: Idea vs URL?": {
-      "main": [
-        [
-          {
-            "node": "Build Idea Context",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
             "node": "/scrape",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Idea Context": {
-      "main": [
-        [
-          {
-            "node": "LLM: Etsy Keyword",
             "type": "main",
             "index": 0
           }

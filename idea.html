@@ -126,7 +126,7 @@ html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .eg-name{font-size:11px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .eg-meta{font-size:9.5px;color:rgba(255,255,255,.8);font-family:"DM Mono",sans-serif}
 .eg-flag{font-size:9.5px;font-weight:700;color:#fca5a5}
-.sg{color:var(--good)}.sw{color:var(--warn)}.sb{color:var(--bad)}
+
 
 /* Social proof */
 .proof-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 10px;background:#f7f7f7;border-radius:10px;margin-bottom:8px}
@@ -1624,7 +1624,6 @@ function populate(data){
   if(q("msub2"))q("msub2").textContent=m.topSellerSales?"sales · active":"";
   if(q("msv3"))q("msv3").textContent=m.printTime||"-";
   if(q("msub3"))q("msub3").textContent=m.unitsPerDay||"";
-  ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
   /* Manufacturing verdict */
@@ -2007,7 +2006,6 @@ function reset(){
   if(q("loading-overlay"))q("loading-overlay").style.display="none";
   if(q("gate-content"))q("gate-content").style.display="";
   ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
-  ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";

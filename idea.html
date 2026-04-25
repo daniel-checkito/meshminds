@@ -1446,10 +1446,10 @@ function runAnalysis(){
     else if(err&&err.message){
       var m=err.message;
       if(m.indexOf("please wait")>=0||m.indexOf("daily limit")>=0||m.indexOf("rate limit")>=0)msg=m.replace(/^HTTP \d+[:\s]*/,"");
-      else if(m.indexOf("scrape_failed")>=0||m.indexOf("Could not scrape")>=0)msg="Couldn't scrape that URL – make sure it's a direct product page link and try again.";
-      else if(m.indexOf("analysis_failed")>=0||m.indexOf("AI analysis")>=0)msg="AI analysis failed – please try again in a moment.";
-      else if(/^HTTP 502/.test(m))msg="Couldn't scrape that URL – make sure it's a direct product page link and try again.";
-      else if(/^HTTP 5/.test(m))msg="AI analysis failed – please try again in a moment.";
+      else if(m.indexOf("scrape_failed")>=0||m.indexOf("Could not scrape")>=0)msg="Couldn't reach that URL – make sure it's a direct product page link and try again.";
+      else if(m.indexOf("analysis_failed")>=0||m.indexOf("AI analysis")>=0)msg="Analysis failed – please try again in a moment.";
+      else if(/^HTTP 502/.test(m))msg="Couldn't reach that URL – make sure it's a direct product page link and try again.";
+      else if(/^HTTP 5/.test(m))msg="Analysis failed – please try again in a moment.";
       else if(/^HTTP 4/.test(m))msg="Request rejected – please check your link and try again.";
       else if(m==="Failed to fetch"||m.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
       else msg=m;

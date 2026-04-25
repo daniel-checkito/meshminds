@@ -825,7 +825,7 @@
       ],
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { error: 'scrape_failed', message: 'Could not scrape that URL. Make sure it is a direct product page link and try again.' } }}",
+        "responseBody": "={{ { error: 'scrape_failed', message: 'Could not reach that URL. Make sure it is a direct product page link and try again.' } }}",
         "options": {
           "responseCode": 502
         }
@@ -842,7 +842,7 @@
       ],
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ { error: 'analysis_failed', message: 'AI analysis failed. Please try again in a moment.' } }}",
+        "responseBody": "={{ { error: 'analysis_failed', message: 'Analysis failed. Please try again in a moment.' } }}",
         "options": {
           "responseCode": 500
         }

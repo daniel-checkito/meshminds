@@ -750,71 +750,6 @@
       ]
     },
     {
-      "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "return [{ json: JSON.parse(JSON.stringify($json)) }];"
-      },
-      "id": "9734a8d6-8cc4-4ead-88b0-61a9fba62e8d",
-      "name": "Rate Limit Check",
-      "type": "n8n-nodes-base.code",
-      "typeVersion": 2,
-      "position": [
-        10496,
-        2256
-      ]
-    },
-    {
-      "parameters": {
-        "conditions": {
-          "options": {
-            "caseSensitive": true,
-            "leftValue": "",
-            "typeValidation": "strict",
-            "version": 1
-          },
-          "conditions": [
-            {
-              "id": "rate-blocked-check",
-              "leftValue": "={{ $json.blocked }}",
-              "rightValue": true,
-              "operator": {
-                "type": "boolean",
-                "operation": "equals",
-                "name": "boolean:equals"
-              }
-            }
-          ],
-          "combinator": "and"
-        },
-        "options": {}
-      },
-      "id": "95f85ffa-2971-43b2-9eca-2d94f5eff170",
-      "name": "IF: Rate Limited?",
-      "type": "n8n-nodes-base.if",
-      "typeVersion": 2,
-      "position": [
-        10720,
-        2256
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ $json.code === 'cooldown' ? { error: 'Please wait ' + ($json.wait || 10) + ' second' + (($json.wait || 10) === 1 ? '' : 's') + ' before your next check.' } : { error: 'Daily limit reached. Please try again tomorrow.' } }}",
-        "options": {
-          "responseCode": 429
-        }
-      },
-      "id": "bb444482-f005-47bc-aa94-2050da63f572",
-      "name": "Respond: Rate Limited",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        10944,
-        2160
-      ]
-    },
-    {
       "id": "err-scrape-001",
       "name": "Respond: Scrape Failed",
       "type": "n8n-nodes-base.respondToWebhook",
@@ -855,7 +790,7 @@
       "main": [
         [
           {
-            "node": "Rate Limit Check",
+            "node": "/scrape",
             "type": "main",
             "index": 0
           }
@@ -952,35 +887,6 @@
         [
           {
             "node": "Message a model",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Rate Limit Check": {
-      "main": [
-        [
-          {
-            "node": "IF: Rate Limited?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "IF: Rate Limited?": {
-      "main": [
-        [
-          {
-            "node": "Respond: Rate Limited",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "/scrape",
             "type": "main",
             "index": 0
           }

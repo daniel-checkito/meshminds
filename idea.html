@@ -315,7 +315,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
   <div class="hdr">
     <div id="submit-block">
-      <div id="hero-text" style="padding:18px 0 14px">
+      <div id="hero-text" style="padding:8px 0 6px">
         <div class="hero-eyebrow">Make money 3D printing</div>
         <div class="hero-h1">Will this print<br><em>actually</em> sell?</div>
         <p class="hero-sub">Paste a MakerWorld link — get demand, profit &amp; legal risk in ~20 seconds.</p>
@@ -357,11 +357,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 0 -->
       <div class="panel">
-
-        <div class="quote-bar">
-          <div class="quote-txt">"Saved me from printing 200 cable boxes nobody wanted. Wish I found this sooner."</div>
-          <div class="quote-who">— Etsy seller · 1,200+ orders</div>
-        </div>
 
         <div class="section-lbl">Popular prints analysed</div>
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;opacity:.65">
@@ -1751,7 +1746,7 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Next","",false);showBack(true);return;}
   if(step===2){step=3;dots(3);slide(3);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===3){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
-  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(false);return;}
+  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(true);return;}
   if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("Check another print","dark",false);showBack(false);return;}
   else{reset();}
 });
@@ -1761,6 +1756,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===3){step=2;dots(2);slide(2);setBtn2("Next","",false);showBack(true);return;}
+  if(step===6){step=5;dots(5);slide(5);q("vbar").style.display="";setBtn2("Legal & copyright check →","",false);showBack(false);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrintChecker — Will your 3D print actually sell?</title>
-<meta name="description" content="Paste a link to any 3D model. We check demand, profit and legal risk in seconds — powered by real Etsy data and AI.">
-<meta property="og:title" content="PrintChecker — Will your 3D print actually sell?">
+<title>PrintChecker - Will your 3D print actually sell?</title>
+<meta name="description" content="Paste a link to any 3D model. We check demand, profit and legal risk in seconds - powered by real Etsy data and AI.">
+<meta property="og:title" content="PrintChecker - Will your 3D print actually sell?">
 <meta property="og:description" content="Paste a MakerWorld link. Get a demand score, revenue estimate and legal risk check in seconds.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PrintChecker — Will your 3D print actually sell?">
+<meta name="twitter:title" content="PrintChecker - Will your 3D print actually sell?">
 <meta name="twitter:description" content="Real Etsy data + AI analysis. Know if your 3D print idea is worth selling before you waste filament.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
@@ -98,6 +98,10 @@ html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .panel{min-width:100%;width:100%;height:100%;overflow-y:auto;flex-shrink:0;padding:16px 16px 14px}
 .panel::-webkit-scrollbar{display:none}
 
+.ban-warn{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:11px;padding:12px 14px;margin:14px 0 2px;display:flex;gap:10px;align-items:flex-start}
+.ban-warn-ico{font-size:20px;flex-shrink:0;line-height:1.2}
+.ban-warn-body{font-size:12.5px;color:#7f1d1d;line-height:1.5}
+.ban-warn-body b{color:#991b1b}
 .foot{padding:12px 16px;border-top:1px solid var(--line);flex-shrink:0;display:flex;flex-direction:column;gap:8px}
 .btn-back{background:none;border:none;padding:6px 0;font-size:13px;color:var(--ink3);cursor:pointer;display:flex;align-items:center;gap:5px;font-family:"DM Sans",sans-serif;align-self:center}
 .btn-back:hover{color:var(--ink)}
@@ -435,7 +439,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <div class="phone">
 
   <div id="proto-bar">
-    <span>🚧 <b>Early beta</b> — Results are not 100% reliable but get better over time.</span>
+    <span>🚧 <b>Early beta</b> - Results are not 100% reliable but get better over time.</span>
     <button class="proto-close" onclick="document.getElementById('proto-bar').style.display='none'" aria-label="Dismiss">✕</button>
   </div>
 
@@ -443,8 +447,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     <div id="submit-block">
       <div id="hero-text" style="padding:8px 0 6px">
         <div class="hero-eyebrow">Make money 3D printing</div>
-        <div class="hero-h1">Will this print<br><em>actually</em> sell?</div>
-        <p class="hero-sub">Paste a MakerWorld link — get demand, profit &amp; legal risk in ~20 seconds.</p>
+        <div class="hero-h1">Will this 3D print<br><em>actually</em> sell?</div>
+        <p class="hero-sub">Paste a MakerWorld link - get demand, profit &amp; legal risk in ~20 seconds.</p>
       </div>
       <div class="inp-card" id="inp-card">
         <div class="inp-inner">
@@ -452,7 +456,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="Paste a MakerWorld link…">
         </div>
         <div class="plat-tags">
-          <span class="plat-tag">MakerWorld</span>
+          <span class="plat-tag">✓ Free to use</span>
+          <span class="plat-tag">⚡ Ready in 30 seconds</span>
         </div>
       </div>
       <div id="url-error" style="display:none;font-size:12px;color:var(--bad);margin-top:-4px;margin-bottom:6px;padding:0 4px"></div>
@@ -482,10 +487,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="panel">
 
         <div class="section-lbl">Popular prints analysed</div>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;opacity:.65">
-          <span style="font-size:9.5px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
-          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:13px;object-fit:contain" onerror="this.style.display='none'">
-        </div>
 
         <div class="eg-grid" style="margin-bottom:20px">
           <div class="eg-card">
@@ -537,13 +538,18 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="stat-cell"><div class="stat-n">1 in 4</div><div class="stat-l">Ideas has IP risk</div></div>
         </div>
 
+        <div class="ban-warn">
+          <div class="ban-warn-ico">🚫</div>
+          <div class="ban-warn-body"><b>Etsy bans shops for selling unlicensed prints.</b> Since March 2026, reselling 3D prints without a verified commercial license can get your shop suspended. We check the license and flag the risk before you list - so you don't lose your shop over a technicality.</div>
+        </div>
+
         <div class="section-lbl">How it works</div>
         <div class="how-steps">
           <div class="how-step">
             <span class="how-num">01</span>
             <div>
               <div class="how-title">Paste a MakerWorld link</div>
-              <div class="how-desc">Drop any product URL — or describe what you're thinking of printing.</div>
+              <div class="how-desc">Drop any product URL - or describe what you're thinking of printing.</div>
               <div class="how-time">~5 seconds</div>
             </div>
           </div>
@@ -551,7 +557,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <span class="how-num">02</span>
             <div>
               <div class="how-title">Answer 3 quick questions</div>
-              <div class="how-desc">Your printer setup, price range, and target market — personalises the analysis.</div>
+              <div class="how-desc">Your printer setup, price range, and target market - personalises the analysis.</div>
               <div class="how-time">~30 seconds</div>
             </div>
           </div>
@@ -571,21 +577,21 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="chk-ico">📊</div>
             <div>
               <div class="chk-title">Market Demand <span class="chk-save">saves 45 min</span></div>
-              <div class="chk-desc">Search volume &amp; marketplace demand — see if buyers are actually searching for this.</div>
+              <div class="chk-desc">Search volume &amp; marketplace demand - see if buyers are actually searching for this.</div>
             </div>
           </div>
           <div class="chk-card">
             <div class="chk-ico">⚖️</div>
             <div>
               <div class="chk-title">Copyright &amp; Legal <span class="chk-save">saves 30 min</span></div>
-              <div class="chk-desc">Platform ToS, IP flags &amp; local law — so you don't get your shop banned or sued.</div>
+              <div class="chk-desc">Platform ToS, IP flags &amp; local law - so you don't get your shop banned or sued.</div>
             </div>
           </div>
           <div class="chk-card">
             <div class="chk-ico">💰</div>
             <div>
               <div class="chk-title">Profit Estimate <span class="chk-save">saves 45 min</span></div>
-              <div class="chk-desc">Material cost, print time &amp; fees — is it actually worth your machine hours?</div>
+              <div class="chk-desc">Material cost, print time &amp; fees - is it actually worth your machine hours?</div>
             </div>
           </div>
         </div>
@@ -597,7 +603,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="panel">
         <div class="q-step-eyebrow">Step 1 of 2</div>
         <div class="q-step-title">Tell us about<br>the print</div>
-        <div class="q-step-sub">3 quick questions about the product itself — this shapes the market data and legal check.</div>
+        <div class="q-step-sub">3 quick questions about the product itself - this shapes the market data and legal check.</div>
 
         <div class="q-block">
           <div class="q-sec-title">What category is it?</div>
@@ -667,7 +673,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <button class="chip chip-list" data-v="none">
               <span class="chip-check">✓</span>
               <span class="chip-content">
-                <span class="chip-name">Nothing special — standard decorative print</span>
+                <span class="chip-name">Nothing special - standard decorative print</span>
               </span>
             </button>
             <button class="chip chip-list" data-v="kids">
@@ -711,7 +717,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
         <div class="q-block">
           <div class="q-sec-title">What are you trying to do?</div>
-          <div class="q-sec-sub">This shapes the whole strategy — pricing, platform, and how we frame the results.</div>
+          <div class="q-sec-sub">This shapes the whole strategy - pricing, platform, and how we frame the results.</div>
           <div class="chips chips-list" id="q-goal">
             <button class="chip chip-list" data-v="testing">
               <span class="chip-ico">🔍</span>
@@ -963,19 +969,19 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
         <!-- Revenue summary cards -->
         <div class="rcards">
-          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">—</div><div class="rc-lbl">units/mo</div></div>
-          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">—</div><div class="rc-lbl">gross rev</div></div>
-          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">—</div><div class="rc-lbl">print cost</div></div>
+          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">-</div><div class="rc-lbl">units/mo</div></div>
+          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">-</div><div class="rc-lbl">gross rev</div></div>
+          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">-</div><div class="rc-lbl">print cost</div></div>
         </div>
         <div class="hero" id="hero">
           <div class="h-eye">Est. monthly profit</div>
-          <div class="h-big" id="hbig">€—</div>
+          <div class="h-big" id="hbig">€-</div>
           <div class="h-sub" id="hsub">at your current price</div>
           <div class="h-bd" id="hbd">
-            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">—</span></div>
-            <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">—</span></div>
-            <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">—</span></div>
-            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3">—</span></div>
+            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">-</span></div>
+            <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">-</span></div>
+            <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">-</span></div>
+            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3">-</span></div>
           </div>
         </div>
 
@@ -984,7 +990,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="price-slider-wrap">
           <div class="price-slider-row">
             <span class="price-slider-lbl">Sell price</span>
-            <span class="price-slider-val" id="price-display">€—</span>
+            <span class="price-slider-val" id="price-display">€-</span>
           </div>
           <input type="range" id="price-slider" min="5" max="120" value="22">
           <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
@@ -992,11 +998,11 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div id="sweet-spot-hint" class="q-hint" style="margin-top:6px"></div>
           <div class="price-margin-row">
             <span class="price-margin-lbl">Margin</span>
-            <span class="price-margin-val" id="margin-val">—</span>
+            <span class="price-margin-val" id="margin-val">-</span>
             <span class="price-margin-lbl"> · </span>
-            <span class="price-margin-val" id="margin-units">—</span>
+            <span class="price-margin-val" id="margin-units">-</span>
             <span class="price-margin-lbl"> units · </span>
-            <span class="price-margin-val" id="margin-net">—</span>
+            <span class="price-margin-val" id="margin-net">-</span>
           </div>
         </div>
         <canvas id="rev-chart" style="width:100%;display:block;margin-bottom:16px;border-radius:8px"></canvas>
@@ -1065,7 +1071,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <span class="platform-rank pr-scale">Scale</span>
             <div>
               <div class="platform-name">Own shop</div>
-              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers — higher margins and full brand control.</div>
+              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers - higher margins and full brand control.</div>
             </div>
           </div>
         </div>
@@ -1075,7 +1081,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="tactic-rows">
           <div class="tactic-row">
             <span class="tactic-impact ti-high">High</span>
-            <span class="tactic-text">Add personalisation — a custom name or text option converts browsers into buyers and justifies a higher price.</span>
+            <span class="tactic-text">Add personalisation - a custom name or text option converts browsers into buyers and justifies a higher price.</span>
           </div>
           <div class="tactic-row">
             <span class="tactic-impact ti-high">High</span>
@@ -1131,7 +1137,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- WINNERS: inspiration + STL library offer -->
       <div class="panel">
         <div class="res-sec-hd"><span class="res-sec-ico">⭐</span><span class="res-sec-lbl">Winners in this niche</span></div>
-        <div class="cta-intro">Prints that scored <b style="color:var(--good)">75+</b> in our database. Use as benchmarks for what sells — or go make your version.</div>
+        <div class="cta-intro">Prints that scored <b style="color:var(--good)">75+</b> in our database. Use as benchmarks for what sells - or go make your version.</div>
 
         <div class="winner-cards">
           <div class="winner-card">
@@ -1171,7 +1177,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             </div>
             <div class="winner-info">
               <div class="winner-name">Cable Box</div>
-              <div class="winner-why">Evergreen utility product — sells year-round, gift-friendly</div>
+              <div class="winner-why">Evergreen utility product - sells year-round, gift-friendly</div>
             </div>
           </div>
           <div class="winner-card">
@@ -1197,7 +1203,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
 
         <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Skip the design phase entirely</span></div>
-        <div class="cta-intro">No CAD skills? Get a library of print-once, sell-forever STL files you can list on Etsy today — full commercial licence, zero IP risk.</div>
+        <div class="cta-intro">No CAD skills? Get a library of print-once, sell-forever STL files you can list on Etsy today - full commercial licence, zero IP risk.</div>
         <div class="cubee-card">
           <div class="cubee-img-wrap">
             <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D commercial STL library" loading="lazy" onerror="this.style.display='none'">
@@ -1206,14 +1212,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="cubee-body">
             <div class="cubee-brand">Cubee3D</div>
             <div class="cubee-name">Print once, sell forever</div>
-            <div class="cubee-desc">A curated library of sell-ready STL files — each one comes with a full commercial licence so you can list, print, and profit with zero legal worry.</div>
+            <div class="cubee-desc">A curated library of sell-ready STL files - each one comes with a full commercial licence so you can list, print, and profit with zero legal worry.</div>
             <div class="cubee-pts">
               <div>1,000+ ready-to-print STL files, curated for Etsy sellers</div>
-              <div>Full commercial licence — sell unlimited prints, keep all profit</div>
+              <div>Full commercial licence - sell unlimited prints, keep all profit</div>
               <div>New models added weekly, members-only early access</div>
             </div>
             <a href="https://cubee3d.com/?ref=meshminds" target="_blank" rel="noopener" class="cubee-cta">Get the commercial license →</a>
-            <div class="cubee-code">Members-only code: <b>MESHMINDS</b> — copy &amp; paste at checkout</div>
+            <div class="cubee-code">Members-only code: <b>MESHMINDS</b> - copy &amp; paste at checkout</div>
           </div>
         </div>
       </div>
@@ -1275,7 +1281,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <h3>2. Welche Daten wir erheben</h3>
       <p>Wenn du deine E-Mail-Adresse eingibst, speichern wir: E-Mail-Adresse, Zustimmung zum Newsletter (Ja/Nein) und Zeitstempel. Die von dir eingegebene MakerWorld-URL wird ausschließlich zur Analyse verarbeitet und nicht dauerhaft gespeichert.</p>
       <h3>3. Zweck und Rechtsgrundlage</h3>
-      <p>Die E-Mail-Adresse wird genutzt, um dir gelegentlich Tipps zum Verkauf von 3D-Drucken und Updates zu PrintChecker zuzusenden — sofern du der Checkbox zugestimmt hast. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Die Analyse-URL wird zur Bereitstellung des Dienstes verarbeitet (Art. 6 Abs. 1 lit. b DSGVO).</p>
+      <p>Die E-Mail-Adresse wird genutzt, um dir gelegentlich Tipps zum Verkauf von 3D-Drucken und Updates zu PrintChecker zuzusenden - sofern du der Checkbox zugestimmt hast. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Die Analyse-URL wird zur Bereitstellung des Dienstes verarbeitet (Art. 6 Abs. 1 lit. b DSGVO).</p>
       <h3>4. Dienstleister (Auftragsverarbeiter)</h3>
       <p><b>Anthropic, PBC</b> (USA): KI-Analyse der Produktdaten durch Claude. Anthropic ist nach dem EU-US Data Privacy Framework zertifiziert.<br><br>
       <b>Firecrawl</b> (USA): Web-Scraping der MakerWorld-Produktseite zur Datenbeschaffung.<br><br>
@@ -1300,7 +1306,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     </div>
     <div class="legal-body">
       <h3>What we collect</h3>
-      <p>Your email address and the MakerWorld link you analyse. We use your email to send occasional tips on selling 3D prints and PrintChecker updates — only if you tick the box.</p>
+      <p>Your email address and the MakerWorld link you analyse. We use your email to send occasional tips on selling 3D prints and PrintChecker updates - only if you tick the box.</p>
       <h3>Who collects it</h3>
       <p>PrintChecker is operated by Daniel Haag (<a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>), Theodorstraße 8, 12099 Berlin. We never sell your data to third parties.</p>
       <h3>Your rights</h3>
@@ -1315,7 +1321,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 (function(){
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
-var EXAMPLE_DATA={score:42,verdict:"Marginal — needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:null,likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume — <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> — 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost — test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial — check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> — Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> — generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> — a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> — use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> — show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
+var EXAMPLE_DATA={score:42,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:null,likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
 function isURL(s){return/^https?:\/\/(www\.)?makerworld\.com\//i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1551,7 +1557,7 @@ function drawRevenueChart(currentPrice){
   function yOf(net){return pad+(maxNet-net)/range*(H-pad*2);}
   var zeroY=yOf(0);
 
-  /* Smooth bezier path — adds segments without moveTo */
+  /* Smooth bezier path - adds segments without moveTo */
   function addSmooth(){
     for(var i=0;i<pts.length-1;i++){
       var x0=xOf(slMin+i),y0=yOf(pts[i]);
@@ -1654,7 +1660,7 @@ function populate(data){
     }
     var beEl=q("mfg-breakeven");
     if(beEl&&mfg.breakEvenUnits>0){
-      beEl.textContent="3D printing stays competitive up to ~"+mfg.breakEvenUnits+" units/mo — above that, injection-mold tooling starts to pay back.";
+      beEl.textContent="3D printing stays competitive up to ~"+mfg.breakEvenUnits+" units/mo - above that, injection-mold tooling starts to pay back.";
       beEl.style.display="";
     }
     if(q("mfg-section"))q("mfg-section").style.display="";
@@ -1777,13 +1783,13 @@ function populateVerdictCard(data){
   var whySigs=[];
   if(m.searchVolume){
     var svFmt=fmt(m.searchVolume);
-    var trendTxt=m.searchTrend?" — "+m.searchTrend:"";
+    var trendTxt=m.searchTrend?" - "+m.searchTrend:"";
     var ratioStr=m.etsyListings?(m.searchVolume/m.etsyListings).toFixed(2)+" searches per listing. Healthy niches sit at 3–8.":"Strong buyer demand in this niche.";
     whySigs.push({title:svFmt+" searches/mo"+trendTxt,desc:ratioStr});
   }
   if(m.etsyListings&&m.searchVolume&&m.searchVolume/m.etsyListings>=2){
     var ratio2=(m.searchVolume/m.etsyListings).toFixed(2);
-    whySigs.push({title:"Only "+fmt(m.etsyListings)+" Etsy listings — room to rank page 1",desc:ratio2+" searches per listing. Healthy niches sit at 3–8. You can rank within weeks."});
+    whySigs.push({title:"Only "+fmt(m.etsyListings)+" Etsy listings - room to rank page 1",desc:ratio2+" searches per listing. Healthy niches sit at 3–8. You can rank within weeks."});
   }
   if(m.topSellerSales&&m.etsyAvgPrice){
     var avgP=parseFloat((m.etsyAvgPrice||"0").replace(/[^0-9.]/g,""))||0;
@@ -1791,7 +1797,7 @@ function populateVerdictCard(data){
     whySigs.push({title:"Top seller: "+fmt(m.topSellerSales)+" sales at avg "+m.etsyAvgPrice,desc:"Proof buyers pay."+gross+" Replicate their approach and compete on design."});
   }
   if(margin>=60&&r.netProfit&&r.unitsPerMonth){
-    whySigs.push({title:margin+"% margin at €"+Math.round(spNum)+" — €"+r.netProfit+" net/mo",desc:"~€"+cost+" per unit. After platform fees, "+r.unitsPerMonth+" units/mo = solid side income."});
+    whySigs.push({title:margin+"% margin at €"+Math.round(spNum)+" - €"+r.netProfit+" net/mo",desc:"~€"+cost+" per unit. After platform fees, "+r.unitsPerMonth+" units/mo = solid side income."});
   }
 
   /* Risk signals */
@@ -1803,7 +1809,7 @@ function populateVerdictCard(data){
     riskSigs.push({title:"Competes with mass-produced alternatives",desc:mfg.alternatives.join(", ")+". Differentiate on customisation, quality or unique design to hold your price."});
   }
   if(m.searchVolume&&m.etsyListings&&m.searchVolume/m.etsyListings<1.5){
-    riskSigs.push({title:"Crowded market — "+fmt(m.etsyListings)+" competing listings",desc:"Fewer than 1.5 searches per listing. Strong photos, SEO and reviews are essential to rank."});
+    riskSigs.push({title:"Crowded market - "+fmt(m.etsyListings)+" competing listings",desc:"Fewer than 1.5 searches per listing. Strong photos, SEO and reviews are essential to rank."});
   }
   if(riskSigs.length<2&&mfg.reason){riskSigs.push({title:"Manufacturing consideration",desc:mfg.reason});}
 
@@ -2024,46 +2030,46 @@ function reset(){
 
 var CERT_INFO={
   kids:{label:"Children's product safety",icon:"👶",certs:[
-    {name:"CE EN 71-1/-2/-3",region:"🇪🇺 EU",desc:"EU Toy Safety Directive — mechanical, flammability, and chemical limits for all toys sold in the EU or by EU sellers",difficulty:"medium",cost:"€500–€2,500",note:"Third-party accredited lab test required; self-declaration alone is not accepted for toys. Add GPSR Responsible Person declaration.",sellTo:["EU","WORLDWIDE"]},
-    {name:"UKCA (Toys Regs 2011)",region:"🇬🇧 UK",desc:"UK Conformity Assessed mark — replaces CE for the GB market since Jan 2023 under the Toys (Safety) Regulations 2011",difficulty:"medium",cost:"£400–£2,000",note:"Keep a Technical File; UKCA does NOT apply in Northern Ireland (use CE there). CE still accepted until further notice.",sellTo:["GB","WORLDWIDE"]},
-    {name:"ASTM F963-23",region:"🇺🇸 USA",desc:"US mandatory toy safety standard — covers mechanical hazards, toxic substances, and flammability for children's toys",difficulty:"medium",cost:"$300–$1,500",note:"Third-party CPSC-accepted lab test required. Issue a Children's Product Certificate (CPC) and keep it on file.",sellTo:["US","WORLDWIDE"]},
-    {name:"CPSIA",region:"🇺🇸 USA",desc:"Consumer Product Safety Improvement Act — lead (<100 ppm), phthalate limits, and mandatory tracking label on product and packaging",difficulty:"low",cost:"$150–$600",note:"Most PLA filaments meet lead limits — request a material data sheet from your filament supplier as supporting evidence.",sellTo:["US","WORLDWIDE"]},
-    {name:"Health Canada SOR/2011-17",region:"🇨🇦 Canada",desc:"Canada Toys Regulations — safety requirements for toys sold to children under 14 in Canada",difficulty:"medium",cost:"C$400–C$1,500",note:"Bilingual English/French labelling required on all consumer products sold in Canada.",sellTo:["CA","WORLDWIDE"]}
+    {name:"CE EN 71-1/-2/-3",region:"🇪🇺 EU",desc:"EU Toy Safety Directive - mechanical, flammability, and chemical limits for all toys sold in the EU or by EU sellers",difficulty:"medium",cost:"€500–€2,500",note:"Third-party accredited lab test required; self-declaration alone is not accepted for toys. Add GPSR Responsible Person declaration.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Toys Regs 2011)",region:"🇬🇧 UK",desc:"UK Conformity Assessed mark - replaces CE for the GB market since Jan 2023 under the Toys (Safety) Regulations 2011",difficulty:"medium",cost:"£400–£2,000",note:"Keep a Technical File; UKCA does NOT apply in Northern Ireland (use CE there). CE still accepted until further notice.",sellTo:["GB","WORLDWIDE"]},
+    {name:"ASTM F963-23",region:"🇺🇸 USA",desc:"US mandatory toy safety standard - covers mechanical hazards, toxic substances, and flammability for children's toys",difficulty:"medium",cost:"$300–$1,500",note:"Third-party CPSC-accepted lab test required. Issue a Children's Product Certificate (CPC) and keep it on file.",sellTo:["US","WORLDWIDE"]},
+    {name:"CPSIA",region:"🇺🇸 USA",desc:"Consumer Product Safety Improvement Act - lead (<100 ppm), phthalate limits, and mandatory tracking label on product and packaging",difficulty:"low",cost:"$150–$600",note:"Most PLA filaments meet lead limits - request a material data sheet from your filament supplier as supporting evidence.",sellTo:["US","WORLDWIDE"]},
+    {name:"Health Canada SOR/2011-17",region:"🇨🇦 Canada",desc:"Canada Toys Regulations - safety requirements for toys sold to children under 14 in Canada",difficulty:"medium",cost:"C$400–C$1,500",note:"Bilingual English/French labelling required on all consumer products sold in Canada.",sellTo:["CA","WORLDWIDE"]}
   ]},
   electronics:{label:"Electronics / LED",icon:"🔌",certs:[
-    {name:"CE (LVD + EMC)",region:"🇪🇺 EU",desc:"Low Voltage Directive 2014/35/EU and EMC Directive 2014/30/EU — mandatory for all electronic products placed on the EU market",difficulty:"high",cost:"€1,500–€6,000",note:"Can self-declare conformity for simple, low-risk devices; higher-risk devices need a Notified Body. Also requires GPSR-compliant documentation and an EU Responsible Person.",sellTo:["EU","WORLDWIDE"]},
-    {name:"UKCA (UK Electrical)",region:"🇬🇧 UK",desc:"UK Conformity Assessed — replaces CE for GB market. Covers UK Electrical Equipment (Safety) Regulations 2016 and UK EMC Regulations 2016",difficulty:"high",cost:"£1,200–£5,000",note:"Technical documentation must be held for 10 years. CE marking still accepted in Great Britain under transitional arrangements until further government notice.",sellTo:["GB","WORLDWIDE"]},
-    {name:"FCC Part 15",region:"🇺🇸 USA",desc:"FCC authorization for unintentional radio frequency emitters — covers most electronics that don't intentionally transmit",difficulty:"medium",cost:"$500–$3,000",note:"SDoC (Supplier's Declaration of Conformity) is sufficient for many Part 15 devices. US Customs can detain non-compliant goods even on marketplace orders.",sellTo:["US","WORLDWIDE"]},
-    {name:"FCC ID (Part 15B/C)",region:"🇺🇸 USA",desc:"Mandatory FCC ID for intentional radiators — required for any product with Wi-Fi, Bluetooth, or other wireless transmission",difficulty:"high",cost:"$5,000–$20,000",note:"Requires testing at an FCC-accredited lab and FCC grant of equipment authorization. Budget 6–10 weeks for approval.",sellTo:["US","WORLDWIDE"]},
-    {name:"ISED RSS-Gen / RSS-247",region:"🇨🇦 Canada",desc:"Industry Canada radio equipment standards — applies to wireless/Bluetooth/Wi-Fi devices sold in Canada",difficulty:"high",cost:"C$3,000–C$12,000",note:"Often tested simultaneously with FCC to reduce cost. Canadian certification number must appear on the device label.",sellTo:["CA","WORLDWIDE"]},
-    {name:"RCM Mark",region:"🇦🇺 Australia",desc:"Regulatory Compliance Mark — combines ACMA telecommunications compliance and electrical safety for all electrical/electronic products",difficulty:"high",cost:"A$2,000–A$8,000",note:"Mandatory before placing on the Australian market. Register with the Responsible Supplier Register (RSR).",sellTo:["AU","WORLDWIDE"]},
+    {name:"CE (LVD + EMC)",region:"🇪🇺 EU",desc:"Low Voltage Directive 2014/35/EU and EMC Directive 2014/30/EU - mandatory for all electronic products placed on the EU market",difficulty:"high",cost:"€1,500–€6,000",note:"Can self-declare conformity for simple, low-risk devices; higher-risk devices need a Notified Body. Also requires GPSR-compliant documentation and an EU Responsible Person.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (UK Electrical)",region:"🇬🇧 UK",desc:"UK Conformity Assessed - replaces CE for GB market. Covers UK Electrical Equipment (Safety) Regulations 2016 and UK EMC Regulations 2016",difficulty:"high",cost:"£1,200–£5,000",note:"Technical documentation must be held for 10 years. CE marking still accepted in Great Britain under transitional arrangements until further government notice.",sellTo:["GB","WORLDWIDE"]},
+    {name:"FCC Part 15",region:"🇺🇸 USA",desc:"FCC authorization for unintentional radio frequency emitters - covers most electronics that don't intentionally transmit",difficulty:"medium",cost:"$500–$3,000",note:"SDoC (Supplier's Declaration of Conformity) is sufficient for many Part 15 devices. US Customs can detain non-compliant goods even on marketplace orders.",sellTo:["US","WORLDWIDE"]},
+    {name:"FCC ID (Part 15B/C)",region:"🇺🇸 USA",desc:"Mandatory FCC ID for intentional radiators - required for any product with Wi-Fi, Bluetooth, or other wireless transmission",difficulty:"high",cost:"$5,000–$20,000",note:"Requires testing at an FCC-accredited lab and FCC grant of equipment authorization. Budget 6–10 weeks for approval.",sellTo:["US","WORLDWIDE"]},
+    {name:"ISED RSS-Gen / RSS-247",region:"🇨🇦 Canada",desc:"Industry Canada radio equipment standards - applies to wireless/Bluetooth/Wi-Fi devices sold in Canada",difficulty:"high",cost:"C$3,000–C$12,000",note:"Often tested simultaneously with FCC to reduce cost. Canadian certification number must appear on the device label.",sellTo:["CA","WORLDWIDE"]},
+    {name:"RCM Mark",region:"🇦🇺 Australia",desc:"Regulatory Compliance Mark - combines ACMA telecommunications compliance and electrical safety for all electrical/electronic products",difficulty:"high",cost:"A$2,000–A$8,000",note:"Mandatory before placing on the Australian market. Register with the Responsible Supplier Register (RSR).",sellTo:["AU","WORLDWIDE"]},
     {name:"RoHS 2011/65/EU",region:"🇪🇺 EU",desc:"Restricts 10 hazardous substances (lead, mercury, cadmium, etc.) in electrical and electronic equipment",difficulty:"low",cost:"€200–€600",note:"Obtain a RoHS compliance declaration from your electronic component supplier; keep records for 10 years.",sellTo:["EU","WORLDWIDE"]},
-    {name:"PSE Mark",region:"🇯🇵 Japan",desc:"Product Safety Electrical Appliance mark — diamond PSE for Class A (higher-risk) appliances, circle PSE for Class B",difficulty:"high",cost:"¥150,000–¥500,000",note:"Requires registration with METI (Ministry of Economy, Trade and Industry). Allow 3–4 months for approval.",sellTo:["JP","WORLDWIDE"]}
+    {name:"PSE Mark",region:"🇯🇵 Japan",desc:"Product Safety Electrical Appliance mark - diamond PSE for Class A (higher-risk) appliances, circle PSE for Class B",difficulty:"high",cost:"¥150,000–¥500,000",note:"Requires registration with METI (Ministry of Economy, Trade and Industry). Allow 3–4 months for approval.",sellTo:["JP","WORLDWIDE"]}
   ]},
   food:{label:"Food contact items",icon:"🍽️",certs:[
-    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials and articles in contact with food — requires a Declaration of Compliance and migration testing",difficulty:"medium",cost:"€400–€1,500",note:"Material test report + overall and specific migration tests from an accredited lab. Standard PLA may not pass without food-grade certification.",sellTo:["EU","WORLDWIDE"]},
-    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Indirect food additive regulations — food-safe plastics requirements; standard FDM filament typically does not qualify",difficulty:"medium",cost:"$500–$2,000",note:"Food-grade PLA exists (e.g. Taulman Amphora) but must be verified by the supplier. Standard printing filament is NOT food-safe.",sellTo:["US","WORLDWIDE"]},
-    {name:"UK Retained Reg. 10/2011",region:"🇬🇧 UK",desc:"UK-retained version of EU food contact materials regulation — identical requirements post-Brexit for GB market",difficulty:"medium",cost:"£300–£1,200",note:"UK Food Standards Agency (FSA) oversight. Declaration of Compliance and migration test results must be available on request.",sellTo:["GB","WORLDWIDE"]},
-    {name:"⚠️ FDM structural risk",region:"All markets",desc:"FDM/FFF layer lines are micro-crevices that trap bacteria and cannot be safely sanitised — independent of any certification",difficulty:"high",cost:"N/A",note:"This is a physical limitation of the process, not a certification issue. Resin-printed or post-processed items can be safer, but most food-contact 3D prints carry ongoing liability and reputational risk.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
+    {name:"EU Reg. 10/2011",region:"🇪🇺 EU",desc:"Plastic materials and articles in contact with food - requires a Declaration of Compliance and migration testing",difficulty:"medium",cost:"€400–€1,500",note:"Material test report + overall and specific migration tests from an accredited lab. Standard PLA may not pass without food-grade certification.",sellTo:["EU","WORLDWIDE"]},
+    {name:"FDA 21 CFR 177",region:"🇺🇸 USA",desc:"Indirect food additive regulations - food-safe plastics requirements; standard FDM filament typically does not qualify",difficulty:"medium",cost:"$500–$2,000",note:"Food-grade PLA exists (e.g. Taulman Amphora) but must be verified by the supplier. Standard printing filament is NOT food-safe.",sellTo:["US","WORLDWIDE"]},
+    {name:"UK Retained Reg. 10/2011",region:"🇬🇧 UK",desc:"UK-retained version of EU food contact materials regulation - identical requirements post-Brexit for GB market",difficulty:"medium",cost:"£300–£1,200",note:"UK Food Standards Agency (FSA) oversight. Declaration of Compliance and migration test results must be available on request.",sellTo:["GB","WORLDWIDE"]},
+    {name:"⚠️ FDM structural risk",region:"All markets",desc:"FDM/FFF layer lines are micro-crevices that trap bacteria and cannot be safely sanitised - independent of any certification",difficulty:"high",cost:"N/A",note:"This is a physical limitation of the process, not a certification issue. Resin-printed or post-processed items can be safer, but most food-contact 3D prints carry ongoing liability and reputational risk.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
   ]},
   wearable:{label:"Wearables / jewellery",icon:"💍",certs:[
-    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"REACH Regulation Article 59 — restricts substances of very high concern in articles with skin contact",difficulty:"low",cost:"€100–€400",note:"Request a REACH SVHC declaration of conformity from your filament supplier. PLA and PETG are generally low-risk.",sellTo:["EU","WORLDWIDE"]},
+    {name:"REACH SVHC",region:"🇪🇺 EU",desc:"REACH Regulation Article 59 - restricts substances of very high concern in articles with skin contact",difficulty:"low",cost:"€100–€400",note:"Request a REACH SVHC declaration of conformity from your filament supplier. PLA and PETG are generally low-risk.",sellTo:["EU","WORLDWIDE"]},
     {name:"Nickel Directive 94/27/EC",region:"🇪🇺 EU",desc:"Limits nickel release to <0.5 µg/cm²/week for items in prolonged skin contact (earrings, bracelets, rings, clasps)",difficulty:"low",cost:"€100–€500",note:"PLA and PETG are typically nickel-free; confirm with your filament supplier's data sheet. Metal post-processing (electroplating) changes the picture.",sellTo:["EU","WORLDWIDE"]},
-    {name:"UK REACH",region:"🇬🇧 UK",desc:"UK-retained REACH regulation — identical substance restrictions for the GB market post-Brexit",difficulty:"low",cost:"£100–£400",note:"Managed by the Health and Safety Executive (HSE). Filament supplier REACH declaration should cover this.",sellTo:["GB","WORLDWIDE"]},
-    {name:"CPSC 16 CFR 1500",region:"🇺🇸 USA",desc:"CPSC hazardous substance rules for jewellery and wearables — applies especially to children's jewellery (lead limits <100 ppm)",difficulty:"low",cost:"$100–$500",note:"Adult jewellery has lighter requirements; children's jewellery requires third-party testing. California Prop 65 may require additional chemical warnings.",sellTo:["US","WORLDWIDE"]}
+    {name:"UK REACH",region:"🇬🇧 UK",desc:"UK-retained REACH regulation - identical substance restrictions for the GB market post-Brexit",difficulty:"low",cost:"£100–£400",note:"Managed by the Health and Safety Executive (HSE). Filament supplier REACH declaration should cover this.",sellTo:["GB","WORLDWIDE"]},
+    {name:"CPSC 16 CFR 1500",region:"🇺🇸 USA",desc:"CPSC hazardous substance rules for jewellery and wearables - applies especially to children's jewellery (lead limits <100 ppm)",difficulty:"low",cost:"$100–$500",note:"Adult jewellery has lighter requirements; children's jewellery requires third-party testing. California Prop 65 may require additional chemical warnings.",sellTo:["US","WORLDWIDE"]}
   ]},
   battery:{label:"Battery / USB products",icon:"🔋",certs:[
-    {name:"UN 38.3",region:"🌍 Global",desc:"UN Manual of Tests and Criteria Part III section 38.3 — mandatory transport safety certification for lithium batteries shipped by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"All major couriers (DHL, UPS, FedEx) require UN 38.3 test summary. Without it, lithium battery shipments will be refused. Covers both cells and packs.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
-    {name:"IEC 62133-2",region:"🌍 Global",desc:"Safety requirements for portable sealed secondary lithium cells and batteries — the primary safety standard for rechargeable battery packs",difficulty:"high",cost:"$3,000–$12,000",note:"Testing by an accredited lab (e.g. TÜV, UL, SGS) required. Etsy and Amazon increasingly require this for listed battery products.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
-    {name:"CE (LVD + EMC + Battery Reg.)",region:"🇪🇺 EU",desc:"CE marking for devices with rechargeable batteries — covers LVD, EMC, and EU Battery Regulation 2023/1542",difficulty:"high",cost:"€2,000–€9,000",note:"New EU Battery Regulation (June 2023) adds labelling, QR code, and carbon footprint declaration requirements. Budget 3–5 months.",sellTo:["EU","WORLDWIDE"]},
-    {name:"UKCA (Battery Regs)",region:"🇬🇧 UK",desc:"UK Battery and Accumulators (Placing on the Market) Regulations 2008 — applies to all battery products on the GB market",difficulty:"high",cost:"£1,500–£6,000",note:"Separate from EU requirements post-Brexit. UK Batteries Regulations producer registration required for B2C sales.",sellTo:["GB","WORLDWIDE"]},
-    {name:"UL 2054",region:"🇺🇸 USA",desc:"UL standard for household and commercial batteries — widely required by US retailers and increasingly by Etsy for battery listings",difficulty:"high",cost:"$4,000–$15,000",note:"UL Recognized Component mark is common for battery cells. Full product UL listing is required for direct consumer sales in some states.",sellTo:["US","WORLDWIDE"]}
+    {name:"UN 38.3",region:"🌍 Global",desc:"UN Manual of Tests and Criteria Part III section 38.3 - mandatory transport safety certification for lithium batteries shipped by air or sea",difficulty:"high",cost:"$2,000–$8,000",note:"All major couriers (DHL, UPS, FedEx) require UN 38.3 test summary. Without it, lithium battery shipments will be refused. Covers both cells and packs.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
+    {name:"IEC 62133-2",region:"🌍 Global",desc:"Safety requirements for portable sealed secondary lithium cells and batteries - the primary safety standard for rechargeable battery packs",difficulty:"high",cost:"$3,000–$12,000",note:"Testing by an accredited lab (e.g. TÜV, UL, SGS) required. Etsy and Amazon increasingly require this for listed battery products.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]},
+    {name:"CE (LVD + EMC + Battery Reg.)",region:"🇪🇺 EU",desc:"CE marking for devices with rechargeable batteries - covers LVD, EMC, and EU Battery Regulation 2023/1542",difficulty:"high",cost:"€2,000–€9,000",note:"New EU Battery Regulation (June 2023) adds labelling, QR code, and carbon footprint declaration requirements. Budget 3–5 months.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Battery Regs)",region:"🇬🇧 UK",desc:"UK Battery and Accumulators (Placing on the Market) Regulations 2008 - applies to all battery products on the GB market",difficulty:"high",cost:"£1,500–£6,000",note:"Separate from EU requirements post-Brexit. UK Batteries Regulations producer registration required for B2C sales.",sellTo:["GB","WORLDWIDE"]},
+    {name:"UL 2054",region:"🇺🇸 USA",desc:"UL standard for household and commercial batteries - widely required by US retailers and increasingly by Etsy for battery listings",difficulty:"high",cost:"$4,000–$15,000",note:"UL Recognized Component mark is common for battery cells. Full product UL listing is required for direct consumer sales in some states.",sellTo:["US","WORLDWIDE"]}
   ]},
   magnetic:{label:"Strong magnets",icon:"🧲",certs:[
-    {name:"EN 71-7 (Finger Traps / Ingestion)",region:"🇪🇺 EU",desc:"Toy Safety Directive annex for magnetic toys — strict flux index limit of 0.5 T² mm² for toys accessible to children under 14",difficulty:"medium",cost:"€500–€2,000",note:"Magnets exceeding the flux limit require additional testing, mandatory age-restriction label (14+), and warning text. Applies to any product a child might play with.",sellTo:["EU","WORLDWIDE"]},
-    {name:"UKCA (Magnetic Toys)",region:"🇬🇧 UK",desc:"UK equivalent of EN 71-7 under the Toys (Safety) Regulations 2011 — same flux index limits apply for GB market",difficulty:"medium",cost:"£400–£1,800",note:"UKCA technical file must document magnet flux measurements. Age warnings must appear on packaging and product listing.",sellTo:["GB","WORLDWIDE"]},
-    {name:"ASTM F963-23 §4.37",region:"🇺🇸 USA",desc:"US toy safety magnetic hazard section — limits on loose or separable magnets accessible to children under 14",difficulty:"medium",cost:"$300–$1,200",note:"High-powered magnets (N35+) sold to adults don't require toy certification, but must carry a choking/ingestion hazard warning label.",sellTo:["US","WORLDWIDE"]},
-    {name:"Hazard warning label",region:"🌍 Global",desc:"Mandatory ingestion and pacemaker hazard warning on all products containing strong magnets (N35 grade or above)",difficulty:"low",cost:"<€30",note:"Warning must appear on both product and packaging: 'Contains strong magnets — keep away from pacemakers and children under 3'. Secure magnets in the design to prevent separation.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
+    {name:"EN 71-7 (Finger Traps / Ingestion)",region:"🇪🇺 EU",desc:"Toy Safety Directive annex for magnetic toys - strict flux index limit of 0.5 T² mm² for toys accessible to children under 14",difficulty:"medium",cost:"€500–€2,000",note:"Magnets exceeding the flux limit require additional testing, mandatory age-restriction label (14+), and warning text. Applies to any product a child might play with.",sellTo:["EU","WORLDWIDE"]},
+    {name:"UKCA (Magnetic Toys)",region:"🇬🇧 UK",desc:"UK equivalent of EN 71-7 under the Toys (Safety) Regulations 2011 - same flux index limits apply for GB market",difficulty:"medium",cost:"£400–£1,800",note:"UKCA technical file must document magnet flux measurements. Age warnings must appear on packaging and product listing.",sellTo:["GB","WORLDWIDE"]},
+    {name:"ASTM F963-23 §4.37",region:"🇺🇸 USA",desc:"US toy safety magnetic hazard section - limits on loose or separable magnets accessible to children under 14",difficulty:"medium",cost:"$300–$1,200",note:"High-powered magnets (N35+) sold to adults don't require toy certification, but must carry a choking/ingestion hazard warning label.",sellTo:["US","WORLDWIDE"]},
+    {name:"Hazard warning label",region:"🌍 Global",desc:"Mandatory ingestion and pacemaker hazard warning on all products containing strong magnets (N35 grade or above)",difficulty:"low",cost:"<€30",note:"Warning must appear on both product and packaging: 'Contains strong magnets - keep away from pacemakers and children under 3'. Secure magnets in the design to prevent separation.",sellTo:["US","EU","GB","CA","AU","WORLDWIDE"]}
   ]}
 };
 
@@ -2197,7 +2203,7 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
-  /* Capture email + consent (fire-and-forget — do not block UX) */
+  /* Capture email + consent (fire-and-forget - do not block UX) */
   var consentEl=q("consent-check");
   var consent=consentEl?consentEl.checked:false;
   fetch("https://meshminds.app.n8n.cloud/webhook/idea-email",{
@@ -2205,7 +2211,7 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify({email:email,consent:consent,timestamp:new Date().toISOString()})
   }).catch(function(){});
   if(analysisComplete){
-    /* Analysis already done — skip loading overlay, go straight to results */
+    /* Analysis already done - skip loading overlay, go straight to results */
     step=5;dots(5);slide(5);showFooter(true);
     setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
   } else {

@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrintChecker</title>
+<title>PrintChecker — Will your 3D print actually sell?</title>
+<meta name="description" content="Paste a link to any 3D model. We check demand, profit and legal risk in seconds — powered by real Etsy data and AI.">
+<meta property="og:title" content="PrintChecker — Will your 3D print actually sell?">
+<meta property="og:description" content="Paste a MakerWorld, Cults3D or Thingiverse link. Get a score, revenue estimate and legal check in seconds.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PrintChecker — Will your 3D print actually sell?">
+<meta name="twitter:description" content="Real Etsy data + AI analysis. Know if your 3D print idea is worth selling before you waste filament.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -186,7 +193,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .gate-form-lbl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:9px}
 .gate-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 13px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fff;outline:none;transition:border-color .2s;margin-bottom:10px}
 .gate-inp:focus{border-color:var(--acc)}
+.gate-consent{display:flex;align-items:flex-start;gap:9px;margin-bottom:12px;cursor:pointer;user-select:none}
+.gate-consent input[type=checkbox]{margin-top:2px;flex-shrink:0;width:16px;height:16px;accent-color:var(--acc);cursor:pointer}
+.gate-consent-lbl{font-size:12px;color:var(--ink2);line-height:1.5}
 .gate-trust{font-size:11px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
+.gate-trust a{color:var(--ink3);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.privacy-note{display:none;background:#f7f7f7;border-radius:9px;padding:12px 13px;font-size:11.5px;color:var(--ink2);line-height:1.55;margin-top:8px}
+.privacy-note b{color:var(--ink)}
 /* Loading overlay */
 .loading-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink3);transition:color .3s}
 .loading-step.active{color:var(--ink);font-weight:700}
@@ -254,15 +267,16 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       </div>
       <div class="url-row">
         <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
+        <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="https://makerworld.com/de/models/…">
       </div>
+      <div id="url-error" style="display:none;font-size:12px;color:var(--bad);margin-top:5px;padding:0 4px"></div>
     </div>
     <div class="vbar" id="vbar" style="display:none">
       <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
         <div class="ve" id="ve">Ready to scan</div>
         <div class="vt" id="vt">Paste a link above</div>
-        <div class="vd" id="vd">Link or describe your idea</div>
+        <div class="vd" id="vd">Paste a product link above</div>
       </div>
     </div>
     <button class="btn" id="btn" style="margin-top:8px;margin-bottom:2px">
@@ -280,10 +294,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 0 -->
       <div class="panel">
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;opacity:.7;padding-bottom:12px;border-bottom:1px solid var(--line)">
-          <span style="font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif">Works with</span>
-          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:16px;object-fit:contain">
-          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Prusa-Printables.png" style="height:16px;object-fit:contain">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;opacity:.7;padding-bottom:12px;border-bottom:1px solid var(--line);flex-wrap:wrap">
+          <span style="font-size:10px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.09em;font-family:'DM Mono',sans-serif;flex-shrink:0">Works with</span>
+          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/makerworldphotologo.png" style="height:15px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'">
+          <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Prusa-Printables.png" style="height:15px;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'">
+          <span style="font-size:10px;color:var(--ink3);font-weight:600;font-family:'DM Mono',sans-serif">Cults3D</span>
+          <span style="font-size:10px;color:var(--ink3);font-weight:600;font-family:'DM Mono',sans-serif">Thingiverse</span>
+          <span style="font-size:10px;color:var(--ink3);font-weight:600;font-family:'DM Mono',sans-serif">CGTrader</span>
         </div>
 
         <div class="eg-label" style="margin-top:4px">Popular prints recently analysed</div>
@@ -360,11 +377,11 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
 
         <div class="proof-bar" style="margin-bottom:4px">
-          <div class="proof-stat"><span class="proof-n">14,203</span><span class="proof-l">prints checked</span></div>
+          <div class="proof-stat"><span class="proof-n">Live</span><span class="proof-l">Etsy market data</span></div>
           <span class="proof-sep">·</span>
-          <div class="proof-stat"><span class="proof-n">94%</span><span class="proof-l">of prints never sell</span></div>
+          <div class="proof-stat"><span class="proof-n">50+</span><span class="proof-l">legal rules checked</span></div>
           <span class="proof-sep">·</span>
-          <div class="proof-stat"><span class="proof-n">★ 4.8</span><span class="proof-l">3,800+ sellers</span></div>
+          <div class="proof-stat"><span class="proof-n">~20s</span><span class="proof-l">full analysis</span></div>
         </div>
         <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:8px 12px;margin-bottom:10px;display:flex;align-items:flex-start;gap:8px">
           <span style="font-size:15px;flex-shrink:0;margin-top:1px">🚨</span>
@@ -612,11 +629,20 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="gate-form">
             <div class="gate-form-lbl">Unlock your free report</div>
             <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
+            <label class="gate-consent">
+              <input type="checkbox" id="consent-check">
+              <span class="gate-consent-lbl">Send me tips on selling 3D prints and updates about PrintChecker. I can unsubscribe anytime.</span>
+            </label>
             <button class="btn" id="btn-email">
               <div class="spin" id="sp-email" style="display:none"></div>
               <span id="bl-email">Get my free report →</span>
             </button>
-            <div class="gate-trust">✓ No spam &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; GDPR compliant</div>
+            <div class="gate-trust">Free forever &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; <a onclick="var n=document.getElementById('privacy-note');n.style.display=n.style.display==='none'?'block':'none';return false">Privacy notice ↓</a></div>
+            <div class="privacy-note" id="privacy-note">
+              <b>What we collect:</b> your email address and the 3D model links you check. We use this to send you occasional tips and product updates — only if you tick the box above.<br><br>
+              <b>Who collects it:</b> PrintChecker (operated by <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--acc)">@meshminds3d</a>). We never sell your data to third parties.<br><br>
+              <b>Your rights:</b> unsubscribe anytime via the link in any email, or DM <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--acc)">@meshminds3d</a> on Instagram to request deletion.
+            </div>
           </div>
         </div>
 
@@ -990,8 +1016,8 @@ function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track")
 function verdict(state,msg){
   var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
   b.className="vbar";
-  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a link or describe your idea";d.textContent="Paste a link or describe your idea";}
-  else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent=lastIsURL?"Analyzing product...":"Researching your idea...";d.textContent="Fetching demand, revenue & legal data";}
+  if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a product link above";d.textContent="Paste a product link above";}
+  else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent="Analyzing product...";d.textContent="Fetching demand, revenue & legal data";}
   else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
   else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}
 }
@@ -1331,16 +1357,21 @@ function analyze(){
     setTimeout(function(){q("ui").style.borderColor="";},1500);
     busy=false;return;
   }
+  if(!isURL(input)){
+    q("ui").style.borderColor="var(--bad)";
+    if(q("url-error")){q("url-error").textContent="Please paste a valid product link (e.g. makerworld.com/models/…)";q("url-error").style.display="";}
+    setTimeout(function(){q("ui").style.borderColor="";if(q("url-error"))q("url-error").style.display="none";},3000);
+    busy=false;return;
+  }
+  if(q("url-error"))q("url-error").style.display="none";
   lastURL=input;
-  lastIsURL=isURL(input);
+  lastIsURL=true;
   lastProductContext=null;
   lastImageUrl=null;
-  if(lastIsURL){
-    fetch("https://meshminds.app.n8n.cloud/webhook/idea",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({url:lastURL,scrapeOnly:true})})
-    .then(function(r){return r.ok?r.json():null;})
-    .then(function(d){if(d&&d.productContext){lastProductContext=d.productContext;lastImageUrl=d.imageUrl||null;}})
-    .catch(function(){});
-  }
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({url:lastURL,scrapeOnly:true})})
+  .then(function(r){return r.ok?r.json():null;})
+  .then(function(d){if(d&&d.productContext){lastProductContext=d.productContext;lastImageUrl=d.imageUrl||null;}})
+  .catch(function(){});
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
@@ -1366,12 +1397,16 @@ function showGateError(msg){
 }
 
 function runAnalysis(){
+  /* Client-side gate (server enforces the real limits) */
+  var rlMsg=rlCheck();
+  if(rlMsg){showGateError(rlMsg);return;}
+  rlRecord();
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
   verdict("scanning");
   startPulse();
   analysisComplete=false;
-  var base=lastIsURL?{url:lastURL}:{description:lastURL,type:"idea"};
+  var base={url:lastURL};
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,material:qMaterial,sellerGoal:qSellerGoal,printerCount:qPrinterCount,printerType:qPrinterType,experience:qExp,weeklyTime:qWeeklyTime,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   var fetchAbort=new AbortController();
@@ -1446,6 +1481,7 @@ function reset(){
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
   if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec  -  enter your email and we'll show the full results";
   if(q("email-inp"))q("email-inp").value="";
+  if(q("consent-check"))q("consent-check").checked=false;
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";
   if(q("btn-email"))q("btn-email").disabled=false;
@@ -1639,6 +1675,13 @@ q("btn-email").addEventListener("click",function(){
     setTimeout(function(){q("email-inp").style.borderColor="";},1500);
     return;
   }
+  /* Capture email + consent (fire-and-forget — do not block UX) */
+  var consentEl=q("consent-check");
+  var consent=consentEl?consentEl.checked:false;
+  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
+    method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
+    body:JSON.stringify({emailCapture:true,email:email,consent:consent})
+  }).catch(function(){});
   if(analysisComplete){
     /* Analysis already done — skip loading overlay, go straight to results */
     step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
@@ -1670,6 +1713,27 @@ q("btn-back").addEventListener("click",function(){
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 })();
+
+/* ── Client-side rate limit helpers (UX only — real limits enforced server-side) ── */
+function rlLastReq(){return parseInt(localStorage.getItem('mm_lr')||'0');}
+function rlCooldownLeft(){var w=10000-(Date.now()-rlLastReq());return w>0?Math.ceil(w/1000):0;}
+function rlDayCount(){
+  var today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
+  return parseInt(localStorage.getItem('mm_dc')||'0');
+}
+function rlRecord(){
+  localStorage.setItem('mm_lr',Date.now().toString());
+  var today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
+  localStorage.setItem('mm_dc',String(parseInt(localStorage.getItem('mm_dc')||'0')+1));
+}
+function rlCheck(){
+  var wait=rlCooldownLeft();
+  if(wait>0)return'Please wait '+wait+' second'+(wait===1?'':'s')+' before your next check.';
+  if(rlDayCount()>=20)return'You have reached your 20 analyses for today. Come back tomorrow!';
+  return null;
+}
 </script>
 </body>
 </html>

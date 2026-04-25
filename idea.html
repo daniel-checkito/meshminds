@@ -416,12 +416,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
 
         <div class="q-block">
-          <div class="q-lbl">Est. print time <span class="q-opt">optional</span></div>
-          <div class="chips g2" id="q-time">
-            <button class="chip" data-v="<2h">Under 2h</button>
-            <button class="chip" data-v="2-6h">2–6h</button>
-            <button class="chip" data-v="6-12h">6–12h</button>
-            <button class="chip" data-v="12h+">12h+</button>
+          <div class="q-lbl">Est. print time per unit <span class="q-opt">optional</span></div>
+          <div class="chips g3" id="q-time">
+            <button class="chip" data-v="<30m">Under 30 min</button>
+            <button class="chip" data-v="30m-1h">30 min–1h</button>
+            <button class="chip" data-v="1-3h">1–3h</button>
+            <button class="chip" data-v="3-8h">3–8h</button>
+            <button class="chip" data-v="8-16h">8–16h</button>
+            <button class="chip" data-v="16h+">16h+</button>
           </div>
           <div class="q-hint">Helps estimate filament &amp; machine cost  -  avg €0.03–0.08/hr on FDM</div>
         </div>
@@ -433,12 +435,22 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="sec"><span class="sn">02</span><span class="st">About you</span><span class="sh">Step 2 of 3</span></div>
 
         <div class="q-block">
-          <div class="q-lbl">Your goal</div>
+          <div class="q-lbl">Experience level</div>
+          <div class="chips g2" id="q-exp">
+            <button class="chip" data-v="new">🌱 Never sold online</button>
+            <button class="chip" data-v="some">👣 Sold a few things</button>
+            <button class="chip" data-v="active">🛒 Regular seller</button>
+            <button class="chip" data-v="pro">⭐ Full-time seller</button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-lbl">Selling ambition</div>
           <div class="chips g2" id="q-goal">
-            <button class="chip" data-v="testing">🧪 Just testing</button>
-            <button class="chip" data-v="side-hustle">💰 Side hustle</button>
-            <button class="chip" data-v="business">🚀 Serious business</button>
-            <button class="chip" data-v="scaling">📈 Already scaling</button>
+            <button class="chip" data-v="testing">🧪 Just exploring</button>
+            <button class="chip" data-v="side-hustle">💰 Side income</button>
+            <button class="chip" data-v="business">🚀 Build a business</button>
+            <button class="chip" data-v="scaling">📈 Grow what's working</button>
           </div>
         </div>
 
@@ -457,17 +469,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="chips g2" id="q-printer-type">
             <button class="chip" data-v="fdm">⚙️ FDM (filament)</button>
             <button class="chip" data-v="resin">💧 Resin (SLA/DLP)</button>
-            <button class="chip" data-v="both" style="grid-column:1/-1;justify-content:center">🖨️ Both</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Selling experience</div>
-          <div class="chips g2" id="q-exp">
-            <button class="chip" data-v="new">🌱 Brand new</button>
-            <button class="chip" data-v="some">👣 Some experience</button>
-            <button class="chip" data-v="active">🛒 Active seller</button>
-            <button class="chip" data-v="pro">⭐ Pro / full-time</button>
           </div>
         </div>
 
@@ -492,10 +493,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="chips g2" id="q-market">
             <button class="chip" data-v="etsy">🛒 Etsy</button>
             <button class="chip" data-v="ebay">🔵 eBay</button>
-            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
-            <button class="chip" data-v="printables">📦 Printables</button>
-            <button class="chip" data-v="cults3d">✦ Cults3D</button>
-            <button class="chip" data-v="myminifactory">⚔️ MyMiniFactory</button>
+            <button class="chip" data-v="amazon">📦 Amazon</button>
+            <button class="chip" data-v="facebook">📘 Facebook Marketplace</button>
             <button class="chip" data-v="local">📍 Local selling</button>
             <button class="chip" data-v="own">🏪 Own shop</button>
           </div>
@@ -507,10 +506,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <button class="chip" data-v="none" style="grid-column:1/-1;justify-content:center">Not yet</button>
             <button class="chip" data-v="etsy">🛒 Etsy</button>
             <button class="chip" data-v="ebay">🔵 eBay</button>
-            <button class="chip" data-v="makerworld">🌐 MakerWorld</button>
-            <button class="chip" data-v="printables">📦 Printables</button>
-            <button class="chip" data-v="cults3d">✦ Cults3D</button>
-            <button class="chip" data-v="myminifactory">⚔️ MyMiniFactory</button>
+            <button class="chip" data-v="amazon">📦 Amazon</button>
+            <button class="chip" data-v="facebook">📘 Facebook Marketplace</button>
             <button class="chip" data-v="own">🏪 Own shop</button>
           </div>
         </div>

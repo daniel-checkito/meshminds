@@ -71,10 +71,9 @@ html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .tag{font-size:10.5px;color:var(--ink3);font-weight:600}
 
 .url-row{position:relative;margin-bottom:8px}
-.url-inp{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 12px 12px 34px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fafafa;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:border-color .2s}
+.url-inp{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink);background:#fafafa;outline:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:border-color .2s}
 .url-inp::placeholder{font-size:14px;color:var(--ink3)}
 .url-inp.active{border-color:var(--acc)}
-.url-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--ink3)}
 
 .vbar{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;border:1.5px solid var(--line);background:#f7f7f7;transition:all .35s}
 .vbar.scanning{border-color:rgba(180,83,9,.3);background:#fef9ec}
@@ -452,7 +451,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       </div>
       <div class="inp-card" id="inp-card">
         <div class="inp-inner">
-          <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
           <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="Paste a MakerWorld link…">
         </div>
         <div class="plat-tags">

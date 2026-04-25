@@ -718,7 +718,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Build Etsy Query').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsySearchData: etsyMarkdown\n})) }];"
+        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = JSON.parse(JSON.stringify($('Extract Product Context').item.json));\nconst kw = JSON.parse(JSON.stringify($('Build Etsy Query').item.json));\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: kw.etsyKeyword || '',\n  etsySearchData: etsyMarkdown\n})) }];"
       },
       "id": "b9af529a-3454-4118-aa2b-8d6295450b8e",
       "name": "Merge Etsy Data",
@@ -774,7 +774,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const keyword = String($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nconst upstream = JSON.parse(JSON.stringify($('Extract Product Context').item.json));\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: keyword\n})) }];"
+        "jsCode": "const keyword = String($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nreturn [{ json: JSON.parse(JSON.stringify({ etsyKeyword: keyword })) }];"
       }
     }
   ],

@@ -1527,12 +1527,13 @@ function drawRevenueChart(currentPrice){
   var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units;
   var costPerUnit=baseUnits>0?baseRevData.printCost/baseUnits:0;
 
+  /* Keep units as float — rounding causes staircase jumps */
   var pts=[];
   for(var p=slMin;p<=slMax;p++){
     var el=p>=basePrice?1.5:0.8;
-    var U=Math.max(1,Math.round(baseUnits*Math.pow(basePrice/p,el)));
+    var U=Math.max(0.1,baseUnits*Math.pow(basePrice/p,el));
     var gross=p*U;
-    var net=gross-Math.round(costPerUnit*U)-Math.round(gross*0.12);
+    var net=gross-costPerUnit*U-gross*0.12;
     pts.push(net);
   }
   var maxNet=Math.max.apply(null,pts);
@@ -1543,16 +1544,21 @@ function drawRevenueChart(currentPrice){
   function yOf(net){return pad+(maxNet-net)/range*(H-pad*2);}
   var zeroY=yOf(0);
 
-  /* Smooth bezier path - adds segments without moveTo */
-  function addSmooth(){
-    for(var i=0;i<pts.length-1;i++){
-      var x0=xOf(slMin+i),y0=yOf(pts[i]);
-      var x1=xOf(slMin+i+1),y1=yOf(pts[i+1]);
-      ctx.quadraticCurveTo(x0,y0,(x0+x1)/2,(y0+y1)/2);
+  /* Build screen-space point array */
+  var sPts=pts.map(function(net,i){return{x:xOf(slMin+i),y:yOf(net)};});
+
+  /* Catmull-Rom cubic Bezier smooth path */
+  function smoothPath(){
+    ctx.moveTo(sPts[0].x,sPts[0].y);
+    for(var i=0;i<sPts.length-1;i++){
+      var p0=sPts[Math.max(0,i-1)],p1=sPts[i],p2=sPts[i+1],p3=sPts[Math.min(sPts.length-1,i+2)];
+      var cp1x=p1.x+(p2.x-p0.x)/6,cp1y=p1.y+(p2.y-p0.y)/6;
+      var cp2x=p2.x-(p3.x-p1.x)/6,cp2y=p2.y-(p3.y-p1.y)/6;
+      ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,p2.x,p2.y);
     }
-    ctx.lineTo(xOf(slMax),yOf(pts[pts.length-1]));
   }
 
+  /* Sweet-spot background */
   var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
   var sx1=xOf(Math.max(sweetLow,slMin)),sx2=xOf(Math.min(sweetHigh,slMax));
   ctx.fillStyle="rgba(21,128,61,0.07)";
@@ -1566,10 +1572,10 @@ function drawRevenueChart(currentPrice){
 
   /* Filled area */
   ctx.beginPath();
-  ctx.moveTo(xOf(slMin),zeroY);
-  ctx.lineTo(xOf(slMin),yOf(pts[0]));
-  addSmooth();
-  ctx.lineTo(xOf(slMax),zeroY);
+  ctx.moveTo(sPts[0].x,zeroY);
+  ctx.lineTo(sPts[0].x,sPts[0].y);
+  smoothPath();
+  ctx.lineTo(sPts[sPts.length-1].x,zeroY);
   ctx.closePath();
   var grad=ctx.createLinearGradient(0,0,0,H);
   grad.addColorStop(0,"rgba(245,158,11,0.22)");
@@ -1578,19 +1584,18 @@ function drawRevenueChart(currentPrice){
 
   /* Smooth stroke */
   ctx.beginPath();
-  ctx.moveTo(xOf(slMin),yOf(pts[0]));
-  addSmooth();
+  smoothPath();
   ctx.strokeStyle="#f59e0b";ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
 
   /* Current price marker */
   var ci=currentPrice-slMin;
-  if(ci>=0&&ci<pts.length){
-    var cx2=xOf(currentPrice),cy2=yOf(pts[ci]);
-    ctx.beginPath();ctx.moveTo(cx2,H);ctx.lineTo(cx2,0);
+  if(ci>=0&&ci<sPts.length){
+    var mx=sPts[ci].x,my=sPts[ci].y;
+    ctx.beginPath();ctx.moveTo(mx,H);ctx.lineTo(mx,0);
     ctx.strokeStyle="rgba(0,0,0,0.15)";ctx.lineWidth=1;ctx.stroke();
-    ctx.beginPath();ctx.arc(cx2,cy2,5,0,Math.PI*2);
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
     ctx.fillStyle=pts[ci]>=0?"#15803d":"#dc2626";ctx.fill();
-    ctx.beginPath();ctx.arc(cx2,cy2,5,0,Math.PI*2);
+    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
     ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.stroke();
   }
 }

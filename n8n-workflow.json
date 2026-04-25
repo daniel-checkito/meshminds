@@ -774,7 +774,7 @@
       ],
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const keyword = ($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nconst upstream = $('Extract Product Context').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
+        "jsCode": "const keyword = String($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nconst upstream = JSON.parse(JSON.stringify($('Extract Product Context').item.json));\nreturn [{ json: {\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: keyword\n} }];"
       }
     }
   ],

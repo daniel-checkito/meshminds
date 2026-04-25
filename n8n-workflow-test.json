@@ -822,7 +822,7 @@
         640
       ],
       "parameters": {
-        "jsCode": "// Collapse all MarketData rows into one item, preserving product context\nconst marketRows = $input.all().map(i => i.json);\nconst productCtx = $('Extract Product Context').item.json;\nreturn [{ json: { ...productCtx, marketRows } }];\n",
+        "jsCode": "const allRows = $input.all().map(i => i.json);\nconst productCtx = $('Extract Product Context').item.json;\nconst category = ($('Webhook: Analysis Request').item.json.body.category || '').toLowerCase().trim();\n\n// Keep only rows matching the selected category (plus any \"all\"/\"general\" catch-all rows)\nconst marketRows = allRows.filter(r => {\n  const rc = (r.category || '').toLowerCase().trim();\n  return !rc || rc === category || rc === 'all' || rc === 'general';\n});\n\nreturn [{ json: { ...productCtx, marketRows } }];\n",
         "mode": "runOnceForAllItems"
       }
     },
@@ -868,7 +868,7 @@
         640
       ],
       "parameters": {
-        "jsCode": "// Collapse all Winners rows, carry forward market rows + product context\nconst winnerRows = $input.all().map(i => i.json);\nconst prev = $('Aggregate: MarketData').item.json;\nreturn [{ json: { ...prev, winnerRows } }];\n",
+        "jsCode": "const allRows = $input.all().map(i => i.json);\nconst prev = $('Aggregate: MarketData').item.json;\nconst category = ($('Webhook: Analysis Request').item.json.body.category || '').toLowerCase().trim();\n\n// Filter by category, then keep at most 5 rows so the prompt stays tight\nconst winnerRows = allRows\n  .filter(r => {\n    const rc = (r.category || '').toLowerCase().trim();\n    return !rc || rc === category || rc === 'all';\n  })\n  .slice(0, 5);\n\nreturn [{ json: { ...prev, winnerRows } }];\n",
         "mode": "runOnceForAllItems"
       }
     },
@@ -914,7 +914,7 @@
         640
       ],
       "parameters": {
-        "jsCode": "// Collapse IPFlags rows and format all three datasets into prompt strings\nconst ipRows = $input.all().map(i => i.json);\nconst prev = $('Aggregate: Winners').item.json;\n\nfunction fmtMarket(rows) {\n  if (!rows || !rows.length) return 'No market benchmark data available.';\n  return rows.map(r =>\n    `[${r.category||'?'}] avg_price=${r.etsy_avg_price||'?'} search_vol=${r.search_volume_monthly||'?'}/mo competition=${r.competition_level||'?'} price_ceiling=${r.price_ceiling||'?'} top_keywords=\"${r.top_keywords||''}\" notes=\"${r.notes||''}\"`\n  ).join('\\n');\n}\n\nfunction fmtWinners(rows) {\n  if (!rows || !rows.length) return 'No winner product data available.';\n  return rows.map(r =>\n    `${r.product_name||'?'} [${r.category||'?'}] price=${r.etsy_price||'?'} est_sales=${r.monthly_sales_est||'?'}/mo why_it_sells=\"${r.why_it_sells||''}\" differentiator=\"${r.key_differentiator||''}\"`\n  ).join('\\n');\n}\n\nfunction fmtIP(rows) {\n  if (!rows || !rows.length) return 'No IP flag data available.';\n  return rows.map(r =>\n    `keyword=\"${r.keyword||'?'}\" ip_holder=\"${r.ip_holder||'?'}\" risk=${r.risk_level||'?'} notes=\"${r.notes||''}\"`\n  ).join('\\n');\n}\n\nreturn [{ json: {\n  ...prev,\n  marketDataStr: fmtMarket(prev.marketRows),\n  winnersStr:    fmtWinners(prev.winnerRows),\n  ipFlagsStr:    fmtIP(ipRows),\n}}];\n",
+        "jsCode": "const allIpRows = $input.all().map(i => i.json);\nconst prev = $('Aggregate: Winners').item.json;\n\n// Build a searchable string from product title, description and tags\nconst productText = [\n  (prev.title || ''),\n  (prev.description || ''),\n  Array.isArray(prev.tags) ? prev.tags.join(' ') : (prev.tags || '')\n].join(' ').toLowerCase();\n\n// Only pass IP flags whose keyword actually appears in the product text\nconst ipRows = allIpRows.filter(r => {\n  const kw = (r.keyword || '').toLowerCase().trim();\n  return kw && productText.includes(kw);\n});\n\nfunction fmtMarket(rows) {\n  if (!rows || !rows.length) return 'No market benchmark data for this category.';\n  return rows.map(r =>\n    `avg_price=${r.etsy_avg_price||'?'} search_vol=${r.search_volume_monthly||'?'}/mo competition=${r.competition_level||'?'} price_ceiling=${r.price_ceiling||'?'} top_keywords=\"${r.top_keywords||''}\" notes=\"${r.notes||''}\"`\n  ).join('\\n');\n}\n\nfunction fmtWinners(rows) {\n  if (!rows || !rows.length) return 'No verified winners for this category yet.';\n  return rows.map(r =>\n    `${r.product_name||'?'} @ ${r.etsy_price||'?'} \u2014 ~${r.monthly_sales_est||'?'}/mo \u2014 \"${r.why_it_sells||''}\" \u2014 key: ${r.key_differentiator||''}`\n  ).join('\\n');\n}\n\nfunction fmtIP(rows) {\n  if (!rows || !rows.length) return 'No IP flags match this product.';\n  return rows.map(r =>\n    `\"${r.keyword||'?'}\" \u2192 ${r.ip_holder||'?'} [${r.risk_level||'?'} risk] ${r.notes||''}`\n  ).join('\\n');\n}\n\nreturn [{ json: {\n  ...prev,\n  marketDataStr: fmtMarket(prev.marketRows),\n  winnersStr:    fmtWinners(prev.winnerRows),\n  ipFlagsStr:    fmtIP(ipRows),\n}}];\n",
         "mode": "runOnceForAllItems"
       }
     }

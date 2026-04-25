@@ -242,8 +242,24 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .gate-consent-lbl{font-size:12px;color:var(--ink2);line-height:1.5}
 .gate-trust{font-size:11px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
 .gate-trust a{color:var(--ink3);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
-.privacy-note{display:none;background:#f7f7f7;border-radius:9px;padding:12px 13px;font-size:11.5px;color:var(--ink2);line-height:1.55;margin-top:8px}
-.privacy-note b{color:var(--ink)}
+/* Legal bar */
+.legal-bar{padding:9px 16px 10px;text-align:center;font-size:11px;color:var(--ink3);flex-shrink:0;border-top:1px solid var(--line)}
+.legal-bar a{color:var(--ink3);text-decoration:none;cursor:pointer}
+.legal-bar a:hover{color:var(--ink);text-decoration:underline}
+.legal-bar span{margin:0 5px;opacity:.5}
+/* Legal overlay modals */
+.legal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:none;align-items:flex-end;justify-content:center}
+.legal-overlay.open{display:flex}
+.legal-sheet{background:#fff;border-radius:16px 16px 0 0;width:100%;max-width:430px;max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
+.legal-sheet-top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid var(--line);flex-shrink:0}
+.legal-sheet-title{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.04em;color:var(--ink)}
+.legal-sheet-close{background:none;border:none;font-size:18px;color:var(--ink3);cursor:pointer;padding:2px 4px;line-height:1}
+.legal-sheet-close:hover{color:var(--ink)}
+.legal-body{overflow-y:auto;padding:16px 18px 28px;font-size:13px;color:var(--ink2);line-height:1.65}
+.legal-body h3{font-size:13px;font-weight:700;color:var(--ink);margin:18px 0 5px}
+.legal-body h3:first-child{margin-top:0}
+.legal-body p{margin:0 0 10px}
+.legal-body a{color:var(--acc)}
 /* Loading overlay */
 .loading-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--ink3);transition:color .3s}
 .loading-step.active{color:var(--ink);font-weight:700}
@@ -840,19 +856,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="gate-form-lbl">Unlock your free report</div>
             <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
             <label class="gate-consent">
-              <input type="checkbox" id="consent-check">
+              <input type="checkbox" id="consent-check" checked>
               <span class="gate-consent-lbl">Send me tips on selling 3D prints and updates about PrintChecker. I can unsubscribe anytime.</span>
             </label>
             <button class="btn" id="btn-email">
               <div class="spin" id="sp-email" style="display:none"></div>
               <span id="bl-email">Get my free report →</span>
             </button>
-            <div class="gate-trust">Free forever &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; <a onclick="var n=document.getElementById('privacy-note');n.style.display=n.style.display==='none'?'block':'none';return false">Privacy notice ↓</a></div>
-            <div class="privacy-note" id="privacy-note">
-              <b>What we collect:</b> your email address and the 3D model links you check. We use this to send you occasional tips and product updates — only if you tick the box above.<br><br>
-              <b>Who collects it:</b> PrintChecker (operated by <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--acc)">@meshminds3d</a>). We never sell your data to third parties.<br><br>
-              <b>Your rights:</b> unsubscribe anytime via the link in any email, or DM <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--acc)">@meshminds3d</a> on Instagram to request deletion.
-            </div>
+            <div class="gate-trust">Free forever &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; <a onclick="openLegal('privacy')">Privacy notice</a></div>
           </div>
         </div>
 
@@ -1221,6 +1232,83 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       Back
     </button>
   </div>
+  <div class="legal-bar">
+    <a onclick="openLegal('impressum')">Impressum</a>
+    <span>·</span>
+    <a onclick="openLegal('datenschutz')">Datenschutz</a>
+    <span>·</span>
+    <a onclick="openLegal('privacy')">Privacy</a>
+  </div>
+</div>
+
+<!-- Legal modals (fixed overlay, outside .phone to avoid overflow:hidden clip) -->
+<div class="legal-overlay" id="lo-impressum" onclick="if(event.target===this)closeLegal('impressum')">
+  <div class="legal-sheet">
+    <div class="legal-sheet-top">
+      <span class="legal-sheet-title">Impressum</span>
+      <button class="legal-sheet-close" onclick="closeLegal('impressum')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>Angaben gemäß §5 TMG</h3>
+      <p>Daniel Haag<br>Theodorstraße 8<br>12099 Berlin</p>
+      <h3>Kontakt</h3>
+      <p>E-Mail: <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a></p>
+      <h3>Verantwortlich für den Inhalt nach §55 Abs. 2 RStV</h3>
+      <p>Daniel Haag, Theodorstraße 8, 12099 Berlin</p>
+      <h3>Haftungsausschluss</h3>
+      <p>Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird keine Gewähr übernommen. Als Diensteanbieter sind wir für eigene Inhalte nach §7 Abs.1 TMG verantwortlich. Nach §§8 bis 10 TMG sind wir nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen.</p>
+      <h3>Streitschlichtung</h3>
+      <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener">ec.europa.eu/consumers/odr</a>. Wir nehmen nicht an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teil.</p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="lo-datenschutz" onclick="if(event.target===this)closeLegal('datenschutz')">
+  <div class="legal-sheet">
+    <div class="legal-sheet-top">
+      <span class="legal-sheet-title">Datenschutzerklärung</span>
+      <button class="legal-sheet-close" onclick="closeLegal('datenschutz')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>1. Verantwortlicher</h3>
+      <p>Daniel Haag, Theodorstraße 8, 12099 Berlin<br>E-Mail: <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a></p>
+      <h3>2. Welche Daten wir erheben</h3>
+      <p>Wenn du deine E-Mail-Adresse eingibst, speichern wir: E-Mail-Adresse, Zustimmung zum Newsletter (Ja/Nein) und Zeitstempel. Die von dir eingegebene MakerWorld-URL wird ausschließlich zur Analyse verarbeitet und nicht dauerhaft gespeichert.</p>
+      <h3>3. Zweck und Rechtsgrundlage</h3>
+      <p>Die E-Mail-Adresse wird genutzt, um dir gelegentlich Tipps zum Verkauf von 3D-Drucken und Updates zu PrintChecker zuzusenden — sofern du der Checkbox zugestimmt hast. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO (Einwilligung). Die Analyse-URL wird zur Bereitstellung des Dienstes verarbeitet (Art. 6 Abs. 1 lit. b DSGVO).</p>
+      <h3>4. Dienstleister (Auftragsverarbeiter)</h3>
+      <p><b>Anthropic, PBC</b> (USA): KI-Analyse der Produktdaten durch Claude. Anthropic ist nach dem EU-US Data Privacy Framework zertifiziert.<br><br>
+      <b>Firecrawl</b> (USA): Web-Scraping der MakerWorld-Produktseite zur Datenbeschaffung.<br><br>
+      <b>n8n GmbH</b> (Deutschland/EU): Workflow-Automatisierung und Datenspeicherung in Google Sheets.</p>
+      <h3>5. Speicherdauer</h3>
+      <p>E-Mail-Adressen werden gespeichert, bis du der Speicherung widersprichst oder die Löschung verlangst. Analyse-Logs werden nach 90 Tagen automatisch gelöscht.</p>
+      <h3>6. Deine Rechte (DSGVO)</h3>
+      <p>Du hast das Recht auf: Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Widerspruch (Art. 21) sowie Widerruf deiner Einwilligung (Art. 7 Abs. 3 DSGVO). Wende dich dazu an: <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a></p>
+      <h3>7. Beschwerderecht</h3>
+      <p>Du hast das Recht, dich bei der zuständigen Datenschutz-Aufsichtsbehörde zu beschweren: Berliner Beauftragte für Datenschutz und Informationsfreiheit, Friedrichstr. 219, 10969 Berlin.</p>
+      <h3>8. Cookies und Tracking</h3>
+      <p>Diese Website verwendet keine Cookies und kein Tracking.</p>
+    </div>
+  </div>
+</div>
+
+<div class="legal-overlay" id="lo-privacy" onclick="if(event.target===this)closeLegal('privacy')">
+  <div class="legal-sheet">
+    <div class="legal-sheet-top">
+      <span class="legal-sheet-title">Privacy Notice</span>
+      <button class="legal-sheet-close" onclick="closeLegal('privacy')">✕</button>
+    </div>
+    <div class="legal-body">
+      <h3>What we collect</h3>
+      <p>Your email address and the MakerWorld link you analyse. We use your email to send occasional tips on selling 3D prints and PrintChecker updates — only if you tick the box.</p>
+      <h3>Who collects it</h3>
+      <p>PrintChecker is operated by Daniel Haag (<a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>), Theodorstraße 8, 12099 Berlin. We never sell your data to third parties.</p>
+      <h3>Your rights</h3>
+      <p>Unsubscribe anytime via the link in any email. To request deletion or data access, email <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a> or DM <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a> on Instagram.</p>
+      <h3>Full privacy policy</h3>
+      <p>For the full German-law Datenschutzerklärung, tap <a onclick="closeLegal('privacy');setTimeout(function(){openLegal('datenschutz')},200);" style="cursor:pointer">Datenschutz</a> in the footer.</p>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1327,6 +1415,8 @@ function completeLoadingAnim(callback){
   requestAnimationFrame(tick);
 }
 
+function openLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.add("open");}
+function closeLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.remove("open");}
 function dots(s){for(var i=0;i<9;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
@@ -1914,7 +2004,7 @@ function reset(){
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
   if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec  -  enter your email and we'll show the full results";
   if(q("email-inp"))q("email-inp").value="";
-  if(q("consent-check"))q("consent-check").checked=false;
+  if(q("consent-check"))q("consent-check").checked=true;
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
   if(q("sp-email"))q("sp-email").style.display="none";
   if(q("btn-email"))q("btn-email").disabled=false;

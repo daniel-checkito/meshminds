@@ -754,7 +754,7 @@
         "messages": {
           "values": [
             {
-              "content": "=You extract Etsy search keywords from 3D print product pages.\n\nReturn ONLY a 2-5 word search phrase that a buyer would type on Etsy to find this type of product. No explanation, no punctuation, just the phrase.\n\nEXAMPLES:\n- dandelion wall art\n- dragon dice tower\n- flexi snake toy\n- cute frog planter\n\nPRODUCT PAGE:\n{{ $json.productContext.substring(0, 1500) }}"
+              "content": "=You extract general Etsy search keywords from 3D print product pages.\n\nReturn ONLY a 2-4 word phrase representing the general product category a buyer would search for on Etsy. Drop specific names, characters, or unique details \u2014 think broad category, not exact product.\n\nEXAMPLES:\n- flower wall art\n- dice tower\n- snake fidget toy\n- frog planter pot\n- dragon figurine\n\nPRODUCT PAGE:\n{{ $json.productContext.substring(0, 1500) }}"
             }
           ]
         },

@@ -50,9 +50,6 @@
           "id": "BN9V68mlR6Lhibd4",
           "name": "Anthropic account 2"
         }
-      },
-      "settings": {
-        "onError": "continueErrorOutput"
       }
     },
     {
@@ -132,9 +129,6 @@
           "id": "Ina0nX9suDXJygGI",
           "name": "Firecrawl API"
         }
-      },
-      "settings": {
-        "onError": "continueErrorOutput"
       }
     },
     {
@@ -748,40 +742,6 @@
         12064,
         2448
       ]
-    },
-    {
-      "id": "err-scrape-001",
-      "name": "Respond: Scrape Failed",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        11168,
-        2640
-      ],
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ { error: 'scrape_failed', message: 'Could not reach that URL. Make sure it is a direct product page link and try again.' } }}",
-        "options": {
-          "responseCode": 502
-        }
-      }
-    },
-    {
-      "id": "err-llm-001",
-      "name": "Respond: Analysis Failed",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        12512,
-        2736
-      ],
-      "parameters": {
-        "respondWith": "json",
-        "responseBody": "={{ { error: 'analysis_failed', message: 'Analysis failed. Please try again in a moment.' } }}",
-        "options": {
-          "responseCode": 500
-        }
-      }
     }
   ],
   "pinData": {},
@@ -805,13 +765,6 @@
             "type": "main",
             "index": 0
           }
-        ],
-        [
-          {
-            "node": "Respond: Scrape Failed",
-            "type": "main",
-            "index": 0
-          }
         ]
       ]
     },
@@ -831,13 +784,6 @@
         [
           {
             "node": "Parse Claude Response",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Respond: Analysis Failed",
             "type": "main",
             "index": 0
           }

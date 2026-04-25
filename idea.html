@@ -919,7 +919,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <script>
 (function(){
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
-function isURL(s){return/^https?:\/\//i.test(s)||/\.(com|net|org|io|co|de|nl|uk)\//i.test(s)||/^www\./i.test(s);}
+function isURL(s){return/^https?:\/\/(www\.)?(makerworld\.com|printables\.com|cults3d\.com|thingiverse\.com|cgtrader\.com)\//i.test(s);}
 
 var q=id=>document.getElementById(id);
 var ease=t=>1-Math.pow(1-t,3);
@@ -1367,7 +1367,7 @@ function analyze(){
   }
   if(!isURL(input)){
     q("ui").style.borderColor="var(--bad)";
-    if(q("url-error")){q("url-error").textContent="Please paste a valid product link (e.g. makerworld.com/models/…)";q("url-error").style.display="";}
+    if(q("url-error")){q("url-error").textContent="Only MakerWorld, Printables, Cults3D, Thingiverse and CGTrader links are accepted.";q("url-error").style.display="";}
     setTimeout(function(){q("ui").style.borderColor="";if(q("url-error"))q("url-error").style.display="none";},3000);
     busy=false;return;
   }

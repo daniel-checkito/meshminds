@@ -370,6 +370,49 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .chip-list.on .chip-check{background:#22c55e;border-color:#22c55e;color:#fff}
 .chip-list.on .chip-content .chip-name{color:var(--acc)}
 .chip-list.on .chip-content .chip-desc{color:var(--acc);opacity:.7}
+/* How to Sell It panel */
+.sell-section-hd{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.04em;color:var(--ink);margin-bottom:10px;margin-top:16px}
+.price-ctx{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-top:8px;padding:9px 11px;background:#f7f7f7;border-radius:8px;font-family:"DM Mono",sans-serif}
+.sell-person-card{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:13px;padding:14px 14px 13px;margin-bottom:16px}
+.sell-person-eyebrow{font-family:"DM Mono",sans-serif;font-size:9.5px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.13em;margin-bottom:4px}
+.sell-person-title{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.03em;color:#5b21b6;margin-bottom:11px}
+.sell-person-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(196,181,253,.5);font-size:12px;color:#4c1d95;line-height:1.4}
+.sell-person-row:last-child{border-bottom:none;padding-bottom:0}
+.sell-person-aov{font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:10px;background:#7c3aed;color:#fff;white-space:nowrap;flex-shrink:0;margin-left:10px}
+.season-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:16px}
+.season-col{border-radius:10px;padding:9px 7px;text-align:center}
+.season-name{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:7px}
+.season-badge{display:inline-block;font-size:8.5px;font-weight:700;font-family:"DM Mono",sans-serif;padding:2px 5px;border-radius:5px;letter-spacing:.03em;text-transform:uppercase;margin-bottom:5px}
+.season-entry{font-size:10px;line-height:1.3;margin-top:4px;font-family:"DM Sans",sans-serif}
+.sb-peak{background:#dcfce7;color:#15803d}
+.sb-strong{background:#dbeafe;color:#1d4ed8}
+.sb-steady{background:#fef9c3;color:#b45309}
+.sb-slow{background:#f3f4f6;color:#6b7280}
+.platform-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.platform-card{border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:10px}
+.platform-rank{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 7px;border-radius:6px;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;margin-top:2px}
+.pr-primary{background:#fff7ed;color:var(--acc)}
+.pr-growth{background:#f0fdf4;color:#15803d}
+.pr-scale{background:#eff6ff;color:#1d4ed8}
+.platform-name{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.02em;color:var(--ink);line-height:1.1}
+.platform-desc{font-size:11.5px;color:var(--ink2);line-height:1.4;margin-top:3px}
+.tactic-rows{background:#fafafa;border-radius:11px;padding:2px 12px;margin-bottom:16px}
+.tactic-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tactic-row:last-child{border-bottom:none}
+.tactic-impact{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;margin-top:2px}
+.ti-high{background:#dcfce7;color:#15803d}
+.ti-med{background:#fef9c3;color:#b45309}
+.ti-low{background:#f3f4f6;color:#6b7280}
+.tactic-text{font-size:12px;color:var(--ink2);line-height:1.45;flex:1}
+/* Winners redesigned cards */
+.winner-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:18px}
+.winner-card{border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)}
+.winner-card-top{height:76px;display:flex;align-items:center;justify-content:center;font-size:30px;position:relative}
+.winner-price{position:absolute;bottom:7px;left:9px;font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;background:rgba(255,255,255,.88);color:var(--ink);padding:2px 7px;border-radius:5px;line-height:1.2}
+.winner-donut{position:absolute;top:7px;right:7px}
+.winner-info{background:#fff;padding:9px 10px 10px}
+.winner-name{font-family:"Bebas Neue",sans-serif;font-size:15px;letter-spacing:.02em;color:var(--ink);line-height:1.1;margin-bottom:3px}
+.winner-why{font-size:10.5px;color:var(--ink2);line-height:1.35}
 </style>
 </head>
 <body>
@@ -415,7 +458,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     </button>
     <div class="try-eg" id="try-eg-hint">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('ui').focus();document.getElementById('ui').dispatchEvent(new Event('input'))">Try an example →</button></div>
     <div class="dots" id="dots" style="display:none">
-      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div>
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div>
     </div>
   </div>
 
@@ -909,6 +952,146 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       </div>
 
+      <!-- HOW TO SELL IT -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
+
+        <!-- Revenue summary cards -->
+        <div class="rcards">
+          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">—</div><div class="rc-lbl">units/mo</div></div>
+          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">—</div><div class="rc-lbl">gross rev</div></div>
+          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">—</div><div class="rc-lbl">print cost</div></div>
+        </div>
+        <div class="hero" id="hero">
+          <div class="h-eye">Est. monthly profit</div>
+          <div class="h-big" id="hbig">€—</div>
+          <div class="h-sub" id="hsub">at your current price</div>
+          <div class="h-bd" id="hbd">
+            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">—</span></div>
+            <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">—</span></div>
+            <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">—</span></div>
+            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3">—</span></div>
+          </div>
+        </div>
+
+        <!-- Price slider -->
+        <div class="sell-section-hd">Set your sell price</div>
+        <div class="price-slider-wrap">
+          <div class="price-slider-row">
+            <span class="price-slider-lbl">Sell price</span>
+            <span class="price-slider-val" id="price-display">€—</span>
+          </div>
+          <input type="range" id="price-slider" min="5" max="120" value="22">
+          <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
+          <div id="price-ctx" class="price-ctx" style="display:none"></div>
+          <div id="sweet-spot-hint" class="q-hint" style="margin-top:6px"></div>
+          <div class="price-margin-row">
+            <span class="price-margin-lbl">Margin</span>
+            <span class="price-margin-val" id="margin-val">—</span>
+            <span class="price-margin-lbl"> · </span>
+            <span class="price-margin-val" id="margin-units">—</span>
+            <span class="price-margin-lbl"> units · </span>
+            <span class="price-margin-val" id="margin-net">—</span>
+          </div>
+        </div>
+        <canvas id="rev-chart" style="width:100%;display:block;margin-bottom:16px;border-radius:8px"></canvas>
+
+        <!-- Personalisation callout -->
+        <div class="sell-person-card">
+          <div class="sell-person-eyebrow">Boost your revenue</div>
+          <div class="sell-person-title">Personalisation = higher AOV</div>
+          <div class="sell-person-row">
+            <span>Custom name or text engraving</span>
+            <span class="sell-person-aov">+€8 AOV</span>
+          </div>
+          <div class="sell-person-row">
+            <span>Gift wrapping &amp; message card</span>
+            <span class="sell-person-aov">+€5 AOV</span>
+          </div>
+          <div class="sell-person-row">
+            <span>Painted or premium colour finish</span>
+            <span class="sell-person-aov">+€12 AOV</span>
+          </div>
+        </div>
+
+        <!-- Seasonal timing -->
+        <div class="sell-section-hd">When to push harder</div>
+        <div class="season-grid">
+          <div class="season-col" style="background:#f0fdf4">
+            <div class="season-name" style="color:#15803d">Spring</div>
+            <div class="season-badge sb-peak">Peak</div>
+            <div class="season-entry" style="color:#166534">Mother's Day &amp; Easter gifting</div>
+          </div>
+          <div class="season-col" style="background:#fefce8">
+            <div class="season-name" style="color:#a16207">Summer</div>
+            <div class="season-badge sb-steady">Steady</div>
+            <div class="season-entry" style="color:#78350f">Holiday &amp; home refresh</div>
+          </div>
+          <div class="season-col" style="background:#eff6ff">
+            <div class="season-name" style="color:#1d4ed8">Autumn</div>
+            <div class="season-badge sb-strong">Strong</div>
+            <div class="season-entry" style="color:#1e3a8a">Pre-Christmas gift orders</div>
+          </div>
+          <div class="season-col" style="background:#fff7ed">
+            <div class="season-name" style="color:#c2410c">Winter</div>
+            <div class="season-badge sb-peak">Peak</div>
+            <div class="season-entry" style="color:#7c2d12">Christmas gifting surge</div>
+          </div>
+        </div>
+
+        <!-- Platform ranking -->
+        <div class="sell-section-hd">Where to sell</div>
+        <div class="platform-cards">
+          <div class="platform-card">
+            <span class="platform-rank pr-primary">Primary</span>
+            <div>
+              <div class="platform-name">Etsy</div>
+              <div class="platform-desc">Largest buyer intent for handmade. Optimise titles with niche keywords and add multiple listing variations.</div>
+            </div>
+          </div>
+          <div class="platform-card">
+            <span class="platform-rank pr-growth">Growth</span>
+            <div>
+              <div class="platform-name">Instagram / TikTok</div>
+              <div class="platform-desc">Short videos of the print process drive organic traffic and shares. Link to your Etsy shop in bio.</div>
+            </div>
+          </div>
+          <div class="platform-card">
+            <span class="platform-rank pr-scale">Scale</span>
+            <div>
+              <div class="platform-name">Own shop</div>
+              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers — higher margins and full brand control.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Differentiation tactics -->
+        <div class="sell-section-hd">Stand out from copycats</div>
+        <div class="tactic-rows">
+          <div class="tactic-row">
+            <span class="tactic-impact ti-high">High</span>
+            <span class="tactic-text">Add personalisation — a custom name or text option converts browsers into buyers and justifies a higher price.</span>
+          </div>
+          <div class="tactic-row">
+            <span class="tactic-impact ti-high">High</span>
+            <span class="tactic-text">Bundle 2–3 matching pieces as a gift set. Increases average order value with no extra listing effort.</span>
+          </div>
+          <div class="tactic-row">
+            <span class="tactic-impact ti-med">Med</span>
+            <span class="tactic-text">Create seasonal variants (Christmas, Valentine's, Halloween). Each one ranks separately in search.</span>
+          </div>
+          <div class="tactic-row">
+            <span class="tactic-impact ti-med">Med</span>
+            <span class="tactic-text">Photograph every colour option you offer. Listings with 7+ photos get significantly more clicks.</span>
+          </div>
+          <div class="tactic-row">
+            <span class="tactic-impact ti-low">Low</span>
+            <span class="tactic-text">Include a printed care card insert. Adds perceived value and encourages reviews &amp; repeat purchases.</span>
+          </div>
+        </div>
+
+      </div>
+
       <!-- LEGAL & COPYRIGHT CHECK -->
       <div class="panel">
         <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
@@ -940,59 +1123,76 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div id="cert-section"></div>
       </div>
 
-      <!-- FINAL: inspiration + STL library offer -->
+      <!-- WINNERS: inspiration + STL library offer -->
       <div class="panel">
-        <div class="res-sec-hd"><span class="res-sec-ico">⭐</span><span class="res-sec-lbl">Winners to inspire your next print</span></div>
-        <div class="cta-intro">Prints that scored <b style="color:var(--good)">75+</b> in our database. Use them as a benchmark for what sells  -  or pick a niche and go make your version.</div>
-        <div class="eg-grid" style="margin-bottom:18px">
-          <div class="eg-card">
-            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat">
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div>
-              <div class="eg-vol">€18 avg</div>
-              <div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div>
+        <div class="res-sec-hd"><span class="res-sec-ico">⭐</span><span class="res-sec-lbl">Winners in this niche</span></div>
+        <div class="cta-intro">Prints that scored <b style="color:var(--good)">75+</b> in our database. Use as benchmarks for what sells — or go make your version.</div>
+
+        <div class="winner-cards">
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#fef9c3,#fde68a)">✍️
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></span>
+              <span class="winner-price">€18 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Custom Name Sign</div>
+              <div class="winner-why">Personalisation drives repeat sales &amp; word-of-mouth</div>
             </div>
           </div>
-          <div class="eg-card">
-            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat">
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div>
-              <div class="eg-vol">€22 avg</div>
-              <div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div>
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0)">🌿
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></span>
+              <span class="winner-price">€12 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Tea-light Holder</div>
+              <div class="winner-why">Gift market drives high peak-season volumes</div>
             </div>
           </div>
-          <div class="eg-card">
-            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat">
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div>
-              <div class="eg-vol">€14 avg</div>
-              <div class="eg-info"><div class="eg-name">Cable Box</div><div class="eg-meta">Functional</div></div>
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#d1fae5,#6ee7b7)">🪴
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></span>
+              <span class="winner-price">€22 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Geometric Planter</div>
+              <div class="winner-why">Premium aesthetic commands higher prices, low IP risk</div>
             </div>
           </div>
-          <div class="eg-card">
-            <div class="eg-img" style="background:linear-gradient(135deg,#fce7f3,#f9a8d4)">
-              🕯️
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div>
-              <div class="eg-vol">€12 avg</div>
-              <div class="eg-info"><div class="eg-name">Tea-light Holder</div><div class="eg-meta">Decor</div></div>
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#dbeafe,#93c5fd)">📦
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></span>
+              <span class="winner-price">€14 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Cable Box</div>
+              <div class="winner-why">Evergreen utility product — sells year-round, gift-friendly</div>
             </div>
           </div>
-          <div class="eg-card">
-            <div class="eg-img" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">
-              🎮
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="64.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">79</text></svg></div>
-              <div class="eg-vol">€17 avg</div>
-              <div class="eg-info"><div class="eg-name">Controller Stand</div><div class="eg-meta">Functional</div></div>
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#ede9fe,#c4b5fd)">🎮
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#1d4ed8" stroke-width="3.5" stroke-dasharray="64.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#1d4ed8" font-size="8" font-weight="800" font-family="DM Mono,monospace">79</text></svg></span>
+              <span class="winner-price">€17 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Controller Stand</div>
+              <div class="winner-why">Gaming niche has strong sustained demand &amp; loyal buyers</div>
             </div>
           </div>
-          <div class="eg-card">
-            <div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat">
-              <div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div>
-              <div class="eg-vol">€11 avg</div>
-              <div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div>
+          <div class="winner-card">
+            <div class="winner-card-top" style="background:linear-gradient(135deg,#e0f2fe,#bae6fd)">📱
+              <span class="winner-donut"><svg width="32" height="32" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.85)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#0369a1" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#0369a1" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></span>
+              <span class="winner-price">€11 avg</span>
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">Phone Stand</div>
+              <div class="winner-why">High search volume, easy to differentiate with custom angles</div>
             </div>
           </div>
         </div>
 
-        <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Can't design your own models?</span></div>
-        <div class="cta-intro">Skip the Fusion 360 learning curve. Get a library of commercial-safe STLs you can list today  -  zero IP risk.</div>
+        <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Skip the design phase entirely</span></div>
+        <div class="cta-intro">No CAD skills? Get a library of print-once, sell-forever STL files you can list on Etsy today — full commercial licence, zero IP risk.</div>
         <div class="cubee-card">
           <div class="cubee-img-wrap">
             <img src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/Text%20%E2%86%92%203D%20Model%20%281%29.jpg" alt="Cubee3D commercial STL library" loading="lazy" onerror="this.style.display='none'">
@@ -1000,15 +1200,15 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
           <div class="cubee-body">
             <div class="cubee-brand">Cubee3D</div>
-            <div class="cubee-name">Commercial STL License</div>
-            <div class="cubee-desc">Unlimited prints. Zero IP risk. A growing library of sell-ready STL files with a full commercial licence  -  no per-model fees.</div>
+            <div class="cubee-name">Print once, sell forever</div>
+            <div class="cubee-desc">A curated library of sell-ready STL files — each one comes with a full commercial licence so you can list, print, and profit with zero legal worry.</div>
             <div class="cubee-pts">
-              <div>1,000+ ready-to-print STL files, curated for Etsy</div>
-              <div>Full commercial licence  -  sell prints without legal worry</div>
-              <div>New models added every week</div>
+              <div>1,000+ ready-to-print STL files, curated for Etsy sellers</div>
+              <div>Full commercial licence — sell unlimited prints, keep all profit</div>
+              <div>New models added weekly, members-only early access</div>
             </div>
             <a href="https://cubee3d.com/?ref=meshminds" target="_blank" rel="noopener" class="cubee-cta">Get the commercial license →</a>
-            <div class="cubee-code">Members-only code: <b>MESHMINDS</b>  -  copy &amp; paste at checkout</div>
+            <div class="cubee-code">Members-only code: <b>MESHMINDS</b> — copy &amp; paste at checkout</div>
           </div>
         </div>
       </div>
@@ -1031,7 +1231,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
 function isURL(s){return/^https?:\/\/(www\.)?(makerworld\.com|printables\.com|cults3d\.com|thingiverse\.com|cgtrader\.com)\//i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1131,7 +1331,7 @@ function completeLoadingAnim(callback){
   requestAnimationFrame(tick);
 }
 
-function dots(s){for(var i=0;i<8;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function dots(s){for(var i=0;i<9;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
 function verdict(state,msg,note){
@@ -1203,6 +1403,18 @@ function recalcRevenue(price){
   if(q("margin-val")){q("margin-val").textContent=margin+"%";q("margin-val").style.color=marginColor;}
   if(q("margin-units")){q("margin-units").textContent=U;q("margin-units").style.color=marginColor;}
   if(q("margin-net")){q("margin-net").textContent="€"+net;q("margin-net").style.color=marginColor;}
+  var ctx=q("price-ctx");
+  if(ctx){
+    if(marketAvgPrice&&marketAvgPrice>0){
+      var diff=Math.round(((price-marketAvgPrice)/marketAvgPrice)*100);
+      var dir=diff>0?"above":"below";
+      var absDiff=Math.abs(diff);
+      ctx.textContent="At €"+price+" you're "+absDiff+"% "+dir+" the market average (€"+Math.round(marketAvgPrice)+" avg on Etsy). "+(diff>0?"Buyers expect premium quality at this price.":diff<-10?"You have room to raise the price without losing volume.":"Right in the sweet spot.");
+      ctx.style.display="";
+    } else {
+      ctx.style.display="none";
+    }
+  }
   var hint=q("sweet-spot-hint");
   if(hint){
     if(inSweet){
@@ -1395,6 +1607,7 @@ function populate(data){
 
   var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
   baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
+  marketAvgPrice=parseFloat((m.etsyAvgPrice||m.avgPrice||"").toString().replace(/[^0-9.]/g,""))||null;
   if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
   /* Update slider range around the optimal price */
   var slMin=Math.max(3,Math.round(spNum*0.25)),slMax=Math.max(120,Math.round(spNum*4));
@@ -1647,8 +1860,9 @@ function runAnalysis(){
         setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
       });
     } else if(step===5)setBtn2("How to sell it →","",false);
-    else if(step===6)setBtn2("See winners & STL library","",false);
-    else if(step===7)setBtn2("Check another print","dark",false);
+    else if(step===6)setBtn2("Check legal status →","",false);
+    else if(step===7)setBtn2("See winners & STL library","",false);
+    else if(step===8)setBtn2("Check another print","dark",false);
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
@@ -1677,7 +1891,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;lastAiCerts=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
@@ -1912,8 +2126,9 @@ q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
-  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(true);return;}
-  if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("Check another print","dark",false);showBack(false);return;}
+  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("Check legal status →","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
+  if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(true);return;}
+  if(step===7){step=8;dots(8);slide(8);q("vbar").style.display="none";setBtn2("Check another print","dark",false);showBack(false);return;}
   else{reset();}
 });
 
@@ -1922,6 +2137,8 @@ q("btn-back").addEventListener("click",function(){
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===6){step=5;dots(5);slide(5);q("vbar").style.display="";setBtn2("How to sell it →","",false);showBack(false);return;}
+  if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status →","",false);showBack(true);return;}
+  if(step===8){step=7;dots(7);slide(7);setBtn2("See winners & STL library","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

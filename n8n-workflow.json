@@ -684,7 +684,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const ctx = $json.productContext || '';\nconst titleLine = ctx.match(/^TITLE:\\s*(.+)$/m);\nconst title = titleLine ? titleLine[1].trim() : '';\n// Fallback: first non-header line of markdown\nconst fallback = ctx.split('\\n')\n  .find(l => l.trim() && !l.startsWith('URL:') && !l.startsWith('TITLE:') && !l.startsWith('DESCRIPTION:') && !l.startsWith('#')) || '';\nconst raw = (title || fallback).replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim();\nconst keyword = raw.substring(0, 60);\nreturn [{ json: {\n  productContext: $json.productContext,\n  imageUrl: $json.imageUrl,\n  sourceUrl: $json.sourceUrl,\n  etsyKeyword: keyword\n} }];"
+        "jsCode": "const ctx = $json.productContext || '';\nconst titleLine = ctx.match(/^TITLE:\\s*(.+)$/m);\nconst title = titleLine ? titleLine[1].trim() : '';\nconst fallback = ctx.split('\n')\n  .find(l => l.trim() && !l.startsWith('URL:') && !l.startsWith('TITLE:') && !l.startsWith('DESCRIPTION:') && !l.startsWith('#')) || '';\nconst raw = (title || fallback).replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim();\nconst keyword = raw.substring(0, 60);\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: $json.productContext,\n  imageUrl: $json.imageUrl,\n  sourceUrl: $json.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
       },
       "id": "cb517149-75fc-4699-8aab-d058295fd52f",
       "name": "Extract Keyword",
@@ -732,7 +732,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "// If Firecrawl failed (continueOnFail), $json.data may be absent\nconst etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Extract Keyword').item.json;\nreturn [{ json: {\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsySearchData: etsyMarkdown\n} }];"
+        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Extract Keyword').item.json;\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext,\n  imageUrl: upstream.imageUrl,\n  sourceUrl: upstream.sourceUrl,\n  etsySearchData: etsyMarkdown\n})) }];"
       },
       "id": "b9af529a-3454-4118-aa2b-8d6295450b8e",
       "name": "Merge Etsy Data",

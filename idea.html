@@ -43,7 +43,7 @@ html,body{height:100%;background:#fff;font-family:"DM Sans",sans-serif;margin:0}
 .vbar.scanning .ve{color:var(--warn)}.vbar.done .ve{color:var(--good)}
 .vt{font-family:"Bebas Neue",sans-serif;font-size:22px;line-height:1;color:var(--ink3);transition:color .3s}
 .vbar.scanning .vt{color:var(--warn)}.vbar.done .vt{color:var(--good)}
-.vd{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.35}
+.vd{font-size:11.5px;color:var(--ink2);margin-top:2px;line-height:1.35;font-weight:500}
 
 .dots{display:flex;justify-content:center;gap:6px;padding:8px 0 0}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .3s}
@@ -669,20 +669,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- RESULTS: Consolidated analysis -->
       <div class="panel">
 
-        <!-- Verdict decision card -->
-        <div id="verdict-card" style="display:none;border-radius:13px;padding:15px 16px 14px;margin-bottom:16px;transition:background .4s">
-          <div style="display:flex;align-items:center;gap:13px">
-            <div id="vc-score-wrap" style="flex-shrink:0;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center">
-              <span id="vc-score" style="font-size:21px;font-weight:800;font-family:'DM Mono',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.02em"></span>
-            </div>
-            <div style="flex:1;min-width:0">
-              <div id="vc-label" style="font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;font-family:'DM Mono',sans-serif;margin-bottom:3px;opacity:.8"></div>
-              <div id="vc-msg" style="font-family:'Bebas Neue',sans-serif;font-size:21px;line-height:1.1;margin-bottom:4px"></div>
-              <div id="vc-note" style="font-size:11.5px;line-height:1.4;opacity:.8"></div>
-            </div>
-          </div>
-        </div>
-
         <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
         <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
         <div class="browser" id="browser-el">
@@ -714,7 +700,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="sc" id="mc3"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="sc-lbl">Print time</div></div><div class="sc-val" id="msv3"></div><div class="sc-sub up" id="msub3"></div></div>
         </div>
         <div class="ins" id="ins" style="margin-bottom:6px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
-        <div id="etsy-query-row" style="display:none;font-size:10.5px;color:var(--ink3);margin-bottom:12px;padding-left:2px">Etsy searched for: <span id="etsy-query-kw" style="font-weight:700;color:var(--ink2)"></span></div>
 
         <!-- Manufacturing Verdict -->
         <div id="mfg-section" style="display:none;margin-bottom:16px">
@@ -1018,13 +1003,13 @@ function completeLoadingAnim(callback){
 function dots(s){for(var i=0;i<8;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
-function verdict(state,msg){
+function verdict(state,msg,note){
   var b=q("vbar"),e=q("ve"),t=q("vt"),d=q("vd");
   b.className="vbar";
   if(state==="idle"){e.textContent="Ready to check";t.textContent="Paste a product link above";d.textContent="Paste a product link above";}
   else if(state==="scanning"){b.classList.add("scanning");e.textContent="Checking";t.textContent="Analyzing product...";d.textContent="Fetching demand, revenue & legal data";}
   else if(state==="error"){e.textContent="Error";t.textContent=msg||"Try again";d.textContent="Check the URL and try again";}
-  else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";d.textContent="Tap Next to explore results";}
+  else{b.classList.add("done");e.textContent="Verdict";t.textContent=msg||"Analysis complete";if(note){d.innerHTML=note;}else{d.textContent="Tap to explore results";}}
 }
 
 function setBtn0(label,spinning){
@@ -1211,8 +1196,6 @@ function populate(data){
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
-  if(data._etsyKeyword&&q("etsy-query-kw")){q("etsy-query-kw").textContent='"'+data._etsyKeyword+'"';q("etsy-query-row").style.display="";};
-
   /* Manufacturing verdict */
   var mfg=obj(data.manufacturing);
   if(mfg&&mfg.verdict){
@@ -1302,26 +1285,9 @@ function populate(data){
   var scoreColor="#15803d";
   if(score!==null)scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
 
-  /* Verdict decision card */
-  if(scoreNum!==null&&q("verdict-card")){
-    var sn=scoreNum;
-    var vcBg=sn>=80?"#f0fdf4":sn>=60?"#fff7ed":sn>=40?"#fefce8":"#fef2f2";
-    var vcFg=sn>=80?"#15803d":sn>=60?"#c2410c":sn>=40?"#a16207":"#b91c1c";
-    var vcLbl=sn>=80?"✅ Go — sell this now":sn>=60?"🟡 Worth testing":sn>=40?"⚠️ Marginal":"🚫 Avoid";
-    var vc=q("verdict-card");
-    vc.style.background=vcBg;
-    var scoreWrap=q("vc-score-wrap");
-    if(scoreWrap)scoreWrap.style.background="rgba(0,0,0,.07)";
-    if(q("vc-score")){q("vc-score").textContent=sn;q("vc-score").style.color=vcFg;}
-    if(q("vc-label")){q("vc-label").textContent=vcLbl;q("vc-label").style.color=vcFg;}
-    if(q("vc-msg")){q("vc-msg").textContent=verdictMsg;q("vc-msg").style.color=vcFg;}
-    if(q("vc-note")&&p.note){q("vc-note").innerHTML=p.note;q("vc-note").style.color=vcFg;}
-    vc.style.display="";
-  }
-
   populateCopyright(data.copyright||{});
   /* Store score  -  only reveal ring/vbar after email gate is passed */
-  pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg};
+  pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg,note:p.note||null};
   if(step>=5)revealScore();
 }
 
@@ -1351,7 +1317,7 @@ function revealScore(){
   if(!pendingScore)return;
   stopPulse();
   animRing(pendingScore.score,600,pendingScore.color);
-  verdict("done",pendingScore.msg);
+  verdict("done",pendingScore.msg,pendingScore.note);
   pendingScore=null;
 }
 
@@ -1500,7 +1466,6 @@ function reset(){
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
-  if(q("verdict-card"))q("verdict-card").style.display="none";
 }
 
 var CERT_INFO={

@@ -1397,10 +1397,6 @@ function showGateError(msg){
 }
 
 function runAnalysis(){
-  /* Client-side gate disabled for testing — re-enable before launch */
-  // var rlMsg=rlCheck();
-  // if(rlMsg){showGateError(rlMsg);return;}
-  // rlRecord();
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
   verdict("scanning");
@@ -1719,26 +1715,6 @@ q("btn-back").addEventListener("click",function(){
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 })();
 
-/* ── Client-side rate limit helpers (UX only — real limits enforced server-side) ── */
-function rlLastReq(){return parseInt(localStorage.getItem('mm_lr')||'0');}
-function rlCooldownLeft(){var w=10000-(Date.now()-rlLastReq());return w>0?Math.ceil(w/1000):0;}
-function rlDayCount(){
-  var today=new Date().toISOString().slice(0,10);
-  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
-  return parseInt(localStorage.getItem('mm_dc')||'0');
-}
-function rlRecord(){
-  localStorage.setItem('mm_lr',Date.now().toString());
-  var today=new Date().toISOString().slice(0,10);
-  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
-  localStorage.setItem('mm_dc',String(parseInt(localStorage.getItem('mm_dc')||'0')+1));
-}
-function rlCheck(){
-  var wait=rlCooldownLeft();
-  if(wait>0)return'Please wait '+wait+' second'+(wait===1?'':'s')+' before your next check.';
-  if(rlDayCount()>=20)return'You have reached your 20 analyses for today. Come back tomorrow!';
-  return null;
-}
 
 </script>
 

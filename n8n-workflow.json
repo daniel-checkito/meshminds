@@ -42,7 +42,7 @@
       "type": "@n8n/n8n-nodes-langchain.anthropic",
       "typeVersion": 1,
       "position": [
-        15980,
+        16480,
         3584
       ],
       "id": "43303869-fc56-4933-bcf1-afd8278ebd71",
@@ -64,7 +64,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        16332,
+        16832,
         3584
       ]
     },
@@ -97,7 +97,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        16580,
+        17080,
         3440
       ]
     },
@@ -122,7 +122,7 @@
       "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
       "typeVersion": 1,
       "position": [
-        14832,
+        15332,
         3584
       ],
       "id": "8999f05d-4131-4e88-afb4-c5653b3bb2e8",
@@ -160,7 +160,7 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3,
       "position": [
-        15040,
+        15540,
         3584
       ]
     },
@@ -464,7 +464,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
       "position": [
-        16580,
+        17080,
         3728
       ],
       "credentials": {
@@ -503,7 +503,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2,
       "position": [
-        15890,
+        16390,
         3584
       ]
     },
@@ -536,7 +536,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        16140,
+        16640,
         3350
       ]
     },
@@ -550,7 +550,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        15240,
+        15740,
         3584
       ],
       "continueOnFail": false
@@ -578,7 +578,7 @@
       "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
       "typeVersion": 1,
       "position": [
-        15460,
+        15960,
         3584
       ],
       "continueOnFail": true,
@@ -599,10 +599,73 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        15680,
+        16180,
         3584
       ],
       "continueOnFail": false
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const store = $getWorkflowStaticData('global');\nconst now = Date.now();\nconst dayMs = 24 * 60 * 60 * 1000;\n\n// Init store\nif (!store.ipData) store.ipData = {};\nif (!store.global) store.global = { count: 0, reset: 0 };\n\n// Extract IP — try Cloudflare, nginx, standard proxy headers\nconst h = ($json.headers || {});\nconst rawIp = h['cf-connecting-ip'] || h['x-real-ip'] || (h['x-forwarded-for'] || '').split(',')[0] || 'anon';\nconst ip = rawIp.trim().slice(0, 45);\n\n// Reset global counter after 24h\nif (now - store.global.reset > dayMs) {\n  store.global = { count: 0, reset: now };\n}\n\n// Global 200/24h hard cap\nif (store.global.count >= 200) {\n  return [{ json: { blocked: true, code: 'global_cap' } }];\n}\n\n// Per-IP record\nif (!store.ipData[ip]) store.ipData[ip] = { last: 0, count: 0, reset: 0 };\nconst rec = store.ipData[ip];\n\n// Reset per-IP daily counter after 24h\nif (now - rec.reset > dayMs) { rec.count = 0; rec.reset = now; }\n\n// 10-second cooldown between any two requests from same IP\nif (now - rec.last < 10000) {\n  const wait = Math.ceil((10000 - (now - rec.last)) / 1000);\n  return [{ json: { blocked: true, code: 'cooldown', wait } }];\n}\n\n// Per-IP 20 full-analysis requests per day (scrapeOnly doesn't count)\nconst isFullAnalysis = !$json.body.scrapeOnly;\nif (isFullAnalysis && rec.count >= 20) {\n  return [{ json: { blocked: true, code: 'user_cap' } }];\n}\n\n// Prune stale IPs (keep store manageable — remove entries idle > 48h)\nconst cutoff = now - 48 * 60 * 60 * 1000;\nconst keys = Object.keys(store.ipData);\nif (keys.length > 800) {\n  for (const k of keys) { if (store.ipData[k].last < cutoff) delete store.ipData[k]; }\n}\n\n// Record the request\nrec.last = now;\nif (isFullAnalysis) rec.count += 1;\nstore.global.count += 1;\n\nreturn [{ json: $json }];"
+      },
+      "id": "rate-limit-check-node-001",
+      "name": "Rate Limit Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        14720,
+        3584
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "rate-blocked-check",
+              "leftValue": "={{ $json.blocked }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals",
+                "name": "boolean:equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-rate-limited-node-002",
+      "name": "IF: Rate Limited?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        14920,
+        3584
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 429,
+        "responseBody": "={{ JSON.stringify({ error: $json.code === 'cooldown' ? 'Please wait ' + ($json.wait || 10) + ' second' + (($json.wait || 10) === 1 ? '' : 's') + ' before your next check.' : 'Daily limit reached. Please try again tomorrow.' }) }}",
+        "options": {}
+      },
+      "id": "respond-rate-limited-node-003",
+      "name": "Respond: Rate Limited",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        15120,
+        3360
+      ]
     }
   ],
   "pinData": {},
@@ -611,7 +674,7 @@
       "main": [
         [
           {
-            "node": "/scrape",
+            "node": "Rate Limit Check",
             "type": "main",
             "index": 0
           }
@@ -712,6 +775,35 @@
         [
           {
             "node": "IF: scrapeOnly?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Check": {
+      "main": [
+        [
+          {
+            "node": "IF: Rate Limited?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Rate Limited?": {
+      "main": [
+        [
+          {
+            "node": "Respond: Rate Limited",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "/scrape",
             "type": "main",
             "index": 0
           }

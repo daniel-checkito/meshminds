@@ -292,7 +292,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       </div>
       <div class="url-row">
         <svg class="url-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        <input class="url-inp" id="ui" type="text" placeholder="Paste a link or describe your idea…">
+        <input class="url-inp" id="ui" type="text" placeholder="https://makerworld.com/de/models/…">
       </div>
     </div>
     <div class="vbar" id="vbar" style="display:none">
@@ -1401,6 +1401,11 @@ function showGateError(msg){
 }
 
 function runAnalysis(){
+  /* Client-side gate (server enforces the real limits) */
+  var rlMsg=rlCheck();
+  if(rlMsg){showGateError(rlMsg);return;}
+  rlRecord();
+
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
   verdict("scanning");
@@ -1444,8 +1449,9 @@ function runAnalysis(){
     var msg="Analysis failed – please try again.";
     if(err&&err.name==="AbortError")msg="Analysis timed out (30 s) – the server is busy, please try again.";
     else if(err&&err.message){
-      if(/^HTTP 5/.test(err.message))msg="Service error ("+err.message+") – try again in a moment.";
-      else if(/^HTTP 4/.test(err.message))msg="Request rejected ("+err.message+") – check your link.";
+      if(/^HTTP 5/.test(err.message))msg="Service error – please try again in a moment.";
+      else if(err.message.indexOf("HTTP 429")>=0||err.message.toLowerCase().indexOf("too many")>=0||err.message.toLowerCase().indexOf("daily limit")>=0||err.message.toLowerCase().indexOf("please wait")>=0)msg=err.message.replace(/^HTTP 429[:\s]*/,"");
+      else if(/^HTTP 4/.test(err.message))msg="Request rejected – please check your link and try again.";
       else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
       else msg=err.message;
     }
@@ -1705,6 +1711,27 @@ q("btn-back").addEventListener("click",function(){
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 })();
+
+/* ── Client-side rate limit helpers (UX only — real limits enforced server-side) ── */
+function rlLastReq(){return parseInt(localStorage.getItem('mm_lr')||'0');}
+function rlCooldownLeft(){var w=10000-(Date.now()-rlLastReq());return w>0?Math.ceil(w/1000):0;}
+function rlDayCount(){
+  var today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
+  return parseInt(localStorage.getItem('mm_dc')||'0');
+}
+function rlRecord(){
+  localStorage.setItem('mm_lr',Date.now().toString());
+  var today=new Date().toISOString().slice(0,10);
+  if(localStorage.getItem('mm_day')!==today){localStorage.setItem('mm_day',today);localStorage.setItem('mm_dc','0');}
+  localStorage.setItem('mm_dc',String(parseInt(localStorage.getItem('mm_dc')||'0')+1));
+}
+function rlCheck(){
+  var wait=rlCooldownLeft();
+  if(wait>0)return'Please wait '+wait+' second'+(wait===1?'':'s')+' before your next check.';
+  if(rlDayCount()>=20)return'You have reached your 20 analyses for today. Come back tomorrow!';
+  return null;
+}
 
 function openAbout(){document.getElementById('about-overlay').classList.add('open')}
 function closeAbout(){document.getElementById('about-overlay').classList.remove('open')}

@@ -14,10 +14,7 @@
       "name": "Webhook: Analysis Request",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [
-        25056,
-        640
-      ],
+      "position": [25056, 640],
       "webhookId": "printchecker-idea2"
     },
     {
@@ -39,10 +36,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.anthropic",
       "typeVersion": 1,
-      "position": [
-        25728,
-        640
-      ],
+      "position": [25728, 640],
       "id": "10083a1e-7ac7-432a-bdfa-50a3cdca2259",
       "name": "Message a model",
       "credentials": {
@@ -54,16 +48,13 @@
     },
     {
       "parameters": {
-        "jsCode": "const raw = $input.first().json;\nconst text = (raw.content?.[0]?.text || '').trim();\n\nif (!text) throw new Error('Empty response from Claude');\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\n\nif (start === -1) {\n  throw new Error('No JSON object found. Tail: ...' + text.slice(-200));\n}\n\nlet jsonStr = clean.slice(start);\n\n// Detect truncation and repair by closing open strings and brackets\nfunction repairTruncatedJson(s) {\n  const stack = [];\n  let inStr = false, esc = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (esc) { esc = false; continue; }\n    if (c === '\\\\' && inStr) { esc = true; continue; }\n    if (c === '\"') { inStr = !inStr; continue; }\n    if (!inStr) {\n      if (c === '{' || c === '[') stack.push(c);\n      else if (c === '}' || c === ']') stack.pop();\n    }\n  }\n  if (stack.length === 0 && !inStr) return { repaired: s, truncated: false };\n  let repaired = s;\n  if (inStr) repaired += '\"';\n  repaired = repaired.replace(/,\\s*$/, '');\n  if (/:\\s*$/.test(repaired)) repaired += 'null';\n  while (stack.length > 0) {\n    repaired += stack.pop() === '{' ? '}' : ']';\n  }\n  return { repaired, truncated: true };\n}\n\nconst { repaired, truncated } = repairTruncatedJson(jsonStr);\nif (truncated) jsonStr = repaired;\n\nfunction parseWithFixes(s) {\n  try { return JSON.parse(s); } catch (_) {}\n  try {\n    const fixed = s.replace(/^\\s*\\/\\/.*$/gm, '').replace(/,(\\s*[}\\]])/g, '$1');\n    return JSON.parse(fixed);\n  } catch (_) {}\n  try {\n    let sanitized = '';\n    let inString = false, escaped = false;\n    for (let i = 0; i < s.length; i++) {\n      const c = s[i];\n      if (escaped) { sanitized += c; escaped = false; }\n      else if (c === '\\\\' && inString) { sanitized += c; escaped = true; }\n      else if (c === '\"') { sanitized += c; inString = !inString; }\n      else if (inString && c === '\\n') { sanitized += '\\\\n'; }\n      else if (inString && c === '\\r') { /* skip */ }\n      else if (inString && c === '\\t') { sanitized += '\\\\t'; }\n      else { sanitized += c; }\n    }\n    return JSON.parse(sanitized);\n  } catch (e) {\n    throw new Error('All parse attempts failed: ' + e.message + '. Last 300 chars: ...' + s.slice(-300));\n  }\n}\n\nconst parsed = parseWithFixes(jsonStr);\nparsed._truncated = truncated;\nreturn { json: JSON.parse(JSON.stringify(parsed)) };\n"
+        "jsCode": "const raw = $input.first().json;\nconst text = (raw.content?.[0]?.text || '').trim();\n\nif (!text) throw new Error('Empty response from Claude');\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\n\nif (start === -1) {\n  throw new Error('No JSON object found. Tail: ...' + text.slice(-200));\n}\n\nlet jsonStr = clean.slice(start);\n\nfunction repairTruncatedJson(s) {\n  const stack = [];\n  let inStr = false, esc = false;\n  for (let i = 0; i < s.length; i++) {\n    const c = s[i];\n    if (esc) { esc = false; continue; }\n    if (c === '\\\\' && inStr) { esc = true; continue; }\n    if (c === '\"') { inStr = !inStr; continue; }\n    if (!inStr) {\n      if (c === '{' || c === '[') stack.push(c);\n      else if (c === '}' || c === ']') stack.pop();\n    }\n  }\n  if (stack.length === 0 && !inStr) return { repaired: s, truncated: false };\n  let repaired = s;\n  if (inStr) repaired += '\"';\n  repaired = repaired.replace(/,\\s*$/, '');\n  if (/:\\s*$/.test(repaired)) repaired += 'null';\n  while (stack.length > 0) {\n    repaired += stack.pop() === '{' ? '}' : ']';\n  }\n  return { repaired, truncated: true };\n}\n\nconst { repaired, truncated } = repairTruncatedJson(jsonStr);\nif (truncated) jsonStr = repaired;\n\nfunction parseWithFixes(s) {\n  try { return JSON.parse(s); } catch (_) {}\n  try {\n    const fixed = s.replace(/^\\s*\\/\\/.*$/gm, '').replace(/,(\\s*[}\\]])/g, '$1');\n    return JSON.parse(fixed);\n  } catch (_) {}\n  try {\n    let sanitized = '';\n    let inString = false, escaped = false;\n    for (let i = 0; i < s.length; i++) {\n      const c = s[i];\n      if (escaped) { sanitized += c; escaped = false; }\n      else if (c === '\\\\' && inString) { sanitized += c; escaped = true; }\n      else if (c === '\"') { sanitized += c; inString = !inString; }\n      else if (inString && c === '\\n') { sanitized += '\\\\n'; }\n      else if (inString && c === '\\r') { /* skip */ }\n      else if (inString && c === '\\t') { sanitized += '\\\\t'; }\n      else { sanitized += c; }\n    }\n    return JSON.parse(sanitized);\n  } catch (e) {\n    throw new Error('All parse attempts failed: ' + e.message + '. Last 300 chars: ...' + s.slice(-300));\n  }\n}\n\nconst parsed = parseWithFixes(jsonStr);\nparsed._truncated = truncated;\nreturn { json: JSON.parse(JSON.stringify(parsed)) };\n"
       },
       "id": "ffe746f4-abde-4f42-8ff2-081d8a56a422",
       "name": "Parse Claude Response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        26080,
-        640
-      ]
+      "position": [26080, 640]
     },
     {
       "parameters": {
@@ -73,18 +64,9 @@
           "responseCode": 200,
           "responseHeaders": {
             "entries": [
-              {
-                "name": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "name": "Access-Control-Allow-Origin",
-                "value": "*"
-              },
-              {
-                "name": "Access-Control-Allow-Headers",
-                "value": "Content-Type"
-              }
+              { "name": "Content-Type", "value": "application/json" },
+              { "name": "Access-Control-Allow-Origin", "value": "*" },
+              { "name": "Access-Control-Allow-Headers", "value": "Content-Type" }
             ]
           }
         }
@@ -93,10 +75,7 @@
       "name": "Respond: Analysis Complete1",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [
-        26304,
-        544
-      ]
+      "position": [26304, 544]
     },
     {
       "parameters": {
@@ -104,11 +83,7 @@
         "url": "={{ ($json.body.url || '').startsWith('http') ? $json.body.url : 'https://' + ($json.body.url || '') }}",
         "scrapeOptions": {
           "options": {
-            "formats": {
-              "format": [
-                {}
-              ]
-            },
+            "formats": { "format": [{}] },
             "headers": {},
             "waitFor": 2000
           }
@@ -117,10 +92,7 @@
       },
       "type": "@mendable/n8n-nodes-firecrawl.firecrawl",
       "typeVersion": 1,
-      "position": [
-        25280,
-        640
-      ],
+      "position": [25280, 640],
       "id": "f4617104-7035-4f7b-b237-16627ed3837a",
       "name": "/scrape",
       "credentials": {
@@ -132,33 +104,13 @@
     },
     {
       "parameters": {
-        "fields": {
-          "values": [
-            {
-              "name": "productContext",
-              "stringValue": "=URL: {{ $json.data.metadata.sourceURL }}\nTITLE: {{ $json.data.metadata.title }}\nDESCRIPTION: {{ $json.data.metadata.description }}\n\n{{ ($json.data.markdown || '').substring(0, 4000) }}"
-            },
-            {
-              "name": "imageUrl",
-              "stringValue": "={{ $json.data.metadata.ogImage }}"
-            },
-            {
-              "name": "sourceUrl",
-              "stringValue": "={{ $json.data.metadata.sourceURL }}"
-            }
-          ]
-        },
-        "include": "none",
-        "options": {}
+        "jsCode": "const raw = $input.first().json;\nconst metadata = raw.data?.metadata || {};\nconst markdown = raw.data?.markdown || '';\n\nconst title = metadata.title || '';\nconst description = metadata.description || '';\nconst sourceURL = metadata.sourceURL || metadata.url || '';\nconst imageUrl = metadata.ogImage || '';\n\nfunction extractProductInfo(md) {\n  let text = md;\n\n  // Remove all inline image tags\n  text = text.replace(/!\\[[^\\]]*\\]\\([^)]+\\)/g, '');\n\n  // Cut off at Related Models section (pure noise for LLM)\n  const relatedIdx = text.indexOf('### Related Models');\n  if (relatedIdx !== -1) text = text.substring(0, relatedIdx);\n\n  // Cut off at Comment & Rating section\n  const commentIdx = text.indexOf('### Comment');\n  if (commentIdx !== -1) text = text.substring(0, commentIdx);\n\n  // Remove hyperlinks but preserve link text\n  text = text.replace(/\\[([^\\]]+)\\]\\([^)]+\\)/g, '$1');\n\n  // Remove known UI noise lines\n  const noiseLines = new Set([\n    'Follow', 'Boost', 'Post', 'All', 'Designer',\n    'Open in Bambu Studio', 'IP Report',\n    'TopMost LikesNewest FirstMost Replies', 'No more',\n    'Drag & drop, paste with Ctrl+v, or upload a file',\n    'Add Photo', '(0/1000)', '* * *', 'Maker\\'s Supply'\n  ]);\n\n  text = text.split('\\n')\n    .filter(line => {\n      const t = line.trim();\n      if (!t || t === '*') return false;\n      if (noiseLines.has(t)) return false;\n      // Remove printer model selector lines\n      if (/^(P1P|P1S|X1|X1 Carbon|X1E|A1|H2D|A1 mini|H2S|P2S|H2C|X2D|H2D Pro)$/.test(t)) return false;\n      // Remove lines that are just bare numbers (isolated stat values without labels)\n      if (/^\\d+$/.test(t)) return false;\n      return true;\n    })\n    .join('\\n');\n\n  return text.replace(/\\n{3,}/g, '\\n\\n').trim();\n}\n\nfunction extractStats(md) {\n  const s = {};\n  const timeMatch = md.match(/(\\d+\\.?\\d*)\\s*h\\b/);\n  if (timeMatch) s.printTime = timeMatch[1] + 'h';\n  const platesMatch = md.match(/(\\d+)\\s*plates?\\b/i);\n  if (platesMatch) s.plates = platesMatch[1];\n  const layerMatch = md.match(/(\\d+\\.?\\d*mm)\\s*layer/);\n  if (layerMatch) s.layerHeight = layerMatch[1];\n  const infillMatch = md.match(/(\\d+%)\\s*infill/);\n  if (infillMatch) s.infill = infillMatch[1];\n  const wallsMatch = md.match(/(\\d+)\\s*walls?/);\n  if (wallsMatch) s.walls = wallsMatch[1];\n  const dateMatch = md.match(/Released\\s+(\\d{4}-\\d{2}-\\d{2})/);\n  if (dateMatch) s.releaseDate = dateMatch[1];\n  const licenseMatch = md.match(/Creative Commons[^\\n]+/);\n  if (licenseMatch) s.license = licenseMatch[0].trim();\n  return s;\n}\n\nconst cleanedContent = extractProductInfo(markdown);\nconst stats = extractStats(markdown);\n\nlet productContext = `URL: ${sourceURL}\\nTITLE: ${title}\\nDESCRIPTION: ${description}\\n`;\nif (stats.releaseDate) productContext += `RELEASE DATE: ${stats.releaseDate}\\n`;\nif (stats.printTime) productContext += `PRINT TIME: ${stats.printTime}\\n`;\nif (stats.plates) productContext += `PLATES: ${stats.plates}\\n`;\nif (stats.layerHeight) productContext += `LAYER HEIGHT: ${stats.layerHeight}\\n`;\nif (stats.infill) productContext += `INFILL: ${stats.infill}\\n`;\nif (stats.walls) productContext += `WALLS: ${stats.walls}\\n`;\nif (stats.license) productContext += `LICENSE: ${stats.license}\\n`;\nproductContext += `\\nPAGE CONTENT (cleaned):\\n${cleanedContent.substring(0, 2500)}`;\n\nreturn [{ json: { productContext, imageUrl, sourceUrl: sourceURL } }];"
       },
       "id": "b5d9424f-f7da-41cb-b357-5c0dd2906ec8",
       "name": "Extract Product Context",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3,
-      "position": [
-        25504,
-        640
-      ]
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [25504, 640]
     },
     {
       "parameters": {
@@ -227,438 +179,54 @@
           },
           "matchingColumns": [],
           "schema": [
-            {
-              "id": "timestamp",
-              "displayName": "timestamp",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "input_url",
-              "displayName": "input_url",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "source_host",
-              "displayName": "source_host",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "score",
-              "displayName": "score",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "verdict",
-              "displayName": "verdict",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "title",
-              "displayName": "title",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "description",
-              "displayName": "description",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "author",
-              "displayName": "author",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "print_time_ai",
-              "displayName": "print_time_ai",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "material_ai",
-              "displayName": "material_ai",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "downloads",
-              "displayName": "downloads",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "likes",
-              "displayName": "likes",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "search_volume",
-              "displayName": "search_volume",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "search_trend",
-              "displayName": "search_trend",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "etsy_listings",
-              "displayName": "etsy_listings",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "etsy_avg_price",
-              "displayName": "etsy_avg_price",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "market_insight",
-              "displayName": "market_insight",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "sell_price",
-              "displayName": "sell_price",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "units_per_month",
-              "displayName": "units_per_month",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "gross_revenue",
-              "displayName": "gross_revenue",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "print_cost",
-              "displayName": "print_cost",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "etsy_fees",
-              "displayName": "etsy_fees",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "net_profit",
-              "displayName": "net_profit",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "manufacturing_verdict",
-              "displayName": "manufacturing_verdict",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "is_3d_optimal",
-              "displayName": "is_3d_optimal",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "printing_advantage",
-              "displayName": "printing_advantage",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "etsy_ban_risk",
-              "displayName": "etsy_ban_risk",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "etsy_ban_reason",
-              "displayName": "etsy_ban_reason",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "legal_risk",
-              "displayName": "legal_risk",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "legal_desc",
-              "displayName": "legal_desc",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "copyright_risk",
-              "displayName": "copyright_risk",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "copyright_desc",
-              "displayName": "copyright_desc",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "best_platform",
-              "displayName": "best_platform",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "category",
-              "displayName": "category",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "marketplace",
-              "displayName": "marketplace",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "price_range",
-              "displayName": "price_range",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "print_time_input",
-              "displayName": "print_time_input",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "material_input",
-              "displayName": "material_input",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "seller_goal",
-              "displayName": "seller_goal",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "printer_count",
-              "displayName": "printer_count",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "printer_type",
-              "displayName": "printer_type",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "experience",
-              "displayName": "experience",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "weekly_time",
-              "displayName": "weekly_time",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "active_markets",
-              "displayName": "active_markets",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "social_media",
-              "displayName": "social_media",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "sell_from",
-              "displayName": "sell_from",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "sell_to",
-              "displayName": "sell_to",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            },
-            {
-              "id": "legal_flags",
-              "displayName": "legal_flags",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true
-            }
+            { "id": "timestamp", "displayName": "timestamp", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "input_url", "displayName": "input_url", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "source_host", "displayName": "source_host", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "score", "displayName": "score", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "verdict", "displayName": "verdict", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "title", "displayName": "title", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "description", "displayName": "description", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "author", "displayName": "author", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "print_time_ai", "displayName": "print_time_ai", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "material_ai", "displayName": "material_ai", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "downloads", "displayName": "downloads", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "likes", "displayName": "likes", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "search_volume", "displayName": "search_volume", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "search_trend", "displayName": "search_trend", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "etsy_listings", "displayName": "etsy_listings", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "etsy_avg_price", "displayName": "etsy_avg_price", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "market_insight", "displayName": "market_insight", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "sell_price", "displayName": "sell_price", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "units_per_month", "displayName": "units_per_month", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "gross_revenue", "displayName": "gross_revenue", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "print_cost", "displayName": "print_cost", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "etsy_fees", "displayName": "etsy_fees", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "net_profit", "displayName": "net_profit", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "manufacturing_verdict", "displayName": "manufacturing_verdict", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "is_3d_optimal", "displayName": "is_3d_optimal", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "printing_advantage", "displayName": "printing_advantage", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "etsy_ban_risk", "displayName": "etsy_ban_risk", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "etsy_ban_reason", "displayName": "etsy_ban_reason", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "legal_risk", "displayName": "legal_risk", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "legal_desc", "displayName": "legal_desc", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "copyright_risk", "displayName": "copyright_risk", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "copyright_desc", "displayName": "copyright_desc", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "best_platform", "displayName": "best_platform", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "category", "displayName": "category", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "marketplace", "displayName": "marketplace", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "price_range", "displayName": "price_range", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "print_time_input", "displayName": "print_time_input", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "material_input", "displayName": "material_input", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "seller_goal", "displayName": "seller_goal", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "printer_count", "displayName": "printer_count", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "printer_type", "displayName": "printer_type", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "experience", "displayName": "experience", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "weekly_time", "displayName": "weekly_time", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "active_markets", "displayName": "active_markets", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "social_media", "displayName": "social_media", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "sell_from", "displayName": "sell_from", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "sell_to", "displayName": "sell_to", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true },
+            { "id": "legal_flags", "displayName": "legal_flags", "required": false, "defaultMatch": false, "display": true, "type": "string", "canBeUsedToMatch": true }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": false
@@ -669,10 +237,7 @@
       "name": "Log to Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4,
-      "position": [
-        26304,
-        736
-      ],
+      "position": [26304, 736],
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "sMwv0H2HObYlX0W7",
@@ -684,64 +249,22 @@
   "pinData": {},
   "connections": {
     "Webhook: Analysis Request": {
-      "main": [
-        [
-          {
-            "node": "/scrape",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "/scrape", "type": "main", "index": 0 }]]
     },
     "/scrape": {
-      "main": [
-        [
-          {
-            "node": "Extract Product Context",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Extract Product Context", "type": "main", "index": 0 }]]
     },
     "Extract Product Context": {
-      "main": [
-        [
-          {
-            "node": "Message a model",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Message a model", "type": "main", "index": 0 }]]
     },
     "Message a model": {
-      "main": [
-        [
-          {
-            "node": "Parse Claude Response",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[{ "node": "Parse Claude Response", "type": "main", "index": 0 }]]
     },
     "Parse Claude Response": {
-      "main": [
-        [
-          {
-            "node": "Respond: Analysis Complete1",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Log to Google Sheets",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
+      "main": [[
+        { "node": "Respond: Analysis Complete1", "type": "main", "index": 0 },
+        { "node": "Log to Google Sheets", "type": "main", "index": 0 }
+      ]]
     }
   },
   "active": true,

@@ -132,29 +132,12 @@
     },
     {
       "parameters": {
-        "fields": {
-          "values": [
-            {
-              "name": "productContext",
-              "stringValue": "=URL: {{ $json.data.metadata.sourceURL }}\nTITLE: {{ $json.data.metadata.title }}\nDESCRIPTION: {{ $json.data.metadata.description }}\n\n{{ ($json.data.markdown || '').substring(0, 4000) }}"
-            },
-            {
-              "name": "imageUrl",
-              "stringValue": "={{ $json.data.metadata.ogImage }}"
-            },
-            {
-              "name": "sourceUrl",
-              "stringValue": "={{ $json.data.metadata.sourceURL }}"
-            }
-          ]
-        },
-        "include": "none",
-        "options": {}
+        "jsCode": "const raw = $input.first().json;\nconst metadata = raw.data?.metadata || {};\nconst markdown = raw.data?.markdown || '';\n\nconst title = metadata.title || '';\nconst description = metadata.description || '';\nconst sourceURL = metadata.sourceURL || metadata.url || '';\nconst imageUrl = metadata.ogImage || '';\n\nfunction extractProductInfo(md) {\n  let text = md;\n\n  // Remove all inline image tags\n  text = text.replace(/!\\[[^\\]]*\\]\\([^)]+\\)/g, '');\n\n  // Cut off at Related Models section (pure noise for LLM)\n  const relatedIdx = text.indexOf('### Related Models');\n  if (relatedIdx !== -1) text = text.substring(0, relatedIdx);\n\n  // Cut off at Comment & Rating section\n  const commentIdx = text.indexOf('### Comment');\n  if (commentIdx !== -1) text = text.substring(0, commentIdx);\n\n  // Remove hyperlinks but preserve link text\n  text = text.replace(/\\[([^\\]]+)\\]\\([^)]+\\)/g, '$1');\n\n  // Remove known UI noise lines\n  const noiseLines = new Set([\n    'Follow', 'Boost', 'Post', 'All', 'Designer',\n    'Open in Bambu Studio', 'IP Report',\n    'TopMost LikesNewest FirstMost Replies', 'No more',\n    'Drag & drop, paste with Ctrl+v, or upload a file',\n    'Add Photo', '(0/1000)', '* * *', 'Maker\\'s Supply'\n  ]);\n\n  text = text.split('\\n')\n    .filter(line => {\n      const t = line.trim();\n      if (!t || t === '*') return false;\n      if (noiseLines.has(t)) return false;\n      // Remove printer model selector lines\n      if (/^(P1P|P1S|X1|X1 Carbon|X1E|A1|H2D|A1 mini|H2S|P2S|H2C|X2D|H2D Pro)$/.test(t)) return false;\n      // Remove lines that are just bare numbers (isolated stat values without labels)\n      if (/^\\d+$/.test(t)) return false;\n      return true;\n    })\n    .join('\\n');\n\n  return text.replace(/\\n{3,}/g, '\\n\\n').trim();\n}\n\nfunction extractStats(md) {\n  const s = {};\n  const timeMatch = md.match(/(\\d+\\.?\\d*)\\s*h\\b/);\n  if (timeMatch) s.printTime = timeMatch[1] + 'h';\n  const platesMatch = md.match(/(\\d+)\\s*plates?\\b/i);\n  if (platesMatch) s.plates = platesMatch[1];\n  const layerMatch = md.match(/(\\d+\\.?\\d*mm)\\s*layer/);\n  if (layerMatch) s.layerHeight = layerMatch[1];\n  const infillMatch = md.match(/(\\d+%)\\s*infill/);\n  if (infillMatch) s.infill = infillMatch[1];\n  const wallsMatch = md.match(/(\\d+)\\s*walls?/);\n  if (wallsMatch) s.walls = wallsMatch[1];\n  const dateMatch = md.match(/Released\\s+(\\d{4}-\\d{2}-\\d{2})/);\n  if (dateMatch) s.releaseDate = dateMatch[1];\n  // MakerWorld license line\n  const licenseMatch = md.match(/Creative Commons[^\\n]+/);\n  if (licenseMatch) s.license = licenseMatch[0].trim();\n  return s;\n}\n\nconst cleanedContent = extractProductInfo(markdown);\nconst stats = extractStats(markdown);\n\nlet productContext = `URL: ${sourceURL}\\nTITLE: ${title}\\nDESCRIPTION: ${description}\\n`;\nif (stats.releaseDate) productContext += `RELEASE DATE: ${stats.releaseDate}\\n`;\nif (stats.printTime) productContext += `PRINT TIME: ${stats.printTime}\\n`;\nif (stats.plates) productContext += `PLATES: ${stats.plates}\\n`;\nif (stats.layerHeight) productContext += `LAYER HEIGHT: ${stats.layerHeight}\\n`;\nif (stats.infill) productContext += `INFILL: ${stats.infill}\\n`;\nif (stats.walls) productContext += `WALLS: ${stats.walls}\\n`;\nif (stats.license) productContext += `LICENSE: ${stats.license}\\n`;\nproductContext += `\\nPAGE CONTENT (cleaned):\\n${cleanedContent.substring(0, 2500)}`;\n\nreturn [{ json: { productContext, imageUrl, sourceUrl: sourceURL } }];"
       },
       "id": "b5d9424f-f7da-41cb-b357-5c0dd2906ec8",
       "name": "Extract Product Context",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 3,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         25504,
         640

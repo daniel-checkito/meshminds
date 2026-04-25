@@ -713,7 +713,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="sc" id="mc2"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div class="sc-lbl">Top seller</div></div><div class="sc-val" id="msv2"></div><div class="sc-sub up" id="msub2"></div></div>
           <div class="sc" id="mc3"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="sc-lbl">Print time</div></div><div class="sc-val" id="msv3"></div><div class="sc-sub up" id="msub3"></div></div>
         </div>
-        <div class="ins" id="ins" style="margin-bottom:12px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
+        <div class="ins" id="ins" style="margin-bottom:6px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
+        <div id="etsy-query-row" style="display:none;font-size:10.5px;color:var(--ink3);margin-bottom:12px;padding-left:2px">Etsy searched for: <span id="etsy-query-kw" style="font-weight:700;color:var(--ink2)"></span></div>
 
         <!-- Manufacturing Verdict -->
         <div id="mfg-section" style="display:none;margin-bottom:16px">
@@ -1210,6 +1211,7 @@ function populate(data){
   ["mc0","mc1","mc2","mc3"].forEach(function(id){var el=q(id);if(el)el.classList.add("show");});
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
+  if(data._etsyKeyword&&q("etsy-query-kw")){q("etsy-query-kw").textContent='"'+data._etsyKeyword+'"';q("etsy-query-row").style.display="";};
 
   /* Manufacturing verdict */
   var mfg=obj(data.manufacturing);

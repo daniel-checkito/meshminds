@@ -1128,7 +1128,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
           </div>
         </div>
-        <div class="ins show" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
+        <div class="ins" id="ck-ins"><div class="ins-dot"></div><span id="ck-ins-text"></span></div>
         <div id="cert-section"></div>
       </div>
 
@@ -1826,7 +1826,7 @@ function populateCopyright(c){
   if(q("ck-legal-desc"))q("ck-legal-desc").textContent=c.legalDesc||"No legal restrictions found.";
   if(q("ck-copy-risk")){q("ck-copy-risk").className="cp-risk "+riskClass(copy);q("ck-copy-risk").textContent=copy.toUpperCase();}
   if(q("ck-copy-desc"))q("ck-copy-desc").textContent=c.copyrightDesc||"No copyright or IP concerns detected.";
-  if(q("ck-ins-text"))q("ck-ins-text").innerHTML=c.insight||"";
+  if(q("ck-ins-text")){q("ck-ins-text").innerHTML=c.insight||"";if(q("ck-ins"))q("ck-ins").classList.toggle("show",!!(c.insight));}
   var anyHigh=etsy==="high"||legal==="high"||copy==="high";
   var anyMed=etsy==="medium"||legal==="medium"||copy==="medium";
   var banner=q("cp-status");

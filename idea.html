@@ -444,7 +444,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div id="url-error" style="display:none;font-size:12px;color:var(--bad);margin-top:-4px;margin-bottom:6px;padding:0 4px"></div>
     </div>
     <div class="vbar" id="vbar" style="display:none">
-      <div class="ring-wrap"><canvas id="ring" width="44" height="44"></canvas><div class="ring-n" id="rn" style="color:var(--ink3)">-</div></div>
       <div class="vr">
         <div class="ve" id="ve">Ready to scan</div>
         <div class="vt" id="vt">Paste a link above</div>
@@ -897,12 +896,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Product insight note -->
-        <div class="res-note" id="res-note" style="display:none">
-          <span class="res-note-ico">💡</span>
-          <span class="res-note-txt" id="res-note-txt"></span>
-        </div>
-
         <!-- Verdict card -->
         <div class="verdict-card" id="verdict-card">
           <div class="verdict-header">
@@ -913,10 +906,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
                 <span id="verdict-text">Analyzing</span>
               </div>
             </div>
-            <div class="verdict-score-wrap">
-              <div class="verdict-score" id="verdict-score">-</div>
-              <div class="verdict-score-max">/ 100</div>
-            </div>
+            <div class="ring-wrap" style="width:56px;height:56px;flex-shrink:0"><canvas id="ring" width="44" height="44" style="width:56px;height:56px;display:block"></canvas><div class="ring-n" id="rn" style="color:var(--ink3);font-size:13px">-</div></div>
           </div>
           <div class="score-bars">
             <div class="score-bar-row">
@@ -940,6 +930,12 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <span class="score-bar-val" id="val-legal">-</span>
             </div>
           </div>
+        </div>
+
+        <!-- Product insight note -->
+        <div class="res-note" id="res-note" style="display:none">
+          <span class="res-note-ico">💡</span>
+          <span class="res-note-txt" id="res-note-txt"></span>
         </div>
 
         <!-- Why it's worth it -->
@@ -1856,7 +1852,7 @@ function runAnalysis(){
     if(waitingForAnalysis){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
-        step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+        step=5;dots(5);slide(5);showFooter(true);
         setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
       });
     } else if(step===5)setBtn2("How to sell it →","",false);
@@ -2112,7 +2108,7 @@ q("btn-email").addEventListener("click",function(){
   }).catch(function(){});
   if(analysisComplete){
     /* Analysis already done — skip loading overlay, go straight to results */
-    step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
+    step=5;dots(5);slide(5);showFooter(true);
     setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
   } else {
     if(q("gate-content"))q("gate-content").style.display="none";
@@ -2126,9 +2122,9 @@ q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
-  if(step===5){step=6;dots(6);slide(6);q("vbar").style.display="none";setBtn2("Check legal status →","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
-  if(step===6){step=7;dots(7);slide(7);q("vbar").style.display="none";setBtn2("See winners & STL library","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);q("vbar").style.display="none";setBtn2("Check another print","dark",false);showBack(false);return;}
+  if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status →","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("See winners & STL library","",false);showBack(true);return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(false);return;}
   else{reset();}
 });
 
@@ -2136,7 +2132,7 @@ q("btn-back").addEventListener("click",function(){
   if(busy)return;
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
-  if(step===6){step=5;dots(5);slide(5);q("vbar").style.display="";setBtn2("How to sell it →","",false);showBack(false);return;}
+  if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it →","",false);showBack(false);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status →","",false);showBack(true);return;}
   if(step===8){step=7;dots(7);slide(7);setBtn2("See winners & STL library","",false);showBack(true);return;}
 });

@@ -794,8 +794,10 @@
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={{ JSON.stringify({ error: $json.code === 'cooldown' ? 'Please wait ' + ($json.wait || 10) + ' second' + (($json.wait || 10) === 1 ? '' : 's') + ' before your next check.' : 'Daily limit reached. Please try again tomorrow.' }) }}",
-        "options": {}
+        "responseBody": "={{ $json.code === 'cooldown' ? { error: 'Please wait ' + ($json.wait || 10) + ' second' + (($json.wait || 10) === 1 ? '' : 's') + ' before your next check.' } : { error: 'Daily limit reached. Please try again tomorrow.' } }}",
+        "options": {
+          "responseCode": 429
+        }
       },
       "id": "bb444482-f005-47bc-aa94-2050da63f572",
       "name": "Respond: Rate Limited",

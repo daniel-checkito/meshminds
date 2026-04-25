@@ -1837,7 +1837,7 @@ function runAnalysis(){
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,material:qMaterial,sellerGoal:qSellerGoal,printerCount:qPrinterCount,printerType:qPrinterType,experience:qExp,weeklyTime:qWeeklyTime,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   var fetchAbort=new AbortController();
-  var fetchTimeout=setTimeout(function(){fetchAbort.abort();},30000);
+  var fetchTimeout=setTimeout(function(){fetchAbort.abort();},75000);
   fetch("https://meshminds.app.n8n.cloud/webhook/idea",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -1870,7 +1870,7 @@ function runAnalysis(){
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
-    if(err&&err.name==="AbortError")msg="Request timed out (30 s) – the server may be busy, please try again.";
+    if(err&&err.name==="AbortError")msg="Request timed out – the server may be busy, please try again.";
     else if(err&&err.message){
       var m=err.message;
       if(m.indexOf("please wait")>=0||m.indexOf("daily limit")>=0||m.indexOf("rate limit")>=0)msg=m.replace(/^HTTP \d+[:\s]*/,"");

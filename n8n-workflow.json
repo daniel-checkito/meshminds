@@ -106,10 +106,9 @@
           "options": {
             "formats": {
               "format": [
-                {}
+                "markdown"
               ]
             },
-            "headers": {},
             "waitFor": 2000
           }
         },

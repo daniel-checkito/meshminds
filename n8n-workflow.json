@@ -181,32 +181,54 @@
           "mappingMode": "defineBelow",
           "value": {
             "timestamp": "={{ new Date().toISOString() }}",
-            "input_url": "={{ $('Webhook: Analysis Request').item.json.body.url || $('Webhook: Analysis Request').item.json.body.description || '' }}",
+            "input_type": "={ $('Webhook: Analysis Request').item.json.body.scrapeOnly ? 'scrape_only' : ($('Webhook: Analysis Request').item.json.body.url ? 'url' : 'idea') }",
+            "input_url": "={ $('Webhook: Analysis Request').item.json.body.url || $('Webhook: Analysis Request').item.json.body.description || '' }",
+            "source_host": "={{ ($json.product || {}).sourceHost || '' }}",
             "score": "={{ $json.score }}",
             "verdict": "={{ $json.verdict }}",
             "title": "={{ ($json.product || {}).title || '' }}",
-            "sell_price": "={{ ($json.revenue || {}).sellPrice || '' }}",
-            "net_profit": "={{ ($json.revenue || {}).netProfit || '' }}",
-            "etsy_ban_risk": "={{ ($json.copyright || {}).etsyBanRisk || '' }}",
-            "copyright_risk": "={{ ($json.copyright || {}).copyrightRisk || '' }}",
+            "description": "={{ ($json.product || {}).description || '' }}",
+            "author": "={{ ($json.product || {}).author || '' }}",
+            "print_time_ai": "={{ ($json.product || {}).printTime || '' }}",
+            "material_ai": "={{ ($json.product || {}).material || '' }}",
+            "downloads": "={{ ($json.product || {}).downloads || '' }}",
+            "likes": "={{ ($json.product || {}).likes || '' }}",
+            "search_volume": "={{ ($json.market || {}).searchVolume || '' }}",
+            "search_trend": "={{ ($json.market || {}).searchTrend || '' }}",
+            "etsy_listings": "={{ ($json.market || {}).etsyListings || '' }}",
+            "etsy_avg_price": "={{ ($json.market || {}).etsyAvgPrice || '' }}",
             "market_insight": "={{ ($json.market || {}).insight || '' }}",
+            "sell_price": "={{ ($json.revenue || {}).sellPrice || '' }}",
+            "units_per_month": "={{ ($json.revenue || {}).unitsPerMonth || '' }}",
+            "gross_revenue": "={{ ($json.revenue || {}).grossRevenue || '' }}",
+            "print_cost": "={{ ($json.revenue || {}).printCost || '' }}",
+            "etsy_fees": "={{ ($json.revenue || {}).etsyFees || '' }}",
+            "net_profit": "={{ ($json.revenue || {}).netProfit || '' }}",
             "manufacturing_verdict": "={{ ($json.manufacturing || {}).verdict || '' }}",
+            "is_3d_optimal": "={{ ($json.manufacturing || {}).is3DPrintingOptimal ?? '' }}",
+            "printing_advantage": "={{ ($json.manufacturing || {}).printingAdvantage || '' }}",
+            "etsy_ban_risk": "={{ ($json.copyright || {}).etsyBanRisk || '' }}",
+            "etsy_ban_reason": "={{ ($json.copyright || {}).etsyBanReason || '' }}",
+            "legal_risk": "={{ ($json.copyright || {}).legalRisk || '' }}",
+            "legal_desc": "={{ ($json.copyright || {}).legalDesc || '' }}",
+            "copyright_risk": "={{ ($json.copyright || {}).copyrightRisk || '' }}",
+            "copyright_desc": "={{ ($json.copyright || {}).copyrightDesc || '' }}",
             "best_platform": "={{ ($json.strategy || {}).bestPlatform || '' }}",
-            "category": "={{ $('Webhook: Analysis Request').item.json.body.category || '' }}",
-            "material": "={{ $('Webhook: Analysis Request').item.json.body.material || '' }}",
-            "price_range": "={{ $('Webhook: Analysis Request').item.json.body.priceRange || '' }}",
-            "print_time": "={{ $('Webhook: Analysis Request').item.json.body.printTime || '' }}",
-            "marketplace": "={{ $('Webhook: Analysis Request').item.json.body.marketplace || '' }}",
-            "seller_goal": "={{ $('Webhook: Analysis Request').item.json.body.sellerGoal || '' }}",
-            "printer_count": "={{ $('Webhook: Analysis Request').item.json.body.printerCount || '' }}",
-            "printer_type": "={{ $('Webhook: Analysis Request').item.json.body.printerType || '' }}",
-            "experience": "={{ $('Webhook: Analysis Request').item.json.body.experience || '' }}",
-            "weekly_time": "={{ $('Webhook: Analysis Request').item.json.body.weeklyTime || '' }}",
-            "active_markets": "={{ Array.isArray($('Webhook: Analysis Request').item.json.body.activeMarkets) ? $('Webhook: Analysis Request').item.json.body.activeMarkets.join(', ') : ($('Webhook: Analysis Request').item.json.body.activeMarkets || '') }}",
-            "social_media": "={{ Array.isArray($('Webhook: Analysis Request').item.json.body.socialMedia) ? $('Webhook: Analysis Request').item.json.body.socialMedia.join(', ') : ($('Webhook: Analysis Request').item.json.body.socialMedia || '') }}",
-            "sell_from": "={{ $('Webhook: Analysis Request').item.json.body.sellFrom || '' }}",
-            "sell_to": "={{ $('Webhook: Analysis Request').item.json.body.sellTo || '' }}",
-            "legal_flags": "={{ Array.isArray($('Webhook: Analysis Request').item.json.body.legalFlags) ? $('Webhook: Analysis Request').item.json.body.legalFlags.join(', ') : ($('Webhook: Analysis Request').item.json.body.legalFlags || '') }}"
+            "category": "={ $('Webhook: Analysis Request').item.json.body.category || '' }",
+            "marketplace": "={ $('Webhook: Analysis Request').item.json.body.marketplace || '' }",
+            "price_range": "={ $('Webhook: Analysis Request').item.json.body.priceRange || '' }",
+            "print_time_input": "={ $('Webhook: Analysis Request').item.json.body.printTime || '' }",
+            "material_input": "={ $('Webhook: Analysis Request').item.json.body.material || '' }",
+            "seller_goal": "={ $('Webhook: Analysis Request').item.json.body.sellerGoal || '' }",
+            "printer_count": "={ $('Webhook: Analysis Request').item.json.body.printerCount || '' }",
+            "printer_type": "={ $('Webhook: Analysis Request').item.json.body.printerType || '' }",
+            "experience": "={ $('Webhook: Analysis Request').item.json.body.experience || '' }",
+            "weekly_time": "={ $('Webhook: Analysis Request').item.json.body.weeklyTime || '' }",
+            "active_markets": "={ Array.isArray($('Webhook: Analysis Request').item.json.body.activeMarkets) ? $('Webhook: Analysis Request').item.json.body.activeMarkets.join(', ') : ($('Webhook: Analysis Request').item.json.body.activeMarkets || '') }",
+            "social_media": "={ Array.isArray($('Webhook: Analysis Request').item.json.body.socialMedia) ? $('Webhook: Analysis Request').item.json.body.socialMedia.join(', ') : ($('Webhook: Analysis Request').item.json.body.socialMedia || '') }",
+            "sell_from": "={ $('Webhook: Analysis Request').item.json.body.sellFrom || '' }",
+            "sell_to": "={ $('Webhook: Analysis Request').item.json.body.sellTo || '' }",
+            "legal_flags": "={ Array.isArray($('Webhook: Analysis Request').item.json.body.legalFlags) ? $('Webhook: Analysis Request').item.json.body.legalFlags.join(', ') : ($('Webhook: Analysis Request').item.json.body.legalFlags || '') }"
           },
           "matchingColumns": [],
           "schema": [
@@ -220,8 +242,26 @@
               "canBeUsedToMatch": true
             },
             {
+              "id": "input_type",
+              "displayName": "input_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
               "id": "input_url",
               "displayName": "input_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "source_host",
+              "displayName": "source_host",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -256,8 +296,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "sell_price",
-              "displayName": "sell_price",
+              "id": "description",
+              "displayName": "description",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -265,8 +305,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "net_profit",
-              "displayName": "net_profit",
+              "id": "author",
+              "displayName": "author",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -274,8 +314,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "etsy_ban_risk",
-              "displayName": "etsy_ban_risk",
+              "id": "print_time_ai",
+              "displayName": "print_time_ai",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -283,8 +323,62 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "copyright_risk",
-              "displayName": "copyright_risk",
+              "id": "material_ai",
+              "displayName": "material_ai",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "downloads",
+              "displayName": "downloads",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "likes",
+              "displayName": "likes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "search_volume",
+              "displayName": "search_volume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "search_trend",
+              "displayName": "search_trend",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_listings",
+              "displayName": "etsy_listings",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_avg_price",
+              "displayName": "etsy_avg_price",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -301,8 +395,134 @@
               "canBeUsedToMatch": true
             },
             {
+              "id": "sell_price",
+              "displayName": "sell_price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "units_per_month",
+              "displayName": "units_per_month",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "gross_revenue",
+              "displayName": "gross_revenue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "print_cost",
+              "displayName": "print_cost",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_fees",
+              "displayName": "etsy_fees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "net_profit",
+              "displayName": "net_profit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
               "id": "manufacturing_verdict",
               "displayName": "manufacturing_verdict",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "is_3d_optimal",
+              "displayName": "is_3d_optimal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "printing_advantage",
+              "displayName": "printing_advantage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_ban_risk",
+              "displayName": "etsy_ban_risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "etsy_ban_reason",
+              "displayName": "etsy_ban_reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "legal_risk",
+              "displayName": "legal_risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "legal_desc",
+              "displayName": "legal_desc",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "copyright_risk",
+              "displayName": "copyright_risk",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "copyright_desc",
+              "displayName": "copyright_desc",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -328,8 +548,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "material",
-              "displayName": "material",
+              "id": "marketplace",
+              "displayName": "marketplace",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -346,8 +566,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "print_time",
-              "displayName": "print_time",
+              "id": "print_time_input",
+              "displayName": "print_time_input",
               "required": false,
               "defaultMatch": false,
               "display": true,
@@ -355,8 +575,8 @@
               "canBeUsedToMatch": true
             },
             {
-              "id": "marketplace",
-              "displayName": "marketplace",
+              "id": "material_input",
+              "displayName": "material_input",
               "required": false,
               "defaultMatch": false,
               "display": true,

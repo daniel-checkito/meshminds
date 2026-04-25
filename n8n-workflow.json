@@ -684,7 +684,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const ctx = $json.productContext || '';\nconst titleLine = ctx.match(/^TITLE:\\s*(.+)$/m);\nconst title = titleLine ? titleLine[1].trim() : '';\nconst fallback = ctx.split('\n')\n  .find(l => l.trim() && !l.startsWith('URL:') && !l.startsWith('TITLE:') && !l.startsWith('DESCRIPTION:') && !l.startsWith('#')) || '';\nconst raw = (title || fallback).replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim();\nconst keyword = raw.substring(0, 60);\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: $json.productContext,\n  imageUrl: $json.imageUrl,\n  sourceUrl: $json.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
+        "jsCode": "const ctx = $json.productContext || '';\nconst titleLine = ctx.match(/^TITLE:\\s*(.+)$/m);\nconst rawTitle = titleLine ? titleLine[1].trim() : '';\n\n// Strip site suffixes and generic 3D-print terms from the title\nconst cleaned = rawTitle\n  .replace(/[\\|\\-\u2013\u2014]\\s*(Free\\s+)?(3D\\s+)?(Print(ing)?|Model|File|STL|Design)\\b.*$/i, '')\n  .replace(/[\\|\\-\u2013\u2014].*?(MakerWorld|Printables|Cults3?D|Thingiverse|CGTrader)\\b.*$/i, '')\n  .replace(/\\s+by\\s+\\w.*$/i, '')\n  .trim();\n\nconst keyword = (cleaned || rawTitle).replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\n\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: $json.productContext,\n  imageUrl: $json.imageUrl,\n  sourceUrl: $json.sourceUrl,\n  etsyKeyword: keyword\n})) }];"
       },
       "id": "cb517149-75fc-4699-8aab-d058295fd52f",
       "name": "Extract Keyword",

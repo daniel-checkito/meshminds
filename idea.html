@@ -1372,10 +1372,6 @@ function analyze(){
   lastIsURL=true;
   lastProductContext=null;
   lastImageUrl=null;
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea",{method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,body:JSON.stringify({url:lastURL,scrapeOnly:true})})
-  .then(function(r){return r.ok?r.json():null;})
-  .then(function(d){if(d&&d.productContext){lastProductContext=d.productContext;lastImageUrl=d.imageUrl||null;}})
-  .catch(function(){});
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
@@ -1446,13 +1442,17 @@ function runAnalysis(){
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
-    if(err&&err.name==="AbortError")msg="Analysis timed out (30 s) – the server is busy, please try again.";
+    if(err&&err.name==="AbortError")msg="Request timed out (30 s) – the server may be busy, please try again.";
     else if(err&&err.message){
-      if(/^HTTP 5/.test(err.message))msg="Service error – please try again in a moment.";
-      else if(err.message.indexOf("HTTP 429")>=0||err.message.toLowerCase().indexOf("too many")>=0||err.message.toLowerCase().indexOf("daily limit")>=0||err.message.toLowerCase().indexOf("please wait")>=0)msg=err.message.replace(/^HTTP 429[:\s]*/,"");
-      else if(/^HTTP 4/.test(err.message))msg="Request rejected – please check your link and try again.";
-      else if(err.message==="Failed to fetch"||err.message.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
-      else msg=err.message;
+      var m=err.message;
+      if(m.indexOf("please wait")>=0||m.indexOf("daily limit")>=0||m.indexOf("rate limit")>=0)msg=m.replace(/^HTTP \d+[:\s]*/,"");
+      else if(m.indexOf("scrape_failed")>=0||m.indexOf("Could not scrape")>=0)msg="Couldn't scrape that URL – make sure it's a direct product page link and try again.";
+      else if(m.indexOf("analysis_failed")>=0||m.indexOf("AI analysis")>=0)msg="AI analysis failed – please try again in a moment.";
+      else if(/^HTTP 502/.test(m))msg="Couldn't scrape that URL – make sure it's a direct product page link and try again.";
+      else if(/^HTTP 5/.test(m))msg="AI analysis failed – please try again in a moment.";
+      else if(/^HTTP 4/.test(m))msg="Request rejected – please check your link and try again.";
+      else if(m==="Failed to fetch"||m.indexOf("NetworkError")>=0)msg="Could not reach the server – check your connection and try again.";
+      else msg=m;
     }
     waitingForAnalysis=false;
     if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}

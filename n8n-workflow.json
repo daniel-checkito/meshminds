@@ -54,8 +54,8 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const raw = $json;\nconst stopReason = raw.stop_reason;\nconst text = (raw.content?.[0]?.text || '').trim();\n\nif (!text) throw new Error('Empty response from Claude');\n\nif (stopReason === 'max_tokens') {\n  throw new Error('Claude hit the token limit \u2014 response was truncated. Increase maxTokensToSample. Response ends with: ...' + text.slice(-120));\n}\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  const truncated = !clean.trimEnd().endsWith('}');\n  if (truncated) throw new Error('Response appears truncated (no closing brace). Last 120 chars: ...' + clean.slice(-120));\n  throw new Error('No JSON object found. Preview: ' + text.substring(0, 300));\n}\n\nconst jsonStr = clean.slice(start, end + 1);\n\n// Attempt 1: raw parse\ntry {\n  const parsed = JSON.parse(jsonStr);\n  parsed._etsyKeyword = String($('Merge Etsy Data').item.json.etsyKeyword || '');\n  return { json: JSON.parse(JSON.stringify(parsed)) };\n} catch (_) {}\n\n// Attempt 2: strip // comment lines and trailing commas, then re-parse\ntry {\n  const fixed = jsonStr\n    .replace(/^\\s*\\/\\/.*$/gm, '')\n    .replace(/,(\\s*[}\\]])/g, '$1');\n  const parsed2 = JSON.parse(fixed);\n  parsed2._etsyKeyword = String($('Merge Etsy Data').item.json.etsyKeyword || '');\n  return { json: JSON.parse(JSON.stringify(parsed2)) };\n} catch (e2) {\n  throw new Error('Parse failed after cleanup: ' + e2.message + '. Last 300 chars: ...' + jsonStr.slice(-300));\n}"
+        "mode": "runOnceForAllItems",
+        "jsCode": "const raw = $input.first().json;\nconst stopReason = raw.stop_reason;\nconst text = (raw.content?.[0]?.text || '').trim();\n\nif (!text) throw new Error('Empty response from Claude');\n\nif (stopReason === 'max_tokens') {\n  throw new Error('Claude hit the token limit \u2014 response was truncated. Increase maxTokensToSample. Response ends with: ...' + text.slice(-120));\n}\n\nconst fenceMatch = text.match(/```(?:json)?\\s*([\\s\\S]*?)```/);\nconst clean = fenceMatch ? fenceMatch[1].trim() : text;\nconst start = clean.indexOf('{');\nconst end = clean.lastIndexOf('}');\n\nif (start === -1 || end <= start) {\n  const truncated = !clean.trimEnd().endsWith('}');\n  if (truncated) throw new Error('Response appears truncated (no closing brace). Last 120 chars: ...' + clean.slice(-120));\n  throw new Error('No JSON object found. Preview: ' + text.substring(0, 300));\n}\n\nconst jsonStr = clean.slice(start, end + 1);\n\n// Attempt 1: raw parse\ntry {\n  const parsed = JSON.parse(jsonStr);\n  parsed._etsyKeyword = String($('Merge Etsy Data').first().json.etsyKeyword || '');\n  return { json: JSON.parse(JSON.stringify(parsed)) };\n} catch (_) {}\n\n// Attempt 2: strip // comment lines and trailing commas, then re-parse\ntry {\n  const fixed = jsonStr\n    .replace(/^\\s*\\/\\/.*$/gm, '')\n    .replace(/,(\\s*[}\\]])/g, '$1');\n  const parsed2 = JSON.parse(fixed);\n  parsed2._etsyKeyword = String($('Merge Etsy Data').first().json.etsyKeyword || '');\n  return { json: JSON.parse(JSON.stringify(parsed2)) };\n} catch (e2) {\n  throw new Error('Parse failed after cleanup: ' + e2.message + '. Last 300 chars: ...' + jsonStr.slice(-300));\n}"
       },
       "id": "93e94c1c-a401-433f-817d-4d216ff7451a",
       "name": "Parse Claude Response",
@@ -717,8 +717,8 @@
     },
     {
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const etsyMarkdown = ($json.data && $json.data.markdown) ? $json.data.markdown.substring(0, 3000) : '';\nconst upstream = JSON.parse(JSON.stringify($('Extract Product Context').item.json));\nconst kw = JSON.parse(JSON.stringify($('Build Etsy Query').item.json));\nreturn [{ json: JSON.parse(JSON.stringify({\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: kw.etsyKeyword || '',\n  etsySearchData: etsyMarkdown\n})) }];"
+        "mode": "runOnceForAllItems",
+        "jsCode": "const item = $input.first().json;\nconst etsyMarkdown = (item.data && item.data.markdown) ? item.data.markdown.substring(0, 3000) : '';\nconst upstream = $('Extract Product Context').first().json;\nconst kw = $('Build Etsy Query').first().json;\nreturn [{ json: {\n  productContext: upstream.productContext || '',\n  imageUrl: upstream.imageUrl || '',\n  sourceUrl: upstream.sourceUrl || '',\n  etsyKeyword: kw.etsyKeyword || '',\n  etsySearchData: etsyMarkdown\n} }];"
       },
       "id": "b9af529a-3454-4118-aa2b-8d6295450b8e",
       "name": "Merge Etsy Data",
@@ -773,8 +773,8 @@
         2448
       ],
       "parameters": {
-        "mode": "runOnceForEachItem",
-        "jsCode": "const keyword = String($json.content?.[0]?.text || '').replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nreturn [{ json: JSON.parse(JSON.stringify({ etsyKeyword: keyword })) }];"
+        "mode": "runOnceForAllItems",
+        "jsCode": "const text = $input.first().json.content?.[0]?.text || '';\nconst keyword = text.replace(/[^\\w\\s\\-]/g, ' ').replace(/\\s+/g, ' ').trim().substring(0, 60);\nreturn [{ json: { etsyKeyword: keyword } }];"
       }
     }
   ],

@@ -216,7 +216,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 /* STEP 4 - Copyright */
 .sel-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
 .sel-lbl{font-size:11.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.07em;font-family:"DM Mono",sans-serif;margin-bottom:5px}
-.sel-inp{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 12px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fafafa;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;cursor:pointer;min-height:46px}
+.sel-inp{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:16px 14px;font-size:16px;font-family:"DM Sans",sans-serif;color:var(--ink2);background:#fafafa;outline:none;transition:border-color .2s;appearance:none;-webkit-appearance:none;cursor:pointer;min-height:56px}
 .sel-inp:focus{border-color:var(--acc)}
 .risk-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:9.5px;font-weight:700;font-family:"DM Mono",sans-serif;letter-spacing:.04em}
 .risk-low{background:#dcfce7;color:#15803d}.risk-medium{background:#fef9c3;color:#b45309}.risk-high{background:#fee2e2;color:#b91c1c}
@@ -608,95 +608,95 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- STEP 2: About you + Selling -->
       <div class="panel">
         <div class="q-step-eyebrow">Step 2 of 2</div>
-        <div class="q-step-title">About you &amp;<br>how you'll sell</div>
-        <div class="q-step-sub">Tell us a bit about yourself and where you plan to sell — this shapes your revenue estimate.</div>
+        <div class="q-step-title">Now about you</div>
+        <div class="q-step-sub">Helps us tailor the strategy and profit estimate to your setup.</div>
 
         <div class="q-block">
-          <div class="q-lbl">Experience level</div>
+          <div class="q-sec-title">What are you trying to do?</div>
+          <div class="q-sec-sub">This shapes the whole strategy — pricing, platform, and how we frame the results.</div>
+          <div class="chips chips-list" id="q-goal">
+            <button class="chip chip-list" data-v="testing">
+              <span class="chip-ico">🔍</span>
+              <span class="chip-content">
+                <span class="chip-name">Just checking if it sells</span>
+                <span class="chip-desc">I want to know before I waste filament on something nobody wants.</span>
+              </span>
+            </button>
+            <button class="chip chip-list" data-v="side-hustle">
+              <span class="chip-ico">💰</span>
+              <span class="chip-content">
+                <span class="chip-name">Side income (€200–€1k/mo)</span>
+                <span class="chip-desc">I want to make real money without going full-time.</span>
+              </span>
+            </button>
+            <button class="chip chip-list" data-v="business">
+              <span class="chip-ico">🚀</span>
+              <span class="chip-content">
+                <span class="chip-name">Building a real business</span>
+                <span class="chip-desc">I'm serious about scaling this into a reliable income stream.</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <div class="q-sec-title">Selling experience?</div>
+          <div class="q-sec-sub">Calibrates how detailed and technical the advice gets.</div>
           <div class="chips g2" id="q-exp">
-            <button class="chip" data-v="new">🌱 Never sold online</button>
-            <button class="chip" data-v="some">👣 Sold a few things</button>
-            <button class="chip" data-v="active">🛒 Regular seller</button>
-            <button class="chip" data-v="pro">⭐ Full-time seller</button>
+            <button class="chip chip-card" data-v="new">
+              <span class="chip-ico">🌱</span>
+              <span class="chip-name">First time</span>
+              <span class="chip-desc">Never sold online</span>
+            </button>
+            <button class="chip chip-card" data-v="some">
+              <span class="chip-ico">👣</span>
+              <span class="chip-name">Some experience</span>
+              <span class="chip-desc">A few orders here and there</span>
+            </button>
+            <button class="chip chip-card" data-v="active">
+              <span class="chip-ico">🛒</span>
+              <span class="chip-name">Active seller</span>
+              <span class="chip-desc">Regular orders, know the ropes</span>
+            </button>
+            <button class="chip chip-card" data-v="pro">
+              <span class="chip-ico">⭐</span>
+              <span class="chip-name">Full-time</span>
+              <span class="chip-desc">This is my main income</span>
+            </button>
           </div>
         </div>
 
         <div class="q-block">
-          <div class="q-lbl">Selling ambition</div>
-          <div class="chips g2" id="q-goal">
-            <button class="chip" data-v="testing">🧪 Just exploring</button>
-            <button class="chip" data-v="side-hustle">💰 Side income</button>
-            <button class="chip" data-v="business">🚀 Build a business</button>
-            <button class="chip" data-v="scaling">📈 Grow what's working</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Printers</div>
-          <div class="chips g2" id="q-printers">
-            <button class="chip" data-v="1">1 printer</button>
-            <button class="chip" data-v="2-3">2–3 printers</button>
-            <button class="chip" data-v="4-9">4–9 printers</button>
-            <button class="chip" data-v="10+">10+ printers</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Printer type</div>
-          <div class="chips g2" id="q-printer-type">
-            <button class="chip" data-v="fdm">⚙️ FDM (filament)</button>
-            <button class="chip" data-v="resin">💧 Resin (SLA/DLP)</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Time per week</div>
-          <div class="chips g2" id="q-weekly-time">
-            <button class="chip" data-v="<5h">Under 5h</button>
-            <button class="chip" data-v="5-15h">5–15h</button>
-            <button class="chip" data-v="15h+">15h+</button>
-            <button class="chip" data-v="fulltime">Full time</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Where to sell?</div>
+          <div class="q-sec-title">Where do you want to sell?</div>
+          <div class="q-sec-sub">Shapes the platform advice and legal requirements.</div>
           <div class="chips g2" id="q-market">
-            <button class="chip" data-v="etsy">🛒 Etsy</button>
-            <button class="chip" data-v="ebay">🔵 eBay</button>
-            <button class="chip" data-v="amazon">📦 Amazon</button>
-            <button class="chip" data-v="facebook">📘 Facebook Marketplace</button>
-            <button class="chip" data-v="local">📍 Local selling</button>
-            <button class="chip" data-v="own">🏪 Own shop</button>
+            <button class="chip chip-card" data-v="etsy">
+              <span class="chip-badge">BEST</span>
+              <span class="chip-ico">🛒</span>
+              <span class="chip-name">Etsy</span>
+              <span class="chip-desc">Recommended to start</span>
+            </button>
+            <button class="chip chip-card" data-v="own">
+              <span class="chip-ico">🏪</span>
+              <span class="chip-name">Own shop</span>
+              <span class="chip-desc">Shopify / Gumroad</span>
+            </button>
+            <button class="chip chip-card" data-v="social">
+              <span class="chip-ico">📱</span>
+              <span class="chip-name">Social media</span>
+              <span class="chip-desc">Instagram / TikTok DMs</span>
+            </button>
+            <button class="chip chip-card" data-v="local">
+              <span class="chip-ico">📍</span>
+              <span class="chip-name">Local / markets</span>
+              <span class="chip-desc">In-person selling</span>
+            </button>
           </div>
         </div>
 
         <div class="q-block">
-          <div class="q-lbl">Already active on? <span class="q-opt">select all that apply</span></div>
-          <div class="chips chips-multi g2" id="q-active">
-            <button class="chip" data-v="none" style="grid-column:1/-1;justify-content:center">Not yet</button>
-            <button class="chip" data-v="etsy">🛒 Etsy</button>
-            <button class="chip" data-v="ebay">🔵 eBay</button>
-            <button class="chip" data-v="amazon">📦 Amazon</button>
-            <button class="chip" data-v="facebook">📘 Facebook Marketplace</button>
-            <button class="chip" data-v="own">🏪 Own shop</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Social media? <span class="q-opt">select all that apply</span></div>
-          <div class="chips chips-multi g3" id="q-social">
-            <button class="chip" data-v="none" style="grid-column:1/-1;justify-content:center">None</button>
-            <button class="chip" data-v="instagram">📸 Instagram</button>
-            <button class="chip" data-v="tiktok">🎵 TikTok</button>
-            <button class="chip" data-v="pinterest">📌 Pinterest</button>
-            <button class="chip" data-v="facebook">👤 Facebook</button>
-            <button class="chip" data-v="youtube">▶️ YouTube</button>
-          </div>
-        </div>
-
-        <div class="q-block">
-          <div class="sel-lbl">Selling from <span class="q-opt" style="font-size:9px;color:var(--ink3);opacity:.65;font-family:'DM Sans',sans-serif;font-weight:400;margin-left:4px">affects VAT &amp; legal</span></div>
+          <div class="q-sec-title">Where are you selling from?</div>
+          <div class="q-sec-sub">Affects VAT rules and which legal certificates apply to you.</div>
           <select id="sell-from" class="sel-inp">
             <option value="">Select your country</option>
             <option value="NL">🇳🇱 Netherlands</option>
@@ -725,18 +725,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <option value="NZ">🇳🇿 New Zealand</option>
             <option value="UA">🇺🇦 Ukraine</option>
           </select>
-        </div>
-
-        <div class="q-block">
-          <div class="q-lbl">Selling to <span class="q-opt">select all that apply</span></div>
-          <div class="chips chips-multi g3" id="q-sell-to">
-            <button class="chip" data-v="US">🇺🇸 USA</button>
-            <button class="chip" data-v="EU">🇪🇺 Europe</button>
-            <button class="chip" data-v="GB">🇬🇧 UK</button>
-            <button class="chip" data-v="CA">🇨🇦 Canada</button>
-            <button class="chip" data-v="AU">🇦🇺 Australia</button>
-            <button class="chip" data-v="WORLDWIDE">🌍 Worldwide</button>
-          </div>
         </div>
 
       </div>

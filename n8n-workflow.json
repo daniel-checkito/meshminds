@@ -746,7 +746,7 @@
     {
       "parameters": {
         "mode": "runOnceForEachItem",
-        "jsCode": "const store = $getWorkflowStaticData('global');\nconst now = Date.now();\nconst dayMs = 24 * 60 * 60 * 1000;\n\nif (!store.ipData) store.ipData = {};\nif (!store.global) store.global = { count: 0, reset: 0 };\n\nconst h = ($json.headers || {});\nconst rawIp = h['cf-connecting-ip'] || h['x-real-ip'] || (h['x-forwarded-for'] || '').split(',')[0] || 'anon';\nconst ip = rawIp.trim().slice(0, 45);\n\nif (now - store.global.reset > dayMs) {\n  store.global = { count: 0, reset: now };\n}\n\nif (store.global.count >= 200) {\n  return [{ json: { blocked: true, code: 'global_cap' } }];\n}\n\nif (!store.ipData[ip]) store.ipData[ip] = { last: 0, count: 0, reset: 0 };\nconst rec = store.ipData[ip];\n\nif (now - rec.reset > dayMs) { rec.count = 0; rec.reset = now; }\n\nif (now - rec.last < 10000) {\n  const wait = Math.ceil((10000 - (now - rec.last)) / 1000);\n  return [{ json: { blocked: true, code: 'cooldown', wait } }];\n}\n\nif (rec.count >= 20) {\n  return [{ json: { blocked: true, code: 'user_cap' } }];\n}\n\nconst cutoff = now - 48 * 60 * 60 * 1000;\nconst keys = Object.keys(store.ipData);\nif (keys.length > 800) {\n  for (const k of keys) { if (store.ipData[k].last < cutoff) delete store.ipData[k]; }\n}\n\nrec.last = now;\nrec.count += 1;\nstore.global.count += 1;\n\nreturn [{ json: JSON.parse(JSON.stringify($json)) }];"
+        "jsCode": "return [{ json: JSON.parse(JSON.stringify($json)) }];"
       },
       "id": "9734a8d6-8cc4-4ead-88b0-61a9fba62e8d",
       "name": "Rate Limit Check",

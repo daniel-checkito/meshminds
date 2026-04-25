@@ -303,6 +303,48 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .cubee-cta:hover{background:#e64d00}
 .cubee-code{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
 .cubee-code b{font-family:"DM Mono",sans-serif;background:#fff7ed;color:var(--acc);padding:2px 7px;border-radius:4px;font-weight:800;letter-spacing:.05em;border:1px dashed rgba(255,92,0,.35)}
+/* Verdict card */
+.verdict-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:16px 15px 14px;margin-bottom:16px}
+.verdict-card.warn{background:#fffbeb;border-color:#fcd34d}
+.verdict-card.bad{background:#fef2f2;border-color:#fca5a5}
+.verdict-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px}
+.verdict-eyebrow{font-family:"DM Mono",monospace;font-size:9px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.13em;margin-bottom:3px}
+.verdict-card.warn .verdict-eyebrow{color:#92400e}
+.verdict-card.bad .verdict-eyebrow{color:#991b1b}
+.verdict-label{display:flex;align-items:center;gap:6px;font-family:"Bebas Neue",sans-serif;font-size:30px;letter-spacing:.02em;color:#15803d;line-height:1}
+.verdict-card.warn .verdict-label{color:#92400e}
+.verdict-card.bad .verdict-label{color:#991b1b}
+.verdict-score-wrap{text-align:right;flex-shrink:0}
+.verdict-score{font-family:"Bebas Neue",sans-serif;font-size:62px;line-height:1;color:#15803d;letter-spacing:-.02em}
+.verdict-card.warn .verdict-score{color:#92400e}
+.verdict-card.bad .verdict-score{color:#991b1b}
+.verdict-score-max{font-size:10.5px;color:#15803d;font-family:"DM Mono",sans-serif;opacity:.7;text-align:right;margin-top:-4px}
+.verdict-card.warn .verdict-score-max{color:#92400e}
+.verdict-card.bad .verdict-score-max{color:#991b1b}
+.score-bars{display:flex;flex-direction:column;gap:8px}
+.score-bar-row{display:flex;align-items:center;gap:8px}
+.score-bar-lbl{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;color:#15803d;width:80px;flex-shrink:0;letter-spacing:.02em}
+.verdict-card.warn .score-bar-lbl{color:#92400e}
+.verdict-card.bad .score-bar-lbl{color:#991b1b}
+.score-bar-track{flex:1;height:7px;background:rgba(0,0,0,.1);border-radius:4px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:4px;background:#15803d;width:0%;transition:width 0.9s ease 0.2s}
+.score-bar-val{font-family:"DM Mono",monospace;font-size:11px;font-weight:700;width:22px;text-align:right;flex-shrink:0}
+/* Insight note */
+.res-note{background:#fefce8;border:1px solid #fde68a;border-radius:11px;padding:12px 13px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
+.res-note-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.res-note-txt{font-size:12.5px;color:#92400e;line-height:1.5}
+.res-note-txt b{color:#78350f}
+/* Signal cards */
+.signals-hd{font-family:"DM Mono",monospace;font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;margin:16px 0 9px}
+.signal-card{border-radius:11px;padding:13px 14px;margin-bottom:8px}
+.signal-card.up{background:#f0fdf4;border:1px solid #bbf7d0}
+.signal-card.dn{background:#fffbeb;border:1px solid #fde68a}
+.signal-row{display:flex;align-items:flex-start;gap:10px}
+.signal-arr{font-size:15px;font-weight:900;flex-shrink:0;margin-top:1px;line-height:1}
+.signal-up{color:#15803d}
+.signal-dn{color:#d97706}
+.signal-title{font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;margin-bottom:3px}
+.signal-desc{font-size:12px;color:var(--ink3);line-height:1.45}
 /* Q-step redesign */
 .q-step-eyebrow{font-family:"DM Mono",monospace;font-size:10px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.13em;margin-bottom:5px}
 .q-step-title{font-family:"Bebas Neue",sans-serif;font-size:36px;line-height:1.05;color:var(--ink);margin-bottom:8px}
@@ -793,7 +835,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- RESULTS: Consolidated analysis -->
       <div class="panel">
 
-        <div class="res-sec-hd"><span class="res-sec-ico">🔍</span><span class="res-sec-lbl">The Product</span></div>
         <div id="idea-card" style="display:none;background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:11px;padding:13px 14px 12px;margin-bottom:12px"><div style="font-size:9px;font-weight:700;color:#3b82f6;text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:6px">Your idea</div><div id="idea-desc-el" style="font-size:13px;color:var(--ink);font-weight:600;line-height:1.4;margin-bottom:8px"></div><div style="font-size:10px;color:#6b7280;background:rgba(255,255,255,.65);border-radius:6px;padding:5px 8px">Estimated - based on similar market data, not a live listing</div></div>
         <div class="browser" id="browser-el">
           <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu"></div></div>
@@ -812,93 +853,59 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             </div>
           </div>
         </div>
-        <div class="note" id="note-div" style="margin-bottom:16px;display:none">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--good)" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span id="note-text"></span>
-        </div>
-        <div class="res-sec-hd"><span class="res-sec-ico">📊</span><span class="res-sec-lbl">Market Demand</span></div>
-        <div class="sgrid">
-          <div class="sc" id="mc0"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><div class="sc-lbl">Search vol.</div></div><div class="sc-val" id="msv0"></div><div class="sc-sub up" id="msub0"></div></div>
-          <div class="sc" id="mc1"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><div class="sc-lbl">Etsy listings</div></div><div class="sc-val" id="msv1"></div><div class="sc-sub nc" id="msub1"></div></div>
-          <div class="sc" id="mc2"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div class="sc-lbl">Top seller</div></div><div class="sc-val" id="msv2"></div><div class="sc-sub up" id="msub2"></div></div>
-          <div class="sc" id="mc3"><div class="sc-ir"><svg class="sc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><div class="sc-lbl">Print time</div></div><div class="sc-val" id="msv3"></div><div class="sc-sub up" id="msub3"></div></div>
-        </div>
-        <div class="ins" id="ins" style="margin-bottom:6px"><div class="ins-dot"></div><span id="ins-text"><b>Low competition, real demand.</b> Analyzing your market data…</span></div>
 
-        <!-- Manufacturing Verdict -->
-        <div id="mfg-section" style="display:none;margin-bottom:16px">
-          <div style="border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;background:#fff">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;flex-wrap:wrap">
-              <span style="font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif">Is 3D printing right?</span>
-              <span id="mfg-verdict-badge" style="font-size:9.5px;font-weight:800;padding:2px 9px;border-radius:20px;font-family:'DM Mono',sans-serif;letter-spacing:.04em"></span>
-            </div>
-            <div id="mfg-reason" style="font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:7px"></div>
-            <div style="display:flex;align-items:flex-start;gap:6px;flex-wrap:wrap">
-              <span style="font-size:10.5px;font-weight:700;color:var(--ink3);flex-shrink:0;padding-top:1px">Key advantage:</span>
-              <span id="mfg-advantage" style="font-size:11px;color:var(--ink);font-weight:600;line-height:1.4"></span>
-            </div>
-            <div id="mfg-alt-wrap" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--line)">
-              <span style="font-size:10.5px;font-weight:700;color:var(--ink3)">Consider instead: </span>
-              <span id="mfg-alt-list" style="font-size:11px;color:var(--ink2)"></span>
-            </div>
-            <div id="mfg-breakeven" style="display:none;margin-top:7px;padding-top:7px;border-top:1px solid var(--line);font-size:11px;color:var(--ink3);line-height:1.4"></div>
-          </div>
+        <!-- Product insight note -->
+        <div class="res-note" id="res-note" style="display:none">
+          <span class="res-note-ico">💡</span>
+          <span class="res-note-txt" id="res-note-txt"></span>
         </div>
 
-        <div class="price-slider-wrap">
-          <div class="price-slider-row">
-            <div class="price-slider-lbl">Your sell price</div>
-            <div class="price-slider-val" id="price-display">€22</div>
+        <!-- Verdict card -->
+        <div class="verdict-card" id="verdict-card">
+          <div class="verdict-header">
+            <div>
+              <div class="verdict-eyebrow">Verdict</div>
+              <div class="verdict-label">
+                <span id="verdict-emoji">…</span>
+                <span id="verdict-text">Analyzing</span>
+              </div>
+            </div>
+            <div class="verdict-score-wrap">
+              <div class="verdict-score" id="verdict-score">-</div>
+              <div class="verdict-score-max">/ 100</div>
+            </div>
           </div>
-          <input type="range" id="price-slider" min="5" max="120" value="22" step="1">
-          <canvas id="rev-chart" style="width:100%;height:68px;display:block;margin-top:10px;border-radius:6px"></canvas>
-          <div class="price-slider-limits" style="margin-top:3px"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
-          <div id="sweet-spot-hint" style="text-align:center;font-size:10.5px;font-weight:700;color:var(--good);font-family:'DM Mono',sans-serif;margin-top:3px;opacity:0;transition:opacity .4s,color .3s"></div>
-          <div class="price-margin-row">
-            <span class="price-margin-lbl">Margin</span>
-            <span class="price-margin-val" id="margin-val">84%</span>
-            <span class="price-margin-lbl">· Units/mo</span>
-            <span class="price-margin-val" id="margin-units">42</span>
-            <span class="price-margin-lbl">· Net/mo</span>
-            <span class="price-margin-val" id="margin-net">€789</span>
-          </div>
-        </div>
-        <div class="res-sec-hd"><span class="res-sec-ico">💰</span><span class="res-sec-lbl">Revenue Potential</span></div>
-        <div class="rcards">
-          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">~0</div><div class="rc-lbl">est. units/mo</div></div>
-          <div class="rc" id="rc1"><div class="rc-ico">💶</div><div class="rc-val" id="rv1">€0</div><div class="rc-lbl">gross rev.</div></div>
-          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">€0</div><div class="rc-lbl">print cost</div></div>
-        </div>
-        <div class="hero" id="hero">
-          <div class="h-eye">Est. monthly profit</div>
-          <div class="h-big" id="hbig">€0</div>
-          <div class="h-sub" id="hsub">before Etsy fees · avg €22.40 sell price</div>
-          <div class="h-bd" id="hbd">
-            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0"></span></div>
-            <div class="h-row"><span class="h-lbl">Material &amp; energy</span><span class="h-val n" id="hv1"></span></div>
-            <div class="h-row"><span class="h-lbl">Etsy fees (~12%)</span><span class="h-val n" id="hv2"></span></div>
-            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3"></span></div>
+          <div class="score-bars">
+            <div class="score-bar-row">
+              <span class="score-bar-lbl">Demand</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-demand"></div></div>
+              <span class="score-bar-val" id="val-demand">-</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-lbl">Competition</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-competition"></div></div>
+              <span class="score-bar-val" id="val-competition">-</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-lbl">Profit</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-profit"></div></div>
+              <span class="score-bar-val" id="val-profit">-</span>
+            </div>
+            <div class="score-bar-row">
+              <span class="score-bar-lbl">Legal</span>
+              <div class="score-bar-track"><div class="score-bar-fill" id="bar-legal"></div></div>
+              <span class="score-bar-val" id="val-legal">-</span>
+            </div>
           </div>
         </div>
 
-        <!-- Strategy & Selling Advice -->
-        <div id="strategy-section" style="display:none;padding-top:4px">
-          <div class="res-sec-hd"><span class="res-sec-ico">🎯</span><span class="res-sec-lbl">Where &amp; How to Sell</span></div>
-          <div style="border:1.5px solid var(--line);border-radius:11px;padding:12px 13px;margin-bottom:10px;background:#fff">
-            <div style="font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:5px">Best starting point</div>
-            <div id="best-platform" style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.3"></div>
-            <div id="platform-advice" style="font-size:12px;color:var(--ink2);line-height:1.5"></div>
-          </div>
-          <div id="example-card" style="display:none;border:1px solid rgba(21,128,61,.2);border-radius:11px;padding:11px 13px;margin-bottom:10px;background:linear-gradient(135deg,#f0fdf4,#fafafa)">
-            <div style="font-size:9px;font-weight:700;color:var(--good);text-transform:uppercase;letter-spacing:.12em;font-family:'DM Mono',sans-serif;margin-bottom:5px">🏆 Real-world example</div>
-            <div id="example-name" style="font-size:13px;font-weight:700;margin-bottom:3px"></div>
-            <div id="example-desc" style="font-size:11.5px;color:var(--ink2);line-height:1.42"></div>
-          </div>
-          <div id="tips-section" style="background:#f7f7f7;border-radius:11px;padding:12px 14px">
-            <div style="font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:'DM Mono',sans-serif;margin-bottom:9px">Top tips for this product</div>
-            <div id="tips-list" style="display:flex;flex-direction:column;gap:9px"></div>
-          </div>
-        </div>
+        <!-- Why it's worth it -->
+        <div class="signals-hd" id="why-hd" style="display:none">Why it's worth it</div>
+        <div id="signals-why"></div>
+
+        <!-- Risks to consider -->
+        <div class="signals-hd" id="risk-hd" style="display:none">Risks to consider</div>
+        <div id="signals-risks" style="margin-bottom:4px"></div>
 
       </div>
 
@@ -1024,7 +1031,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
 function isURL(s){return/^https?:\/\/(www\.)?(makerworld\.com|printables\.com|cults3d\.com|thingiverse\.com|cgtrader\.com)\//i.test(s);}
 
 var q=id=>document.getElementById(id);
@@ -1420,9 +1427,97 @@ function populate(data){
   if(score!==null)scoreColor=score>=0.7?"#15803d":score>=0.4?"#FF5C00":"#b91c1c";
 
   populateCopyright(data.copyright||{});
+  populateVerdictCard(data);
   /* Store score  -  only reveal ring/vbar after email gate is passed */
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg,note:p.note||null};
   if(step>=5)revealScore();
+}
+
+function populateVerdictCard(data){
+  function obj(v){if(typeof v==="string"){try{return JSON.parse(v);}catch(e){}}return v||{};}
+  var m=obj(data.market),r=obj(data.revenue),mfg=obj(data.manufacturing),p=obj(data.product);
+
+  /* Insight note */
+  if(p.note&&q("res-note")){q("res-note-txt").innerHTML=p.note;q("res-note").style.display="";}
+
+  /* Sub-scores */
+  var demand=70,competition=70,profit=70,legal=90;
+  if(m.searchVolume!==undefined){
+    var sv=m.searchVolume;
+    if(sv>=50000)demand=95;else if(sv>=20000)demand=88;else if(sv>=10000)demand=82;else if(sv>=3000)demand=72;else if(sv>=1000)demand=58;else demand=42;
+    var tr=(m.searchTrend||"").toLowerCase();
+    if(tr.indexOf("grow")>=0||tr.indexOf("+")>=0)demand=Math.min(99,demand+5);
+    demand=Math.round(demand);
+  }
+  if(m.searchVolume&&m.etsyListings){
+    var ratio=m.searchVolume/m.etsyListings;
+    if(ratio>=8)competition=92;else if(ratio>=5)competition=85;else if(ratio>=3)competition=78;else if(ratio>=1.5)competition=65;else if(ratio>=0.5)competition=48;else competition=28;
+    competition=Math.round(competition);
+  }
+  var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
+  var cost=r.printCost||0;
+  var margin=Math.round((spNum-cost)/spNum*100);
+  if(margin>=85)profit=92;else if(margin>=75)profit=80;else if(margin>=65)profit=70;else if(margin>=50)profit=55;else profit=38;
+  var c=obj(data.copyright);
+  var etsy=(c.etsyBanRisk||"low").toLowerCase(),lr=(c.legalRisk||"low").toLowerCase(),cp=(c.copyrightRisk||"low").toLowerCase();
+  if(etsy==="high"||lr==="high"||cp==="high")legal=15;else if(etsy==="medium"||lr==="medium"||cp==="medium")legal=55;else legal=92;
+
+  /* Verdict card */
+  var scoreNum=data.score!==undefined?parseInt(data.score):Math.round((demand+competition+profit+legal)/4);
+  var isGood=scoreNum>=70,isWarn=scoreNum>=40&&scoreNum<70;
+  var vc=q("verdict-card");
+  if(vc)vc.className=isGood?"verdict-card":isWarn?"verdict-card warn":"verdict-card bad";
+  if(q("verdict-emoji"))q("verdict-emoji").textContent=isGood?"✅":isWarn?"⚠️":"❌";
+  if(q("verdict-text"))q("verdict-text").textContent=isGood?"Print it":isWarn?"Consider it":"Skip it";
+
+  /* Store sub-scores for bar animation in revealScore() */
+  function barColor(v){return v>=75?"#15803d":v>=50?"#d97706":"#dc2626";}
+  pendingSubScores={demand:demand,competition:competition,profit:profit,legal:legal,overall:scoreNum,barColor:barColor};
+
+  /* Positive signals */
+  var whySigs=[];
+  if(m.searchVolume){
+    var svFmt=fmt(m.searchVolume);
+    var trendTxt=m.searchTrend?" — "+m.searchTrend:"";
+    var ratioStr=m.etsyListings?(m.searchVolume/m.etsyListings).toFixed(2)+" searches per listing. Healthy niches sit at 3–8.":"Strong buyer demand in this niche.";
+    whySigs.push({title:svFmt+" searches/mo"+trendTxt,desc:ratioStr});
+  }
+  if(m.etsyListings&&m.searchVolume&&m.searchVolume/m.etsyListings>=2){
+    var ratio2=(m.searchVolume/m.etsyListings).toFixed(2);
+    whySigs.push({title:"Only "+fmt(m.etsyListings)+" Etsy listings — room to rank page 1",desc:ratio2+" searches per listing. Healthy niches sit at 3–8. You can rank within weeks."});
+  }
+  if(m.topSellerSales&&m.etsyAvgPrice){
+    var avgP=parseFloat((m.etsyAvgPrice||"0").replace(/[^0-9.]/g,""))||0;
+    var gross=avgP>0?" That's ~€"+Math.round(m.topSellerSales*avgP/1000)+"k gross from one Etsy shop.":"";
+    whySigs.push({title:"Top seller: "+fmt(m.topSellerSales)+" sales at avg "+m.etsyAvgPrice,desc:"Proof buyers pay."+gross+" Replicate their approach and compete on design."});
+  }
+  if(margin>=60&&r.netProfit&&r.unitsPerMonth){
+    whySigs.push({title:margin+"% margin at €"+Math.round(spNum)+" — €"+r.netProfit+" net/mo",desc:"~€"+cost+" per unit. After platform fees, "+r.unitsPerMonth+" units/mo = solid side income."});
+  }
+
+  /* Risk signals */
+  var riskSigs=[];
+  if(m.printTime&&m.unitsPerDay){
+    riskSigs.push({title:m.printTime+" print time limits daily output",desc:"1 printer = max "+m.unitsPerDay+". Scaling to €2k+/mo requires multiple machines."});
+  }
+  if(mfg.alternatives&&mfg.alternatives.length>0){
+    riskSigs.push({title:"Competes with mass-produced alternatives",desc:mfg.alternatives.join(", ")+". Differentiate on customisation, quality or unique design to hold your price."});
+  }
+  if(m.searchVolume&&m.etsyListings&&m.searchVolume/m.etsyListings<1.5){
+    riskSigs.push({title:"Crowded market — "+fmt(m.etsyListings)+" competing listings",desc:"Fewer than 1.5 searches per listing. Strong photos, SEO and reviews are essential to rank."});
+  }
+  if(riskSigs.length<2&&mfg.reason){riskSigs.push({title:"Manufacturing consideration",desc:mfg.reason});}
+
+  function renderSigs(id,sigs,type){
+    var el=q(id);if(!el)return;
+    el.innerHTML=sigs.map(function(s){
+      return '<div class="signal-card '+type+'"><div class="signal-row"><span class="signal-arr signal-'+(type==="up"?"up":"dn")+'">'+(type==="up"?"↑":"↓")+'</span><div><div class="signal-title">'+s.title+'</div><div class="signal-desc">'+s.desc+'</div></div></div></div>';
+    }).join("");
+  }
+  renderSigs("signals-why",whySigs,"up");
+  renderSigs("signals-risks",riskSigs,"dn");
+  if(whySigs.length>0&&q("why-hd"))q("why-hd").style.display="";
+  if(riskSigs.length>0&&q("risk-hd"))q("risk-hd").style.display="";
 }
 
 function populateCopyright(c){
@@ -1453,6 +1548,22 @@ function revealScore(){
   animRing(pendingScore.score,600,pendingScore.color);
   verdict("done",pendingScore.msg,pendingScore.note);
   pendingScore=null;
+  if(pendingSubScores){
+    var subs=pendingSubScores;
+    pendingSubScores=null;
+    setTimeout(function(){
+      function setBar(barId,valId,val){
+        var b=q(barId),v=q(valId);
+        if(b){b.style.width=val+"%";b.style.background=subs.barColor(val);}
+        if(v){v.textContent=val;v.style.color=subs.barColor(val);}
+      }
+      setBar("bar-demand","val-demand",subs.demand);
+      setBar("bar-competition","val-competition",subs.competition);
+      setBar("bar-profit","val-profit",subs.profit);
+      setBar("bar-legal","val-legal",subs.legal);
+      if(q("verdict-score"))q("verdict-score").textContent=subs.overall;
+    },150);
+  }
 }
 
 function analyze(){
@@ -1533,9 +1644,9 @@ function runAnalysis(){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
         step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-        setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
+        setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
       });
-    } else if(step===5)setBtn2("Legal & copyright check →","",false);
+    } else if(step===5)setBtn2("How to sell it →","",false);
     else if(step===6)setBtn2("See winners & STL library","",false);
     else if(step===7)setBtn2("Check another print","dark",false);
   }).catch(function(err){
@@ -1566,7 +1677,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;baseRevData=null;lastAiCerts=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;lastAiCerts=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
@@ -1788,7 +1899,7 @@ q("btn-email").addEventListener("click",function(){
   if(analysisComplete){
     /* Analysis already done — skip loading overlay, go straight to results */
     step=5;dots(5);slide(5);showFooter(true);q("vbar").style.display="";
-    setBtn2("Legal & copyright check →","",false);revealScore();populateLegalCerts();
+    setBtn2("How to sell it →","",false);revealScore();populateLegalCerts();
   } else {
     if(q("gate-content"))q("gate-content").style.display="none";
     if(q("loading-overlay"))q("loading-overlay").style.display="";
@@ -1810,7 +1921,7 @@ q("btn-back").addEventListener("click",function(){
   if(busy)return;
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
-  if(step===6){step=5;dots(5);slide(5);q("vbar").style.display="";setBtn2("Legal & copyright check →","",false);showBack(false);return;}
+  if(step===6){step=5;dots(5);slide(5);q("vbar").style.display="";setBtn2("How to sell it →","",false);showBack(false);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

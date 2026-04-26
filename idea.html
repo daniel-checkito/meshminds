@@ -2009,7 +2009,7 @@ function runAnalysis(){
     populate(EXAMPLE_DATA);
     analysisComplete=true;
     step=5;dots(5);slide(5);
-    showFooter(true);
+    showFooter(true);showBack(true);
     setBtn2("How to sell it","",false);
     revealScore();
     populateLegalCerts();
@@ -2046,7 +2046,7 @@ function runAnalysis(){
     if(waitingForAnalysis){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
-        step=5;dots(5);slide(5);showFooter(true);
+        step=5;dots(5);slide(5);showFooter(true);showBack(true);
         setBtn2("How to sell it","",false);revealScore();populateLegalCerts();
       });
     } else if(step===5)setBtn2("How to sell it","",false);
@@ -2301,7 +2301,7 @@ q("btn-email").addEventListener("click",function(){
   }).catch(function(){});
   if(analysisComplete){
     /* Analysis already done - skip loading overlay, go straight to results */
-    step=5;dots(5);slide(5);showFooter(true);
+    step=5;dots(5);slide(5);showFooter(true);showBack(true);
     setBtn2("How to sell it","",false);revealScore();populateLegalCerts();
   } else {
     if(q("gate-content"))q("gate-content").style.display="none";
@@ -2317,7 +2317,7 @@ q("btn2").addEventListener("click",function(){
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(false);updateOfferPanel();return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();return;}
   else{reset();}
 });
 
@@ -2325,7 +2325,7 @@ q("btn-back").addEventListener("click",function(){
   if(busy)return;
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
-  if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(false);return;}
+  if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
   if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
 });

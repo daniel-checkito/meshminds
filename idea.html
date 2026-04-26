@@ -432,6 +432,24 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .winner-info{background:#fff;padding:9px 10px 10px}
 .winner-name{font-family:"Bebas Neue",sans-serif;font-size:15px;letter-spacing:.02em;color:var(--ink);line-height:1.1;margin-bottom:3px}
 .winner-why{font-size:10.5px;color:var(--ink2);line-height:1.35}
+/* Community offer panel */
+.offer-score-badge{display:flex;align-items:center;gap:10px;border-radius:12px;padding:11px 13px;margin-bottom:14px;border:1.5px solid #86efac;background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+.offer-score-badge.warn{border-color:#fcd34d;background:linear-gradient(135deg,#fffbeb,#fef3c7)}
+.offer-score-badge.bad{border-color:#fca5a5;background:linear-gradient(135deg,#fef2f2,#fee2e2)}
+.offer-score-ico{font-size:22px;flex-shrink:0}
+.offer-score-txt{font-size:12.5px;color:#166534;line-height:1.4;font-weight:600;flex:1}
+.offer-score-txt.warn{color:#92400e}
+.offer-score-txt.bad{color:#991b1b}
+.offer-score-num{font-family:"Bebas Neue",sans-serif;font-size:32px;color:#15803d;line-height:1;flex-shrink:0}
+.offer-score-num.warn{color:#b45309}
+.offer-score-num.bad{color:#b91c1c}
+.offer-panel-wrap{position:relative}
+.offer-lock{position:absolute;inset:0;border-radius:14px;background:linear-gradient(160deg,rgba(10,10,10,0.78),rgba(10,10,10,0.72));backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;z-index:10;padding:24px 20px;text-align:center}
+.offer-lock-icon{font-size:44px;line-height:1;filter:grayscale(0)}
+.offer-lock-title{font-family:"Bebas Neue",sans-serif;font-size:28px;color:#fff;letter-spacing:.02em;line-height:1.1}
+.offer-lock-sub{font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.5;max-width:220px}
+.offer-lock-score{display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:5px 14px;font-family:"DM Mono",sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:.06em;margin-top:2px}
+.offer-cta-hint{font-size:11.5px;color:var(--ink3);text-align:center;line-height:1.5;margin-top:12px}
 </style>
 </head>
 <body>
@@ -1132,18 +1150,70 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div id="cert-section"></div>
       </div>
 
-      <!-- WINNERS: thank you + feedback -->
-      <div class="panel">
-        <div style="text-align:center;padding:28px 8px 20px">
-          <div style="font-size:48px;margin-bottom:16px">🙏</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.03em;line-height:1.1;margin-bottom:12px">Thanks for trying<br>the beta!</div>
-          <p style="font-size:14px;color:var(--ink2);line-height:1.6;margin-bottom:24px">This tool is being actively improved over the coming days and weeks. Your feedback directly shapes what gets built next.</p>
-          <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:15px 14px;border-radius:12px;background:var(--acc);color:#fff;font-weight:700;font-size:15px;text-decoration:none;letter-spacing:.01em;box-sizing:border-box">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            DM me on Instagram
-          </a>
-          <p style="font-size:11.5px;color:var(--ink3);margin-top:12px;line-height:1.5">Questions, bugs, ideas - all welcome.<br><b style="color:var(--ink2)">@meshminds3d</b></p>
+      <!-- STEP 8: Community offer -->
+      <div class="panel" id="offer-panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Your next step</span></div>
+
+        <!-- Score badge -->
+        <div class="offer-score-badge" id="offer-badge">
+          <span class="offer-score-ico" id="offer-badge-ico">🏆</span>
+          <div style="flex:1">
+            <div class="offer-score-txt" id="offer-badge-txt">You found a sellable print.</div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:2px">Sellability score</div>
+          </div>
+          <span class="offer-score-num" id="offer-badge-num">—</span>
         </div>
+
+        <!-- Offer card with lock overlay -->
+        <div class="offer-panel-wrap">
+          <!-- Lock overlay (shown when score < 60) -->
+          <div class="offer-lock" id="offer-lock" style="display:none">
+            <div class="offer-lock-icon">🔒</div>
+            <div class="offer-lock-title">Not ready to sell yet</div>
+            <div class="offer-lock-sub">This offer unlocks at a score of 60+. Find a better print or refine your niche first.</div>
+            <div class="offer-lock-score" id="offer-lock-score">Your score: — / 100</div>
+          </div>
+
+          <!-- Skool community card -->
+          <div class="cubee-card" id="skool-card">
+            <div class="cubee-img-wrap" style="aspect-ratio:16/7;background:linear-gradient(135deg,#1a1a1a 0%,#2d1a08 100%)">
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:16px">
+                <div style="font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.4);letter-spacing:.18em;text-transform:uppercase;margin-bottom:2px">Skool Community</div>
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:#fff;letter-spacing:.02em;line-height:1;text-align:center">Print &amp; Profit</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:210px">Where 3D print sellers go from "I think this might work" to consistent monthly income</div>
+              </div>
+              <div class="cubee-badge">By Daniel Haag · €160K+ on Etsy</div>
+            </div>
+            <div class="cubee-body">
+              <div class="cubee-brand">Print &amp; Profit Community</div>
+              <div class="cubee-name">Now let's actually make it happen</div>
+              <div class="cubee-desc">You found a print that can sell. Inside Print &amp; Profit, you get real data, ready-to-use listings, and direct feedback from someone who's already done it.</div>
+              <div class="cubee-pts">
+                <div>Weekly product picks with demand data — no more guessing what to print</div>
+                <div>Ready-to-copy Etsy listings — title, tags &amp; description already written</div>
+                <div>Personal shop + idea review so you launch knowing it'll convert</div>
+                <div>Content templates that actually get your prints seen</div>
+                <div>Direct access to Daniel — ask anything, get a real answer</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:10px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
+                <div>
+                  <div style="font-size:9.5px;color:var(--ink3);font-family:'DM Mono',sans-serif;text-transform:uppercase;letter-spacing:.08em;margin-bottom:1px">Monthly</div>
+                  <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);line-height:1">$45 <span style="font-size:13px;font-family:Manrope,sans-serif;font-weight:600;color:var(--ink3)">/month</span></div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:10px;color:var(--ink3);font-family:'DM Mono',sans-serif;letter-spacing:.04em;line-height:1.3">New members follow the<br><b style="color:var(--ink2)">30-day launch plan</b></div>
+                </div>
+              </div>
+              <a href="https://www.skool.com/print-and-profit" target="_blank" rel="noopener" class="cubee-cta">Start your 30 days now →</a>
+              <div class="cubee-code" style="margin-top:10px">Not for people who want to "think about it."<br>This is for makers ready to print their first <b>€1,000</b>.</div>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink2);font-size:13px;font-weight:600;text-decoration:none;margin-top:10px;box-sizing:border-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          Questions? DM @meshminds3d
+        </a>
 
         <div style="display:none" class="winner-cards">
           <div class="winner-card">
@@ -1305,7 +1375,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
-var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
+var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:42,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
 function isURL(s){return/^https?:\/\/(www\.)?makerworld\.com\//i.test(s);}
@@ -1768,6 +1838,7 @@ function populateVerdictCard(data){
   /* Store sub-scores for bar animation in revealScore() */
   function barColor(v){return v>=75?"#15803d":v>=50?"#d97706":"#dc2626";}
   pendingSubScores={demand:demand,competition:competition,profit:profit,legal:legal,overall:scoreNum,barColor:barColor};
+  lastScore=scoreNum;
 
   /* Positive signals */
   var whySigs=[];
@@ -1834,6 +1905,32 @@ function populateCopyright(c){
     if(anyHigh){banner.className="cp-banner bad";banner.textContent="🚫 Legal warning  -  review before listing";}
     else if(anyMed){banner.className="cp-banner warn";banner.textContent="⚠️ Some risks to be aware of  -  read details";}
     else{banner.className="cp-banner";banner.textContent="✅ No legal issues found  -  safe to sell";}
+  }
+}
+
+function updateOfferPanel(){
+  var score=lastScore!==null?lastScore:0;
+  var unlocked=score>=60;
+  var badge=q("offer-badge"),badgeIco=q("offer-badge-ico"),badgeTxt=q("offer-badge-txt"),badgeNum=q("offer-badge-num");
+  if(badgeNum)badgeNum.textContent=score;
+  if(unlocked){
+    if(badge){badge.className="offer-score-badge"+(score>=70?"":" warn");}
+    if(badgeIco)badgeIco.textContent=score>=70?"🏆":"✅";
+    if(badgeTxt){
+      badgeTxt.textContent=score>=70?"You found a winner — time to sell it.":"Solid print. Here's how to move forward.";
+      badgeTxt.className="offer-score-txt"+(score>=70?"":" warn");
+    }
+    if(badgeNum)badgeNum.className="offer-score-num"+(score>=70?"":" warn");
+    if(q("offer-lock"))q("offer-lock").style.display="none";
+    if(q("skool-card"))q("skool-card").style.opacity="1";
+  } else {
+    if(badge)badge.className="offer-score-badge bad";
+    if(badgeIco)badgeIco.textContent="⚠️";
+    if(badgeTxt){badgeTxt.textContent="Score too low to unlock this offer. Try a better print.";badgeTxt.className="offer-score-txt bad";}
+    if(badgeNum)badgeNum.className="offer-score-num bad";
+    if(q("offer-lock")){q("offer-lock").style.display="flex";}
+    if(q("offer-lock-score"))q("offer-lock-score").textContent="Your score: "+score+" / 100";
+    if(q("skool-card"))q("skool-card").style.opacity="0.35";
   }
 }
 
@@ -1981,7 +2078,7 @@ function runAnalysis(){
 }
 
 function reset(){
-  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
   if(q("idea-card"))q("idea-card").style.display="none";
@@ -2216,8 +2313,8 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
-  if(step===6){step=7;dots(7);slide(7);setBtn2("Done - share your feedback","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(false);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(false);updateOfferPanel();return;}
   else{reset();}
 });
 
@@ -2227,7 +2324,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(false);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
-  if(step===8){step=7;dots(7);slide(7);setBtn2("Done - share your feedback","",false);showBack(true);return;}
+  if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

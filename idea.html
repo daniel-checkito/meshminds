@@ -2008,8 +2008,14 @@ function runAnalysis(){
   if(lastURL===EXAMPLE_URL){
     populate(EXAMPLE_DATA);
     analysisComplete=true;
-    step=4;dots(4);slide(4);
-    showFooter(false);
+    revealScore();
+    populateLegalCerts();
+    if(baseRevData)recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);
+    step=8;dots(8);slide(8);
+    showFooter(true);
+    setBtn2("Check another print","dark",false);
+    showBack(false);
+    updateOfferPanel();
     busy=false;
     return;
   }

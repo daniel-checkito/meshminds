@@ -432,7 +432,49 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .winner-info{background:#fff;padding:9px 10px 10px}
 .winner-name{font-family:"Bebas Neue",sans-serif;font-size:15px;letter-spacing:.02em;color:var(--ink);line-height:1.1;margin-bottom:3px}
 .winner-why{font-size:10.5px;color:var(--ink2);line-height:1.35}
+
+/* ── Auth / Account bar ── */
+#acct-bar{display:flex;align-items:center;gap:8px;padding:0 16px 0;height:32px;flex-shrink:0;border-bottom:1px solid var(--line);background:#fff;font-size:11px}
+#acct-bar .ab-spacer{flex:1}
+#acct-bar .ab-email{font-weight:600;color:var(--ink);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px}
+#acct-bar .ab-quota{font-family:"DM Mono",monospace;font-size:9.5px;background:var(--surf2);border:1px solid var(--line2);border-radius:4px;padding:1px 6px;color:var(--ink2);white-space:nowrap}
+#acct-bar .ab-quota.warn{background:#fef9ec;border-color:#fcd34d;color:var(--warn)}
+#acct-bar .ab-quota.danger{background:#fef2f2;border-color:#fca5a5;color:var(--bad)}
+#acct-bar .ab-btn{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--acc);background:none;border:none;cursor:pointer;padding:0;letter-spacing:.03em;white-space:nowrap}
+#acct-bar .ab-link{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--ink3);background:none;border:none;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:2px;white-space:nowrap}
+
+/* ── Auth modals ── */
+.auth-tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:20px;margin:-4px -4px 20px}
+.auth-tab{flex:1;padding:12px 8px;font-size:13px;font-weight:600;color:var(--ink3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;font-family:"Manrope",sans-serif}
+.auth-tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.auth-field{margin-bottom:14px}
+.auth-field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink2);margin-bottom:5px}
+.auth-field input{width:100%;border:1.5px solid var(--line2);border-radius:9px;padding:11px 13px;font-family:"Manrope",sans-serif;font-size:15px;color:var(--ink);outline:none;background:#fff;transition:border-color .2s}
+.auth-field input:focus{border-color:var(--acc)}
+.auth-msg{font-size:12px;margin-top:12px;padding:9px 11px;border-radius:8px;line-height:1.5;display:none}
+.auth-msg.error{background:#fef2f2;color:var(--bad);border:1px solid #fca5a5;display:block}
+.auth-msg.success{background:#f0fdf4;color:var(--good);border:1px solid #86efac;display:block}
+.auth-forgot{font-size:11.5px;color:var(--ink3);text-align:right;margin-top:-8px;margin-bottom:16px}
+.auth-forgot button{background:none;border:none;color:var(--acc);cursor:pointer;font-family:"Manrope",sans-serif;font-size:11.5px}
+.auth-pane{display:none}
+.auth-pane.active{display:block}
+
+/* ── Paywall modal ── */
+.paywall-hero{text-align:center;padding:4px 0 18px}
+.paywall-icon{font-size:36px;margin-bottom:10px}
+.paywall-title{font-family:"Bebas Neue",sans-serif;font-size:30px;letter-spacing:.02em;color:var(--ink);margin-bottom:6px}
+.paywall-sub{font-size:13px;color:var(--ink2);line-height:1.5}
+.paywall-free{font-size:12px;color:var(--ink3);text-align:center;margin-top:10px}
+.paywall-plan{border:1.5px solid var(--acc);border-radius:14px;padding:16px;margin:16px 0 8px;background:rgba(255,92,0,.03)}
+.paywall-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.paywall-price{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--acc);line-height:1}
+.paywall-period{font-size:12px;color:var(--ink3)}
+.paywall-scans{font-family:"DM Mono",monospace;font-size:11px;color:var(--ink2);margin-bottom:12px;letter-spacing:.03em}
+.paywall-perks{list-style:none;display:flex;flex-direction:column;gap:7px}
+.paywall-perks li{font-size:13px;color:var(--ink2);display:flex;gap:9px;align-items:flex-start;line-height:1.4}
+.paywall-perks li::before{content:"✓";color:var(--good);font-weight:700;flex-shrink:0}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 <div class="phone">
@@ -440,6 +482,17 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   <div id="proto-bar">
     <span>🚧 <b>Early beta</b> - Results are not 100% reliable but get better over time.</span>
     <button class="proto-close" onclick="document.getElementById('proto-bar').style.display='none'" aria-label="Dismiss">✕</button>
+  </div>
+
+  <div id="acct-bar">
+    <span class="ab-spacer"></span>
+    <button class="ab-btn" id="ab-signin" onclick="openAuth('signin')" style="display:none">Sign in</button>
+    <span id="ab-sep" style="color:var(--line2);display:none">·</span>
+    <button class="ab-btn" id="ab-signup" onclick="openAuth('signup')" style="display:none">Create account</button>
+    <span class="ab-email" id="ab-email" style="display:none"></span>
+    <span class="ab-quota" id="ab-quota" style="display:none"></span>
+    <a href="/dashboard" class="ab-link" id="ab-dash" style="display:none">Dashboard</a>
+    <button class="ab-link" id="ab-signout" onclick="signOut()" style="display:none">Sign out</button>
   </div>
 
   <div class="hdr">
@@ -1303,6 +1356,287 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   </div>
 </div>
 
+<!-- Auth modal -->
+<div class="legal-overlay" id="lo-auth" onclick="if(event.target===this)closeLegal('auth')">
+  <div class="legal-sheet">
+    <div class="legal-sheet-top">
+      <span class="legal-sheet-title">Your account</span>
+      <button class="legal-sheet-close" onclick="closeLegal('auth')">✕</button>
+    </div>
+    <div class="legal-body" style="padding-top:4px">
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="signin" onclick="switchAuthTab('signin')">Sign in</button>
+        <button class="auth-tab" data-tab="signup" onclick="switchAuthTab('signup')">Create account</button>
+      </div>
+
+      <!-- Sign in pane -->
+      <div class="auth-pane active" data-pane="signin">
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="si-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="si-pwd" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="auth-forgot"><button onclick="switchAuthTab('reset')">Forgot password?</button></div>
+        <button class="btn" id="si-btn" onclick="doSignIn()" style="width:100%">
+          <span>Sign in</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+        <div class="auth-msg" id="si-msg"></div>
+        <div class="auth-sep">Don't have an account? <button class="btn-try-eg" onclick="switchAuthTab('signup')">Create one for free</button></div>
+      </div>
+
+      <!-- Sign up pane -->
+      <div class="auth-pane" data-pane="signup">
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="su-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="auth-field">
+          <label>Password <span style="font-weight:400;color:var(--ink3)">(min 6 characters)</span></label>
+          <input type="password" id="su-pwd" placeholder="Choose a password" autocomplete="new-password">
+        </div>
+        <button class="btn" id="su-btn" onclick="doSignUp()" style="width:100%">
+          <span>Create account - it's free</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+        <div class="auth-msg" id="su-msg"></div>
+        <p style="font-size:11px;color:var(--ink3);margin-top:12px;line-height:1.5">Free account gives you 10 scans. No credit card needed.</p>
+      </div>
+
+      <!-- Reset password pane -->
+      <div class="auth-pane" data-pane="reset">
+        <p style="font-size:13px;color:var(--ink2);margin-bottom:16px;line-height:1.5">Enter your email and we'll send you a link to reset your password.</p>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="rs-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <button class="btn" id="rs-btn" onclick="doReset()" style="width:100%">
+          <span>Send reset link</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </button>
+        <div class="auth-msg" id="rs-msg"></div>
+        <div class="auth-sep" style="margin-top:14px"><button class="btn-try-eg" onclick="switchAuthTab('signin')">← Back to sign in</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Paywall modal -->
+<div class="legal-overlay" id="lo-paywall" onclick="if(event.target===this)closeLegal('paywall')">
+  <div class="legal-sheet">
+    <div class="legal-sheet-top">
+      <span class="legal-sheet-title">Upgrade your plan</span>
+      <button class="legal-sheet-close" onclick="closeLegal('paywall')">✕</button>
+    </div>
+    <div class="legal-body">
+      <div class="paywall-hero">
+        <div class="paywall-icon">🎯</div>
+        <div class="paywall-title">You're out of free scans</div>
+        <p class="paywall-sub">You've used all 10 free scans. Upgrade to keep checking your print ideas.</p>
+      </div>
+      <div class="paywall-plan">
+        <div class="paywall-price-row">
+          <span class="paywall-price">€19</span>
+          <span class="paywall-period">/month</span>
+        </div>
+        <div class="paywall-scans">250 scans per month</div>
+        <ul class="paywall-perks">
+          <li>Full demand, profit &amp; legal analysis</li>
+          <li>Scan history &amp; score tracking</li>
+          <li>Priority support via DM</li>
+          <li>Cancel anytime</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="alert('Stripe coming soon - DM @meshminds3d on Instagram to get early access!')" style="width:100%;margin-top:4px">
+        <span>Get full access</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </button>
+      <p class="paywall-free">Questions? DM <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="color:var(--acc)">@meshminds3d</a> on Instagram</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Supabase Auth ── */
+(function(){
+  var SURL='https://jzpresjqxqnmjengmdgg.supabase.co';
+  var SKEY='sb_publishable_gM1DHFqmuvu4WCQjlDXcjg_Gq1iPUhV';
+  var FREE_LIMIT=10;
+  var sb=supabase.createClient(SURL,SKEY);
+  var authUser=null,userProfile=null,pendingAnalysis=false;
+
+  window._sb=sb;
+  window._authUser=function(){return authUser;};
+  window._userProfile=function(){return userProfile;};
+  window._isPending=function(){return pendingAnalysis;};
+  window._clearPending=function(){pendingAnalysis=false;};
+  window._FREE_LIMIT=FREE_LIMIT;
+
+  sb.auth.onAuthStateChange(function(event,session){
+    authUser=session?session.user:null;
+    refreshProfile().then(function(){
+      updateAcctBar();
+      if(authUser&&pendingAnalysis){
+        pendingAnalysis=false;
+        /* small delay so modal closes first */
+        setTimeout(function(){window._continueAnalysis&&window._continueAnalysis();},300);
+      }
+    });
+  });
+
+  function refreshProfile(){
+    if(!authUser){userProfile=null;return Promise.resolve();}
+    return sb.from('profiles').select('*').eq('id',authUser.id).single().then(function(res){
+      userProfile=res.data;
+    });
+  }
+
+  function updateAcctBar(){
+    var si=document.getElementById('ab-signin');
+    var sep=document.getElementById('ab-sep');
+    var su=document.getElementById('ab-signup');
+    var em=document.getElementById('ab-email');
+    var qu=document.getElementById('ab-quota');
+    var da=document.getElementById('ab-dash');
+    var so=document.getElementById('ab-signout');
+    if(!si)return;
+    if(!authUser){
+      si.style.display='';sep.style.display='';su.style.display='';
+      em.style.display='none';qu.style.display='none';da.style.display='none';so.style.display='none';
+    } else {
+      si.style.display='none';sep.style.display='none';su.style.display='none';
+      em.style.display='';da.style.display='';so.style.display='';
+      em.textContent=authUser.email||'';
+      var used=userProfile?userProfile.free_scans_used:0;
+      var isPrem=userProfile&&userProfile.is_premium;
+      var limit=isPrem?250:FREE_LIMIT;
+      var left=Math.max(0,limit-used);
+      qu.style.display='';
+      qu.textContent=left+'/'+limit+' scans';
+      qu.className='ab-quota'+(left===0?' danger':left<=2?' warn':'');
+    }
+  }
+
+  window.openAuth=function(tab){
+    switchAuthTab(tab||'signin');
+    openLegal('auth');
+  };
+
+  window.switchAuthTab=function(tab){
+    document.querySelectorAll('.auth-tab').forEach(function(t){
+      t.classList.toggle('active',t.dataset.tab===tab);
+    });
+    document.querySelectorAll('.auth-pane').forEach(function(p){
+      p.classList.toggle('active',p.dataset.pane===tab);
+    });
+    clearAuthMsg();
+  };
+
+  function clearAuthMsg(){
+    document.querySelectorAll('.auth-msg').forEach(function(m){
+      m.className='auth-msg';m.textContent='';
+    });
+  }
+
+  function showMsg(el,type,msg){
+    el.className='auth-msg '+type;el.textContent=msg;
+  }
+
+  window.doSignIn=function(){
+    var email=document.getElementById('si-email').value.trim();
+    var pwd=document.getElementById('si-pwd').value;
+    var msg=document.getElementById('si-msg');
+    var btn=document.getElementById('si-btn');
+    if(!email||!pwd){showMsg(msg,'error','Please fill in all fields.');return;}
+    btn.disabled=true;btn.querySelector('span').textContent='Signing in…';
+    sb.auth.signInWithPassword({email:email,password:pwd}).then(function(res){
+      btn.disabled=false;btn.querySelector('span').textContent='Sign in';
+      if(res.error){showMsg(msg,'error',res.error.message);return;}
+      closeLegal('auth');
+    });
+  };
+
+  window.doSignUp=function(){
+    var email=document.getElementById('su-email').value.trim();
+    var pwd=document.getElementById('su-pwd').value;
+    var msg=document.getElementById('su-msg');
+    var btn=document.getElementById('su-btn');
+    if(!email||!pwd){showMsg(msg,'error','Please fill in all fields.');return;}
+    if(pwd.length<6){showMsg(msg,'error','Password must be at least 6 characters.');return;}
+    btn.disabled=true;btn.querySelector('span').textContent='Creating account…';
+    sb.auth.signUp({email:email,password:pwd}).then(function(res){
+      btn.disabled=false;btn.querySelector('span').textContent='Create account - it\'s free';
+      if(res.error){showMsg(msg,'error',res.error.message);return;}
+      showMsg(msg,'success','Account created! Check your email to confirm it, then sign in.');
+    });
+  };
+
+  window.doReset=function(){
+    var email=document.getElementById('rs-email').value.trim();
+    var msg=document.getElementById('rs-msg');
+    var btn=document.getElementById('rs-btn');
+    if(!email){showMsg(msg,'error','Enter your email address.');return;}
+    btn.disabled=true;btn.querySelector('span').textContent='Sending…';
+    sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/dashboard'}).then(function(res){
+      btn.disabled=false;btn.querySelector('span').textContent='Send reset link';
+      if(res.error){showMsg(msg,'error',res.error.message);return;}
+      showMsg(msg,'success','Reset link sent! Check your email.');
+    });
+  };
+
+  window.signOut=function(){
+    sb.auth.signOut().then(function(){
+      authUser=null;userProfile=null;updateAcctBar();
+    });
+  };
+
+  window.checkAuthAndRun=function(runFn){
+    if(!authUser){
+      pendingAnalysis=true;
+      window._continueAnalysis=runFn;
+      openAuth('signin');
+      return false;
+    }
+    var used=userProfile?userProfile.free_scans_used:0;
+    var isPrem=userProfile&&userProfile.is_premium;
+    var limit=isPrem?250:FREE_LIMIT;
+    if(used>=limit){
+      openLegal('paywall');
+      return false;
+    }
+    return true;
+  };
+
+  window.saveScan=function(url,title,score,verdict){
+    if(!authUser)return;
+    var uid=authUser.id;
+    sb.from('scans').insert({user_id:uid,url:url,title:title,score:score,verdict:verdict}).then(function(){});
+    sb.from('profiles').select('free_scans_used,is_premium').eq('id',uid).single().then(function(res){
+      if(res.data){
+        var newUsed=(res.data.free_scans_used||0)+1;
+        sb.from('profiles').update({free_scans_used:newUsed}).eq('id',uid).then(function(){
+          if(userProfile)userProfile.free_scans_used=newUsed;
+          updateAcctBar();
+        });
+      }
+    });
+  };
+
+  /* Initial render */
+  sb.auth.getSession().then(function(res){
+    if(res.data&&res.data.session){
+      authUser=res.data.session.user;
+      refreshProfile().then(updateAcctBar);
+    } else {
+      updateAcctBar();
+    }
+  });
+})();
+</script>
+
 <script>
 (function(){
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null;
@@ -1876,6 +2210,18 @@ function analyze(){
     busy=false;return;
   }
   if(q("url-error"))q("url-error").style.display="none";
+
+  /* Gate real URLs behind auth */
+  if(input!==EXAMPLE_URL){
+    var canRun=window.checkAuthAndRun&&window.checkAuthAndRun(function(){
+      busy=true;
+      q("ui").value=input;
+      setBtn0("Checking…",true);
+      setTimeout(function(){setBtn0("Check this print",false);analyze();},380);
+    });
+    if(!canRun){busy=false;return;}
+  }
+
   lastURL=input;
   lastIsURL=true;
   lastProductContext=null;
@@ -1942,6 +2288,13 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
+    /* Save scan to Supabase (fire-and-forget) */
+    if(window.saveScan){
+      var title=data&&data.product?data.product.title:'';
+      var score=data&&data.score!=null?data.score:null;
+      var verd=data&&data.verdict?data.verdict:'';
+      window.saveScan(lastURL,title,score,verd);
+    }
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
     if(waitingForAnalysis){
       waitingForAnalysis=false;

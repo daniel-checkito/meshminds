@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meshminds 3D Printer Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --o:#FF5C00;--od:#cc4900;--o8:rgba(255,92,0,0.08);--o15:rgba(255,92,0,0.15);
+  --bg:#0a0a0a;--bg2:#111;--bg3:#161616;--bg4:#1c1c1c;
+  --t:#f5f5f5;--t2:rgba(245,245,245,0.6);--t3:rgba(245,245,245,0.35);
+  --b:rgba(255,255,255,0.08);--b2:rgba(255,255,255,0.14);
+  --good:#22c55e;
+  --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+  --r:12px;--r2:8px;
+}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--t);font-family:var(--fb);font-size:16px;line-height:1.6;overflow-x:hidden;min-height:100vh}
+
+.site-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b);position:sticky;top:0;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);z-index:100}
+.logo{font-family:var(--fd);font-size:22px;letter-spacing:2px;color:var(--t);display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--o)}
+.header-right{display:flex;align-items:center;gap:10px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--t2);background:var(--bg3);border:1px solid var(--b);border-radius:100px;padding:5px 12px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--good);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+.apply-btn-sm{background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:8px 16px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+
+.hero{padding:48px 20px 32px;max-width:700px;margin:0 auto;text-align:center}
+.hero-eye{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--o);font-weight:700;margin-bottom:12px;font-family:var(--fm)}
+.hero-title{font-family:var(--fd);font-size:clamp(42px,12vw,72px);line-height:.95;letter-spacing:2px;margin-bottom:16px}
+.hero-title span{color:var(--o)}
+.hero-sub{font-size:16px;color:var(--t2);max-width:480px;margin:0 auto 28px;line-height:1.6}
+.hero-stats{display:flex;justify-content:center;gap:32px;margin-bottom:32px;flex-wrap:wrap}
+.hs{text-align:center}
+.hs-n{font-family:var(--fd);font-size:32px;color:var(--o);line-height:1}
+.hs-l{font-size:12px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-top:2px;font-family:var(--fm)}
+
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--b);max-width:960px;margin:0 auto;padding:0 20px}
+.tab{padding:14px 20px;font-size:14px;font-weight:600;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--fb)}
+.tab.active{color:var(--o);border-bottom-color:var(--o)}
+.tab:hover{color:var(--t2)}
+.tab-content{display:none;max-width:960px;margin:0 auto;padding:24px 20px}
+.tab-content.active{display:block}
+
+.map-container{position:relative;border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+#world-map{width:100%;display:block;border-radius:var(--r)}
+.map-layout{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:700px){.map-layout{grid-template-columns:1fr 300px}}
+
+.member-popup{position:absolute;z-index:20;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r);width:250px;pointer-events:auto;display:none;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.7)}
+.member-popup.show{display:block}
+.popup-img{width:100%;height:100px;object-fit:cover;display:block;background:var(--bg4)}
+.popup-img-ph{width:100%;height:100px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:28px}
+.popup-body{padding:12px}
+.popup-name{font-size:14px;font-weight:700;color:var(--t);margin-bottom:2px}
+.popup-loc{font-size:11px;color:var(--t3);margin-bottom:7px}
+.popup-tags{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:9px}
+.popup-tag{font-size:10px;font-weight:600;background:var(--bg4);border:1px solid var(--b);border-radius:4px;padding:2px 6px;color:var(--t2)}
+.popup-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
+.popup-stat{background:var(--bg4);border-radius:6px;padding:7px 9px;text-align:center}
+.popup-stat-n{font-family:var(--fm);font-size:14px;color:var(--o)}
+.popup-stat-l{font-size:9px;color:var(--t3);margin-top:1px}
+.popup-cta{display:flex;gap:5px}
+.popup-btn{flex:1;padding:8px;border-radius:var(--r2);font-size:11px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:var(--fb);transition:background .15s}
+.popup-btn.primary{background:var(--o);color:#fff}
+.popup-btn.primary:hover{background:var(--od)}
+.popup-btn.secondary{background:var(--bg4);color:var(--t2);border:1px solid var(--b2)}
+.popup-btn.secondary:hover{border-color:var(--o);color:var(--t)}
+.popup-close{position:absolute;top:7px;right:7px;background:rgba(0,0,0,.55);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1}
+
+.member-list-panel{display:flex;flex-direction:column;gap:8px}
+.member-list-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:4px;font-family:var(--fm)}
+.member-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r2);cursor:pointer;transition:border-color .15s,background .15s}
+.member-row:hover{border-color:rgba(255,92,0,.4);background:var(--bg4)}
+.member-row.active{border-color:var(--o);background:var(--o8)}
+.mr-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.mr-name{font-size:13px;font-weight:600;color:var(--t);margin-bottom:1px}
+.mr-loc{font-size:11px;color:var(--t3)}
+.mr-right{margin-left:auto;text-align:right}
+.mr-rank{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--o)}
+.mr-sales{font-size:10px;color:var(--t3);margin-top:1px}
+
+.lb-header{display:grid;grid-template-columns:40px 1fr 80px 80px 80px;gap:8px;padding:8px 12px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);font-family:var(--fm);border-bottom:1px solid var(--b);margin-bottom:4px}
+.lb-row{display:grid;grid-template-columns:40px 1fr 80px 80px 80px;gap:8px;align-items:center;padding:12px;background:var(--bg3);border:1px solid var(--b);border-radius:var(--r2);margin-bottom:6px;cursor:pointer;transition:border-color .15s,background .15s}
+.lb-row:hover{border-color:rgba(255,92,0,.35);background:var(--bg4)}
+.lb-row.gold{border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.04)}
+.lb-row.silver{border-color:rgba(148,163,184,.2)}
+.lb-row.bronze{border-color:rgba(180,83,9,.2)}
+.lb-rank{font-family:var(--fd);font-size:22px;text-align:center;line-height:1}
+.lb-rank.gold{color:#eab308}.lb-rank.silver{color:#94a3b8}.lb-rank.bronze{color:#b45309}.lb-rank.other{color:var(--t3);font-size:16px}
+.lb-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.lb-info{display:flex;align-items:center;gap:8px;min-width:0}
+.lb-name{font-size:13px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-loc{font-size:11px;color:var(--t3)}
+.lb-val{font-family:var(--fm);font-size:13px;color:var(--t);text-align:right}
+.lb-val.hot{color:var(--o)}
+.lb-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-align:center;white-space:nowrap}
+.lb-badge.top{background:rgba(234,179,8,.15);color:#eab308}
+.lb-badge.rising{background:rgba(255,92,0,.12);color:var(--o)}
+.lb-badge.new{background:rgba(34,197,94,.1);color:var(--good)}
+.lb-badge.verified{background:var(--bg4);color:var(--t3);border:1px solid var(--b)}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--b2);border-radius:16px;max-width:540px;width:100%;position:relative;overflow:hidden;margin:auto}
+.modal-imgs{position:relative;height:210px;background:var(--bg4);overflow:hidden}
+.modal-imgs img{width:100%;height:100%;object-fit:cover;display:block}
+.modal-imgs-ph{width:100%;height:210px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:48px}
+.modal-img-nav{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px}
+.modal-img-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:background .15s}
+.modal-img-dot.active{background:#fff}
+.modal-close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.6);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;z-index:10;line-height:1}
+.modal-body{padding:22px}
+.modal-badge-row{display:flex;align-items:center;gap:7px;margin-bottom:11px;flex-wrap:wrap}
+.modal-badge{font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:4px}
+.modal-badge.rank{background:rgba(234,179,8,.15);color:#eab308}
+.modal-badge.verified{background:rgba(255,92,0,.12);color:var(--o)}
+.modal-badge.member{background:var(--bg4);color:var(--t3);border:1px solid var(--b)}
+.modal-name{font-family:var(--fd);font-size:26px;letter-spacing:1px;margin-bottom:4px}
+.modal-loc{font-size:13px;color:var(--t3);margin-bottom:13px}
+.modal-project-title{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--o);margin-bottom:5px;font-family:var(--fm)}
+.modal-project-name{font-size:17px;font-weight:700;color:var(--t);margin-bottom:7px}
+.modal-project-desc{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:14px}
+.modal-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
+.modal-stat{background:var(--bg4);border-radius:var(--r2);padding:10px;text-align:center}
+.modal-stat-n{font-family:var(--fm);font-size:15px;color:var(--o)}
+.modal-stat-l{font-size:10px;color:var(--t3);margin-top:2px}
+.modal-tags-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px}
+.modal-tag{font-size:11px;background:var(--bg4);border:1px solid var(--b);border-radius:4px;padding:3px 8px;color:var(--t2)}
+.modal-actions{display:flex;gap:8px}
+.modal-action{flex:1;padding:12px;border-radius:var(--r2);font-size:14px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:var(--fb);text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .15s}
+.modal-action.primary{background:var(--o);color:#fff}
+.modal-action.primary:hover{background:var(--od)}
+.modal-action.secondary{background:var(--bg4);color:var(--t2);border:1px solid var(--b2)}
+.modal-action.secondary:hover{border-color:var(--o);color:var(--t)}
+
+.join-section{background:var(--bg3);border:1px solid rgba(255,92,0,.25);border-radius:var(--r);padding:28px 24px;text-align:center;margin-top:24px;position:relative;overflow:hidden}
+.join-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,92,0,.1),transparent 70%);pointer-events:none}
+.join-eye{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--o);margin-bottom:8px;font-family:var(--fm)}
+.join-title{font-family:var(--fd);font-size:clamp(24px,6vw,36px);letter-spacing:1px;margin-bottom:8px}
+.join-sub{font-size:14px;color:var(--t2);margin-bottom:20px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.5}
+.join-perks{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;text-align:left;max-width:320px;margin-left:auto;margin-right:auto}
+.join-perk{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px}
+.join-perk::before{content:'→';color:var(--o);font-weight:700;flex-shrink:0}
+.join-cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:14px 28px;font-family:var(--fb);font-size:15px;font-weight:600;cursor:pointer;transition:background .15s}
+.join-cta-btn:hover{background:var(--od)}
+.join-price{font-size:12px;color:var(--t3);margin-top:10px}
+
+.filter-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.filter-chip{padding:6px 12px;border-radius:100px;font-size:12px;font-weight:600;border:1px solid var(--b);background:var(--bg3);color:var(--t3);cursor:pointer;transition:all .15s;font-family:var(--fb)}
+.filter-chip:hover{border-color:rgba(255,92,0,.4);color:var(--t2)}
+.filter-chip.active{background:var(--o);border-color:var(--o);color:#fff}
+
+/* PARTNER BRANDS */
+.partners-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.partners-title-block .ph-eye{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--o);margin-bottom:4px;font-family:var(--fm)}
+.partners-title-block .ph-title{font-family:var(--fd);font-size:26px;letter-spacing:1px;color:var(--t)}
+.partners-title-block .ph-sub{font-size:13px;color:var(--t3);margin-top:3px;max-width:420px;line-height:1.45}
+.sponsored-note{font-size:11px;color:var(--t3);background:var(--bg4);border:1px solid var(--b);border-radius:6px;padding:5px 10px;align-self:flex-start;white-space:nowrap}
+.brand-map-wrap{border:1px solid var(--b);border-radius:var(--r);overflow:hidden;margin-bottom:24px}
+.brand-map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--t3);font-family:var(--fm);letter-spacing:1px;z-index:2}
+.brands-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.brand-card{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;position:relative}
+.brand-card:hover{border-color:rgba(255,92,0,.45);transform:translateY(-2px)}
+.brand-card.featured{border-color:rgba(255,92,0,.4);box-shadow:0 0 0 1px rgba(255,92,0,.15)}
+.brand-card-img{width:100%;height:110px;object-fit:cover;display:block;background:var(--bg4)}
+.brand-card-img-ph{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:36px;background:var(--bg4)}
+.brand-featured-badge{position:absolute;top:8px;left:8px;background:var(--o);color:#fff;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;border-radius:4px}
+.brand-sponsored-badge{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.6);color:rgba(255,255,255,.5);font-size:9px;font-weight:600;letter-spacing:.5px;padding:3px 8px;border-radius:4px}
+.brand-body{padding:14px}
+.brand-logo-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.brand-logo{width:36px;height:36px;border-radius:8px;background:var(--bg4);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.brand-name{font-size:15px;font-weight:700;color:var(--t);margin-bottom:1px}
+.brand-category{font-size:11px;color:var(--o);font-weight:600;letter-spacing:.5px}
+.brand-desc{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:12px}
+.brand-perks{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.brand-perk{font-size:12px;color:var(--t2);display:flex;align-items:center;gap:6px}
+.brand-perk::before{content:'✓';color:var(--good);font-weight:700;font-size:11px;flex-shrink:0}
+.brand-code-row{display:flex;align-items:center;gap:8px;background:var(--bg4);border:1px solid rgba(255,92,0,.25);border-radius:var(--r2);padding:8px 12px;margin-bottom:12px}
+.brand-code-label{font-size:10px;color:var(--t3);font-family:var(--fm)}
+.brand-code{font-family:var(--fm);font-size:14px;font-weight:500;color:var(--o);letter-spacing:1px;flex:1}
+.brand-copy-btn{background:var(--o);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fb);white-space:nowrap;transition:background .15s}
+.brand-copy-btn:hover{background:var(--od)}
+.brand-copy-btn.copied{background:#22c55e}
+.brand-cta{display:flex;gap:6px}
+.brand-btn{flex:1;padding:10px;border-radius:var(--r2);font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:var(--fb);text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .15s}
+.brand-btn.primary{background:var(--o);color:#fff}
+.brand-btn.primary:hover{background:var(--od)}
+.brand-btn.secondary{background:var(--bg4);color:var(--t2);border:1px solid var(--b2)}
+.brand-btn.secondary:hover{border-color:var(--o);color:var(--t)}
+.brand-popup{position:absolute;z-index:20;background:var(--bg2);border:1px solid var(--b2);border-radius:var(--r);width:220px;pointer-events:auto;display:none;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.7);padding:14px}
+.brand-popup.show{display:block}
+.brand-popup-name{font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px}
+.brand-popup-cat{font-size:10px;color:var(--o);font-weight:600;margin-bottom:7px}
+.brand-popup-desc{font-size:12px;color:var(--t2);line-height:1.45;margin-bottom:10px}
+.brand-popup-btn{width:100%;padding:8px;border-radius:var(--r2);font-size:12px;font-weight:600;text-align:center;cursor:pointer;border:none;font-family:var(--fb);background:var(--o);color:#fff;transition:background .15s}
+.brand-popup-btn:hover{background:var(--od)}
+.brand-popup-close{position:absolute;top:7px;right:7px;background:var(--bg4);border:none;color:var(--t3);width:20px;height:20px;border-radius:50%;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;line-height:1}
+.partners-cta-bar{background:var(--bg3);border:1px solid rgba(255,92,0,.2);border-radius:var(--r);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}
+.partners-cta-text .pct-title{font-family:var(--fd);font-size:20px;letter-spacing:1px;margin-bottom:3px}
+.partners-cta-text .pct-sub{font-size:13px;color:var(--t2)}
+.partners-cta-btn{background:var(--o);color:#fff;border:none;border-radius:var(--r2);padding:11px 22px;font-family:var(--fb);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
+.partners-cta-btn:hover{background:var(--od)}
+
+.av-o{background:rgba(255,92,0,.12);color:#FF5C00}
+.av-g{background:rgba(34,197,94,.12);color:#22c55e}
+.av-b{background:rgba(59,130,246,.12);color:#3b82f6}
+.av-p{background:rgba(139,92,246,.12);color:#8b5cf6}
+.av-r{background:rgba(239,68,68,.12);color:#ef4444}
+.av-y{background:rgba(234,179,8,.12);color:#eab308}
+
+.map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0d1117;z-index:5;font-size:13px;color:var(--t3);letter-spacing:1px;font-family:var(--fm)}
+
+@media(max-width:600px){
+  .lb-header{grid-template-columns:36px 1fr 70px 60px}
+  .lb-row{grid-template-columns:36px 1fr 70px 60px}
+  .lb-header>div:nth-child(5),.lb-row>div:nth-child(5){display:none}
+}
+/* Leaflet pin + popup */
+.mm-pin{background:transparent!important;border:none!important;display:flex;align-items:center;justify-content:center}
+.mm-pin-dot{width:14px;height:14px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35),0 0 0 1px rgba(0,0,0,.12);transition:transform .15s;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.mm-pin:hover .mm-pin-dot{transform:translate(-50%,-50%) scale(1.4)}
+.mm-member-pin{background:transparent!important;border:none!important}
+.mm-member-pin-inner{width:22px;height:22px;border-radius:50% 50% 50% 0;background:#FF5C00;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.28);transform:rotate(-45deg);transition:transform .15s,box-shadow .15s}
+.mm-member-pin:hover .mm-member-pin-inner{transform:rotate(-45deg) scale(1.2);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.mm-popup .leaflet-popup-content-wrapper{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:var(--r);box-shadow:0 6px 24px rgba(0,0,0,.15);padding:0;overflow:hidden}
+.mm-popup .leaflet-popup-tip{background:#fff}
+.mm-popup .leaflet-popup-content{margin:0;width:262px!important}
+.mm-popup .leaflet-popup-close-button{color:rgba(0,0,0,.4)!important;background:rgba(0,0,0,.07)!important;border-radius:50%!important;width:22px!important;height:22px!important;font-size:14px!important;line-height:22px!important;text-align:center!important;padding:0!important;top:8px!important;right:8px!important}
+.mm-popup .leaflet-popup-close-button:hover{color:#000!important;background:rgba(0,0,0,.14)!important}
+.mm-popup .popup-img{background:#e8e8e8}
+.mm-popup .popup-img-ph{background:#e8e8e8}
+.mm-popup .popup-name{color:#111}
+.mm-popup .popup-loc{color:rgba(0,0,0,.45)}
+.mm-popup .popup-tag{background:#f0f0f0;border-color:rgba(0,0,0,.1);color:rgba(0,0,0,.6)}
+.mm-popup .popup-stat{background:#f5f5f5}
+.mm-popup .popup-stat-l{color:rgba(0,0,0,.4)}
+.mm-popup .popup-btn.secondary{background:#f0f0f0;color:rgba(0,0,0,.65);border-color:rgba(0,0,0,.15)}
+.mm-popup .popup-btn.secondary:hover{border-color:#FF5C00;color:#111}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo"><div class="logo-dot"></div>MESHMINDS</div>
+  <div class="header-right">
+    <div class="live-badge"><div class="live-dot"></div>24 members</div>
+    <a href="javascript:void(0)" onclick="openApplyForm()" class="apply-btn-sm">Get listed →</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eye">3D Printer Community</div>
+  <div class="hero-title">OUR<br><span>COMMUNITY</span></div>
+  <div class="hero-sub">The most active 3D print sellers on the planet. Featured on Daniel's page in front of 93K followers.</div>
+  <div class="hero-stats">
+    <div class="hs"><div class="hs-n">24</div><div class="hs-l">Members</div></div>
+    <div class="hs"><div class="hs-n">12</div><div class="hs-l">Countries</div></div>
+    <div class="hs"><div class="hs-n">48K</div><div class="hs-l">Total sales</div></div>
+    <div class="hs"><div class="hs-n">93K</div><div class="hs-l">Followers</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('map',this)">🗺 World Map</button>
+  <button class="tab" onclick="switchTab('leaderboard',this)">🏆 Leaderboard</button>
+  <button class="tab" onclick="switchTab('projects',this)">📦 Projects</button>
+  <button class="tab" onclick="switchTab('partners',this)">⭐ Partner Brands</button>
+</div>
+
+<div class="tab-content active" id="tab-map">
+  <div class="map-layout">
+    <div>
+      <div class="map-container">
+        <div id="world-map" style="height:430px"></div>
+      </div>
+    </div>
+    <div class="member-list-panel">
+      <div class="member-list-label">Active members</div>
+      <div id="member-list-items"></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-leaderboard">
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterLB('all',this)">All time</button>
+    <button class="filter-chip" onclick="filterLB('month',this)">This month</button>
+    <button class="filter-chip" onclick="filterLB('sales',this)">By sales</button>
+  </div>
+  <div class="lb-header">
+    <div>#</div><div>Member</div>
+    <div style="text-align:right">Sales</div>
+    <div style="text-align:right">Revenue</div>
+    <div style="text-align:right">Status</div>
+  </div>
+  <div id="lb-rows"></div>
+</div>
+
+<div class="tab-content" id="tab-projects">
+  <div class="filter-bar">
+    <button class="filter-chip active" onclick="filterProj('all',this)">All</button>
+    <button class="filter-chip" onclick="filterProj('decor',this)">Home decor</button>
+    <button class="filter-chip" onclick="filterProj('gifts',this)">Gifts</button>
+    <button class="filter-chip" onclick="filterProj('tools',this)">Tools</button>
+    <button class="filter-chip" onclick="filterProj('gaming',this)">Gaming</button>
+  </div>
+  <div id="projects-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px"></div>
+</div>
+
+<div class="tab-content" id="tab-partners"></div>
+
+<div style="max-width:960px;margin:0 auto;padding:0 20px 48px" id="join">
+  <div class="join-section">
+    <div class="join-eye">Apply for a spot</div>
+    <div class="join-title">GET FEATURED HERE</div>
+    <div class="join-sub">Your shop, your project, your name in front of Daniel's 93K Instagram followers. Every month.</div>
+    <div class="join-perks">
+      <div class="join-perk">Pin on the world map with your project</div>
+      <div class="join-perk">Leaderboard ranking updated weekly</div>
+      <div class="join-perk">Project showcase with images & links</div>
+      <div class="join-perk">Verified badge on all mentions</div>
+      <div class="join-perk">Featured in monthly community posts</div>
+    </div>
+    <button class="join-cta-btn" onclick="openApplyForm()">Apply for a spot →</button>
+    <div class="join-price">Free to join · Manual review · Pin live within 48h</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const MEMBERS=[
+  {id:0,name:"Lena M.",init:"LM",av:"av-o",city:"Berlin",country:"Germany",flag:"🇩🇪",tags:["Lamps","Home decor"],sales:847,revenue:18634,etsy:"lena3dberlin",ig:"@lena3d",public:true,rank:1,badge:"top",lon:13.4,lat:52.5,bio:"Part-time seller, full-time chaos. I print minimalist lamps and wall shelves when my kids are asleep.",project:{name:"Minimal Lamp Series",desc:"Clean, minimalist lamp collection. 6 designs, all print-tested and ready to sell.",imgs:["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=560&h=220&fit=crop","https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
+  {id:1,name:"Tom K.",init:"TK",av:"av-g",city:"Amsterdam",country:"Netherlands",flag:"🇳🇱",tags:["Planters","Organizers"],sales:1240,revenue:24800,etsy:"tomkprints",ig:"@tomkprint",public:true,rank:2,badge:"top",lon:4.9,lat:52.37,bio:"Dutch designer with a Bambu X1C and way too many filament spools. I make modular planters for small apartments.",project:{name:"Modular Planter System",desc:"Interlocking wall planter system. Works with any wall type, ships flat.",imgs:["https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
+  {id:2,name:"James R.",init:"JR",av:"av-b",city:"London",country:"UK",flag:"🇬🇧",tags:["Gaming","Minis"],sales:652,revenue:12388,etsy:"jamesrprints",ig:"@jrprints3d",public:false,rank:3,badge:"top",lon:-0.12,lat:51.5,bio:"Tabletop gamer who got tired of buying expensive minis. Now I design and sell them. D&D runs in my blood.",project:{name:"DnD Miniature Line",desc:"Hand-designed tabletop miniatures. New drops every month, 40+ countries shipped.",imgs:["https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=560&h=220&fit=crop"]},joined:"Dec 2024"},
+  {id:3,name:"Marc D.",init:"MD",av:"av-p",city:"Paris",country:"France",flag:"🇫🇷",tags:["Jewelry","Gifts"],sales:318,revenue:7632,etsy:"marcdparis",ig:"@marcdprint",public:false,rank:4,badge:"rising",lon:2.35,lat:48.85,bio:"Jewellery designer by day, 3D print nerd by night. My wife thinks I spend too much on filament. She's right.",project:{name:"Geometric Jewelry",desc:"Precision-printed geometric jewelry in PLA and PETG. Custom orders always welcome.",imgs:["https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
+  {id:4,name:"Sara V.",init:"SV",av:"av-y",city:"Vienna",country:"Austria",flag:"🇦🇹",tags:["Seasonal","Home decor"],sales:483,revenue:10143,etsy:"saravdesigns",ig:"@saravprint",public:true,rank:5,badge:"verified",lon:16.37,lat:48.21,bio:"I print seasonal décor — Christmas, Easter, Halloween. My shop basically runs itself for 3 months and dies for the other 9.",project:{name:"Seasonal Decor Sets",desc:"Seasonal print collections. Consistent 5-star reviews across 480 orders.",imgs:["https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=560&h=220&fit=crop"]},joined:"Feb 2025"},
+  {id:5,name:"Erik S.",init:"ES",av:"av-b",city:"Stockholm",country:"Sweden",flag:"🇸🇪",tags:["Organizers","Functional"],sales:921,revenue:21183,etsy:"eriksprints",ig:"@eriksprints",public:false,rank:6,badge:"verified",lon:18.07,lat:59.33,bio:"Minimalist at heart. Everything I make fits on a desk. Scandinavian design principles, no unnecessary clutter.",project:{name:"Desk Organizer System",desc:"Modular desk organizers. 15 compatible pieces, all prints in under 3 hours.",imgs:["https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=560&h=220&fit=crop"]},joined:"Jan 2025"},
+  {id:6,name:"Chiara B.",init:"CB",av:"av-r",city:"Milan",country:"Italy",flag:"🇮🇹",tags:["Art","Home decor"],sales:214,revenue:3852,etsy:"chiarabdesign",ig:"@chiarab3d",public:true,rank:7,badge:"new",lon:9.19,lat:45.46,bio:"Architecture student who figured out I could sell prints instead of just making them for studio. Abstract wall panels are my thing.",project:{name:"Abstract Wall Art",desc:"Bold abstract wall panels inspired by Italian design. FDM printed, hand-sanded finish.",imgs:["https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=560&h=220&fit=crop"]},joined:"Apr 2025"},
+  {id:7,name:"Ana P.",init:"AP",av:"av-g",city:"Lisbon",country:"Portugal",flag:"🇵🇹",tags:["Gifts","Custom"],sales:376,revenue:7520,etsy:"anapprints",ig:"@anaprint3d",public:true,rank:8,badge:"verified",lon:-9.14,lat:38.72,bio:"Custom gift boxes for weddings and events. My whole family is now involved in the business whether they like it or not.",project:{name:"Custom Gift Boxes",desc:"Personalized gift packaging with 3D printed lids. Weddings, birthdays, corporate events.",imgs:["https://images.unsplash.com/photo-1513201099705-a9746072f043?w=560&h=220&fit=crop"]},joined:"Mar 2025"},
+];
+
+let activePopup=null,currentMember=null,currentImgIdx=0;
+let leafletMap=null,memberMarkers={};
+
+function memberPopupHtml(m){
+  const imgHtml=m.project.imgs&&m.project.imgs.length
+    ?`<img src="${m.project.imgs[0]}" class="popup-img" onerror="this.style.display='none'">`
+    :`<div class="popup-img-ph">🖨️</div>`;
+  const socialHtml=m.public
+    ?`<a href="https://instagram.com/${m.ig.replace('@','')}" target="_blank" rel="noopener" style="color:#FF5C00;text-decoration:none;font-size:11px">${m.ig}</a>`
+    :`<span style="font-size:11px;color:rgba(0,0,0,.35);font-style:italic">Private account</span>`;
+  return imgHtml+`<div class="popup-body">
+    <div class="popup-name">${m.name}</div>
+    <div class="popup-loc">${m.flag} ${m.city}, ${m.country}</div>
+    <div style="font-size:11px;margin:2px 0 7px">${socialHtml}</div>
+    <div style="font-size:12px;color:rgba(0,0,0,.58);line-height:1.5;margin-bottom:8px;font-style:italic">"${m.bio}"</div>
+    <div class="popup-tags">${m.tags.map(t=>`<span class="popup-tag">${t}</span>`).join('')}</div>
+    <div class="popup-stats"><div class="popup-stat"><div class="popup-stat-n">${m.sales.toLocaleString()}</div><div class="popup-stat-l">Sales</div></div><div class="popup-stat"><div class="popup-stat-n">#${m.rank}</div><div class="popup-stat-l">Ranked</div></div></div>
+    <div class="popup-cta"><button class="popup-btn primary" onclick="openModal(${m.id})">See project →</button><button class="popup-btn secondary" onclick="window.open('https://etsy.com/shop/${m.etsy}','_blank')">Etsy</button></div>
+  </div>`;
+}
+
+function initMap(){
+  leafletMap=L.map('world-map',{center:[48,12],zoom:3,minZoom:2,maxZoom:10,zoomControl:true,attributionControl:true});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains:'abcd',maxZoom:19
+  }).addTo(leafletMap);
+  leafletMap.on('popupclose',()=>{
+    activePopup=null;
+    document.querySelectorAll('.member-row').forEach(r=>r.classList.remove('active'));
+  });
+  MEMBERS.forEach((m)=>{
+    const icon=L.divIcon({className:'mm-member-pin',html:'<div class="mm-member-pin-inner"></div>',iconSize:[22,28],iconAnchor:[11,28],popupAnchor:[0,-30]});
+    const marker=L.marker([m.lat,m.lon],{icon})
+      .bindPopup(L.popup({maxWidth:252,className:'mm-popup',closeButton:true}).setContent(memberPopupHtml(m)))
+      .addTo(leafletMap);
+    marker.on('click',()=>{
+      activePopup=m.id;
+      document.querySelectorAll('.member-row').forEach(r=>r.classList.remove('active'));
+      const row=document.getElementById('mr-'+m.id);
+      if(row){row.classList.add('active');row.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    });
+    memberMarkers[m.id]=marker;
+  });
+  initMemberList();
+}
+
+function showPopup(m){
+  if(!leafletMap||!memberMarkers[m.id])return;
+  leafletMap.setView([m.lat,m.lon],Math.max(leafletMap.getZoom(),4),{animate:true,duration:0.5});
+  memberMarkers[m.id].openPopup();
+}
+
+function hidePopup(){
+  activePopup=null;
+  if(leafletMap)leafletMap.closePopup();
+  document.querySelectorAll('.member-row').forEach(r=>r.classList.remove('active'));
+}
+
+function initMemberList(){
+  const list=document.getElementById('member-list-items');
+  list.innerHTML='';
+  MEMBERS.forEach(m=>{
+    const row=document.createElement('div');
+    row.className='member-row';row.id='mr-'+m.id;
+    row.innerHTML=`<div class="mr-av ${m.av}">${m.init}</div><div style="flex:1;min-width:0"><div class="mr-name">${m.name}</div><div class="mr-loc">${m.flag} ${m.city}</div></div><div class="mr-right"><div class="mr-rank">#${m.rank}</div><div class="mr-sales">${m.sales.toLocaleString()} sales</div></div>`;
+    row.addEventListener('click',()=>showPopup(m));
+    list.appendChild(row);
+  });
+}
+
+function initLeaderboard(){
+  const container=document.getElementById('lb-rows');
+  const sorted=[...MEMBERS].sort((a,b)=>b.sales-a.sales);
+  container.innerHTML='';
+  const badgeMap={top:'<span class="lb-badge top">Top seller</span>',rising:'<span class="lb-badge rising">↑ Rising</span>',new:'<span class="lb-badge new">New</span>',verified:'<span class="lb-badge verified">Verified</span>'};
+  sorted.forEach((m,i)=>{
+    const rankClass=i===0?'gold':i===1?'silver':i===2?'bronze':'other';
+    const rankIcon=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    const row=document.createElement('div');
+    row.className=`lb-row ${rankClass}`;
+    row.innerHTML=`
+      <div class="lb-rank ${rankClass}">${rankIcon}</div>
+      <div class="lb-info">
+        <div class="lb-av ${m.av}">${m.init}</div>
+        <div><div class="lb-name">${m.name}</div><div class="lb-loc">${m.flag} ${m.city}</div></div>
+      </div>
+      <div class="lb-val hot">${m.sales.toLocaleString()}</div>
+      <div class="lb-val">€${Math.round(m.revenue/1000)}K</div>
+      <div>${badgeMap[m.badge]||''}</div>`;
+    row.addEventListener('click',()=>openModal(m.id));
+    container.appendChild(row);
+  });
+}
+
+function initProjects(){
+  const grid=document.getElementById('projects-grid');
+  grid.innerHTML='';
+  MEMBERS.forEach(m=>{
+    const card=document.createElement('div');
+    card.style.cssText='background:var(--bg3);border:1px solid var(--b);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s';
+    card.setAttribute('data-tags',m.tags.join(',').toLowerCase());
+    const imgHtml=m.project.imgs&&m.project.imgs.length
+      ?`<img src="${m.project.imgs[0]}" style="width:100%;height:130px;object-fit:cover;display:block" onerror="this.parentElement.style.background='var(--bg4)';this.style.display='none'">`
+      :`<div style="height:130px;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--bg4)">🖨️</div>`;
+    card.innerHTML=`${imgHtml}<div style="padding:12px"><div style="display:flex;align-items:center;gap:6px;margin-bottom:6px"><div class="${m.av}" style="width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0">${m.init}</div><span style="font-size:12px;font-weight:600;color:var(--t2)">${m.name} ${m.flag}</span></div><div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:4px;line-height:1.3">${m.project.name}</div><div style="font-size:12px;color:var(--t3);margin-bottom:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${m.project.desc}</div><div style="font-size:12px;color:var(--o);font-weight:600">${m.sales.toLocaleString()} sales →</div></div>`;
+    card.addEventListener('click',()=>openModal(m.id));
+    card.addEventListener('mouseenter',()=>{card.style.borderColor='rgba(255,92,0,0.4)';card.style.transform='translateY(-2px)';});
+    card.addEventListener('mouseleave',()=>{card.style.borderColor='var(--b)';card.style.transform='';});
+    grid.appendChild(card);
+  });
+}
+
+function filterLB(type,btn){
+  document.querySelectorAll('#tab-leaderboard .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+}
+function filterProj(type,btn){
+  document.querySelectorAll('#tab-projects .filter-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#projects-grid div[data-tags]').forEach(card=>{
+    card.style.display=(type==='all'||card.getAttribute('data-tags').includes(type))?'':'none';
+  });
+}
+
+function openModal(id){
+  const m=MEMBERS.find(x=>x.id===id);
+  if(!m)return;
+  currentMember=m;currentImgIdx=0;
+  const imgs=m.project.imgs||[];
+  const imgHtml=imgs.length
+    ?`<img id="modal-img" src="${imgs[0]}" style="width:100%;height:100%;object-fit:cover;display:block">`
+    :`<div class="modal-imgs-ph">🖨️</div>`;
+  const dotsHtml=imgs.length>1?`<div class="modal-img-nav">${imgs.map((_,i)=>`<div class="modal-img-dot${i===0?' active':''}" onclick="switchImg(${i})"></div>`).join('')}</div>`:'';
+  const rankLabel=m.rank<=3?['🥇 #1 Seller','🥈 #2 Seller','🥉 #3 Seller'][m.rank-1]:`Ranked #${m.rank}`;
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-imgs">${imgHtml}${dotsHtml}</div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-badge-row">
+        <span class="modal-badge rank">${rankLabel}</span>
+        <span class="modal-badge verified">✓ Verified</span>
+        <span class="modal-badge member">Since ${m.joined}</span>
+      </div>
+      <div class="modal-name">${m.name}</div>
+      <div class="modal-loc">${m.flag} ${m.city}, ${m.country}${m.public?' · '+m.ig:''}</div>
+      <div class="modal-project-title">Featured project</div>
+      <div class="modal-project-name">${m.project.name}</div>
+      <div class="modal-project-desc">${m.project.desc}</div>
+      <div class="modal-stats-grid">
+        <div class="modal-stat"><div class="modal-stat-n">${m.sales.toLocaleString()}</div><div class="modal-stat-l">Total sales</div></div>
+        <div class="modal-stat"><div class="modal-stat-n">€${Math.round(m.revenue/1000)}K</div><div class="modal-stat-l">Revenue</div></div>
+        <div class="modal-stat"><div class="modal-stat-n">#${m.rank}</div><div class="modal-stat-l">Leaderboard</div></div>
+      </div>
+      <div class="modal-tags-row">${m.tags.map(t=>`<span class="modal-tag">${t}</span>`).join('')}</div>
+      <div class="modal-actions">
+        <a href="https://etsy.com/shop/${m.etsy}" target="_blank" rel="noopener" class="modal-action primary">Visit Etsy shop →</a>
+        ${m.public?`<a href="https://instagram.com/${m.ig.replace('@','')}" target="_blank" rel="noopener" class="modal-action secondary">Instagram</a>`:''}
+      </div>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function switchImg(idx){
+  if(!currentMember||!currentMember.project.imgs)return;
+  currentImgIdx=idx;
+  const img=document.getElementById('modal-img');
+  if(img)img.src=currentMember.project.imgs[idx];
+  document.querySelectorAll('.modal-img-dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='leaderboard')initLeaderboard();
+  if(name==='projects')initProjects();
+  if(name==='partners')initPartners();
+}
+
+const BRANDS=[
+  {id:0,name:"Cubee3D",logo:"🧊",category:"Commercial STL License",featured:true,lon:-0.12,lat:51.5,country:"UK",flag:"🇬🇧",desc:"1,000+ proven Etsy-ready designs with full commercial license. The fastest way to start selling without designing from scratch.",perks:["1,000+ ready-to-sell designs","Unlimited prints allowed","No IP risk, full commercial rights"],code:"MESHMINDS",codeDiscount:"10% off",url:"https://cubee3d.com",img:"https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=220&fit=crop"},
+  {id:1,name:"Bambu Lab",logo:"🖨️",category:"3D Printers",featured:true,lon:114.06,lat:22.54,country:"China",flag:"🇨🇳",desc:"The fastest desktop 3D printers on the market. Used by top Etsy sellers worldwide for high-volume production.",perks:["Multi-color printing","Up to 16x faster than competitors","Used by 93K+ community members"],code:"MESHMINDS5",codeDiscount:"5% off",url:"https://bambulab.com",img:"https://images.unsplash.com/photo-1612198790700-0b2a5e8e8c0e?w=600&h=220&fit=crop"},
+  {id:2,name:"Overture",logo:"🧵",category:"Filament",featured:false,lon:-87.63,lat:41.88,country:"USA",flag:"🇺🇸",desc:"Premium PLA and specialty filaments built for Etsy sellers. Consistent quality across every spool.",perks:["Up to 20% affiliate commission","Fast US shipping 3-6 days","Silk, matte, glow variants"],code:"MESH20",codeDiscount:"20% off",url:"https://overture3d.com",img:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=220&fit=crop"},
+  {id:3,name:"eRank",logo:"📊",category:"Etsy Analytics",featured:false,lon:-122.33,lat:47.61,country:"USA",flag:"🇺🇸",desc:"The tool serious Etsy sellers use to find winning niches, track keywords, and spy on competitors.",perks:["Real Etsy search volume data","Competitor tracking","Keyword trend alerts"],code:"MESHMINDS",codeDiscount:"Free trial",url:"https://erank.com",img:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=220&fit=crop"},
+  {id:4,name:"MakerWorld",logo:"🌍",category:"Model Platform",featured:false,lon:114.06,lat:22.54,country:"China",flag:"🇨🇳",desc:"Bambu Lab's model sharing platform. Upload your designs, earn points, and unlock passive income from downloads.",perks:["Free to list models","Earn from downloads","Integrated Bambu slicer"],code:null,codeDiscount:null,url:"https://makerworld.com",img:"https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=220&fit=crop"},
+];
+
+let activeBrandPopup=null;
+let brandLeafletMap=null;
+
+function initPartners(){
+  const tab=document.getElementById('tab-partners');
+  if(tab.dataset.init==='1')return;
+  tab.dataset.init='1';
+
+  tab.innerHTML=`
+    <div class="partners-header">
+      <div class="partners-title-block">
+        <div class="ph-eye">Curated partners</div>
+        <div class="ph-title">SHOPS & BRANDS</div>
+        <div class="ph-sub">Tools and brands Daniel actually uses. All separately mapped not mixed with community members.</div>
+      </div>
+      <div class="sponsored-note">Sponsored placements</div>
+    </div>
+
+    <div class="brand-map-wrap">
+      <div id="brand-world-map" style="height:260px;border-radius:var(--r)"></div>
+    </div>
+
+    <div class="brands-grid" id="brands-grid"></div>
+
+    <div class="partners-cta-bar">
+      <div class="partners-cta-text">
+        <div class="pct-title">WANT YOUR BRAND HERE?</div>
+        <div class="pct-sub">€199–499/month · your logo, discount code & map pin in front of 93K followers</div>
+      </div>
+      <button class="partners-cta-btn" onclick="alert('Partner enquiry form coming soon!')">Enquire →</button>
+    </div>`;
+
+  initBrandMap();
+  renderBrandCards();
+}
+
+function initBrandMap(){
+  if(brandLeafletMap)return;
+  brandLeafletMap=L.map('brand-world-map',{center:[30,0],zoom:2,minZoom:2,maxZoom:8,scrollWheelZoom:true,zoomControl:true,attributionControl:false});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; OSM &copy; CARTO',subdomains:'abcd',maxZoom:19
+  }).addTo(brandLeafletMap);
+  BRANDS.forEach(b=>{
+    const sz=b.featured?22:16;
+    const color=b.featured?'#FF5C00':'#4a90d9';
+    const dotSz=b.featured?14:10;
+    const icon=L.divIcon({className:'mm-pin',html:`<div class="mm-pin-dot" style="background:${color};width:${dotSz}px;height:${dotSz}px"></div>`,iconSize:[sz,sz],iconAnchor:[sz/2,sz/2],popupAnchor:[0,-(sz/2)+2]});
+    const popupHtml=`<div class="popup-body"><div class="popup-name">${b.logo} ${b.name}</div><div class="popup-loc">${b.flag} ${b.country} · ${b.category}</div><div style="font-size:12px;color:var(--t2);line-height:1.45;margin:6px 0 10px">${b.desc.slice(0,90)}...</div><button class="brand-popup-btn" onclick="document.getElementById('brand-${b.id}').scrollIntoView({behavior:'smooth',block:'center'})">See details ↓</button></div>`;
+    L.marker([b.lat,b.lon],{icon}).bindPopup(L.popup({maxWidth:220,className:'mm-popup'}).setContent(popupHtml)).addTo(brandLeafletMap);
+  });
+}
+
+function copyCode(code,btnId){
+  navigator.clipboard.writeText(code).catch(()=>{});
+  const btn=document.getElementById(btnId);
+  if(!btn)return;
+  btn.textContent='Copied!';btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+}
+
+function renderBrandCards(){
+  const grid=document.getElementById('brands-grid');
+  grid.innerHTML='';
+  BRANDS.forEach(b=>{
+    const card=document.createElement('div');
+    card.className='brand-card'+(b.featured?' featured':'');
+    card.id='brand-'+b.id;
+    const imgHtml=b.img
+      ?`<img class="brand-card-img" src="${b.img}" onerror="this.parentElement.querySelector('.brand-card-img-ph').style.display='flex';this.style.display='none'">`
+      :'';
+    const codeSec=b.code?`
+      <div class="brand-code-row">
+        <div><div class="brand-code-label">Discount code</div><div class="brand-code">${b.code}</div></div>
+        <span style="font-size:11px;color:var(--good);font-weight:600;white-space:nowrap">${b.codeDiscount}</span>
+        <button class="brand-copy-btn" id="copy-${b.id}" onclick="copyCode('${b.code}','copy-${b.id}')">Copy</button>
+      </div>`:'';
+    card.innerHTML=`
+      <div style="position:relative">
+        ${imgHtml}
+        <div class="brand-card-img-ph" style="display:none">${b.logo}</div>
+        ${b.featured?'<span class="brand-featured-badge">✦ Featured</span>':''}
+        <span class="brand-sponsored-badge">Sponsored</span>
+      </div>
+      <div class="brand-body">
+        <div class="brand-logo-row">
+          <div class="brand-logo">${b.logo}</div>
+          <div><div class="brand-name">${b.name}</div><div class="brand-category">${b.category}</div></div>
+        </div>
+        <div class="brand-desc">${b.desc}</div>
+        <div class="brand-perks">${b.perks.map(p=>`<div class="brand-perk">${p}</div>`).join('')}</div>
+        ${codeSec}
+        <div class="brand-cta">
+          <a href="${b.url}" target="_blank" rel="noopener sponsored" class="brand-btn primary">Visit ${b.name} →</a>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+initMap();
+
+function openApplyForm(){
+  document.getElementById('apply-overlay').style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeApplyForm(){
+  document.getElementById('apply-overlay').style.display='none';
+  document.body.style.overflow='';
+  document.getElementById('apply-form-inner').style.display='flex';
+  document.getElementById('apply-thanks').style.display='none';
+  ['af-name','af-city','af-country','af-social','af-etsy','af-desc','af-email'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+}
+
+function submitApplyForm(){
+  const name=document.getElementById('af-name').value.trim();
+  const email=document.getElementById('af-email').value.trim();
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if(!name){document.getElementById('af-name').style.borderColor='#ef4444';setTimeout(()=>document.getElementById('af-name').style.borderColor='',1500);return;}
+  if(!email||!emailRe.test(email)){document.getElementById('af-email').style.borderColor='#ef4444';setTimeout(()=>document.getElementById('af-email').style.borderColor='',1500);return;}
+  const payload={
+    name, email,
+    city:document.getElementById('af-city').value,
+    country:document.getElementById('af-country').value,
+    social:document.getElementById('af-social').value,
+    etsy:document.getElementById('af-etsy').value,
+    desc:document.getElementById('af-desc').value,
+    type:'map_application',
+    ts:new Date().toISOString(),
+  };
+  fetch('https://script.google.com/macros/s/AKfycbyYX18EH7wJxAXgP4sj8OGYqdLedIBjblRc2AyLu1mBaFZNmp3lilNLFtgAuK90hxu3/exec',{
+    method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify(payload),keepalive:true
+  }).catch(()=>{});
+  document.getElementById('apply-form-inner').style.display='none';
+  document.getElementById('apply-thanks').style.display='block';
+}
+</script>
+
+<div class="apply-overlay" id="apply-overlay" onclick="if(event.target===this)closeApplyForm()" style="position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.88);backdrop-filter:blur(10px);padding:20px;display:none;align-items:center;justify-content:center">
+  <div style="background:#161616;border:1px solid rgba(255,92,0,0.25);border-radius:14px;padding:32px 28px;max-width:420px;width:100%;position:relative;background-image:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(255,92,0,0.08) 0%,transparent 65%)">
+    <button onclick="closeApplyForm()" style="position:absolute;top:14px;right:14px;background:transparent;border:1px solid rgba(255,255,255,0.14);color:rgba(245,245,245,0.35);width:30px;height:30px;border-radius:4px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">✕</button>
+    <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#FF5C00;font-family:'DM Mono',monospace;margin-bottom:8px">Join the network</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;line-height:1;margin-bottom:20px;color:#f5f5f5">GET LISTED FREE</div>
+    <div id="apply-form-inner" style="display:flex;flex-direction:column;gap:12px">
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Your name</div>
+        <input id="af-name" type="text" placeholder="Lena M." style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div>
+          <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">City</div>
+          <input id="af-city" type="text" placeholder="Berlin" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+        </div>
+        <div>
+          <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Country</div>
+          <input id="af-country" type="text" placeholder="Germany" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Instagram or TikTok handle</div>
+        <input id="af-social" type="text" placeholder="@yourhandle" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Etsy shop link (optional)</div>
+        <input id="af-etsy" type="url" placeholder="etsy.com/shop/yourshop" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">What do you print and sell?</div>
+        <input id="af-desc" type="text" placeholder="Custom organizers, lithophanes..." style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <div>
+        <div style="font-size:11px;color:rgba(245,245,245,0.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Your email</div>
+        <input id="af-email" type="email" placeholder="you@email.com" style="background:#1c1c1c;border:1px solid rgba(255,255,255,0.14);border-radius:6px;padding:11px 14px;font-size:14px;color:#f5f5f5;font-family:'DM Sans',sans-serif;width:100%;outline:none">
+      </div>
+      <button onclick="submitApplyForm()" style="background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:14px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-top:4px">Send application →</button>
+      <div style="font-size:12px;color:rgba(245,245,245,0.3);text-align:center;line-height:1.5">Free to join · Manual review · Pin live within 48h</div>
+    </div>
+    <div id="apply-thanks" style="display:none;text-align:center;padding:20px 0">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;margin-bottom:10px;color:#FF5C00">APPLICATION SENT ✓</div>
+      <div style="font-size:14px;color:rgba(245,245,245,0.6);line-height:1.6">Thanks! Daniel will review your application and get back to you within 48 hours. Your pin goes live once approved.</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -323,7 +323,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .cubee-code{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:10px;line-height:1.5}
 .cubee-code b{font-family:"DM Mono",sans-serif;background:#fff7ed;color:var(--acc);padding:2px 7px;border-radius:4px;font-weight:800;letter-spacing:.05em;border:1px dashed rgba(255,92,0,.35)}
 /* Verdict card */
-.verdict-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:16px 15px 14px;margin-bottom:16px}
+.verdict-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:14px;padding:16px 15px 14px;margin-top:16px;margin-bottom:16px}
 .verdict-card.warn{background:#fffbeb;border-color:#fcd34d}
 .verdict-card.bad{background:#fef2f2;border-color:#fca5a5}
 .verdict-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:13px}
@@ -983,24 +983,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="panel">
         <div class="res-sec-hd"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
 
-        <!-- Revenue summary cards -->
-        <div class="rcards">
-          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">-</div><div class="rc-lbl">units/mo</div></div>
-          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">-</div><div class="rc-lbl">gross rev</div></div>
-          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">-</div><div class="rc-lbl">print cost</div></div>
-        </div>
-        <div class="hero" id="hero">
-          <div class="h-eye">Est. monthly profit</div>
-          <div class="h-big" id="hbig">€-</div>
-          <div class="h-sub" id="hsub">at your current price</div>
-          <div class="h-bd" id="hbd">
-            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">-</span></div>
-            <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">-</span></div>
-            <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">-</span></div>
-            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3">-</span></div>
-          </div>
-        </div>
-
         <!-- Price slider -->
         <div class="sell-section-hd">Set your sell price</div>
         <div class="price-slider-wrap">
@@ -1021,6 +1003,24 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <span class="price-margin-val" id="margin-net">-</span>
           </div>
           <canvas id="rev-chart" style="width:100%;display:block;margin-top:12px;border-radius:6px"></canvas>
+        </div>
+
+        <!-- Revenue summary cards -->
+        <div class="rcards">
+          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">-</div><div class="rc-lbl">units/mo</div></div>
+          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">-</div><div class="rc-lbl">gross rev</div></div>
+          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">-</div><div class="rc-lbl">print cost</div></div>
+        </div>
+        <div class="hero" id="hero">
+          <div class="h-eye">Est. monthly profit</div>
+          <div class="h-big" id="hbig">€-</div>
+          <div class="h-sub" id="hsub">at your current price</div>
+          <div class="h-bd" id="hbd">
+            <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">-</span></div>
+            <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">-</span></div>
+            <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">-</span></div>
+            <div class="h-row"><span class="h-lbl">Net profit</span><span class="h-val p" id="hv3">-</span></div>
+          </div>
         </div>
 
         <!-- Personalisation callout -->
@@ -2316,7 +2316,7 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
-  if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
   if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();return;}
   else{reset();}
 });
@@ -2327,7 +2327,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
-  if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step →","",false);showBack(true);return;}
+  if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

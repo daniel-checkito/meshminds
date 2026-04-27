@@ -1778,7 +1778,8 @@ function populate(data){
   if(q("gate-title"))q("gate-title").textContent="Your report is ready";
   if(q("gate-sub"))q("gate-sub").textContent="Enter your email to unlock the full analysis";
   /* Populate email gate teasers with real (blurred) values */
-  var scoreNum=data.score!==undefined?data.score:null;
+  var scoreRaw=data.score!==undefined?data.score:null;
+  var scoreNum=scoreRaw!==null?Math.min(100,scoreRaw+10):null;
   if(q("tease-score"))q("tease-score").textContent=scoreNum!==null?scoreNum:fmt(m.searchVolume)||"-";
   if(q("tease-rev"))q("tease-rev").textContent=r.netProfit!==undefined?"€"+r.netProfit:"-";
   var etsyRisk=(((data.copyright||{}).etsyBanRisk)||"LOW").toUpperCase();
@@ -1811,26 +1812,27 @@ function populateVerdictCard(data){
   var demand=70,competition=70,profit=70,legal=90;
   if(m.searchVolume!==undefined){
     var sv=m.searchVolume;
-    if(sv>=50000)demand=95;else if(sv>=20000)demand=88;else if(sv>=10000)demand=82;else if(sv>=3000)demand=72;else if(sv>=1000)demand=58;else demand=42;
+    if(sv>=50000)demand=98;else if(sv>=20000)demand=92;else if(sv>=10000)demand=86;else if(sv>=3000)demand=78;else if(sv>=1000)demand=65;else demand=50;
     var tr=(m.searchTrend||"").toLowerCase();
     if(tr.indexOf("grow")>=0||tr.indexOf("+")>=0)demand=Math.min(99,demand+5);
     demand=Math.round(demand);
   }
   if(m.searchVolume&&m.etsyListings){
     var ratio=m.searchVolume/m.etsyListings;
-    if(ratio>=8)competition=92;else if(ratio>=5)competition=85;else if(ratio>=3)competition=78;else if(ratio>=1.5)competition=65;else if(ratio>=0.5)competition=48;else competition=28;
+    if(ratio>=8)competition=96;else if(ratio>=5)competition=90;else if(ratio>=3)competition=83;else if(ratio>=1.5)competition=72;else if(ratio>=0.5)competition=56;else competition=38;
     competition=Math.round(competition);
   }
   var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
   var cost=r.printCost||0;
   var margin=Math.round((spNum-cost)/spNum*100);
-  if(margin>=85)profit=92;else if(margin>=75)profit=80;else if(margin>=65)profit=70;else if(margin>=50)profit=55;else profit=38;
+  if(margin>=85)profit=95;else if(margin>=75)profit=85;else if(margin>=65)profit=76;else if(margin>=50)profit=62;else profit=46;
   var c=obj(data.copyright);
   var etsy=(c.etsyBanRisk||"low").toLowerCase(),lr=(c.legalRisk||"low").toLowerCase(),cp=(c.copyrightRisk||"low").toLowerCase();
-  if(etsy==="high"||lr==="high"||cp==="high")legal=15;else if(etsy==="medium"||lr==="medium"||cp==="medium")legal=55;else legal=92;
+  if(etsy==="high"||lr==="high"||cp==="high")legal=25;else if(etsy==="medium"||lr==="medium"||cp==="medium")legal=62;else legal=95;
 
   /* Verdict card */
-  var scoreNum=data.score!==undefined?parseInt(data.score):Math.round((demand+competition+profit+legal)/4);
+  var rawScore=data.score!==undefined?parseInt(data.score):Math.round((demand+competition+profit+legal)/4);
+  var scoreNum=Math.min(100,rawScore+10);
   var isGood=scoreNum>=70,isWarn=scoreNum>=40&&scoreNum<70;
   var vc=q("verdict-card");
   if(vc)vc.className=isGood?"verdict-card":isWarn?"verdict-card warn":"verdict-card bad";

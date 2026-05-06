@@ -296,16 +296,23 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .cp-banner{display:flex;align-items:center;gap:9px;padding:12px 14px;border-radius:11px;font-size:13px;font-weight:600;margin-bottom:14px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif;line-height:1.4}
 .cp-banner.warn{background:#fef9c3;color:#854d0e}
 .cp-banner.bad{background:#fee2e2;color:#991b1b}
-.cp-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
-.cp-card{border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:11px}
-.cp-card-left{flex-shrink:0;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:1px}
-.cp-risk{font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 8px;border-radius:6px;display:inline-block;letter-spacing:.04em;text-align:center}
-.cp-clabel{font-size:10.5px;color:var(--ink3);font-weight:700;line-height:1.2;text-align:center}
-.cp-desc{font-size:12px;color:var(--ink2);line-height:1.45;flex:1;padding-top:1px}
+.cp-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.cp-card{border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cp-card-summary{display:flex;align-items:center;gap:10px;padding:11px 13px}
+.cp-card-left{flex-shrink:0;display:flex;align-items:center;gap:7px}
+.cp-risk{font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 8px;border-radius:6px;display:inline-block;letter-spacing:.04em}
+.cp-clabel{font-size:12px;color:var(--ink);font-weight:600;line-height:1.2}
+.cp-desc{font-size:12px;color:var(--ink2);line-height:1.45;padding:0 13px 11px 13px;display:none}
+.cp-card.open .cp-desc{display:block}
+.cp-chevron{font-size:14px;color:var(--ink3);margin-left:auto;transition:transform .2s;flex-shrink:0}
+.cp-card.open .cp-chevron{transform:rotate(90deg)}
 /* Consolidated results section headers */
-.res-sec-hd{display:flex;align-items:center;gap:8px;margin-bottom:11px;padding:8px 0 9px;border-bottom:1.5px solid var(--line)}
-.res-sec-ico{font-size:16px}
-.res-sec-lbl{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.02em;color:var(--ink)}
+.res-sec-hd{display:flex;align-items:center;gap:10px;margin:-16px -16px 16px;padding:12px 16px;border-bottom:2px solid rgba(0,0,0,.05)}
+.res-sec-hd-sell{background:linear-gradient(90deg,#fff3e6 0%,#fdfaf8 100%)}
+.res-sec-hd-legal{background:linear-gradient(90deg,#eff6ff 0%,#fdfcfb 100%)}
+.res-sec-hd-offer{background:linear-gradient(90deg,#f0fdf4 0%,#fdfcfb 100%)}
+.res-sec-ico{font-size:20px;flex-shrink:0}
+.res-sec-lbl{font-family:"Bebas Neue",sans-serif;font-size:20px;letter-spacing:.02em;color:var(--ink)}
 
 /* Final page: winners + offer */
 .cta-intro{font-size:12px;color:var(--ink2);line-height:1.5;margin-bottom:12px}
@@ -393,7 +400,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .chip-list.on .chip-content .chip-name{color:var(--acc)}
 .chip-list.on .chip-content .chip-desc{color:var(--acc);opacity:.7}
 /* How to Sell It panel */
-.sell-section-hd{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.04em;color:var(--ink);margin-bottom:10px;margin-top:16px}
+.sell-section-hd{font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif;margin:20px 0 10px;display:flex;align-items:center;gap:10px}
+.sell-section-hd::after{content:'';flex:1;height:1px;background:var(--line)}
 .price-ctx{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-top:8px;padding:9px 11px;background:#f7f7f7;border-radius:8px;font-family:"DM Mono",sans-serif}
 .sell-person-card{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:13px;padding:14px 14px 13px;margin-bottom:16px}
 .sell-person-eyebrow{font-family:"DM Mono",sans-serif;font-size:9.5px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.13em;margin-bottom:4px}
@@ -411,7 +419,10 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .sb-steady{background:#fef9c3;color:#b45309}
 .sb-slow{background:#f3f4f6;color:#6b7280}
 .platform-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.platform-card{border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:10px}
+.platform-card{border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:10px;border-left-width:4px}
+.platform-card-etsy{border-left-color:var(--acc)}
+.platform-card-ig{border-left-color:#e1306c}
+.platform-card-shop{border-left-color:#96bf48}
 .platform-rank{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 7px;border-radius:6px;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;margin-top:2px}
 .pr-primary{background:#fff7ed;color:var(--acc)}
 .pr-growth{background:#f0fdf4;color:#15803d}
@@ -419,13 +430,17 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .platform-name{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.02em;color:var(--ink);line-height:1.1}
 .platform-desc{font-size:11.5px;color:var(--ink2);line-height:1.4;margin-top:3px}
 .tactic-rows{background:#fafafa;border-radius:11px;padding:2px 12px;margin-bottom:16px}
-.tactic-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.tactic-row{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
 .tactic-row:last-child{border-bottom:none}
+.tactic-row:active{background:rgba(0,0,0,.02)}
 .tactic-impact{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:6px;letter-spacing:.04em;text-transform:uppercase;flex-shrink:0;margin-top:2px}
 .ti-high{background:#dcfce7;color:#15803d}
 .ti-med{background:#fef9c3;color:#b45309}
 .ti-low{background:#f3f4f6;color:#6b7280}
-.tactic-text{font-size:12px;color:var(--ink2);line-height:1.45;flex:1}
+.tactic-text{font-size:12px;color:var(--ink2);line-height:1.45;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical}
+.tactic-row.open .tactic-text{display:block;-webkit-line-clamp:unset}
+.tactic-chevron{font-size:14px;color:var(--ink3);flex-shrink:0;transition:transform .2s;margin-top:1px;line-height:1}
+.tactic-row.open .tactic-chevron{transform:rotate(90deg)}
 /* Winners redesigned cards */
 .winner-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:18px}
 .winner-card{border-radius:13px;overflow:hidden;border:1px solid rgba(0,0,0,.07)}
@@ -1134,7 +1149,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- HOW TO SELL IT -->
       <div class="panel">
-        <div class="res-sec-hd"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
+        <div class="res-sec-hd res-sec-hd-sell"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
 
         <!-- Price slider -->
         <div class="sell-section-hd">Set your sell price</div>
@@ -1222,21 +1237,21 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <!-- Platform ranking -->
         <div class="sell-section-hd">Where to sell</div>
         <div class="platform-cards">
-          <div class="platform-card">
+          <div class="platform-card platform-card-etsy">
             <span class="platform-rank pr-primary">Primary</span>
             <div>
               <div class="platform-name">Etsy</div>
               <div class="platform-desc">Largest buyer intent for handmade. Optimise titles with niche keywords and add multiple listing variations.</div>
             </div>
           </div>
-          <div class="platform-card">
+          <div class="platform-card platform-card-ig">
             <span class="platform-rank pr-growth">Growth</span>
             <div>
               <div class="platform-name">Instagram / TikTok</div>
               <div class="platform-desc">Short videos of the print process drive organic traffic and shares. Link to your Etsy shop in bio.</div>
             </div>
           </div>
-          <div class="platform-card">
+          <div class="platform-card platform-card-shop">
             <span class="platform-rank pr-scale">Scale</span>
             <div>
               <div class="platform-name">Own shop</div>
@@ -1248,25 +1263,30 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <!-- Differentiation tactics -->
         <div class="sell-section-hd">Stand out from copycats</div>
         <div class="tactic-rows">
-          <div class="tactic-row">
+          <div class="tactic-row" onclick="this.classList.toggle('open')">
             <span class="tactic-impact ti-high">High</span>
             <span class="tactic-text">Add personalisation - a custom name or text option converts browsers into buyers and justifies a higher price.</span>
+            <span class="tactic-chevron">›</span>
           </div>
-          <div class="tactic-row">
+          <div class="tactic-row" onclick="this.classList.toggle('open')">
             <span class="tactic-impact ti-high">High</span>
             <span class="tactic-text">Bundle 2–3 matching pieces as a gift set. Increases average order value with no extra listing effort.</span>
+            <span class="tactic-chevron">›</span>
           </div>
-          <div class="tactic-row">
+          <div class="tactic-row" onclick="this.classList.toggle('open')">
             <span class="tactic-impact ti-med">Med</span>
             <span class="tactic-text">Create seasonal variants (Christmas, Valentine's, Halloween). Each one ranks separately in search.</span>
+            <span class="tactic-chevron">›</span>
           </div>
-          <div class="tactic-row">
+          <div class="tactic-row" onclick="this.classList.toggle('open')">
             <span class="tactic-impact ti-med">Med</span>
             <span class="tactic-text">Photograph every colour option you offer. Listings with 7+ photos get significantly more clicks.</span>
+            <span class="tactic-chevron">›</span>
           </div>
-          <div class="tactic-row">
+          <div class="tactic-row" onclick="this.classList.toggle('open')">
             <span class="tactic-impact ti-low">Low</span>
             <span class="tactic-text">Include a printed care card insert. Adds perceived value and encourages reviews &amp; repeat purchases.</span>
+            <span class="tactic-chevron">›</span>
           </div>
         </div>
 
@@ -1274,27 +1294,36 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- LEGAL & COPYRIGHT CHECK -->
       <div class="panel">
-        <div class="res-sec-hd"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
+        <div class="res-sec-hd res-sec-hd-legal"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
         <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
         <div class="cp-grid">
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
-              <div class="cp-clabel">Etsy ban risk</div>
+          <div class="cp-card" onclick="this.classList.toggle('open')">
+            <div class="cp-card-summary">
+              <div class="cp-card-left">
+                <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
+                <span class="cp-clabel">Etsy ban risk</span>
+              </div>
+              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
           </div>
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
-              <div class="cp-clabel">Legal risk</div>
+          <div class="cp-card" onclick="this.classList.toggle('open')">
+            <div class="cp-card-summary">
+              <div class="cp-card-left">
+                <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
+                <span class="cp-clabel">Legal risk</span>
+              </div>
+              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
           </div>
-          <div class="cp-card">
-            <div class="cp-card-left">
-              <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
-              <div class="cp-clabel">Copyright / IP</div>
+          <div class="cp-card" onclick="this.classList.toggle('open')">
+            <div class="cp-card-summary">
+              <div class="cp-card-left">
+                <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
+                <span class="cp-clabel">Copyright / IP</span>
+              </div>
+              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
           </div>
@@ -1305,7 +1334,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 8: Community offer -->
       <div class="panel" id="offer-panel">
-        <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Your next step</span></div>
+        <div class="res-sec-hd res-sec-hd-offer"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Your next step</span></div>
 
         <!-- Contextual roadmap -->
         <div id="roadmap-section" style="margin-bottom:16px;display:none">

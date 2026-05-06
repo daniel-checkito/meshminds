@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Dashboard — MeshMinds</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--good-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fffbeb;--info:#1d4ed8;--info-bg:#eff6ff;--bad:#b91c1c;--bad-bg:#fef2f2}
+body{background:#fff;font-family:"Manrope",sans-serif;min-height:100vh}
+
+/* ── auth gate ── */
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:999}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+
+/* ── nav ── */
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:50;padding:0 20px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:0;height:52px}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--acc)}
+.pro-pill{background:var(--acc);color:#fff;font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;display:inline-block}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:12px}
+.nav-link{font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--surf);color:var(--ink)}
+.nav-link.active{font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-validator{font-size:12px;color:var(--acc);font-weight:700;text-decoration:none;font-family:"DM Mono",monospace;letter-spacing:.02em}
+.nav-validator:hover{text-decoration:underline}
+.nav-logout{background:none;border:1px solid var(--line2);border-radius:8px;font-family:"Manrope",sans-serif;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer}
+.nav-logout:hover{color:var(--bad);border-color:var(--bad)}
+
+/* ── page ── */
+.page{max-width:960px;margin:0 auto;padding:32px 20px 60px}
+
+/* greeting */
+.greeting-row{margin-bottom:32px}
+.greeting-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.greeting-h1{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:.95;color:var(--ink);margin-bottom:6px}
+.greeting-sub{font-size:13px;color:var(--ink3)}
+.member-email-badge{display:inline-block;font-family:"DM Mono",monospace;font-size:11px;color:var(--ink3);background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:3px 10px;margin-top:8px}
+
+/* stats row */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(3,1fr);gap:8px}}
+.stat-box{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 14px}
+.stat-n{font-family:"Bebas Neue",sans-serif;font-size:34px;color:var(--acc);line-height:1;margin-bottom:2px}
+.stat-l{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink3);line-height:1.4}
+
+/* section label */
+.sec-lbl{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* feature cards grid */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+@media(max-width:540px){.feat-grid{grid-template-columns:1fr}}
+.feat-card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:22px 20px;text-decoration:none;display:block;transition:border-color .2s,transform .15s}
+.feat-card:hover{border-color:var(--acc);transform:translateY(-2px)}
+.feat-card-ico{font-size:28px;margin-bottom:12px;display:block}
+.feat-card-title{font-family:"Bebas Neue",sans-serif;font-size:26px;color:var(--ink);line-height:1;margin-bottom:6px}
+.feat-card-sub{font-size:12px;color:var(--ink2);line-height:1.5}
+.feat-card-badge{display:inline-block;font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:2px 7px;margin-top:10px}
+.badge-hot{background:rgba(255,92,0,.1);color:var(--acc)}
+.badge-new{background:var(--good-bg);color:var(--good)}
+.badge-monthly{background:var(--info-bg);color:var(--info)}
+
+/* recent trending strip */
+.trending-strip{display:flex;flex-direction:column;gap:8px;margin-bottom:32px}
+.trend-row{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:12px;text-decoration:none}
+.trend-row:hover{border-color:var(--acc)}
+.trend-heat{font-size:16px;flex-shrink:0;width:28px;text-align:center}
+.trend-info{flex:1;min-width:0}
+.trend-name{font-size:13px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.trend-meta{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--ink3);letter-spacing:.03em}
+.trend-score{flex-shrink:0;text-align:right}
+.score-chip{font-family:"Bebas Neue",sans-serif;font-size:20px;line-height:1}
+.score-chip.sb{color:var(--good)}
+.score-chip.b{color:var(--info)}
+.score-chip.cb{color:var(--warn)}
+.verdict-tiny{font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+
+/* validator CTA */
+.validator-cta{background:var(--surf);border:1.5px solid var(--acc);border-radius:16px;padding:20px;display:flex;align-items:center;gap:14px}
+.validator-cta-ico{font-size:28px;flex-shrink:0}
+.validator-cta-txt{flex:1}
+.validator-cta-title{font-size:14px;font-weight:800;color:var(--ink);margin-bottom:3px}
+.validator-cta-sub{font-size:12px;color:var(--ink2)}
+.validator-cta-btn{background:var(--acc);color:#fff;border:none;border-radius:10px;padding:10px 16px;font-weight:700;font-size:13px;cursor:pointer;text-decoration:none;flex-shrink:0;white-space:nowrap}
+
+/* mobile nav */
+@media(max-width:640px){
+  .nav-links{display:none}
+  .nav-logo{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="loading"><div class="spin"></div></div>
+
+<div id="app">
+  <!-- Nav -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/pro/dashboard" class="nav-logo">Mesh<em>Minds</em><span class="pro-pill">PRO</span></a>
+      <div class="nav-links">
+        <a href="/pro/dashboard" class="nav-link active">Dashboard</a>
+        <a href="/pro/catalogue" class="nav-link">Catalogue</a>
+        <a href="/pro/trending" class="nav-link">Trending</a>
+        <a href="/pro/keywords" class="nav-link">Keywords</a>
+        <a href="/pro/hotlist" class="nav-link">Hot List</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/idea" class="nav-validator">← Validator</a>
+        <button class="nav-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <!-- Greeting -->
+    <div class="greeting-row">
+      <div class="greeting-eyebrow">Pro Dashboard</div>
+      <div class="greeting-h1">Your unfair<br>advantage.</div>
+      <div class="greeting-sub">Real Etsy data. Real decisions.</div>
+      <div class="member-email-badge" id="member-email">—</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-n">847</div>
+        <div class="stat-l">Products validated</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-n">6</div>
+        <div class="stat-l">New this week</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-n">15</div>
+        <div class="stat-l">Top keywords</div>
+      </div>
+    </div>
+
+    <!-- Feature cards -->
+    <div class="sec-lbl">Pro features</div>
+    <div class="feat-grid">
+      <a href="/pro/catalogue" class="feat-card">
+        <span class="feat-card-ico">📊</span>
+        <div class="feat-card-title">Product Catalogue</div>
+        <div class="feat-card-sub">847 validated products with scores, verdicts, and monthly revenue estimates.</div>
+        <span class="feat-card-badge badge-new">847 products</span>
+      </a>
+      <a href="/pro/trending" class="feat-card">
+        <span class="feat-card-ico">🔥</span>
+        <div class="feat-card-title">Trending Now</div>
+        <div class="feat-card-sub">Products spiking in search this week. Get in before everyone else does.</div>
+        <span class="feat-card-badge badge-hot">Updated daily</span>
+      </a>
+      <a href="/pro/keywords" class="feat-card">
+        <span class="feat-card-ico">🔑</span>
+        <div class="feat-card-title">Top Keywords</div>
+        <div class="feat-card-sub">15 keywords ranked by demand, competition, and trend direction.</div>
+        <span class="feat-card-badge badge-new">Last 30 days</span>
+      </a>
+      <a href="/pro/hotlist" class="feat-card">
+        <span class="feat-card-ico">⭐</span>
+        <div class="feat-card-title">Hot List</div>
+        <div class="feat-card-sub">My personal picks — products I'd actually print and sell right now.</div>
+        <span class="feat-card-badge badge-monthly">Updated monthly</span>
+      </a>
+    </div>
+
+    <!-- Trending this week -->
+    <div class="sec-lbl">Trending this week</div>
+    <div class="trending-strip">
+      <a href="/pro/trending" class="trend-row">
+        <div class="trend-heat">🔥🔥🔥</div>
+        <div class="trend-info">
+          <div class="trend-name">Articulated Sea Turtle</div>
+          <div class="trend-meta">Validated 1 day ago · +89% searches this week</div>
+        </div>
+        <div class="trend-score">
+          <div class="score-chip sb">84</div>
+          <div class="verdict-tiny">Strong Buy</div>
+        </div>
+      </a>
+      <a href="/pro/trending" class="trend-row">
+        <div class="trend-heat">🔥🔥🔥</div>
+        <div class="trend-info">
+          <div class="trend-name">Modular Honeycomb Wall Panel</div>
+          <div class="trend-meta">Validated 3 days ago · +68% searches this week</div>
+        </div>
+        <div class="trend-score">
+          <div class="score-chip sb">91</div>
+          <div class="verdict-tiny">Strong Buy</div>
+        </div>
+      </a>
+      <a href="/pro/trending" class="trend-row">
+        <div class="trend-heat">🔥🔥</div>
+        <div class="trend-info">
+          <div class="trend-name">Hex Drawer Organizer</div>
+          <div class="trend-meta">Validated 5 days ago · +210% (new keyword)</div>
+        </div>
+        <div class="trend-score">
+          <div class="score-chip b">79</div>
+          <div class="verdict-tiny">Buy</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Validator CTA -->
+    <a href="/idea" class="validator-cta" style="text-decoration:none">
+      <div class="validator-cta-ico">⚡</div>
+      <div class="validator-cta-txt">
+        <div class="validator-cta-title">Validate your own idea</div>
+        <div class="validator-cta-sub">Paste a MakerWorld link, get a score + full breakdown in seconds.</div>
+      </div>
+      <span class="validator-cta-btn">Open →</span>
+    </a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var token = localStorage.getItem('mm_pro_token');
+  if (!token) { location.href = '/pro/login'; return; }
+
+  fetch('/api/pro-verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token: token }),
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (!d.ok) { localStorage.removeItem('mm_pro_token'); location.href = '/pro/login'; return; }
+      document.getElementById('member-email').textContent = d.member.email || 'Pro Member';
+      reveal();
+    })
+    .catch(function(){ reveal(); }); // graceful: show page if API unreachable
+})();
+
+function reveal() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('app').style.display = '';
+}
+
+function logout() {
+  localStorage.removeItem('mm_pro_token');
+  location.href = '/idea';
+}
+</script>
+</body>
+</html>

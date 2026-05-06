@@ -4,6 +4,15 @@
   "functions": {
     "api/analyze.js": {
       "maxDuration": 60
+    },
+    "api/pro-auth.js": {
+      "maxDuration": 15
+    },
+    "api/pro-verify.js": {
+      "maxDuration": 10
+    },
+    "api/pro-login.js": {
+      "maxDuration": 15
     }
   }
 }

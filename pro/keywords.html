@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top Keywords — MeshMinds Pro</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--good-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fffbeb;--info:#1d4ed8;--info-bg:#eff6ff;--bad:#b91c1c;--bad-bg:#fef2f2}
+body{background:#fff;font-family:"Manrope",sans-serif;min-height:100vh}
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:999}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:50;padding:0 20px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;height:52px;gap:0}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--acc)}
+.pro-pill{background:var(--acc);color:#fff;font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;display:inline-block}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:12px}
+.nav-link{font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--surf);color:var(--ink)}
+.nav-link.active{font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-validator{font-size:12px;color:var(--acc);font-weight:700;text-decoration:none;font-family:"DM Mono",monospace}
+.nav-validator:hover{text-decoration:underline}
+.nav-logout{background:none;border:1px solid var(--line2);border-radius:8px;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer}
+.nav-logout:hover{color:var(--bad);border-color:var(--bad)}
+@media(max-width:640px){.nav-links{display:none}}
+
+.page{max-width:760px;margin:0 auto;padding:28px 20px 60px}
+.page-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.page-h1{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--ink);line-height:1;margin-bottom:10px}
+.page-sub{font-size:13px;color:var(--ink3);margin-bottom:24px}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.leg-item{display:flex;align-items:center;gap:5px;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.leg-dot.vh{background:var(--good)}
+.leg-dot.h{background:var(--info)}
+.leg-dot.m{background:var(--warn)}
+.leg-dot.l{background:var(--bad)}
+.leg-sep{width:1px;height:14px;background:var(--line);margin:0 4px}
+
+/* keyword list */
+.kw-list{display:flex;flex-direction:column;gap:8px}
+.kw-card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 16px}
+.kw-top{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.kw-term{font-family:"DM Mono",monospace;font-size:14px;font-weight:500;color:var(--ink);flex:1;letter-spacing:.02em}
+.trend-arrow{font-size:18px;flex-shrink:0}
+.kw-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media(max-width:480px){.kw-metrics{grid-template-columns:repeat(2,1fr)}}
+.metric-box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 10px;text-align:center}
+.metric-val{font-family:"DM Mono",monospace;font-size:11px;font-weight:500;letter-spacing:.04em;margin-bottom:2px}
+.metric-lbl{font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.metric-chip{display:inline-block;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:2px 6px;font-weight:500}
+.chip-vh{background:var(--good-bg);color:var(--good)}
+.chip-h{background:var(--info-bg);color:var(--info)}
+.chip-m{background:var(--warn-bg);color:var(--warn)}
+.chip-l{background:var(--bad-bg);color:var(--bad)}
+.chip-rising{background:rgba(255,92,0,.1);color:var(--acc)}
+.chip-stable{background:var(--surf2);color:var(--ink3)}
+.chip-new{background:var(--good-bg);color:var(--good)}
+.chip-dec{background:var(--bad-bg);color:var(--bad)}
+
+.kw-tip{font-size:11.5px;color:var(--ink2);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.kw-tip b{color:var(--ink)}
+
+/* section divider */
+.sec-lbl{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--line)}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div></div>
+<div id="app">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/pro/dashboard" class="nav-logo">Mesh<em>Minds</em><span class="pro-pill">PRO</span></a>
+      <div class="nav-links">
+        <a href="/pro/dashboard" class="nav-link">Dashboard</a>
+        <a href="/pro/catalogue" class="nav-link">Catalogue</a>
+        <a href="/pro/trending" class="nav-link">Trending</a>
+        <a href="/pro/keywords" class="nav-link active">Keywords</a>
+        <a href="/pro/hotlist" class="nav-link">Hot List</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/idea" class="nav-validator">← Validator</a>
+        <button class="nav-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-eyebrow">Keyword Intelligence</div>
+    <div class="page-h1">Top Keywords<br>Last 30 Days</div>
+    <div class="page-sub">Etsy search volume + competition + trend direction. Use these in your listing titles and tags.</div>
+
+    <div class="legend">
+      <div class="leg-item"><span class="leg-dot vh"></span>Very High</div>
+      <div class="leg-item"><span class="leg-dot h"></span>High</div>
+      <div class="leg-item"><span class="leg-dot m"></span>Medium</div>
+      <div class="leg-item"><span class="leg-dot l"></span>Low</div>
+    </div>
+
+    <div class="sec-lbl">🔥 Trending up</div>
+    <div class="kw-list">
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"honeycomb wall panel"</div>
+          <div class="trend-arrow">↑↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-vh">Very High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">8,400</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-rising">+68%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Put this exact phrase in your listing title. Low competition + high volume is rare — this is the golden ratio.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"articulated dragon 3d print"</div>
+          <div class="trend-arrow">↑↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-vh">Very High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">12,300</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-rising">+42%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Include "3d print" in the keyword — buyers using this phrase have clear purchase intent. Title format: "Articulated Dragon 3D Print — Flexi Toy Gift [size]"</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"articulated sea turtle"</div>
+          <div class="trend-arrow">↑↑↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">6,100</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-rising">+89%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Brand new trend — list now. Almost no competition. This has the same trajectory as articulated dragon did 6 months ago.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"mini planter 3d print"</div>
+          <div class="trend-arrow">↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">4,200</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-rising">+31%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Seasonal spring spike — still in the window. Sell as a set of 3 for higher AOV. Add "succulent" or "cactus" as secondary tags.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"watch stand organizer"</div>
+          <div class="trend-arrow">↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">3,800</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-rising">+24%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Target "Apple Watch stand" as a variant tag. Buyers searching this are ready to buy — high purchase intent keyword.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"hex drawer organizer"</div>
+          <div class="trend-arrow">↑↑</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-m">Medium</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-l">Low</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">1,800</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-new">New keyword</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> New keyword with 0 competition. List early and dominate before anyone else finds this. Volume is low but growing fast.</div>
+      </div>
+
+    </div>
+
+    <div class="sec-lbl">→ Stable</div>
+    <div class="kw-list">
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"magnetic phone stand"</div>
+          <div class="trend-arrow">→</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-m">Medium</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">5,600</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-stable">+5%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Mature keyword — compete on photography and listing quality, not keyword alone. Price slightly above average ($28–35) to signal quality.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"cable organizer desk"</div>
+          <div class="trend-arrow">→</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-vh">Very High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">9,200</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-stable">+3%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> High competition. Differentiate with a set (3 or 5 clips) and emphasize cable sizes supported. Don't compete on price — compete on bundle value.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"succulent planter set"</div>
+          <div class="trend-arrow">→</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-h">High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-m">Medium</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">4,900</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-stable">+8%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Action:</b> Medium competition, sell a set of 3–5. Gift market (Mother's Day tail, housewarming). Use "boho" and "modern" as style tags.</div>
+      </div>
+
+    </div>
+
+    <div class="sec-lbl">↓ Declining — avoid</div>
+    <div class="kw-list">
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"fidget toy 3d print"</div>
+          <div class="trend-arrow" style="color:var(--bad)">↓</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-vh">Very High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip" style="background:var(--bad-bg);color:var(--bad)">Very High</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">11,400</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-dec">-12%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Skip it.</b> Market is saturated and declining. The margins have been competed away. Pivot to articulated animals — same buyer, much better opportunity.</div>
+      </div>
+
+      <div class="kw-card">
+        <div class="kw-top">
+          <div class="kw-term">"airpod case custom"</div>
+          <div class="trend-arrow" style="color:var(--bad)">↓</div>
+        </div>
+        <div class="kw-metrics">
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-vh">Very High</span></div>
+            <div class="metric-lbl">Demand</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip" style="background:var(--bad-bg);color:var(--bad)">Very High</span></div>
+            <div class="metric-lbl">Competition</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val">13,200</div>
+            <div class="metric-lbl">Monthly searches</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val"><span class="metric-chip chip-dec">-8%</span></div>
+            <div class="metric-lbl">30-day change</div>
+          </div>
+        </div>
+        <div class="kw-tip"><b>Skip it.</b> Thousands of sellers, thin margins, Apple changes cases with every model release making old listings obsolete. Not worth the effort.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var token = localStorage.getItem('mm_pro_token');
+  if(!token){location.href='/pro/login';return;}
+  fetch('/api/pro-verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d.ok){localStorage.removeItem('mm_pro_token');location.href='/pro/login';return;}reveal();})
+    .catch(function(){reveal();});
+})();
+function reveal(){document.getElementById('loading').style.display='none';document.getElementById('app').style.display='';}
+function logout(){localStorage.removeItem('mm_pro_token');location.href='/idea';}
+</script>
+</body>
+</html>

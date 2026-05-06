@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Catalogue — MeshMinds Pro</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--good-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fffbeb;--info:#1d4ed8;--info-bg:#eff6ff;--bad:#b91c1c;--bad-bg:#fef2f2}
+body{background:#fff;font-family:"Manrope",sans-serif;min-height:100vh}
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:999}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+
+/* nav */
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:50;padding:0 20px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;height:52px;gap:0}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--acc)}
+.pro-pill{background:var(--acc);color:#fff;font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;display:inline-block}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:12px}
+.nav-link{font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--surf);color:var(--ink)}
+.nav-link.active{font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-validator{font-size:12px;color:var(--acc);font-weight:700;text-decoration:none;font-family:"DM Mono",monospace;letter-spacing:.02em}
+.nav-validator:hover{text-decoration:underline}
+.nav-logout{background:none;border:1px solid var(--line2);border-radius:8px;font-family:"Manrope",sans-serif;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer}
+.nav-logout:hover{color:var(--bad);border-color:var(--bad)}
+@media(max-width:640px){.nav-links{display:none}}
+
+/* page */
+.page{max-width:960px;margin:0 auto;padding:28px 20px 60px}
+.page-hd{margin-bottom:20px}
+.page-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.page-h1{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--ink);line-height:1;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--ink3)}
+
+/* filter bar */
+.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.filter-btn{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:6px 14px;cursor:pointer;color:var(--ink2);transition:all .15s;white-space:nowrap}
+.filter-btn:hover,.filter-btn.active{background:var(--acc);color:#fff;border-color:var(--acc)}
+.sort-label{font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);letter-spacing:.06em;margin-left:auto}
+.sort-select{font-family:"DM Mono",monospace;font-size:10px;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color:var(--ink);cursor:pointer;outline:none}
+
+/* product grid */
+.product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(min-width:700px){.product-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:480px){.product-grid{grid-template-columns:1fr}}
+
+/* product card */
+.prod-card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:16px 14px;cursor:pointer;transition:border-color .2s,transform .15s;position:relative}
+.prod-card:hover{border-color:var(--acc);transform:translateY(-1px)}
+.prod-card.hidden{display:none}
+.prod-category{font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.prod-name{font-size:13px;font-weight:700;color:var(--ink);line-height:1.35;margin-bottom:10px;min-height:36px}
+.prod-score-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.prod-score{font-family:"Bebas Neue",sans-serif;font-size:38px;line-height:1}
+.prod-score.sb{color:var(--good)}
+.prod-score.b{color:var(--info)}
+.prod-score.cb{color:var(--warn)}
+.prod-score.h{color:var(--bad)}
+.prod-verdict{font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:3px 8px;font-weight:500}
+.verdict-sb{background:var(--good-bg);color:var(--good)}
+.verdict-b{background:var(--info-bg);color:var(--info)}
+.verdict-cb{background:var(--warn-bg);color:var(--warn)}
+.verdict-h{background:var(--bad-bg);color:var(--bad)}
+.prod-revenue{font-size:12px;color:var(--ink2);font-weight:600}
+.prod-revenue span{color:var(--ink3);font-weight:400;font-size:11px}
+.prod-date{font-family:"DM Mono",monospace;font-size:8.5px;color:var(--ink3);margin-top:6px}
+
+/* empty state */
+.empty{text-align:center;padding:48px 20px;color:var(--ink3);font-size:13px}
+
+/* count badge */
+.count-badge{font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);margin-left:auto;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div></div>
+<div id="app">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/pro/dashboard" class="nav-logo">Mesh<em>Minds</em><span class="pro-pill">PRO</span></a>
+      <div class="nav-links">
+        <a href="/pro/dashboard" class="nav-link">Dashboard</a>
+        <a href="/pro/catalogue" class="nav-link active">Catalogue</a>
+        <a href="/pro/trending" class="nav-link">Trending</a>
+        <a href="/pro/keywords" class="nav-link">Keywords</a>
+        <a href="/pro/hotlist" class="nav-link">Hot List</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/idea" class="nav-validator">← Validator</a>
+        <button class="nav-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-hd">
+      <div class="page-eyebrow">Pro Catalogue</div>
+      <div class="page-h1">All Validated Products</div>
+      <div class="page-sub">847 products scored with real Etsy data · revenue estimates based on $250K store data</div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all" onclick="filter(this,'all')">All</button>
+      <button class="filter-btn" data-filter="Strong Buy" onclick="filter(this,'Strong Buy')">Strong Buy</button>
+      <button class="filter-btn" data-filter="Buy" onclick="filter(this,'Buy')">Buy</button>
+      <button class="filter-btn" data-filter="Cautious Buy" onclick="filter(this,'Cautious Buy')">Cautious Buy</button>
+      <button class="filter-btn" data-filter="Hold" onclick="filter(this,'Hold')">Hold</button>
+      <span class="count-badge" id="count-badge">20 shown</span>
+      <select class="sort-select" id="sort-select" onchange="resort()">
+        <option value="score">Sort: Score</option>
+        <option value="revenue">Sort: Revenue</option>
+        <option value="date">Sort: Newest</option>
+      </select>
+    </div>
+
+    <div class="product-grid" id="product-grid"></div>
+    <div class="empty" id="empty" style="display:none">No products match this filter.</div>
+  </div>
+</div>
+
+<script>
+var PRODUCTS = [
+  {id:1,name:'Modular Honeycomb Wall Panel',score:91,verdict:'Strong Buy',revenue:3850,cat:'Home & Decor',added:'2026-05-01'},
+  {id:2,name:'Articulated Dragon (XL)',score:88,verdict:'Strong Buy',revenue:2400,cat:'Toys & Gifts',added:'2026-05-03'},
+  {id:3,name:'Magnetic Phone Desk Stand',score:87,verdict:'Strong Buy',revenue:2100,cat:'Tech Accessories',added:'2026-04-28'},
+  {id:4,name:'Planter with Drainage System',score:85,verdict:'Strong Buy',revenue:1650,cat:'Planters',added:'2026-04-30'},
+  {id:5,name:'Articulated Sea Turtle',score:84,verdict:'Strong Buy',revenue:1720,cat:'Toys & Gifts',added:'2026-05-04'},
+  {id:6,name:'Mini Succulent Planter Set',score:82,verdict:'Strong Buy',revenue:1450,cat:'Planters',added:'2026-04-22'},
+  {id:7,name:'Watch Stand Organizer',score:81,verdict:'Strong Buy',revenue:1280,cat:'Tech Accessories',added:'2026-05-04'},
+  {id:8,name:'Hex Drawer Organizer',score:79,verdict:'Buy',revenue:980,cat:'Home & Decor',added:'2026-04-20'},
+  {id:9,name:'Battery Holder AA/AAA',score:78,verdict:'Buy',revenue:910,cat:'Home & Decor',added:'2026-04-16'},
+  {id:10,name:'Earbud Stand',score:77,verdict:'Buy',revenue:820,cat:'Tech Accessories',added:'2026-04-18'},
+  {id:11,name:'Key Fob Organizer',score:76,verdict:'Buy',revenue:840,cat:'EDC & Accessories',added:'2026-04-15'},
+  {id:12,name:'Desk Cable Clip Set (6-pack)',score:75,verdict:'Buy',revenue:760,cat:'Tech Accessories',added:'2026-04-12'},
+  {id:13,name:'Modular Spice Rack',score:74,verdict:'Buy',revenue:710,cat:'Kitchen',added:'2026-04-10'},
+  {id:14,name:'Phone Grip Ring',score:73,verdict:'Buy',revenue:670,cat:'EDC & Accessories',added:'2026-04-08'},
+  {id:15,name:'Wall-Mounted Headphone Hook',score:72,verdict:'Buy',revenue:650,cat:'Tech Accessories',added:'2026-04-06'},
+  {id:16,name:'Fidget Spinner (classic)',score:71,verdict:'Buy',revenue:620,cat:'Toys & Gifts',added:'2026-04-04'},
+  {id:17,name:'Board Game Token Set',score:69,verdict:'Cautious Buy',revenue:430,cat:'Toys & Gifts',added:'2026-03-28'},
+  {id:18,name:'Geometric Coaster Set',score:68,verdict:'Cautious Buy',revenue:520,cat:'Home & Decor',added:'2026-04-05'},
+  {id:19,name:'Minimalist Wall Hook (3-pack)',score:65,verdict:'Cautious Buy',revenue:440,cat:'Home & Decor',added:'2026-04-02'},
+  {id:20,name:'AirPod Pro Case (custom fit)',score:62,verdict:'Cautious Buy',revenue:380,cat:'Tech Accessories',added:'2026-03-25'},
+  {id:21,name:'Business Card Holder',score:58,verdict:'Hold',revenue:290,cat:'Office',added:'2026-03-20'},
+  {id:22,name:'Bookmark Set (pagemarker)',score:55,verdict:'Hold',revenue:240,cat:'EDC & Accessories',added:'2026-03-15'},
+  {id:23,name:'LED Diffuser Panel',score:54,verdict:'Hold',revenue:210,cat:'Home & Decor',added:'2026-03-10'},
+];
+
+var currentFilter = 'all';
+
+function scoreClass(s){return s>=80?'sb':s>=65?'b':s>=50?'cb':'h'}
+function verdictClass(v){return v==='Strong Buy'?'verdict-sb':v==='Buy'?'verdict-b':v==='Cautious Buy'?'verdict-cb':'verdict-h'}
+function fmtRevenue(n){return '$'+n.toLocaleString()}
+function fmtDate(d){var dt=new Date(d);return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+
+function renderGrid(prods) {
+  var grid = document.getElementById('product-grid');
+  var empty = document.getElementById('empty');
+  if (!prods.length) { grid.innerHTML=''; empty.style.display=''; document.getElementById('count-badge').textContent='0 shown'; return; }
+  empty.style.display='none';
+  document.getElementById('count-badge').textContent = prods.length + ' shown';
+  grid.innerHTML = prods.map(function(p){
+    var sc = scoreClass(p.score);
+    return '<div class="prod-card" onclick="openProduct('+p.id+')">' +
+      '<div class="prod-category">'+p.cat+'</div>' +
+      '<div class="prod-name">'+p.name+'</div>' +
+      '<div class="prod-score-row">' +
+        '<div class="prod-score '+sc+'">'+p.score+'</div>' +
+        '<span class="prod-verdict '+verdictClass(p.verdict)+'">'+p.verdict+'</span>' +
+      '</div>' +
+      '<div class="prod-revenue">~'+fmtRevenue(p.revenue)+' <span>/ month avg</span></div>' +
+      '<div class="prod-date">Added '+fmtDate(p.added)+'</div>' +
+    '</div>';
+  }).join('');
+}
+
+function filter(btn, val) {
+  currentFilter = val;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  applyFilterSort();
+}
+
+function resort(){ applyFilterSort(); }
+
+function applyFilterSort() {
+  var sortVal = document.getElementById('sort-select').value;
+  var prods = PRODUCTS.filter(function(p){ return currentFilter==='all' || p.verdict===currentFilter; });
+  prods = prods.slice().sort(function(a,b){
+    if(sortVal==='score') return b.score-a.score;
+    if(sortVal==='revenue') return b.revenue-a.revenue;
+    return new Date(b.added)-new Date(a.added);
+  });
+  renderGrid(prods);
+}
+
+function openProduct(id) {
+  var p = PRODUCTS.find(function(x){ return x.id===id; });
+  if (!p) return;
+  alert(p.name+'\n\nScore: '+p.score+' ('+p.verdict+')\nEst. revenue: ~'+fmtRevenue(p.revenue)+'/month\nCategory: '+p.cat+'\nAdded: '+fmtDate(p.added));
+}
+
+// Auth
+(function(){
+  var token = localStorage.getItem('mm_pro_token');
+  if (!token) { location.href = '/pro/login'; return; }
+  fetch('/api/pro-verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(!d.ok){localStorage.removeItem('mm_pro_token');location.href='/pro/login';return;}
+      reveal();
+    })
+    .catch(function(){reveal();});
+})();
+
+function reveal() {
+  document.getElementById('loading').style.display='none';
+  document.getElementById('app').style.display='';
+  applyFilterSort();
+}
+function logout(){localStorage.removeItem('mm_pro_token');location.href='/idea';}
+</script>
+</body>
+</html>

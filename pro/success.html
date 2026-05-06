@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to MeshMinds Pro</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--surf:#f7f5f2;--good:#15803d;--good-bg:#f0fdf4}
+body{min-height:100vh;background:#fff;font-family:"Manrope",sans-serif;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{width:100%;max-width:400px;text-align:center}
+
+/* loading state */
+.loader{display:flex;flex-direction:column;align-items:center;gap:16px;padding:60px 20px}
+.spin{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-family:"DM Mono",monospace;font-size:12px;color:var(--ink3);letter-spacing:.06em}
+
+/* success state */
+.success{display:none;padding:40px 24px}
+.check-ring{width:72px;height:72px;border-radius:50%;background:var(--good-bg);border:2px solid var(--good);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+.success-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.success-h1{font-family:"Bebas Neue",sans-serif;font-size:46px;line-height:.95;margin-bottom:6px;color:var(--ink)}
+.success-sub{font-size:14px;color:var(--ink2);margin-bottom:6px;line-height:1.5}
+.success-email{font-family:"DM Mono",monospace;font-size:12px;color:var(--acc);margin-bottom:28px}
+
+.feat-list{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:24px;text-align:left;display:flex;flex-direction:column;gap:10px}
+.feat-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}
+.feat-ico{width:22px;height:22px;background:rgba(255,92,0,.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+
+.cta-btn{display:block;background:var(--acc);color:#fff;font-family:"Manrope",sans-serif;font-weight:800;font-size:15px;border:none;border-radius:12px;padding:16px 24px;text-decoration:none;cursor:pointer;width:100%;margin-bottom:12px;letter-spacing:.01em;transition:opacity .15s}
+.cta-btn:hover{opacity:.9}
+.login-link{font-size:12px;color:var(--ink3);font-family:"DM Mono",monospace}
+.login-link a{color:var(--ink2);text-decoration:none}
+.login-link a:hover{color:var(--ink)}
+
+/* error state */
+.error{display:none;padding:40px 20px;text-align:center}
+.error-ico{font-size:40px;margin-bottom:16px}
+.error-msg{font-size:14px;color:var(--ink2);margin-bottom:20px;line-height:1.5}
+.back-btn{display:inline-block;background:var(--acc);color:#fff;font-weight:700;font-size:14px;border-radius:10px;padding:12px 24px;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Loading -->
+  <div class="loader" id="state-loading">
+    <div class="spin"></div>
+    <div class="loader-txt">Verifying your payment…</div>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="state-success">
+    <div class="check-ring">✓</div>
+    <div class="success-eyebrow">You're in</div>
+    <div class="success-h1">Welcome to<br>Pro.</div>
+    <div class="success-sub">Access confirmed for</div>
+    <div class="success-email" id="member-email">—</div>
+    <div class="feat-list">
+      <div class="feat-row"><div class="feat-ico">📊</div><span>All 847+ validated products with scores &amp; revenue estimates</span></div>
+      <div class="feat-row"><div class="feat-ico">🔥</div><span>Trending Now — what's spiking this week</span></div>
+      <div class="feat-row"><div class="feat-ico">🔑</div><span>Top keywords from the last 30 days</span></div>
+      <div class="feat-row"><div class="feat-ico">⭐</div><span>My personal hot list — products I'd print myself</span></div>
+    </div>
+    <a href="/pro/dashboard" class="cta-btn">Go to my Pro dashboard →</a>
+    <div class="login-link">Bookmark <a href="/pro/dashboard">/pro/dashboard</a> to come back</div>
+  </div>
+
+  <!-- Error -->
+  <div class="error" id="state-error">
+    <div class="error-ico">⚠️</div>
+    <div class="error-msg" id="error-msg">We couldn't verify your payment. If you were charged, email <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a> and we'll sort it out.</div>
+    <a href="/idea" class="back-btn">Back to PrintChecker</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var sessionId = params.get('session_id');
+
+  // If no session_id, check if already has a valid token
+  if (!sessionId) {
+    var existing = localStorage.getItem('mm_pro_token');
+    if (existing) { location.href = '/pro/dashboard'; return; }
+    show('error', 'No payment session found. Please complete checkout first.');
+    return;
+  }
+
+  fetch('/api/pro-auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId: sessionId }),
+  })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (!d.ok || !d.token) {
+        show('error', d.error || 'Payment verification failed.');
+        return;
+      }
+      localStorage.setItem('mm_pro_token', d.token);
+      document.getElementById('member-email').textContent = d.email || 'your account';
+      show('success');
+    })
+    .catch(function(){
+      show('error', 'Network error — please try refreshing.');
+    });
+
+  function show(state, errMsg) {
+    document.getElementById('state-loading').style.display = 'none';
+    document.getElementById('state-success').style.display = 'none';
+    document.getElementById('state-error').style.display = 'none';
+    if (state === 'error') {
+      document.getElementById('state-error').style.display = '';
+      if (errMsg) document.getElementById('error-msg').textContent = errMsg;
+    } else {
+      document.getElementById('state-' + state).style.display = '';
+    }
+  }
+})();
+</script>
+</body>
+</html>

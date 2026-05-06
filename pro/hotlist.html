@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot List — MeshMinds Pro</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--good-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fffbeb;--info:#1d4ed8;--info-bg:#eff6ff;--bad:#b91c1c;--bad-bg:#fef2f2}
+body{background:#fff;font-family:"Manrope",sans-serif;min-height:100vh}
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:999}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:50;padding:0 20px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;height:52px;gap:0}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--acc)}
+.pro-pill{background:var(--acc);color:#fff;font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;display:inline-block}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:12px}
+.nav-link{font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--surf);color:var(--ink)}
+.nav-link.active{font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-validator{font-size:12px;color:var(--acc);font-weight:700;text-decoration:none;font-family:"DM Mono",monospace}
+.nav-validator:hover{text-decoration:underline}
+.nav-logout{background:none;border:1px solid var(--line2);border-radius:8px;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer}
+.nav-logout:hover{color:var(--bad);border-color:var(--bad)}
+@media(max-width:640px){.nav-links{display:none}}
+
+.page{max-width:680px;margin:0 auto;padding:28px 20px 60px}
+.page-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.page-h1{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--ink);line-height:1;margin-bottom:4px}
+.page-edition{font-family:"DM Mono",monospace;font-size:11px;color:var(--ink3);margin-bottom:20px;letter-spacing:.06em}
+
+/* intro card */
+.intro-card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:28px}
+.intro-avatar{width:44px;height:44px;border-radius:50%;background:var(--acc);color:#fff;font-family:"Bebas Neue",sans-serif;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.intro-body{flex:1}
+.intro-name{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.intro-handle{font-family:"DM Mono",monospace;font-size:10px;color:var(--acc);letter-spacing:.04em;margin-bottom:8px}
+.intro-txt{font-size:13px;color:var(--ink2);line-height:1.6;font-style:italic}
+
+/* pick cards */
+.picks{display:flex;flex-direction:column;gap:16px}
+.pick-card{background:var(--surf);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.pick-header{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.pick-num{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.pick-name{font-family:"Bebas Neue",sans-serif;font-size:30px;color:var(--ink);line-height:1;margin-bottom:10px}
+.pick-stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.score-pill{font-family:"Bebas Neue",sans-serif;font-size:18px;background:var(--good-bg);color:var(--good);border-radius:8px;padding:3px 10px;line-height:1.2}
+.verdict-pill{font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;background:var(--good-bg);color:var(--good);border-radius:5px;padding:3px 8px}
+.rev-pill{font-size:12px;font-weight:700;color:var(--ink2)}
+.rev-pill span{color:var(--ink3);font-weight:400;font-size:11px}
+.pick-body{padding:16px 18px}
+.pick-note{font-size:13.5px;color:var(--ink);line-height:1.65;margin-bottom:14px}
+.why-title{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+.why-list{display:flex;flex-direction:column;gap:5px}
+.why-item{font-size:12px;color:var(--ink2);display:flex;align-items:flex-start;gap:8px;line-height:1.4}
+.why-ico{color:var(--acc);flex-shrink:0;font-size:12px;margin-top:1px}
+
+/* tip box */
+.tip-box{background:rgba(255,92,0,.06);border:1px solid rgba(255,92,0,.2);border-radius:10px;padding:12px 14px;margin-top:12px;font-size:12px;color:var(--ink2);line-height:1.5}
+.tip-box b{color:var(--acc)}
+
+/* updated note */
+.updated-note{text-align:center;font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);letter-spacing:.06em;margin-top:28px;padding-top:20px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div></div>
+<div id="app">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/pro/dashboard" class="nav-logo">Mesh<em>Minds</em><span class="pro-pill">PRO</span></a>
+      <div class="nav-links">
+        <a href="/pro/dashboard" class="nav-link">Dashboard</a>
+        <a href="/pro/catalogue" class="nav-link">Catalogue</a>
+        <a href="/pro/trending" class="nav-link">Trending</a>
+        <a href="/pro/keywords" class="nav-link">Keywords</a>
+        <a href="/pro/hotlist" class="nav-link active">Hot List</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/idea" class="nav-validator">← Validator</a>
+        <button class="nav-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-eyebrow">Daniel's Picks</div>
+    <div class="page-h1">Hot List</div>
+    <div class="page-edition">May 2026 Edition · Updated monthly</div>
+
+    <div class="intro-card">
+      <div class="intro-avatar">D</div>
+      <div class="intro-body">
+        <div class="intro-name">Daniel Haag</div>
+        <div class="intro-handle">@meshminds3d</div>
+        <div class="intro-txt">"These are the 4 products I'd start printing right now if I were building from scratch this month. Not just high scores — these are the ones where the timing, competition gap, and profit margin all line up."</div>
+      </div>
+    </div>
+
+    <div class="picks">
+
+      <!-- Pick 1 -->
+      <div class="pick-card">
+        <div class="pick-header">
+          <div class="pick-num">Pick #1</div>
+          <div class="pick-name">Modular Honeycomb Wall Panel</div>
+          <div class="pick-stats">
+            <span class="score-pill">91</span>
+            <span class="verdict-pill">Strong Buy</span>
+            <span class="rev-pill">~$3,850 <span>/ month avg</span></span>
+          </div>
+        </div>
+        <div class="pick-body">
+          <div class="pick-note">
+            This one's been killing it for 3 months straight. Super easy to print — no supports needed, finishes cleanly in PLA. The magic is the upsell: customers always buy in sets of 6, 10, or 20. Once they buy once, half come back for more. I've had customers spend $80+ in a single order just on these panels.
+          </div>
+          <div class="why-title">Why I'd do it</div>
+          <div class="why-list">
+            <div class="why-item"><span class="why-ico">✓</span>High repeat purchase rate — customers come back for more panels</div>
+            <div class="why-item"><span class="why-ico">✓</span>Infinite size variations = easy upsell and listing expansion</div>
+            <div class="why-item"><span class="why-ico">✓</span>Trending in home decor right now (+68% this week)</div>
+            <div class="why-item"><span class="why-ico">✓</span>Zero copyright issues — original design</div>
+          </div>
+          <div class="tip-box"><b>My pricing tip:</b> Sell individual panels at $4.50 but push the 10-pack at $38 (instead of $45). The discount triggers the bulk buy. That's your $3K+ month right there.</div>
+        </div>
+      </div>
+
+      <!-- Pick 2 -->
+      <div class="pick-card">
+        <div class="pick-header">
+          <div class="pick-num">Pick #2</div>
+          <div class="pick-name">Articulated Sea Turtle</div>
+          <div class="pick-stats">
+            <span class="score-pill">84</span>
+            <span class="verdict-pill">Strong Buy</span>
+            <span class="rev-pill">~$1,720 <span>/ month avg</span></span>
+          </div>
+        </div>
+        <div class="pick-body">
+          <div class="pick-note">
+            Brand new trend this month. Went from zero to top-10 Etsy search ranking in 3 weeks. I've watched this exact pattern before with articulated dragons and octopuses — early movers capture the algorithmic advantage and hold it for months. If you're reading this in May 2026, the window is still open. List now.
+          </div>
+          <div class="why-title">Why I'd do it</div>
+          <div class="why-list">
+            <div class="why-item"><span class="why-ico">✓</span>Trend is young — you're early, not late</div>
+            <div class="why-item"><span class="why-ico">✓</span>Silk PLA photos = naturally viral on social media</div>
+            <div class="why-item"><span class="why-ico">✓</span>Gift market: ocean lovers, kids, collectors — huge audience</div>
+            <div class="why-item"><span class="why-ico">✓</span>Currently less than 5 serious sellers on Etsy</div>
+          </div>
+          <div class="tip-box"><b>My print tip:</b> Use silk rainbow or ocean blue PLA. Take photos outside on a wood deck or near water. That aesthetic gets shared organically. Price $18–22 for a medium size, $28–34 for large.</div>
+        </div>
+      </div>
+
+      <!-- Pick 3 -->
+      <div class="pick-card">
+        <div class="pick-header">
+          <div class="pick-num">Pick #3</div>
+          <div class="pick-name">Watch Stand Organizer</div>
+          <div class="pick-stats">
+            <span class="score-pill">81</span>
+            <span class="verdict-pill">Strong Buy</span>
+            <span class="rev-pill">~$1,280 <span>/ month avg</span></span>
+          </div>
+        </div>
+        <div class="pick-body">
+          <div class="pick-note">
+            Underrated. Seriously underrated. Low competition because most sellers copy the obvious designs. The opportunity is to do it better: minimal, clean, slightly elevated. The Apple Watch market is enormous and those buyers have disposable income — they're not looking for the cheapest option. A nice watch stand at $28 feels like a no-brainer to someone who just spent $400 on a watch.
+          </div>
+          <div class="why-title">Why I'd do it</div>
+          <div class="why-list">
+            <div class="why-item"><span class="why-ico">✓</span>Low competition, high purchase intent buyers</div>
+            <div class="why-item"><span class="why-ico">✓</span>Apple Watch Series 11 launch is driving fresh search volume</div>
+            <div class="why-item"><span class="why-ico">✓</span>Easy bundle: watch stand + cable tray = $45–55 order</div>
+            <div class="why-item"><span class="why-ico">✓</span>Shoots beautifully on a dark desk with one light source</div>
+          </div>
+          <div class="tip-box"><b>My design tip:</b> Print in matte black or concrete gray. Photograph on a dark wood desk with the watch you own. Authenticity beats studio shots for this product category.</div>
+        </div>
+      </div>
+
+      <!-- Pick 4 -->
+      <div class="pick-card">
+        <div class="pick-header">
+          <div class="pick-num">Pick #4</div>
+          <div class="pick-name">Articulated Dragon (XL)</div>
+          <div class="pick-stats">
+            <span class="score-pill">88</span>
+            <span class="verdict-pill">Strong Buy</span>
+            <span class="rev-pill">~$2,400 <span>/ month avg</span></span>
+          </div>
+        </div>
+        <div class="pick-body">
+          <div class="pick-note">
+            Dragon is still the single most searched articulated toy on Etsy. It didn't die — it matured. The XL version is where the money is now because the market bifurcated: budget buyers go small and cheap, while the gift buyers (who spend more) want the impressive XL version they can hold up and flex. $35–50 price point, sold as a premium gift.
+          </div>
+          <div class="why-title">Why I'd do it</div>
+          <div class="why-list">
+            <div class="why-item"><span class="why-ico">✓</span>#1 searched articulated animal keyword on Etsy — proven demand</div>
+            <div class="why-item"><span class="why-ico">✓</span>XL commands $35–50 price point — best margins in the category</div>
+            <div class="why-item"><span class="why-ico">✓</span>Father's Day gift wave starting now — 3 weeks to list and rank</div>
+            <div class="why-item"><span class="why-ico">✓</span>Zero IP/copyright issues — flexi dragon is original</div>
+          </div>
+          <div class="tip-box"><b>My sales tip:</b> Lead with the gift angle in your title and photos. "Gift for Dad", "Birthday Gift", "Dragon Lover Gift" — those modifier keywords convert 40% better than product-only titles for this item.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="updated-note">Hot List updates every 1st of the month · Next update: June 1, 2026</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var token = localStorage.getItem('mm_pro_token');
+  if(!token){location.href='/pro/login';return;}
+  fetch('/api/pro-verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d.ok){localStorage.removeItem('mm_pro_token');location.href='/pro/login';return;}reveal();})
+    .catch(function(){reveal();});
+})();
+function reveal(){document.getElementById('loading').style.display='none';document.getElementById('app').style.display='';}
+function logout(){localStorage.removeItem('mm_pro_token');location.href='/idea';}
+</script>
+</body>
+</html>

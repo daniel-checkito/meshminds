@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trending Now — MeshMinds Pro</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--good-bg:#f0fdf4;--warn:#b45309;--warn-bg:#fffbeb;--info:#1d4ed8;--info-bg:#eff6ff;--bad:#b91c1c;--bad-bg:#fef2f2}
+body{background:#fff;font-family:"Manrope",sans-serif;min-height:100vh}
+#loading{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:999}
+.spin{width:30px;height:30px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app{display:none}
+
+.nav{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);z-index:50;padding:0 20px}
+.nav-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;height:52px;gap:0}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);text-decoration:none;flex-shrink:0}
+.nav-logo em{font-style:normal;color:var(--acc)}
+.pro-pill{background:var(--acc);color:#fff;font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;display:inline-block}
+.nav-links{display:flex;align-items:center;gap:2px;margin-left:auto;margin-right:12px}
+.nav-link{font-size:13px;font-weight:600;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .15s,color .15s;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--surf);color:var(--ink)}
+.nav-link.active{font-weight:700}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-validator{font-size:12px;color:var(--acc);font-weight:700;text-decoration:none;font-family:"DM Mono",monospace}
+.nav-validator:hover{text-decoration:underline}
+.nav-logout{background:none;border:1px solid var(--line2);border-radius:8px;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer}
+.nav-logout:hover{color:var(--bad);border-color:var(--bad)}
+@media(max-width:640px){.nav-links{display:none}}
+
+.page{max-width:760px;margin:0 auto;padding:28px 20px 60px}
+.page-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+.page-h1{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--ink);line-height:1;margin-bottom:4px}
+.live-badge{display:inline-flex;align-items:center;gap:6px;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--good);background:var(--good-bg);border:1px solid var(--good);border-radius:20px;padding:4px 12px;margin-bottom:16px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--good);animation:blink 1.8s ease infinite}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.page-sub{font-size:13px;color:var(--ink3);margin-bottom:24px}
+
+/* trend cards */
+.trend-list{display:flex;flex-direction:column;gap:12px}
+.trend-card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:18px 18px 16px;display:flex;gap:16px;align-items:flex-start}
+.trend-rank{font-family:"Bebas Neue",sans-serif;font-size:40px;color:var(--line2);line-height:1;flex-shrink:0;width:40px;text-align:right}
+.trend-body{flex:1;min-width:0}
+.trend-name{font-size:15px;font-weight:800;color:var(--ink);margin-bottom:4px;line-height:1.3}
+.trend-heat-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.heat-ico{font-size:14px}
+.heat-pct{font-family:"DM Mono",monospace;font-size:11px;color:var(--acc);font-weight:500;letter-spacing:.04em}
+.trend-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag{font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;background:var(--surf2);border:1px solid var(--line2);border-radius:4px;padding:2px 7px;color:var(--ink3)}
+.trend-meta-row{display:flex;align-items:center;gap:10px}
+.verdict-chip{font-family:"DM Mono",monospace;font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:5px;padding:3px 8px}
+.verdict-sb{background:var(--good-bg);color:var(--good)}
+.verdict-b{background:var(--info-bg);color:var(--info)}
+.verdict-cb{background:var(--warn-bg);color:var(--warn)}
+.trend-date{font-family:"DM Mono",monospace;font-size:9px;color:var(--ink3)}
+.trend-score-col{flex-shrink:0;text-align:right;padding-top:4px}
+.score-big{font-family:"Bebas Neue",sans-serif;font-size:44px;line-height:1;color:var(--good)}
+.score-big.b{color:var(--info)}
+.score-lbl{font-family:"DM Mono",monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.rev-est{font-size:12px;font-weight:600;color:var(--ink2);margin-top:6px}
+.rev-lbl{font-size:10px;color:var(--ink3);font-weight:400}
+
+/* why box */
+.why-box{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px}
+.why-title{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.why-items{display:flex;flex-direction:column;gap:4px}
+.why-item{font-size:11.5px;color:var(--ink2);display:flex;align-items:flex-start;gap:6px}
+.why-item::before{content:'→';color:var(--acc);flex-shrink:0;font-size:11px;margin-top:1px}
+
+/* insight banner */
+.insight-banner{background:rgba(255,92,0,.06);border:1px solid rgba(255,92,0,.2);border-radius:12px;padding:14px 16px;margin-bottom:24px;display:flex;gap:10px;align-items:flex-start}
+.insight-ico{font-size:18px;flex-shrink:0}
+.insight-txt{font-size:12.5px;color:var(--ink2);line-height:1.5}
+.insight-txt b{color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="loading"><div class="spin"></div></div>
+<div id="app">
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="/pro/dashboard" class="nav-logo">Mesh<em>Minds</em><span class="pro-pill">PRO</span></a>
+      <div class="nav-links">
+        <a href="/pro/dashboard" class="nav-link">Dashboard</a>
+        <a href="/pro/catalogue" class="nav-link">Catalogue</a>
+        <a href="/pro/trending" class="nav-link active">Trending</a>
+        <a href="/pro/keywords" class="nav-link">Keywords</a>
+        <a href="/pro/hotlist" class="nav-link">Hot List</a>
+      </div>
+      <div class="nav-actions">
+        <a href="/idea" class="nav-validator">← Validator</a>
+        <button class="nav-logout" onclick="logout()">Log out</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-eyebrow">Trending Now</div>
+    <div class="page-h1">What's Spiking<br>This Week</div>
+    <div class="live-badge"><span class="live-dot"></span>Updated daily</div>
+    <div class="page-sub">Products with the sharpest search volume increases over the last 7 days on Etsy. Get in early.</div>
+
+    <div class="insight-banner">
+      <div class="insight-ico">💡</div>
+      <div class="insight-txt"><b>This week's pattern:</b> Articulated animals and modular storage are dominating. Both benefit from the "flex & show" TikTok mechanic. If you're starting now, pick one of these two categories.</div>
+    </div>
+
+    <div class="trend-list">
+
+      <div class="trend-card">
+        <div class="trend-rank">1</div>
+        <div class="trend-body">
+          <div class="trend-name">Articulated Sea Turtle</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥🔥</span>
+            <span class="heat-pct">+89% search volume this week</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">articulated</span>
+            <span class="tag">animal</span>
+            <span class="tag">gift</span>
+            <span class="tag">ocean</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-sb">Strong Buy</span>
+            <span class="trend-date">Validated 1 day ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">New TikTok trend: "satisfying flex toy" videos driving mass search</div>
+              <div class="why-item">Only 3 serious sellers on Etsy — window is open now</div>
+              <div class="why-item">Silk PLA version photographs beautifully = organic reach</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big">84</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$1,720<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-rank">2</div>
+        <div class="trend-body">
+          <div class="trend-name">Modular Honeycomb Wall Panel</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥🔥</span>
+            <span class="heat-pct">+68% search volume this week</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">wall decor</span>
+            <span class="tag">storage</span>
+            <span class="tag">modular</span>
+            <span class="tag">home</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-sb">Strong Buy</span>
+            <span class="trend-date">Validated 3 days ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">Home organization content is having a Spring resurgence</div>
+              <div class="why-item">High AOV: customers buy sets of 6–20 panels at $4–8 each</div>
+              <div class="why-item">Infinite variations = easy listing expansion (colors, sizes)</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big">91</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$3,850<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-rank">3</div>
+        <div class="trend-body">
+          <div class="trend-name">Watch Stand Organizer</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥</span>
+            <span class="heat-pct">+24% search volume this week</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">watch</span>
+            <span class="tag">desk</span>
+            <span class="tag">organizer</span>
+            <span class="tag">apple watch</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-sb">Strong Buy</span>
+            <span class="trend-date">Validated 2 days ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">Apple Watch Series 11 launch last month is driving accessory search</div>
+              <div class="why-item">Low competition — most sellers use injection-molded plastic versions</div>
+              <div class="why-item">Print in matte black or concrete gray, price at $22–28</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big">81</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$1,280<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-rank">4</div>
+        <div class="trend-body">
+          <div class="trend-name">Hex Drawer Organizer</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥</span>
+            <span class="heat-pct">+210% (brand new keyword)</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">drawer</span>
+            <span class="tag">organizer</span>
+            <span class="tag">hexagon</span>
+            <span class="tag">modular</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-b">Buy</span>
+            <span class="trend-date">Validated 5 days ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">Keyword is brand new — essentially zero competition right now</div>
+              <div class="why-item">+210% is from a very low base, but momentum looks real</div>
+              <div class="why-item">List early to build rank before competition arrives</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big b">79</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$980<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-rank">5</div>
+        <div class="trend-body">
+          <div class="trend-name">Articulated Dragon (XL)</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥🔥</span>
+            <span class="heat-pct">+42% search volume this week</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">articulated</span>
+            <span class="tag">dragon</span>
+            <span class="tag">gift</span>
+            <span class="tag">fantasy</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-sb">Strong Buy</span>
+            <span class="trend-date">Validated 3 days ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">Dragon is still the #1 searched articulated animal term on Etsy</div>
+              <div class="why-item">XL size commands $35–50 price point — best margin in the category</div>
+              <div class="why-item">Father's Day gift wave is starting — 3 weeks to list and rank</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big">88</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$2,400<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-rank">6</div>
+        <div class="trend-body">
+          <div class="trend-name">Mini Succulent Planter Set</div>
+          <div class="trend-heat-row">
+            <span class="heat-ico">🔥🔥</span>
+            <span class="heat-pct">+31% search volume this week</span>
+          </div>
+          <div class="trend-tags">
+            <span class="tag">planter</span>
+            <span class="tag">succulent</span>
+            <span class="tag">spring</span>
+            <span class="tag">gift</span>
+          </div>
+          <div class="trend-meta-row">
+            <span class="verdict-chip verdict-sb">Strong Buy</span>
+            <span class="trend-date">Validated 7 days ago</span>
+          </div>
+          <div class="why-box">
+            <div class="why-title">Why it's spiking</div>
+            <div class="why-items">
+              <div class="why-item">Seasonal: Spring always drives planter search — predictable annual spike</div>
+              <div class="why-item">Sell as a set of 3 — increases AOV to $22–30</div>
+              <div class="why-item">Mothers' Day tail end is still driving gift purchases</div>
+            </div>
+          </div>
+        </div>
+        <div class="trend-score-col">
+          <div class="score-big">82</div>
+          <div class="score-lbl">Score</div>
+          <div class="rev-est">$1,450<div class="rev-lbl">/mo avg</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var token = localStorage.getItem('mm_pro_token');
+  if(!token){location.href='/pro/login';return;}
+  fetch('/api/pro-verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:token})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(!d.ok){localStorage.removeItem('mm_pro_token');location.href='/pro/login';return;}reveal();})
+    .catch(function(){reveal();});
+})();
+function reveal(){document.getElementById('loading').style.display='none';document.getElementById('app').style.display='';}
+function logout(){localStorage.removeItem('mm_pro_token');location.href='/idea';}
+</script>
+</body>
+</html>

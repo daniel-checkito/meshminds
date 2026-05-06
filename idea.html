@@ -610,6 +610,33 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .val-data-val.g{color:#15803d}
 .val-data-lbl{font-size:8px;color:var(--ink3);font-family:"DM Mono",sans-serif;margin-top:2px;line-height:1.2}
 .val-source{font-size:9.5px;color:var(--ink3);font-family:"DM Mono",sans-serif;text-align:center;letter-spacing:.02em}
+/* Enhanced val-widget */
+.val-body{min-height:180px!important}
+.val-main-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.val-thumb{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--surf2);border:1px solid var(--line)}
+.val-url-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.val-cursor-blink{display:inline-block;width:1.5px;height:11px;background:var(--ink2);vertical-align:middle;margin-left:1px;animation:vcblink .8s step-end infinite}
+@keyframes vcblink{0%,100%{opacity:1}50%{opacity:0}}
+.val-click-cursor{position:absolute;font-size:16px;pointer-events:none;z-index:5;top:20px;right:38px;opacity:0;animation:click-cursor 7s ease-in-out infinite}
+@keyframes click-cursor{0%,8%{opacity:0;transform:translate(18px,0)}14%{opacity:1;transform:translate(0,0)}20%{opacity:1;transform:translate(0,0) scale(.75)}22%{opacity:1;transform:scale(1.05)}26%,100%{opacity:0}}
+.val-scan-prog{height:2px;border-radius:2px;background:var(--line);overflow:hidden;margin:4px 0}
+.val-scan-fill{height:100%;border-radius:2px;background:var(--acc);width:0;animation:scan-prog 7s ease-in-out infinite}
+@keyframes scan-prog{0%,2%{width:0}28%{width:82%}36%,100%{width:0}}
+/* Bigger try-eg tap target */
+.try-eg{margin-top:10px;font-size:12.5px;color:var(--ink3);display:flex;align-items:center;gap:5px;justify-content:center;padding:11px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);cursor:pointer;-webkit-tap-highlight-color:rgba(255,92,0,.1)}
+.try-eg:active{background:var(--surf2)}
+.btn-try-eg{background:none;border:none;font-family:"DM Mono",monospace;font-size:12px;color:var(--acc);cursor:pointer;padding:0;letter-spacing:.02em;font-weight:700}
+/* Seller avatar */
+.seller-profile-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.seller-avatar{width:56px;height:56px;border-radius:50%;background:var(--acc);color:#fff;font-family:"Bebas Neue",sans-serif;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;letter-spacing:.02em;border:2px solid rgba(255,92,0,.15)}
+.seller-handle{font-family:"DM Mono",monospace;font-size:10px;color:var(--acc);letter-spacing:.04em;margin-top:2px}
+/* Country chips */
+.country-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.country-chip{background:var(--surf);border:1.5px solid var(--line2);border-radius:10px;padding:10px 4px 8px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;user-select:none;-webkit-tap-highlight-color:transparent}
+.country-chip:active,.country-chip.sel{background:rgba(255,92,0,.08);border-color:var(--acc)}
+.cc-flag{font-size:20px;display:block;margin-bottom:3px;line-height:1}
+.cc-name{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--ink2);letter-spacing:-.01em;display:block}
+.country-chip.sel .cc-name{color:var(--acc);font-weight:700}
 </style>
 </head>
 <body>
@@ -671,36 +698,49 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     <span class="val-brand">meshminds · idea validator</span>
   </div>
   <div class="val-body">
-    <!-- State A: paste URL -->
-    <div class="val-state-a">
-      <div class="val-url-row">
-        <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span>
-        <span class="val-url-go">Check →</span>
+    <!-- State A: paste URL + scan -->
+    <div class="val-state-a" style="position:absolute;inset:0;padding:12px 14px 12px;display:flex;flex-direction:column;gap:0">
+      <span class="val-click-cursor">👆</span>
+      <div class="val-main-row">
+        <img class="val-thumb" src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp" alt="Geometric Planter" loading="lazy">
+        <div class="val-url-col">
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Paste any model link</div>
+          <div class="val-url-row" style="margin-bottom:0">
+            <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span><span class="val-cursor-blink"></span>
+            <span class="val-url-go">Check →</span>
+          </div>
+          <div class="val-scan-prog"><div class="val-scan-fill"></div></div>
+          <div class="val-scanning">
+            <span class="val-scan-dot"></span>
+            Scanning 8,400 Etsy listings…
+          </div>
+        </div>
       </div>
-      <div class="val-scanning">
-        <span class="val-scan-dot"></span>
-        Scanning 8,400 Etsy listings for this niche…
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
         <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
         <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
-        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · Thingiverse · any link</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · any link</span>
       </div>
     </div>
     <!-- State B: result -->
-    <div class="val-state-b">
-      <div class="val-result-row">
-        <div class="val-ring-wrap">
-          <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
-            <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
-            <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
-          </svg>
-          <div class="val-score-num">87</div>
-        </div>
-        <div>
-          <div class="val-verdict">✓ Start selling</div>
-          <div class="val-verdict-title">Strong demand in your niche</div>
-          <div class="val-verdict-sub">Low competition · €28 avg price</div>
+    <div class="val-state-b" style="position:absolute;inset:0;padding:12px 14px 12px;display:flex;flex-direction:column;gap:8px;opacity:0">
+      <div class="val-main-row" style="margin-bottom:0">
+        <img class="val-thumb" src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp" alt="Geometric Planter" loading="lazy">
+        <div style="flex:1;min-width:0">
+          <div class="val-result-row" style="margin-bottom:0">
+            <div class="val-ring-wrap">
+              <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
+                <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
+                <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
+              </svg>
+              <div class="val-score-num">87</div>
+            </div>
+            <div>
+              <div class="val-verdict">✓ Start selling</div>
+              <div class="val-verdict-title">Strong demand found</div>
+              <div class="val-verdict-sub">Low competition · €28 avg</div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="val-data-grid">

@@ -581,6 +581,35 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .bl-lock-title{font-family:"Bebas Neue",sans-serif;font-size:20px;color:var(--ink);letter-spacing:.02em;margin-bottom:4px}
 .bl-lock-sub{font-size:11.5px;color:var(--ink2);margin-bottom:12px;line-height:1.4}
 .bl-lock-cta{display:inline-block;background:var(--acc);color:#fff;font-size:12.5px;font-weight:800;border-radius:8px;padding:10px 18px;text-decoration:none;font-family:"DM Sans",sans-serif}
+
+/* ── Simplified validator preview widget ── */
+@keyframes ring-draw{from{stroke-dasharray:0 81.7}to{stroke-dasharray:71.1 81.7}}
+@keyframes val-scan{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes val-a{0%,28%{opacity:1;transform:none}36%,96%{opacity:0;transform:translateY(-5px)}100%{opacity:1;transform:none}}
+@keyframes val-b{0%,32%{opacity:0;transform:translateY(5px)}40%,92%{opacity:1;transform:none}100%{opacity:0;transform:translateY(5px)}}
+.val-widget{background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px}
+.val-hdr{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
+.val-brand{font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);letter-spacing:.12em;text-transform:uppercase;margin-left:4px}
+.val-body{position:relative;min-height:148px;padding:0}
+.val-state-a{position:absolute;inset:0;padding:14px 14px 12px;display:flex;flex-direction:column;gap:10px;animation:val-a 7s ease-in-out infinite}
+.val-state-b{position:absolute;inset:0;padding:14px 14px 12px;display:flex;flex-direction:column;gap:9px;opacity:0;animation:val-b 7s ease-in-out infinite}
+.val-url-row{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line2);border-radius:8px;padding:9px 11px}
+.val-url-text{font-size:11px;color:var(--ink2);flex:1;font-family:"DM Mono",sans-serif;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.val-url-go{background:var(--acc);color:#fff;font-size:10px;font-weight:700;border-radius:6px;padding:4px 9px;font-family:"DM Mono",sans-serif;flex-shrink:0;white-space:nowrap}
+.val-scanning{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink3);font-family:"DM Mono",sans-serif}
+.val-scan-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0;animation:val-scan 1.1s ease-in-out infinite}
+.val-result-row{display:flex;align-items:center;gap:12px}
+.val-ring-wrap{position:relative;width:52px;height:52px;flex-shrink:0}
+.val-score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:18px;color:#15803d}
+.val-verdict{font-size:10px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif;margin-bottom:3px}
+.val-verdict-title{font-size:13px;font-weight:700;color:var(--ink);line-height:1.25}
+.val-verdict-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.val-data-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.val-data-cell{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 4px;text-align:center}
+.val-data-val{font-family:"Bebas Neue",sans-serif;font-size:15px;color:var(--ink);line-height:1}
+.val-data-val.g{color:#15803d}
+.val-data-lbl{font-size:8px;color:var(--ink3);font-family:"DM Mono",sans-serif;margin-top:2px;line-height:1.2}
+.val-source{font-size:9.5px;color:var(--ink3);font-family:"DM Mono",sans-serif;text-align:center;letter-spacing:.02em}
 </style>
 </head>
 <body>
@@ -634,76 +663,56 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- STEP 0 -->
       <div class="panel">
 
-        <!-- How-it-works animation widget -->
-        <div class="demo-widget">
-          <div class="demo-widget-hdr">
-            <span class="demo-dot" style="background:#ef4444"></span>
-            <span class="demo-dot" style="background:#f59e0b"></span>
-            <span class="demo-dot" style="background:#22c55e"></span>
-            <span class="demo-brand">meshminds — idea validator</span>
-          </div>
-          <div class="demo-frames">
-            <!-- Frame 1: Paste a link -->
-            <div class="demo-frame">
-              <div class="demo-step-lbl">Step 01 — Paste any model link</div>
-              <div class="demo-inp-row">
-                <span class="demo-inp-text">printables.com/model/geometric-planter</span>
-                <span class="demo-inp-cursor"></span>
-                <span class="demo-inp-go">Check →</span>
-              </div>
-              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">
-                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
-                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
-                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D</span>
-                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Thingiverse</span>
-                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">+ any link</span>
-              </div>
-              <div style="font-size:10.5px;color:var(--ink3);margin-top:4px">No account needed · free to start</div>
-            </div>
-            <!-- Frame 2: Quick setup questions -->
-            <div class="demo-frame">
-              <div class="demo-step-lbl">Step 02 — Tell us your setup</div>
-              <div class="demo-chips-row">
-                <span class="demo-chip on">FDM printer</span>
-                <span class="demo-chip on">1 printer</span>
-                <span class="demo-chip">2 printers</span>
-              </div>
-              <div class="demo-chips-row">
-                <span class="demo-chip on">Sell on Etsy</span>
-                <span class="demo-chip">eBay</span>
-                <span class="demo-chip">Local</span>
-              </div>
-              <div style="font-size:10.5px;color:var(--ink3);margin-top:2px">Personalises your revenue estimate &amp; strategy</div>
-            </div>
-            <!-- Frame 3: Score result -->
-            <div class="demo-frame">
-              <div class="demo-step-lbl">Step 03 — Your score &amp; strategy</div>
-              <div class="demo-score-row">
-                <div class="demo-ring-wrap">
-                  <svg width="52" height="52" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="var(--surf2)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/></svg>
-                  <div class="demo-ring-lbl">87</div>
-                </div>
-                <div class="demo-score-info">
-                  <div class="demo-verdict-tag">✓ Good for the right audience</div>
-                  <div style="font-size:11px;color:var(--ink3)">Demand ↑ · Low IP risk · Strong margin</div>
-                </div>
-              </div>
-              <div class="demo-rev-row">
-                <div class="demo-rev-cell"><div class="demo-rev-val">€22</div><div class="demo-rev-lbl">sell price</div></div>
-                <div class="demo-rev-cell"><div class="demo-rev-val">€310</div><div class="demo-rev-lbl">est. profit/mo</div></div>
-                <div class="demo-rev-cell"><div class="demo-rev-val">LOW</div><div class="demo-rev-lbl">legal risk</div></div>
-              </div>
-            </div>
-          </div>
-          <div class="demo-widget-footer">
-            <span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',sans-serif">Free analysis · no signup</span>
-            <div class="demo-step-dots">
-              <span class="demo-step-dot active"></span>
-              <span class="demo-step-dot"></span>
-              <span class="demo-step-dot"></span>
-            </div>
-          </div>
+        <div class="val-widget">
+  <div class="val-hdr">
+    <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+    <span class="val-brand">meshminds · idea validator</span>
+  </div>
+  <div class="val-body">
+    <!-- State A: paste URL -->
+    <div class="val-state-a">
+      <div class="val-url-row">
+        <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span>
+        <span class="val-url-go">Check →</span>
+      </div>
+      <div class="val-scanning">
+        <span class="val-scan-dot"></span>
+        Scanning 8,400 Etsy listings for this niche…
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · Thingiverse · any link</span>
+      </div>
+    </div>
+    <!-- State B: result -->
+    <div class="val-state-b">
+      <div class="val-result-row">
+        <div class="val-ring-wrap">
+          <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
+            <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
+            <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
+          </svg>
+          <div class="val-score-num">87</div>
         </div>
+        <div>
+          <div class="val-verdict">✓ Start selling</div>
+          <div class="val-verdict-title">Strong demand in your niche</div>
+          <div class="val-verdict-sub">Low competition · €28 avg price</div>
+        </div>
+      </div>
+      <div class="val-data-grid">
+        <div class="val-data-cell"><div class="val-data-val">8.4K</div><div class="val-data-lbl">Etsy searches/mo</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€28</div><div class="val-data-lbl">avg sale price</div></div>
+        <div class="val-data-cell"><div class="val-data-val g">LOW</div><div class="val-data-lbl">legal risk</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€310</div><div class="val-data-lbl">est. profit/mo</div></div>
+      </div>
+      <div class="val-source">Real data · 3,000h Etsy research · $250K verified revenue</div>
+    </div>
+  </div>
+</div>
 
         <div class="section-lbl">Popular prints analysed</div>
 

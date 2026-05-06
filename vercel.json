@@ -1,4 +1,12 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "functions": {
+    "api/analyze.js": {
+      "maxDuration": 60
+    },
+    "api/email.js": {
+      "maxDuration": 10
+    }
+  }
 }

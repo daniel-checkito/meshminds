@@ -2028,7 +2028,7 @@ function runAnalysis(){
 
   var fetchAbort=new AbortController();
   var fetchTimeout=setTimeout(function(){fetchAbort.abort();},75000);
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea-test",{
+  fetch("/api/analyze",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     signal:fetchAbort.signal,
@@ -2299,7 +2299,7 @@ q("btn-email").addEventListener("click",function(){
   /* Capture email + consent (fire-and-forget - do not block UX) */
   var consentEl=q("consent-check");
   var consent=consentEl?consentEl.checked:false;
-  fetch("https://meshminds.app.n8n.cloud/webhook/idea-email-test",{
+  fetch("/api/email",{
     method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
     body:JSON.stringify({email:email,consent:consent,timestamp:new Date().toISOString()})
   }).catch(function(){});

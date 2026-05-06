@@ -5,6 +5,9 @@
     "api/analyze.js": {
       "maxDuration": 60
     },
+    "api/save-results.js": {
+      "maxDuration": 10
+    },
     "api/pro-auth.js": {
       "maxDuration": 15
     },

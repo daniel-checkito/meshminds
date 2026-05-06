@@ -95,6 +95,8 @@ module.exports = async (req, res) => {
     : '';
 
   if (scrapeUrl) {
+    const fcAbort = new AbortController();
+    const fcTimeout = setTimeout(() => fcAbort.abort(), 20000);
     try {
       const fcResp = await fetch('https://api.firecrawl.dev/v1/scrape', {
         method: 'POST',
@@ -107,6 +109,7 @@ module.exports = async (req, res) => {
           formats: ['markdown'],
           waitFor: 2000,
         }),
+        signal: fcAbort.signal,
       });
 
       if (fcResp.ok) {
@@ -117,7 +120,9 @@ module.exports = async (req, res) => {
         sourceUrl = extracted.sourceUrl;
       }
     } catch (_) {
-      // Firecrawl failed — proceed without scraped context
+      // Firecrawl failed or timed out — proceed without scraped context
+    } finally {
+      clearTimeout(fcTimeout);
     }
   }
 
@@ -298,7 +303,14 @@ IMPORTANT RULES:
 - Return ONLY the JSON object. No other text.`;
 
   // ── 3. Call Claude ───────────────────────────────────────────────────────
+  // Split prompt into cacheable static part + dynamic product context
+  const staticPromptEnd = prompt.indexOf('Product data:');
+  const staticPart = staticPromptEnd > 0 ? prompt.slice(0, staticPromptEnd).trimEnd() : prompt;
+  const dynamicPart = staticPromptEnd > 0 ? prompt.slice(staticPromptEnd) : '';
+
   let claudeJson;
+  const claudeAbort = new AbortController();
+  const claudeTimeout = setTimeout(() => claudeAbort.abort(), 50000);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -306,12 +318,21 @@ IMPORTANT RULES:
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 4096,
-        messages: [{ role: 'user', content: prompt }],
+        system: [
+          {
+            type: 'text',
+            text: staticPart,
+            cache_control: { type: 'ephemeral' },
+          },
+        ],
+        messages: [{ role: 'user', content: dynamicPart || prompt }],
       }),
+      signal: claudeAbort.signal,
     });
 
     if (!claudeResp.ok) {
@@ -322,6 +343,8 @@ IMPORTANT RULES:
     claudeJson = await claudeResp.json();
   } catch (e) {
     return res.status(502).json({ error: 'analysis_failed', message: e.message });
+  } finally {
+    clearTimeout(claudeTimeout);
   }
 
   const rawText = (claudeJson.content?.[0]?.text || '').trim();
@@ -385,8 +408,11 @@ function extractProductContext(fcData) {
 
   function extractStats(md) {
     const s = {};
-    const timeMatch = md.match(/(\d+\.?\d*)\s*h\b/);
-    if (timeMatch) s.printTime = timeMatch[1] + 'h';
+    // Match "6h 30m", "6h", "6.5h", "6 hours 30 minutes"
+    const timeMatch = md.match(/(\d+\.?\d*)\s*h(?:ours?)?\s*(?:(\d+)\s*m(?:in(?:utes?)?)?)?/i);
+    if (timeMatch) {
+      s.printTime = timeMatch[1] + 'h' + (timeMatch[2] ? ' ' + timeMatch[2] + 'm' : '');
+    }
     const platesMatch = md.match(/(\d+)\s*plates?\b/i);
     if (platesMatch) s.plates = platesMatch[1];
     const layerMatch = md.match(/(\d+\.?\d*mm)\s*layer/);
@@ -397,7 +423,8 @@ function extractProductContext(fcData) {
     if (wallsMatch) s.walls = wallsMatch[1];
     const dateMatch = md.match(/Released\s+(\d{4}-\d{2}-\d{2})/);
     if (dateMatch) s.releaseDate = dateMatch[1];
-    const licenseMatch = md.match(/Creative Commons[^\n]+/);
+    // Broad license detection: Creative Commons, MakerWorld Standard/Commercial, CC0, etc.
+    const licenseMatch = md.match(/(Creative Commons[^\n]+|CC0[^\n]*|CC BY[^\n]*|Standard MakerWorld License[^\n]*|Commercial License[^\n]*|Personal Use[^\n]*|Non-Commercial[^\n]*|Print-for-Sale[^\n]*)/i);
     if (licenseMatch) s.license = licenseMatch[0].trim();
     return s;
   }

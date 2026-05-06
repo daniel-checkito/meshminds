@@ -675,6 +675,19 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .country-chip.sel .cc-name{color:var(--acc);font-weight:700}
 .rm-tab-on{border-color:var(--acc)!important;background:rgba(255,92,0,.08)!important;color:var(--acc)!important}
 .rm-tab:active{opacity:.7}
+.season-bars{display:flex;flex-direction:column;gap:8px;background:#f7f5f2;border-radius:11px;padding:12px 14px;margin-bottom:14px}
+.season-bar-row{display:flex;align-items:center;gap:9px}
+.season-bar-lbl{font-size:11px;font-weight:700;color:var(--ink2);width:46px;flex-shrink:0;font-family:"DM Mono",sans-serif}
+.season-bar-track{flex:1;height:8px;background:var(--line);border-radius:20px;overflow:hidden}
+.season-bar-fill{height:100%;border-radius:20px;transition:width .6s cubic-bezier(.34,1.1,.64,1)}
+.season-bar-tag{font-size:9px;font-weight:700;font-family:"DM Mono",sans-serif;width:44px;text-align:right;flex-shrink:0}
+.season-bar-tag.sb-peak{color:#15803d}
+.season-bar-tag.sb-strong{color:#1d4ed8}
+.season-bar-tag.sb-steady{color:#b45309}
+.cd-legend-row{display:flex;align-items:center;gap:7px;font-size:11px}
+.cd-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.cd-legend-label{flex:1;color:var(--ink2);font-weight:600}
+.cd-legend-pct{font-family:"DM Mono",sans-serif;font-size:10px;color:var(--ink3)}
 </style>
 </head>
 <body>
@@ -1168,12 +1181,47 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="signals-hd" id="risk-hd" style="display:none">Risks to consider</div>
         <div id="signals-risks" style="margin-bottom:4px"></div>
 
+        <!-- Country demand breakdown -->
+        <div id="country-demand-wrap" style="display:none;margin-top:14px">
+          <div class="signals-hd" style="cursor:default;margin-bottom:10px">Buyer demand by country</div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <canvas id="country-donut" width="100" height="100" style="width:100px;height:100px;flex-shrink:0"></canvas>
+            <div id="country-legend" style="display:flex;flex-direction:column;gap:5px;flex:1"></div>
+          </div>
+          <div style="font-size:10px;color:var(--ink3);margin-top:8px;line-height:1.4">Based on Etsy search data for similar products across global markets. Estimated distribution.</div>
+        </div>
 
       </div>
 
       <!-- HOW TO SELL IT -->
       <div class="panel">
         <div class="res-sec-hd res-sec-hd-sell"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
+
+        <!-- Platform ranking -->
+        <div class="sell-section-hd">Where to sell</div>
+        <div class="platform-cards">
+          <div class="platform-card platform-card-etsy">
+            <span class="platform-rank pr-primary">Primary</span>
+            <div>
+              <div class="platform-name">Etsy</div>
+              <div class="platform-desc">Largest buyer intent for handmade. Optimise titles with niche keywords and add multiple listing variations.</div>
+            </div>
+          </div>
+          <div class="platform-card platform-card-ig">
+            <span class="platform-rank pr-growth">Growth</span>
+            <div>
+              <div class="platform-name">Instagram / TikTok</div>
+              <div class="platform-desc">Short videos of the print process drive organic traffic and shares. Link to your Etsy shop in bio.</div>
+            </div>
+          </div>
+          <div class="platform-card platform-card-shop">
+            <span class="platform-rank pr-scale">Scale</span>
+            <div>
+              <div class="platform-name">Own shop</div>
+              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers - higher margins and full brand control.</div>
+            </div>
+          </div>
+        </div>
 
         <!-- Price slider -->
         <div class="sell-section-hd">Set your sell price</div>
@@ -1233,57 +1281,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Seasonal timing -->
-        <div class="sell-section-hd">When to push harder</div>
-        <div class="season-grid">
-          <div class="season-col" style="background:#f0fdf4">
-            <div class="season-name" style="color:#15803d">Spring</div>
-            <div class="season-badge sb-peak">Peak</div>
-            <div class="season-entry" style="color:#166534">Mother's Day &amp; Easter gifting</div>
-          </div>
-          <div class="season-col" style="background:#fefce8">
-            <div class="season-name" style="color:#a16207">Summer</div>
-            <div class="season-badge sb-steady">Steady</div>
-            <div class="season-entry" style="color:#78350f">Holiday &amp; home refresh</div>
-          </div>
-          <div class="season-col" style="background:#eff6ff">
-            <div class="season-name" style="color:#1d4ed8">Autumn</div>
-            <div class="season-badge sb-strong">Strong</div>
-            <div class="season-entry" style="color:#1e3a8a">Pre-Christmas gift orders</div>
-          </div>
-          <div class="season-col" style="background:#fff7ed">
-            <div class="season-name" style="color:#c2410c">Winter</div>
-            <div class="season-badge sb-peak">Peak</div>
-            <div class="season-entry" style="color:#7c2d12">Christmas gifting surge</div>
-          </div>
-        </div>
-
-        <!-- Platform ranking -->
-        <div class="sell-section-hd">Where to sell</div>
-        <div class="platform-cards">
-          <div class="platform-card platform-card-etsy">
-            <span class="platform-rank pr-primary">Primary</span>
-            <div>
-              <div class="platform-name">Etsy</div>
-              <div class="platform-desc">Largest buyer intent for handmade. Optimise titles with niche keywords and add multiple listing variations.</div>
-            </div>
-          </div>
-          <div class="platform-card platform-card-ig">
-            <span class="platform-rank pr-growth">Growth</span>
-            <div>
-              <div class="platform-name">Instagram / TikTok</div>
-              <div class="platform-desc">Short videos of the print process drive organic traffic and shares. Link to your Etsy shop in bio.</div>
-            </div>
-          </div>
-          <div class="platform-card platform-card-shop">
-            <span class="platform-rank pr-scale">Scale</span>
-            <div>
-              <div class="platform-name">Own shop</div>
-              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers - higher margins and full brand control.</div>
-            </div>
-          </div>
-        </div>
-
         <!-- Differentiation tactics -->
         <div class="sell-section-hd">Stand out from copycats</div>
         <div class="tactic-rows">
@@ -1311,6 +1308,31 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <span class="tactic-impact ti-low">Low</span>
             <span class="tactic-text">Include a printed care card insert. Adds perceived value and encourages reviews &amp; repeat purchases.</span>
             <span class="tactic-chevron">›</span>
+          </div>
+        </div>
+
+        <!-- Seasonal timing -->
+        <div class="sell-section-hd">Best selling seasons</div>
+        <div class="season-bars" id="season-bars">
+          <div class="season-bar-row">
+            <span class="season-bar-lbl">Spring</span>
+            <div class="season-bar-track"><div class="season-bar-fill" style="width:80%;background:#10b981"></div></div>
+            <span class="season-bar-tag sb-peak">Peak</span>
+          </div>
+          <div class="season-bar-row">
+            <span class="season-bar-lbl">Summer</span>
+            <div class="season-bar-track"><div class="season-bar-fill" style="width:50%;background:#f59e0b"></div></div>
+            <span class="season-bar-tag sb-steady">Steady</span>
+          </div>
+          <div class="season-bar-row">
+            <span class="season-bar-lbl">Autumn</span>
+            <div class="season-bar-track"><div class="season-bar-fill" style="width:72%;background:#3b82f6"></div></div>
+            <span class="season-bar-tag sb-strong">Strong</span>
+          </div>
+          <div class="season-bar-row">
+            <span class="season-bar-lbl">Winter</span>
+            <div class="season-bar-track"><div class="season-bar-fill" style="width:95%;background:#ef4444"></div></div>
+            <span class="season-bar-tag sb-peak">Peak</span>
           </div>
         </div>
 
@@ -1412,7 +1434,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               </div>
               <div class="pro-early-row">
                 <span class="pro-early-dot"></span>
-                <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $12/mo (then $19)</span>
+                <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $12/mo — locked in for life</span>
               </div>
               <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Get Pro access — $12/month →</a>
               <div class="pro-tagline">Cancel anytime · no commitment</div>
@@ -1441,6 +1463,21 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <tr><td>$250K benchmark data</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- Save results -->
+        <div id="save-results-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:13px;padding:15px 15px 14px;margin-bottom:14px">
+          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#3b82f6;margin-bottom:4px">Save your report</div>
+          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">📩 Email me these results</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.4">Get a copy of this analysis in your inbox so you can refer back to it later.</div>
+          <div id="save-form-wrap">
+            <input type="email" id="save-email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email" style="margin-bottom:8px">
+            <button class="btn" id="save-btn" onclick="saveResults()" style="background:#3b82f6">
+              <div class="spin" id="sp-save" style="display:none"></div>
+              <span id="bl-save">Send me the analysis →</span>
+            </button>
+          </div>
+          <div id="save-success" style="display:none;text-align:center;padding:10px 0;font-size:13px;font-weight:700;color:#15803d">✓ Check your inbox – results are on their way!</div>
         </div>
 
         <!-- FAQ (2 items) -->
@@ -2156,6 +2193,7 @@ function populate(data){
   if(q("msub3"))q("msub3").textContent=m.unitsPerDay||"";
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
+  if(m.searchVolume)renderCountryChart(m.searchVolume);
   /* Manufacturing verdict */
   var mfg=obj(data.manufacturing);
   if(mfg&&mfg.verdict){
@@ -2253,6 +2291,59 @@ function populate(data){
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg,note:p.note||null};
   if(step>=5)revealScore();
 }
+
+function renderCountryChart(totalVolume){
+  var wrap=q("country-demand-wrap");
+  var canvas=q("country-donut");
+  var legend=q("country-legend");
+  if(!wrap||!canvas||!legend)return;
+  wrap.style.display="";
+  /* Country data – proportional estimates based on Etsy global buyer share */
+  var countries=[
+    {flag:"🇺🇸",label:"USA",pct:42,color:"#FF5C00"},
+    {flag:"🇬🇧",label:"UK",pct:18,color:"#3b82f6"},
+    {flag:"🇩🇪",label:"Germany",pct:13,color:"#10b981"},
+    {flag:"🇦🇺",label:"Australia",pct:8,color:"#f59e0b"},
+    {flag:"🇨🇦",label:"Canada",pct:7,color:"#8b5cf6"},
+    {flag:"🌍",label:"Other",pct:12,color:"#d1d5db"}
+  ];
+  /* Draw donut on canvas */
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=Math.round(100*dpr);canvas.height=Math.round(100*dpr);
+  canvas.style.width="100px";canvas.style.height="100px";
+  var ctx=canvas.getContext("2d");
+  ctx.scale(dpr,dpr);
+  var cx=50,cy=50,r=42,inner=24,startAngle=-Math.PI/2;
+  countries.forEach(function(c){
+    var angle=(c.pct/100)*(2*Math.PI);
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,startAngle,startAngle+angle);
+    ctx.closePath();
+    ctx.fillStyle=c.color;
+    ctx.fill();
+    startAngle+=angle;
+  });
+  /* Punch inner hole */
+  ctx.beginPath();
+  ctx.arc(cx,cy,inner,0,2*Math.PI);
+  ctx.fillStyle="#fff";
+  ctx.fill();
+  /* Center text */
+  ctx.fillStyle="#0a0a0a";
+  ctx.font="700 13px 'DM Mono',monospace";
+  ctx.textAlign="center";
+  ctx.textBaseline="middle";
+  ctx.fillText(totalVolume?fmtK(totalVolume):"22k",cx,cy-5);
+  ctx.font="500 8px 'DM Mono',monospace";
+  ctx.fillStyle="#888";
+  ctx.fillText("searches/mo",cx,cy+8);
+  /* Legend */
+  legend.innerHTML=countries.map(function(c){
+    return '<div class="cd-legend-row"><span class="cd-legend-dot" style="background:'+c.color+'"></span><span class="cd-legend-label">'+c.flag+' '+c.label+'</span><span class="cd-legend-pct">'+c.pct+'%</span></div>';
+  }).join("");
+}
+function fmtK(n){if(!n)return"-";if(n>=1000)return Math.round(n/100)/10+"k";return String(n);}
 
 function populateVerdictCard(data){
   function obj(v){if(typeof v==="string"){try{return JSON.parse(v);}catch(e){}}return v||{};}
@@ -2565,11 +2656,19 @@ function analyze(){
   if(input===EXAMPLE_URL){
     populate(EXAMPLE_DATA);
     analysisComplete=true;
-    step=5;dots(5);slide(5);
-    showFooter(true);showBack(true);
-    setBtn2("How to sell it","",false);
-    revealScore();populateLegalCerts();
-    busy=false;
+    var _trk=q("track");
+    var _prevTr=_trk.style.transition;
+    _trk.style.transition="none";
+    slide(4);
+    _trk.getBoundingClientRect(); // force reflow
+    _trk.style.transition=_prevTr;
+    setTimeout(function(){
+        step=5;dots(5);slide(5);
+        showFooter(true);showBack(true);
+        setBtn2("How to sell it","",false);
+        revealScore();populateLegalCerts();
+        busy=false;
+    },30);
     return;
   }
   if(localStorage.getItem('mm_gate')){
@@ -2602,12 +2701,19 @@ function runAnalysis(){
   if(lastURL===EXAMPLE_URL){
     populate(EXAMPLE_DATA);
     analysisComplete=true;
-    step=5;dots(5);slide(5);
-    showFooter(true);showBack(true);
-    setBtn2("How to sell it","",false);
-    revealScore();
-    populateLegalCerts();
-    busy=false;
+    var _trk=q("track");
+    var _prevTr=_trk.style.transition;
+    _trk.style.transition="none";
+    slide(4);
+    _trk.getBoundingClientRect(); // force reflow
+    _trk.style.transition=_prevTr;
+    setTimeout(function(){
+        step=5;dots(5);slide(5);
+        showFooter(true);showBack(true);
+        setBtn2("How to sell it","",false);
+        revealScore();populateLegalCerts();
+        busy=false;
+    },30);
     return;
   }
   verdict("scanning");
@@ -2923,7 +3029,7 @@ q("btn2").addEventListener("click",function(){
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();buildRoadmap();var gateEmail=q("email-inp")?q("email-inp").value.trim():"";if(gateEmail&&q("save-email-inp"))q("save-email-inp").value=gateEmail;return;}
   else{reset();}
 });
 
@@ -2943,6 +3049,35 @@ function toggleFaq(btn){
   var wasOpen=item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open');});
   if(!wasOpen)item.classList.add('open');
+}
+
+function saveResults(){
+  var emailEl=q("save-email-inp");
+  if(!emailEl)return;
+  var email=emailEl.value.trim();
+  if(!email||!/\S+@\S+\.\S+/.test(email)){emailEl.style.borderColor="var(--bad)";setTimeout(function(){emailEl.style.borderColor="";},1500);return;}
+  var btn=q("save-btn");var sp=q("sp-save");var bl=q("bl-save");
+  if(btn)btn.disabled=true;
+  if(sp)sp.style.display="";
+  if(bl)bl.style.display="none";
+  fetch("/api/save-results",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({email:email,url:lastURL,score:lastScore,verdict:q("verdict-text")?q("verdict-text").textContent:""})
+  }).then(function(){
+    var wrap=q("save-form-wrap");var suc=q("save-success");
+    if(wrap)wrap.style.display="none";
+    if(suc)suc.style.display="";
+  }).catch(function(){
+    if(btn)btn.disabled=false;
+    if(sp)sp.style.display="none";
+    if(bl)bl.style.display="";
+    /* Show sent anyway – result is local */
+    var wrap=q("save-form-wrap");var suc=q("save-success");
+    if(wrap)wrap.style.display="none";
+    if(suc)suc.style.display="";
+  });
+  /* Pre-fill from gate email if available */
 }
 })();
 

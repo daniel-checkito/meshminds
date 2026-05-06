@@ -1,3 +1,27 @@
+/* ── In-memory rate limiter (resets on cold start; good enough for serverless abuse prevention) ── */
+const _rl = new Map();
+function checkRate(ip, limit, windowMs) {
+  const now = Date.now();
+  const entry = _rl.get(ip) || { count: 0, resetAt: now + windowMs };
+  if (now > entry.resetAt) { entry.count = 0; entry.resetAt = now + windowMs; }
+  entry.count++;
+  _rl.set(ip, entry);
+  /* Clean up old entries occasionally */
+  if (_rl.size > 500) { for (const [k, v] of _rl) { if (Date.now() > v.resetAt) _rl.delete(k); } }
+  return entry.count <= limit;
+}
+
+/* Known 3D print platform hostnames */
+const ALLOWED_HOSTS = ['makerworld.com', 'printables.com', 'cults3d.com', 'thingiverse.com',
+  'myminifactory.com', 'thangs.com', 'cgtrader.com', 'turbosquid.com', 'grabcad.com'];
+function isAllowedUrl(raw) {
+  if (!raw) return false;
+  try {
+    const u = new URL(raw.startsWith('http') ? raw : 'https://' + raw);
+    return ALLOWED_HOSTS.some(h => u.hostname === h || u.hostname.endsWith('.' + h));
+  } catch { return false; }
+}
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -5,6 +29,27 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  /* ── Bot protection ── */
+  const clientIp = (req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
+
+  /* Rate limit: max 8 requests per IP per 10 minutes */
+  if (!checkRate(clientIp, 8, 10 * 60 * 1000)) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a few minutes before trying again.' });
+  }
+
+  /* Reject requests not from a browser (no Accept header with text/html) */
+  const ua = req.headers['user-agent'] || '';
+  const isBotUa = !ua || /^(curl|wget|python|go-http|java|ruby|php|axios|node-fetch|undici|httpie)/i.test(ua);
+  if (isBotUa) {
+    return res.status(403).json({ error: 'Automated requests are not allowed.' });
+  }
+
+  /* Validate URL is from a supported platform */
+  const rawBodyUrl = (req.body || {}).url || '';
+  if (rawBodyUrl && !isAllowedUrl(rawBodyUrl)) {
+    return res.status(400).json({ error: 'URL must be from a supported 3D model platform (MakerWorld, Printables, Cults3D, etc.)' });
+  }
 
   const body = req.body || {};
   const {

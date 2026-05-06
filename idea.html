@@ -16,7 +16,8 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--acc:#FF5C00;--ink:#0a0a0a;--ink2:#555;--ink3:#888;--line:#e5e2dd;--line2:#d4d0ca;--surf:#f7f5f2;--surf2:#eeece9;--good:#15803d;--bad:#b91c1c;--warn:#b45309}
-html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
+html{height:100%}
+body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 
 /* ── New landing components ── */
 .hero-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -62,7 +63,8 @@ html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .how-desc{font-size:12px;color:var(--ink3);line-height:1.45}
 .how-time{font-family:"DM Mono",monospace;font-size:9.5px;color:var(--acc);letter-spacing:.05em;margin-top:5px}
 
-.phone{width:100%;max-width:430px;height:100%;margin:0 auto;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+.phone{width:100%;max-width:430px;height:auto;margin:0 auto;background:#fff;display:flex;flex-direction:column}
+.phone.phone-active{height:100vh;height:100dvh;overflow:hidden;position:sticky;top:0;z-index:100}
 
 .hdr{padding:12px 16px 10px;flex-shrink:0}
 .hdr-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
@@ -92,7 +94,8 @@ html,body{height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .3s}
 .dot.on{background:var(--acc);transform:scale(1.35)}.dot.done{background:#10b981}
 
-.scroll{flex:1;overflow:hidden;min-height:0;position:relative}
+.scroll{flex:1;overflow:hidden;min-height:0;position:relative;display:none}
+.phone.phone-active .scroll{display:block}
 .track{display:flex;height:100%;transition:transform .42s cubic-bezier(.4,0,.2,1)}
 .panel{min-width:100%;width:100%;height:100%;overflow-y:auto;flex-shrink:0;padding:16px 16px 14px}
 .panel::-webkit-scrollbar{display:none}
@@ -450,33 +453,134 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .offer-lock-sub{font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.5;max-width:220px}
 .offer-lock-score{display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:5px 14px;font-family:"DM Mono",sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:.06em;margin-top:2px}
 .offer-cta-hint{font-size:11.5px;color:var(--ink3);text-align:center;line-height:1.5;margin-top:12px}
-/* MeshMinds Pro Banner */
-.pro-wrap{margin-top:18px}
-.pro-fomo-bar{background:linear-gradient(135deg,#0f172a,#1e1b4b);border-radius:12px 12px 0 0;padding:12px 15px 11px;display:flex;align-items:flex-start;gap:9px}
-.pro-fomo-ico{font-size:17px;flex-shrink:0;margin-top:1px}
-.pro-fomo-txt{font-size:12.5px;color:rgba(255,255,255,0.7);line-height:1.45}
-.pro-fomo-txt b{color:#fbbf24;font-weight:700}
-.pro-card{background:#0f172a;border:1px solid rgba(251,191,36,0.18);border-top:none;border-radius:0 0 12px 12px;padding:14px 15px 16px}
-.pro-card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-.pro-badge-pill{font-family:"DM Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a;border-radius:20px;padding:3px 9px;flex-shrink:0}
-.pro-card-name{font-family:"Bebas Neue",sans-serif;font-size:20px;color:#fff;letter-spacing:.03em;line-height:1;flex:1}
+/* MeshMinds Pro Banner (inside result screen) */
+.pro-wrap{margin-top:18px;border:1.5px solid var(--line2);border-radius:12px;overflow:hidden}
+.pro-fomo-bar{background:var(--surf);padding:11px 14px;display:flex;align-items:flex-start;gap:9px;border-bottom:1px solid var(--line)}
+.pro-fomo-ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.pro-fomo-txt{font-size:12px;color:var(--ink2);line-height:1.45}
+.pro-fomo-txt b{color:var(--acc);font-weight:700}
+.pro-card{background:#fff;padding:14px 14px 15px}
+.pro-card-head{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.pro-badge-pill{font-family:"DM Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--acc);color:#fff;border-radius:20px;padding:3px 9px;flex-shrink:0}
+.pro-card-name{font-family:"Bebas Neue",sans-serif;font-size:18px;color:var(--ink);letter-spacing:.03em;line-height:1;flex:1}
 .pro-price-tag{display:flex;align-items:baseline;gap:2px;flex-shrink:0}
-.pro-price-big{font-family:"Bebas Neue",sans-serif;font-size:26px;color:#fbbf24;line-height:1}
-.pro-price-per{font-size:10px;color:rgba(255,255,255,0.35);font-family:"DM Mono",sans-serif;margin-left:1px}
-.pro-headline{font-family:"Bebas Neue",sans-serif;font-size:21px;color:#fff;letter-spacing:.02em;line-height:1.2;margin-bottom:12px}
-.pro-features-list{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
-.pro-feat{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.4}
-.pro-feat-ico{flex-shrink:0;color:#34d399;font-size:11px;margin-top:2px}
-.pro-feat-hot{color:rgba(255,255,255,0.85)}
-.pro-feat-hot .pro-feat-ico{color:#f97316}
-.pro-early-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.18);border-radius:8px;margin-bottom:12px}
-.pro-early-dot{width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0;animation:pro-pulse 1.8s ease-in-out infinite}
+.pro-price-big{font-family:"Bebas Neue",sans-serif;font-size:24px;color:var(--acc);line-height:1}
+.pro-price-per{font-size:10px;color:var(--ink3);font-family:"DM Mono",sans-serif;margin-left:1px}
+.pro-headline{font-size:12px;color:var(--ink2);line-height:1.4;margin-bottom:11px}
+.pro-features-list{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.pro-feat{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--ink2);line-height:1.4}
+.pro-feat-ico{flex-shrink:0;color:#15803d;font-size:11px;margin-top:2px}
+.pro-feat-hot{color:var(--ink)}
+.pro-feat-hot .pro-feat-ico{color:var(--acc)}
+.pro-early-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--surf);border:1px solid var(--line);border-radius:8px;margin-bottom:11px}
+.pro-early-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0;animation:pro-pulse 1.8s ease-in-out infinite}
 @keyframes pro-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
-.pro-early-txt{font-size:11px;color:rgba(255,255,255,0.5);font-family:"DM Mono",sans-serif;letter-spacing:.02em}
-.pro-early-txt b{color:#fbbf24}
-.pro-cta-btn{display:block;width:100%;box-sizing:border-box;padding:13px 16px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0f172a;font-size:13.5px;font-weight:800;font-family:"DM Sans",sans-serif;border-radius:10px;text-align:center;text-decoration:none;letter-spacing:-.01em;margin-bottom:9px;transition:opacity 0.15s}
+.pro-early-txt{font-size:11px;color:var(--ink2);font-family:"DM Mono",sans-serif;letter-spacing:.02em}
+.pro-early-txt b{color:var(--acc)}
+.pro-cta-btn{display:block;width:100%;box-sizing:border-box;padding:12px 16px;background:var(--acc);color:#fff;font-size:13px;font-weight:800;font-family:"DM Sans",sans-serif;border-radius:10px;text-align:center;text-decoration:none;letter-spacing:-.01em;margin-bottom:8px;transition:opacity 0.15s}
 .pro-cta-btn:active{opacity:0.82}
-.pro-tagline{font-size:11px;color:rgba(255,255,255,0.28);text-align:center;font-family:"DM Mono",sans-serif;letter-spacing:.05em}
+.pro-tagline{font-size:10.5px;color:var(--ink3);text-align:center;font-family:"DM Mono",sans-serif;letter-spacing:.04em}
+/* ── Landing page sections (below tool) ── */
+.lp{max-width:430px;margin:0 auto}
+.lp-sec{padding:28px 20px}
+.lp-eyebrow{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.lp-eyebrow-gold{color:var(--acc)}
+.lp-h2{font-family:"Bebas Neue",sans-serif;font-size:32px;letter-spacing:.02em;line-height:1.1;color:var(--ink);margin-bottom:6px}
+.lp-sub{font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:20px}
+/* Comparison table */
+.cmp-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+.cmp-table th{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 12px;text-align:left;border-bottom:2px solid var(--line);color:var(--ink2)}
+.cmp-table th:last-child{color:var(--acc)}
+.cmp-table td{font-size:12.5px;padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:middle}
+.cmp-table td:first-child{color:var(--ink);font-weight:600}
+.cmp-table td:last-child{color:#15803d;font-weight:700}
+.cmp-tick{color:#15803d;font-size:14px}
+.cmp-dash{color:#d1d5db}
+.cmp-hot{color:var(--acc);font-weight:700}
+.cmp-price-row{background:var(--surf);border:1.5px solid var(--line2);border-radius:14px;padding:18px 16px;display:flex;align-items:center;gap:14px}
+.cmp-price-big{font-family:"Bebas Neue",sans-serif;font-size:52px;color:var(--acc);line-height:1;flex-shrink:0}
+.cmp-price-detail{flex:1}
+.cmp-price-was{font-size:11px;color:var(--ink3);font-family:"DM Mono",sans-serif;text-decoration:line-through;margin-bottom:2px}
+.cmp-price-note{font-size:12px;color:var(--ink2);line-height:1.4;margin-bottom:6px}
+.cmp-spots{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--acc);font-family:"DM Mono",sans-serif;letter-spacing:.03em}
+.cmp-spots-dot{width:6px;height:6px;border-radius:50%;background:var(--acc);flex-shrink:0;animation:pro-pulse 1.8s ease-in-out infinite}
+.lp-cta-btn{display:block;width:100%;box-sizing:border-box;padding:14px 16px;background:var(--acc);color:#fff;font-size:14px;font-weight:800;font-family:"DM Sans",sans-serif;border-radius:11px;text-align:center;text-decoration:none;letter-spacing:-.01em;margin-top:14px;transition:opacity .15s}
+.lp-cta-btn:active{opacity:0.82}
+.lp-cta-sub{font-size:11px;color:var(--ink3);text-align:center;margin-top:7px;font-family:"DM Mono",sans-serif}
+/* Legal footer bar */
+.lp-legal-bar{padding:16px 20px;text-align:center;font-size:11px;color:var(--ink3);font-family:"DM Mono",sans-serif;letter-spacing:.03em;border-top:1px solid var(--line);max-width:430px;margin:0 auto}
+.lp-legal-bar a{color:var(--ink3);text-decoration:none;cursor:pointer}
+.lp-legal-bar a:hover{color:var(--ink)}
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.faq-item{}
+.faq-q{width:100%;background:#fff;border:none;padding:14px 16px;font-size:13.5px;font-weight:700;font-family:"Manrope",sans-serif;color:var(--ink);text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.faq-q:not(:last-child){border-bottom:1px solid var(--line)}
+.faq-chevron{font-size:16px;color:var(--ink3);transition:transform .2s;flex-shrink:0}
+.faq-a{display:none;padding:0 16px 14px;font-size:13px;color:var(--ink2);line-height:1.6;border-bottom:1px solid var(--line)}
+.faq-item.open .faq-chevron{transform:rotate(180deg)}
+.faq-item.open .faq-a{display:block}
+.lp-divider{height:1px;background:var(--line);margin:0 20px}
+/* ── How-it-works animation widget ── */
+.demo-widget{background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:20px;position:relative}
+.demo-widget-hdr{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
+.demo-dot{width:8px;height:8px;border-radius:50%}
+.demo-brand{font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);letter-spacing:.12em;text-transform:uppercase;margin-left:4px}
+.demo-frames{position:relative;height:172px}
+.demo-frame{position:absolute;inset:0;padding:18px 16px;display:flex;flex-direction:column;gap:10px;opacity:0}
+@keyframes demo-show{
+  0%{opacity:0;transform:translateY(6px)}
+  8%{opacity:1;transform:translateY(0)}
+  28%{opacity:1;transform:translateY(0)}
+  36%{opacity:0;transform:translateY(-6px)}
+  100%{opacity:0;transform:translateY(-6px)}
+}
+.demo-frame:nth-child(1){animation:demo-show 9s ease-in-out infinite;animation-delay:0s}
+.demo-frame:nth-child(2){animation:demo-show 9s ease-in-out infinite;animation-delay:3s}
+.demo-frame:nth-child(3){animation:demo-show 9s ease-in-out infinite;animation-delay:6s}
+.demo-step-lbl{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+.demo-inp-row{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line2);border-radius:8px;padding:9px 11px}
+.demo-inp-text{font-size:11.5px;color:var(--ink2);flex:1;font-family:"DM Mono",sans-serif;overflow:hidden;white-space:nowrap}
+.demo-inp-cursor{width:2px;height:13px;background:var(--acc);border-radius:1px;animation:blink .9s step-end infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.demo-inp-go{background:var(--acc);color:#fff;font-size:10px;font-weight:700;border-radius:6px;padding:4px 9px;font-family:"DM Mono",sans-serif;flex-shrink:0}
+.demo-chips-row{display:flex;gap:6px;flex-wrap:wrap}
+.demo-chip{background:#fff;border:1.5px solid var(--line2);border-radius:6px;padding:5px 9px;font-size:10.5px;color:var(--ink2)}
+.demo-chip.on{background:#dcfce7;border-color:#86efac;color:#15803d;font-weight:600}
+.demo-score-row{display:flex;align-items:center;gap:14px}
+.demo-ring-wrap{position:relative;width:52px;height:52px;flex-shrink:0}
+.demo-ring-lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:17px;color:#15803d}
+.demo-score-info{flex:1}
+.demo-verdict-tag{display:inline-block;background:#dcfce7;border:1px solid #86efac;border-radius:6px;padding:3px 8px;font-size:10px;color:#15803d;font-family:"DM Mono",sans-serif;margin-bottom:6px}
+.demo-rev-row{display:flex;gap:8px}
+.demo-rev-cell{background:#fff;border:1px solid var(--line);border-radius:7px;padding:6px 8px;flex:1;text-align:center}
+.demo-rev-val{font-family:"Bebas Neue",sans-serif;font-size:16px;color:var(--ink);line-height:1}
+.demo-rev-lbl{font-size:9px;color:var(--ink3);font-family:"DM Mono",sans-serif;margin-top:2px}
+.demo-widget-footer{background:var(--surf);border-top:1px solid var(--line);padding:8px 14px;display:flex;align-items:center;justify-content:space-between}
+.demo-step-dots{display:flex;gap:5px}
+.demo-step-dot{width:5px;height:5px;border-radius:50%;background:var(--line2)}
+.demo-step-dot.active{background:var(--acc)}
+/* ── Blurred ideas list ── */
+.blurred-list-wrap{position:relative;padding:0 20px 32px}
+.blurred-list-hd{font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.blurred-list{display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)}
+.bl-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#fff;border-bottom:1px solid var(--line)}
+.bl-row:last-child{border-bottom:none}
+.bl-rank{font-family:"DM Mono",monospace;font-size:10px;color:var(--ink3);width:18px;flex-shrink:0;text-align:right}
+.bl-score{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:2px solid #86efac;display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:13px;color:#15803d;flex-shrink:0}
+.bl-score.warn{background:linear-gradient(135deg,#fef3c7,#fde68a);border-color:#f59e0b;color:#b45309}
+.bl-score.bad{background:linear-gradient(135deg,#fee2e2,#fecaca);border-color:#fca5a5;color:#b91c1c}
+.bl-info{flex:1;min-width:0}
+.bl-name{font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bl-meta{font-size:10.5px;color:var(--ink3)}
+.bl-right{text-align:right;flex-shrink:0}
+.bl-price{font-size:12px;font-weight:700;color:var(--ink)}
+.bl-verdict{font-size:9.5px;color:#15803d;font-family:"DM Mono",sans-serif}
+.bl-blur-overlay{position:absolute;bottom:0;left:0;right:0;height:240px;background:linear-gradient(to bottom,rgba(255,255,255,0) 0%,rgba(255,255,255,0.7) 20%,rgba(255,255,255,0.97) 50%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:24px}
+.bl-lock-card{background:var(--surf);border:1.5px solid var(--line2);border-radius:12px;padding:14px 18px;margin:0 20px;text-align:center;width:100%;box-sizing:border-box}
+.bl-lock-title{font-family:"Bebas Neue",sans-serif;font-size:20px;color:var(--ink);letter-spacing:.02em;margin-bottom:4px}
+.bl-lock-sub{font-size:11.5px;color:var(--ink2);margin-bottom:12px;line-height:1.4}
+.bl-lock-cta{display:inline-block;background:var(--acc);color:#fff;font-size:12.5px;font-weight:800;border-radius:8px;padding:10px 18px;text-decoration:none;font-family:"DM Sans",sans-serif}
 </style>
 </head>
 <body>
@@ -492,15 +596,16 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div id="hero-text" style="padding:8px 0 6px">
         <div class="hero-eyebrow">Make money 3D printing</div>
         <div class="hero-h1">Will this 3D print<br><em>actually</em> sell?</div>
-        <p class="hero-sub">Paste a link to a 3D model - we check buyer demand, profit &amp; legal risk of selling it.</p>
+        <p class="hero-sub">Paste a link to a 3D model — we check buyer demand, profit &amp; legal risk of selling it.</p>
       </div>
       <div class="inp-card" id="inp-card">
         <div class="inp-inner">
-          <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="Paste a MakerWorld link…">
+          <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="Paste any model link (MakerWorld, Printables…)">
         </div>
         <div class="plat-tags">
-          <span class="plat-tag">✓ Free to use</span>
-          <span class="plat-tag">⚡ Ready in 30 seconds</span>
+          <span class="plat-tag">✓ Start free</span>
+          <span class="plat-tag">⚡ 30 seconds</span>
+          <span class="plat-tag">↑ Upgrade anytime</span>
         </div>
       </div>
       <div id="url-error" style="display:none;font-size:12px;color:var(--bad);margin-top:-4px;margin-bottom:6px;padding:0 4px"></div>
@@ -528,6 +633,77 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 0 -->
       <div class="panel">
+
+        <!-- How-it-works animation widget -->
+        <div class="demo-widget">
+          <div class="demo-widget-hdr">
+            <span class="demo-dot" style="background:#ef4444"></span>
+            <span class="demo-dot" style="background:#f59e0b"></span>
+            <span class="demo-dot" style="background:#22c55e"></span>
+            <span class="demo-brand">meshminds — idea validator</span>
+          </div>
+          <div class="demo-frames">
+            <!-- Frame 1: Paste a link -->
+            <div class="demo-frame">
+              <div class="demo-step-lbl">Step 01 — Paste any model link</div>
+              <div class="demo-inp-row">
+                <span class="demo-inp-text">printables.com/model/geometric-planter</span>
+                <span class="demo-inp-cursor"></span>
+                <span class="demo-inp-go">Check →</span>
+              </div>
+              <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">
+                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
+                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
+                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D</span>
+                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Thingiverse</span>
+                <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">+ any link</span>
+              </div>
+              <div style="font-size:10.5px;color:var(--ink3);margin-top:4px">No account needed · free to start</div>
+            </div>
+            <!-- Frame 2: Quick setup questions -->
+            <div class="demo-frame">
+              <div class="demo-step-lbl">Step 02 — Tell us your setup</div>
+              <div class="demo-chips-row">
+                <span class="demo-chip on">FDM printer</span>
+                <span class="demo-chip on">1 printer</span>
+                <span class="demo-chip">2 printers</span>
+              </div>
+              <div class="demo-chips-row">
+                <span class="demo-chip on">Sell on Etsy</span>
+                <span class="demo-chip">eBay</span>
+                <span class="demo-chip">Local</span>
+              </div>
+              <div style="font-size:10.5px;color:var(--ink3);margin-top:2px">Personalises your revenue estimate &amp; strategy</div>
+            </div>
+            <!-- Frame 3: Score result -->
+            <div class="demo-frame">
+              <div class="demo-step-lbl">Step 03 — Your score &amp; strategy</div>
+              <div class="demo-score-row">
+                <div class="demo-ring-wrap">
+                  <svg width="52" height="52" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="var(--surf2)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/></svg>
+                  <div class="demo-ring-lbl">87</div>
+                </div>
+                <div class="demo-score-info">
+                  <div class="demo-verdict-tag">✓ Good for the right audience</div>
+                  <div style="font-size:11px;color:var(--ink3)">Demand ↑ · Low IP risk · Strong margin</div>
+                </div>
+              </div>
+              <div class="demo-rev-row">
+                <div class="demo-rev-cell"><div class="demo-rev-val">€22</div><div class="demo-rev-lbl">sell price</div></div>
+                <div class="demo-rev-cell"><div class="demo-rev-val">€310</div><div class="demo-rev-lbl">est. profit/mo</div></div>
+                <div class="demo-rev-cell"><div class="demo-rev-val">LOW</div><div class="demo-rev-lbl">legal risk</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="demo-widget-footer">
+            <span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',sans-serif">Free analysis · no signup</span>
+            <div class="demo-step-dots">
+              <span class="demo-step-dot active"></span>
+              <span class="demo-step-dot"></span>
+              <span class="demo-step-dot"></span>
+            </div>
+          </div>
+        </div>
 
         <div class="section-lbl">Popular prints analysed</div>
 
@@ -591,8 +767,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="how-step">
             <span class="how-num">01</span>
             <div>
-              <div class="how-title">Paste a MakerWorld link</div>
-              <div class="how-desc">Drop any product URL - or describe what you're thinking of printing.</div>
+              <div class="how-title">Paste any model link</div>
+              <div class="how-desc">MakerWorld, Printables, Cults3D, Thingiverse — or describe what you're thinking of printing.</div>
               <div class="how-time">~5 seconds</div>
             </div>
           </div>
@@ -1233,40 +1409,35 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="offer-lock-score" id="offer-lock-score">Your score: — / 100</div>
           </div>
 
-          <!-- Skool community card -->
-          <div class="cubee-card" id="skool-card">
-            <div class="cubee-img-wrap" style="aspect-ratio:16/7;background:linear-gradient(135deg,#1a1a1a 0%,#2d1a08 100%)">
-              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:16px">
-                <div style="font-family:'DM Mono',monospace;font-size:9.5px;color:rgba(255,255,255,0.4);letter-spacing:.18em;text-transform:uppercase;margin-bottom:2px">Skool Community</div>
-                <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;color:#fff;letter-spacing:.02em;line-height:1;text-align:center">Print &amp; Profit</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.5);text-align:center;line-height:1.4;max-width:210px">Where 3D print sellers go from "I think this might work" to consistent monthly income</div>
-              </div>
-              <div class="cubee-badge">By Daniel Haag · €160K+ on Etsy</div>
+          <!-- Pro catalogue card -->
+          <div class="pro-wrap" id="skool-card" style="margin-top:0">
+            <div class="pro-fomo-bar">
+              <span class="pro-fomo-ico">📂</span>
+              <div class="pro-fomo-txt">You just saw <b>your</b> result. Pro members see <b>everyone's</b> — all <span id="offer-pro-count">847</span> scored products.</div>
             </div>
-            <div class="cubee-body">
-              <div class="cubee-brand">Print &amp; Profit Community</div>
-              <div class="cubee-name">Now let's actually make it happen</div>
-              <div class="cubee-desc">You found a print that can sell. Inside Print &amp; Profit, you get real data, ready-to-use listings, and direct feedback from someone who's already done it.</div>
-              <div class="cubee-pts">
-                <div>Weekly product picks with demand data — no more guessing what to print</div>
-                <div>Ready-to-copy Etsy listings — title, tags &amp; description already written</div>
-                <div>Personal shop + idea review so you launch knowing it'll convert</div>
-                <div>Content templates that actually get your prints seen</div>
-                <div>Direct access to Daniel — ask anything, get a real answer</div>
-              </div>
-              <div style="margin-bottom:14px;padding:12px 13px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border-radius:10px;border:1.5px solid #f59e0b">
-                <div style="font-size:9.5px;font-weight:700;color:#b45309;font-family:'DM Mono',sans-serif;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px">🔥 Limited offer</div>
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
-                  <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:#15803d;line-height:1">$0</div>
-                  <div>
-                    <div style="font-size:11px;font-weight:700;color:var(--ink)">First 7 days free</div>
-                    <div style="font-size:10px;color:var(--ink3)">then <span style="text-decoration:line-through">$45</span> $45/month · cancel anytime</div>
-                  </div>
+            <div class="pro-card">
+              <div class="pro-card-head">
+                <span class="pro-badge-pill">Pro</span>
+                <span class="pro-card-name">The Full Catalogue</span>
+                <div class="pro-price-tag">
+                  <span class="pro-price-big">$9</span>
+                  <span class="pro-price-per">/mo</span>
                 </div>
-                <div style="font-size:10px;color:#92400e;font-family:'DM Mono',sans-serif;letter-spacing:.03em">No charge today · cancel before day 7 to pay nothing</div>
               </div>
-              <a href="https://www.skool.com/make-money-3d-printing-1698/about" target="_blank" rel="noopener" class="cubee-cta">Start your free 7 days →</a>
-              <div class="cubee-code" style="margin-top:10px">Not for people who want to "think about it."<br>This is for makers ready to print their first <b>€1,000</b>.</div>
+              <div class="pro-headline">Every product we've ever scored — with revenue estimates, verdicts, and trending data. Your shortcut to knowing what sells before you waste filament.</div>
+              <div class="pro-features-list">
+                <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">🔥</span>Live Trending Now list — what's hot this week</div>
+                <div class="pro-feat"><span class="pro-feat-ico">✓</span>All <span id="offer-pro-count2">847</span> validated products + scores + revenue</div>
+                <div class="pro-feat"><span class="pro-feat-ico">✓</span>Monthly Hot List — Daniel's personal picks to print right now</div>
+                <div class="pro-feat"><span class="pro-feat-ico">✓</span>Top keywords last 30 days — see what buyers are searching</div>
+                <div class="pro-feat"><span class="pro-feat-ico">✓</span>$250K Etsy benchmark data — real prices and margins</div>
+              </div>
+              <div class="pro-early-row">
+                <span class="pro-early-dot"></span>
+                <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $9/mo (then $19)</span>
+              </div>
+              <a href="#" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Get Pro access — $9/month →</a>
+              <div class="pro-tagline">Cancel anytime · no commitment</div>
             </div>
           </div>
         </div>
@@ -1355,13 +1526,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       Back
     </button>
   </div>
-  <div class="legal-bar">
-    <a onclick="openLegal('impressum')">Impressum</a>
-    <span>·</span>
-    <a onclick="openLegal('datenschutz')">Datenschutz</a>
-    <span>·</span>
-    <a onclick="openLegal('privacy')">Privacy</a>
-  </div>
 </div>
 
 <!-- Legal modals (fixed overlay, outside .phone to avoid overflow:hidden clip) -->
@@ -1434,13 +1598,351 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   </div>
 </div>
 
+<!-- ── Landing page sections ─────────────────────────────────────────────── -->
+<div class="lp">
+
+  <!-- How it works animation widget -->
+  <div class="lp-sec" style="padding-top:24px;padding-bottom:8px">
+    <div class="demo-widget">
+      <div class="demo-widget-hdr">
+        <span class="demo-dot" style="background:#ef4444"></span>
+        <span class="demo-dot" style="background:#f59e0b"></span>
+        <span class="demo-dot" style="background:#22c55e"></span>
+        <span class="demo-brand">meshminds — idea validator</span>
+      </div>
+      <div class="demo-frames">
+        <div class="demo-frame">
+          <div class="demo-step-lbl">Step 01 — Paste any model link</div>
+          <div class="demo-inp-row">
+            <span class="demo-inp-text">printables.com/model/geometric-planter</span>
+            <span class="demo-inp-cursor"></span>
+            <span class="demo-inp-go">Check →</span>
+          </div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">
+            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
+            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
+            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D</span>
+            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">+ any link</span>
+          </div>
+          <div style="font-size:10.5px;color:var(--ink3);margin-top:4px">No account needed · free to start</div>
+        </div>
+        <div class="demo-frame">
+          <div class="demo-step-lbl">Step 02 — Tell us your setup</div>
+          <div class="demo-chips-row">
+            <span class="demo-chip on">FDM printer</span>
+            <span class="demo-chip on">1 printer</span>
+            <span class="demo-chip">2 printers</span>
+          </div>
+          <div class="demo-chips-row">
+            <span class="demo-chip on">Sell on Etsy</span>
+            <span class="demo-chip">eBay</span>
+            <span class="demo-chip">Local</span>
+          </div>
+          <div style="font-size:10.5px;color:var(--ink3);margin-top:2px">Personalises your revenue estimate &amp; strategy</div>
+        </div>
+        <div class="demo-frame">
+          <div class="demo-step-lbl">Step 03 — Your score &amp; strategy</div>
+          <div class="demo-score-row">
+            <div class="demo-ring-wrap">
+              <svg width="52" height="52" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="var(--surf2)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/></svg>
+              <div class="demo-ring-lbl">87</div>
+            </div>
+            <div class="demo-score-info">
+              <div class="demo-verdict-tag">✓ Good for the right audience</div>
+              <div style="font-size:11px;color:var(--ink3)">Demand ↑ · Low IP risk · Strong margin</div>
+            </div>
+          </div>
+          <div class="demo-rev-row">
+            <div class="demo-rev-cell"><div class="demo-rev-val">€22</div><div class="demo-rev-lbl">sell price</div></div>
+            <div class="demo-rev-cell"><div class="demo-rev-val">€310</div><div class="demo-rev-lbl">est. profit/mo</div></div>
+            <div class="demo-rev-cell"><div class="demo-rev-val">LOW</div><div class="demo-rev-lbl">legal risk</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="demo-widget-footer">
+        <span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',sans-serif">Free analysis · no signup</span>
+        <div class="demo-step-dots">
+          <span class="demo-step-dot active"></span>
+          <span class="demo-step-dot"></span>
+          <span class="demo-step-dot"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- Popular prints -->
+  <div class="lp-sec" style="padding-bottom:16px">
+    <div class="section-lbl">Popular prints analysed</div>
+    <div class="eg-grid" style="margin-bottom:16px">
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div><div class="eg-vol">16.6k</div><div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div></div></div>
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div><div class="eg-vol">9.2k</div><div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div></div></div>
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div><div class="eg-vol">7.8k</div><div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div></div></div>
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div><div class="eg-vol">22.1k</div><div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div></div></div>
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-12-29_d08591307f16a8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#b91c1c" stroke-width="3.5" stroke-dasharray="22.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#b91c1c" font-size="8" font-weight="800" font-family="DM Mono,monospace">28</text></svg></div><div class="eg-info"><div class="eg-name">Disney Cookie Cutter</div><div class="eg-flag">⚠️ IP flagged</div></div></div></div>
+      <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div><div class="eg-vol">11.3k</div><div class="eg-info"><div class="eg-name">Minimalist Phone Stand</div><div class="eg-meta">Functional</div></div></div></div>
+    </div>
+    <div class="stat-grid" style="margin-bottom:16px">
+      <div class="stat-cell"><div class="stat-n">~20s</div><div class="stat-l">Full analysis</div></div>
+      <div class="stat-cell"><div class="stat-n">50+</div><div class="stat-l">Legal rules checked</div></div>
+      <div class="stat-cell"><div class="stat-n">1 in 4</div><div class="stat-l">Ideas has IP risk</div></div>
+    </div>
+    <div class="ban-warn">
+      <div class="ban-warn-ico">🚫</div>
+      <div class="ban-warn-body"><b>Etsy bans shops for selling unlicensed prints.</b> Since March 2026, reselling 3D prints without a verified commercial license can get your shop suspended. We check the license and flag the risk before you list.</div>
+    </div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- How it works steps -->
+  <div class="lp-sec" style="padding-bottom:16px">
+    <div class="section-lbl">How it works</div>
+    <div class="how-steps">
+      <div class="how-step"><span class="how-num">01</span><div><div class="how-title">Paste any model link</div><div class="how-desc">MakerWorld, Printables, Cults3D, Thingiverse — or any product page.</div><div class="how-time">~5 seconds</div></div></div>
+      <div class="how-step"><span class="how-num">02</span><div><div class="how-title">Answer 3 quick questions</div><div class="how-desc">Your printer setup, price range, and target market.</div><div class="how-time">~30 seconds</div></div></div>
+      <div class="how-step"><span class="how-num">03</span><div><div class="how-title">Get your score + verdict</div><div class="how-desc">A 0–100 sellability score: print it, skip it, or tweak your niche.</div><div class="how-time">Instant</div></div></div>
+    </div>
+    <div class="section-lbl" style="margin-top:20px">What we check</div>
+    <div class="chk-list">
+      <div class="chk-card"><div class="chk-ico">📊</div><div><div class="chk-title">Market Demand <span class="chk-save">saves 45 min</span></div><div class="chk-desc">Search volume &amp; marketplace demand — see if buyers are actually searching for this.</div></div></div>
+      <div class="chk-card"><div class="chk-ico">⚖️</div><div><div class="chk-title">Copyright &amp; Legal <span class="chk-save">saves 30 min</span></div><div class="chk-desc">Platform ToS, IP flags &amp; local law — so you don't get your shop banned or sued.</div></div></div>
+      <div class="chk-card"><div class="chk-ico">💰</div><div><div class="chk-title">Profit Estimate <span class="chk-save">saves 45 min</span></div><div class="chk-desc">Material cost, print time &amp; fees — is it actually worth your machine hours?</div></div></div>
+    </div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- Social proof -->
+  <div class="lp-sec" style="padding-bottom:24px">
+    <div class="lp-eyebrow">Built by a real seller</div>
+    <div class="stat-grid" style="margin-bottom:14px">
+      <div class="stat-cell"><div class="stat-n">$250K</div><div class="stat-l">Verified Etsy revenue</div></div>
+      <div class="stat-cell"><div class="stat-n">847</div><div class="stat-l">Products validated</div></div>
+      <div class="stat-cell"><div class="stat-n">3K+</div><div class="stat-l">Hours of data</div></div>
+    </div>
+    <div class="quote-bar">
+      <div class="quote-txt">"I built this after wasting weeks printing things that didn't sell. Now I know in 30 seconds."</div>
+      <div class="quote-who">Daniel Haag · €160K+ Etsy · #1 of 0.1% sellers</div>
+    </div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- Pro comparison -->
+  <div class="lp-sec">
+    <div class="lp-eyebrow-gold lp-eyebrow">MeshMinds Pro</div>
+    <div class="lp-h2">See what others can't.</div>
+    <div class="lp-sub">Your free result shows your product. Pro shows the whole market.</div>
+
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th>Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Your product score &amp; verdict</td>
+          <td><span class="cmp-tick">✓</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+        <tr>
+          <td>Revenue &amp; legal analysis</td>
+          <td><span class="cmp-tick">✓</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+        <tr>
+          <td>All validated products + scores</td>
+          <td><span class="cmp-dash">—</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+        <tr>
+          <td>Top keywords (last 30 days)</td>
+          <td><span class="cmp-dash">—</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+        <tr>
+          <td>🔥 Trending Now</td>
+          <td><span class="cmp-dash">—</span></td>
+          <td><span class="cmp-hot">🔥 Live</span></td>
+        </tr>
+        <tr>
+          <td>Monthly Hot List</td>
+          <td><span class="cmp-dash">—</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+        <tr>
+          <td>$250K benchmark data</td>
+          <td><span class="cmp-dash">—</span></td>
+          <td><span class="cmp-tick">✓</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cmp-price-row">
+      <div class="cmp-price-big">$9</div>
+      <div class="cmp-price-detail">
+        <div class="cmp-price-was">$19/month</div>
+        <div class="cmp-price-note">Early adopter price — first 100 members only. Cancel anytime.</div>
+        <div class="cmp-spots">
+          <span class="cmp-spots-dot"></span>
+          <span id="lp-spots">33 of 100 spots left</span>
+        </div>
+      </div>
+    </div>
+
+    <a href="#" id="lp-pro-cta" class="lp-cta-btn" target="_blank" rel="noopener">Get Pro — $9/month →</a>
+    <div class="lp-cta-sub">Start free · upgrade anytime · no commitment</div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- FAQ -->
+  <div class="lp-sec">
+    <div class="lp-eyebrow">Common questions</div>
+    <div class="lp-h2">FAQ</div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>What's in the monthly Hot List?</span>
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">Once a month I publish the products I would personally print and sell right now — based on my own Etsy data and current market trends. Not curated picks. My actual list.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>Can I cancel anytime?</span>
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">Yes. No contracts, no questions asked. Cancel in one click from your account. Your access stays active until the end of the billing period.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          <span>Where does the data come from?</span>
+          <span class="faq-chevron">⌄</span>
+        </button>
+        <div class="faq-a">Every score and benchmark is derived from real Etsy sales data — $250K in verified revenue from my own store, plus 3,000+ hours of market research. The validator runs on Claude (Anthropic) and live Etsy search data.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lp-divider"></div>
+
+  <!-- Blurred ideas preview -->
+  <div style="padding:28px 20px 0">
+    <div class="lp-eyebrow-gold lp-eyebrow">Pro members only</div>
+    <div class="lp-h2">All scored ideas.</div>
+    <div class="lp-sub" style="margin-bottom:16px">Every product analysed by the community — with scores, verdicts, and revenue estimates. Pro unlocks the full list.</div>
+  </div>
+  <div style="position:relative;padding-bottom:0">
+    <div class="blurred-list" style="margin:0 20px;filter:blur(0)">
+      <!-- Row 1 visible (teaser) -->
+      <div class="bl-row">
+        <span class="bl-rank">#1</span>
+        <div class="bl-score">94</div>
+        <div class="bl-info"><div class="bl-name">Custom Name Plaque</div><div class="bl-meta">Decor · €18 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€340/mo</div><div class="bl-verdict">Start selling</div></div>
+      </div>
+      <!-- Row 2 visible (teaser) -->
+      <div class="bl-row">
+        <span class="bl-rank">#2</span>
+        <div class="bl-score">91</div>
+        <div class="bl-info"><div class="bl-name">Geometric Candle Holder</div><div class="bl-meta">Home · €14 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€280/mo</div><div class="bl-verdict">Start selling</div></div>
+      </div>
+      <!-- Rows 3–10 blurred -->
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#3</span>
+        <div class="bl-score warn">88</div>
+        <div class="bl-info"><div class="bl-name">Modular Desk Organiser</div><div class="bl-meta">Functional · €24 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€390/mo</div><div class="bl-verdict">Good niche</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#4</span>
+        <div class="bl-score">86</div>
+        <div class="bl-info"><div class="bl-name">DnD Dice Tower</div><div class="bl-meta">Gaming · €28 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€450/mo</div><div class="bl-verdict">Start selling</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#5</span>
+        <div class="bl-score">83</div>
+        <div class="bl-info"><div class="bl-name">Apple Watch Stand</div><div class="bl-meta">Tech · €19 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€310/mo</div><div class="bl-verdict">Good niche</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#6</span>
+        <div class="bl-score warn">74</div>
+        <div class="bl-info"><div class="bl-name">Succulent Planter Set</div><div class="bl-meta">Home · €12 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€190/mo</div><div class="bl-verdict">One fix away</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#7</span>
+        <div class="bl-score">79</div>
+        <div class="bl-info"><div class="bl-name">Hex Wall Shelf</div><div class="bl-meta">Decor · €32 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€520/mo</div><div class="bl-verdict">Good niche</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#8</span>
+        <div class="bl-score warn">68</div>
+        <div class="bl-info"><div class="bl-name">Phone Stand w/ Cable Mgmt</div><div class="bl-meta">Functional · €11 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€140/mo</div><div class="bl-verdict">One fix away</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#9</span>
+        <div class="bl-score bad">31</div>
+        <div class="bl-info"><div class="bl-name">Disney Character Cookie Cutter</div><div class="bl-meta">Kitchen · €6 avg</div></div>
+        <div class="bl-right"><div class="bl-price">—</div><div class="bl-verdict" style="color:#b91c1c">IP risk</div></div>
+      </div>
+      <div class="bl-row" style="filter:blur(5px);user-select:none">
+        <span class="bl-rank">#10</span>
+        <div class="bl-score">81</div>
+        <div class="bl-info"><div class="bl-name">Monitor Riser w/ Drawer</div><div class="bl-meta">Office · €38 avg</div></div>
+        <div class="bl-right"><div class="bl-price">€610/mo</div><div class="bl-verdict">Start selling</div></div>
+      </div>
+    </div>
+    <!-- Fade + lock overlay -->
+    <div class="bl-blur-overlay">
+      <div class="bl-lock-card">
+        <div class="bl-lock-title">Pro members see all <span id="bl-count">847</span> scored products</div>
+        <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
+        <a href="#" id="bl-pro-cta" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro — $9/month →</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:24px"></div>
+
+</div>
+<!-- ── End landing sections ───────────────────────────────────────────────── -->
+
+<div class="lp-legal-bar">
+  <a onclick="openLegal('impressum')">Impressum</a>
+  <span style="margin:0 5px;opacity:.5">·</span>
+  <a onclick="openLegal('datenschutz')">Datenschutz</a>
+  <span style="margin:0 5px;opacity:.5">·</span>
+  <a onclick="openLegal('privacy')">Privacy</a>
+</div>
+
 <script>
 (function(){
-var PRO_VALIDATED_COUNT=847; /* update this number as real validations accumulate */
+var PRO_VALIDATED_COUNT=847; /* update as real validations accumulate */
+var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
+(function(){
+  var el=document.getElementById('lp-spots');if(el)el.textContent=PRO_SPOTS_LEFT+' of 100 spots left';
+  var bl=document.getElementById('bl-count');if(bl)bl.textContent=PRO_VALIDATED_COUNT;
+  var oc=document.getElementById('offer-pro-count');if(oc)oc.textContent=PRO_VALIDATED_COUNT;
+  var oc2=document.getElementById('offer-pro-count2');if(oc2)oc2.textContent=PRO_VALIDATED_COUNT;
+  var os=document.getElementById('offer-spots');if(os)os.textContent=PRO_SPOTS_LEFT+' spots left';
+})();
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
-function isURL(s){return/^https?:\/\/(www\.)?makerworld\.com\//i.test(s);}
+function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
 
 var q=id=>document.getElementById(id);
 var ease=t=>1-Math.pow(1-t,3);
@@ -2034,7 +2536,7 @@ function analyze(){
   }
   if(!isURL(input)){
     q("ui").style.borderColor="var(--bad)";
-    if(q("url-error")){q("url-error").textContent="Only MakerWorld links are accepted (makerworld.com).";q("url-error").style.display="";}
+    if(q("url-error")){q("url-error").textContent="Please paste a valid link (e.g. makerworld.com, printables.com, cults3d.com…)";q("url-error").style.display="";}
     setTimeout(function(){q("ui").style.borderColor="";if(q("url-error"))q("url-error").style.display="none";},3000);
     busy=false;return;
   }
@@ -2043,6 +2545,8 @@ function analyze(){
   lastIsURL=true;
   lastProductContext=null;
   lastImageUrl=null;
+  document.querySelector('.phone').classList.add('phone-active');
+  window.scrollTo(0,0);
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
   q("btn").style.display="none";
@@ -2147,6 +2651,7 @@ function runAnalysis(){
 }
 
 function reset(){
+  document.querySelector('.phone').classList.remove('phone-active');
   step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
@@ -2397,6 +2902,13 @@ q("btn-back").addEventListener("click",function(){
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
+
+function toggleFaq(btn){
+  var item=btn.closest('.faq-item');
+  var wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i){i.classList.remove('open');});
+  if(!wasOpen)item.classList.add('open');
+}
 })();
 
 

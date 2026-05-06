@@ -37,10 +37,11 @@ module.exports = async (req, res) => {
     ? legalFlags.join(', ')
     : legalFlags || 'none';
 
-  // ── 1. Firecrawl scrape ──────────────────────────────────────────────────
+  // ── 1. Firecrawl scrape (product + Etsy search in parallel when possible) ──
   let productContext = '';
   let imageUrl = '';
   let sourceUrl = '';
+  let etsyRealData = '';
 
   const rawUrl = url || '';
   const scrapeUrl = rawUrl.startsWith('http')
@@ -49,30 +50,107 @@ module.exports = async (req, res) => {
     ? 'https://' + rawUrl
     : '';
 
-  if (scrapeUrl) {
+  // Extract keywords from the URL slug so we can run Etsy search in parallel
+  function keywordsFromUrl(u) {
     try {
-      const fcResp = await fetch('https://api.firecrawl.dev/v1/scrape', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}`,
-        },
-        body: JSON.stringify({
-          url: scrapeUrl,
-          formats: ['markdown'],
-          waitFor: 2000,
-        }),
-      });
+      const path = new URL(u).pathname;
+      // Most 3D model platforms use slugs like /model/123456-fidget-cube-v2
+      const slug = path.split('/').pop() || '';
+      // Remove leading ID (digits + hyphen) and version suffixes
+      const cleaned = slug
+        .replace(/^\d+-/, '')         // leading "123456-"
+        .replace(/-v\d+(\.\d+)?$/, '') // trailing "-v2" or "-v1.2"
+        .replace(/-/g, ' ')
+        .replace(/[^a-zA-Z0-9\s]/g, ' ')
+        .trim();
+      const words = cleaned
+        .split(/\s+/)
+        .filter(w => w.length > 2 && !/^(the|and|for|with|that|this|from|into|your|model|print|3d|stl)$/i.test(w))
+        .slice(0, 4);
+      return words.join(' ');
+    } catch (_) { return ''; }
+  }
 
-      if (fcResp.ok) {
-        const fcData = await fcResp.json();
-        const extracted = extractProductContext(fcData);
-        productContext = extracted.productContext;
-        imageUrl = extracted.imageUrl;
-        sourceUrl = extracted.sourceUrl;
+  async function firecrawlScrape(targetUrl, waitMs, abortMs) {
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), abortMs);
+    try {
+      const r = await fetch('https://api.firecrawl.dev/v1/scrape', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.FIRECRAWL_API_KEY}` },
+        body: JSON.stringify({ url: targetUrl, formats: ['markdown'], waitFor: waitMs }),
+        signal: ac.signal,
+      });
+      return r.ok ? await r.json() : null;
+    } catch (_) { return null; } finally { clearTimeout(t); }
+  }
+
+  function parseEtsyData(md, query) {
+    const countMatch = md.match(/(\d[\d,]+)\s*results?/i);
+    let result = '';
+    if (countMatch) {
+      const n = parseInt(countMatch[1].replace(/,/g, ''), 10);
+      if (n > 0) {
+        result = `REAL ETSY SEARCH DATA (live scrape for "${query}"): ${n.toLocaleString()} total listings found. Use this as the primary anchor for market.etsyListings — do not estimate lower than this number.`;
       }
-    } catch (_) {
-      // Firecrawl failed — proceed without scraped context
+    }
+    // Extract price signals from top listings (Etsy shows USD $ by default)
+    const priceMatches = [...md.matchAll(/\$\s*(\d+(?:\.\d+)?)/g)];
+    if (priceMatches.length >= 3) {
+      const prices = priceMatches.slice(0, 10).map(m => parseFloat(m[1])).filter(p => p > 1 && p < 500);
+      if (prices.length >= 2) {
+        const avgUsd = Math.round(prices.reduce((a, b) => a + b, 0) / prices.length);
+        const avgEur = Math.round(avgUsd * 0.93);
+        if (result) result += ` Average sell price from top listings: ~$${avgUsd} / ~€${avgEur}.`;
+      }
+    }
+    return result;
+  }
+
+  const urlKeywords = scrapeUrl ? keywordsFromUrl(scrapeUrl) : '';
+
+  if (scrapeUrl && urlKeywords) {
+    // Run product scrape + Etsy search scrape in parallel
+    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(urlKeywords)}&explicit=1`;
+    const [fcData, etsyData] = await Promise.all([
+      firecrawlScrape(scrapeUrl, 2000, 20000),
+      firecrawlScrape(etsySearchUrl, 1500, 14000),
+    ]);
+    if (fcData) {
+      const extracted = extractProductContext(fcData);
+      productContext = extracted.productContext;
+      imageUrl = extracted.imageUrl;
+      sourceUrl = extracted.sourceUrl;
+    }
+    if (etsyData) {
+      etsyRealData = parseEtsyData(etsyData.data?.markdown || '', urlKeywords);
+    }
+  } else if (scrapeUrl) {
+    // No URL keywords — scrape product first, then Etsy
+    const fcData = await firecrawlScrape(scrapeUrl, 2000, 20000);
+    if (fcData) {
+      const extracted = extractProductContext(fcData);
+      productContext = extracted.productContext;
+      imageUrl = extracted.imageUrl;
+      sourceUrl = extracted.sourceUrl;
+    }
+    // Derive keywords from scraped title
+    const titleMatch = productContext.match(/TITLE:\s*(.+)/);
+    const rawTitle = (titleMatch?.[1] || description || '').trim();
+    const postScrapeKeywords = rawTitle
+      .replace(/[^a-zA-Z0-9\s]/g, ' ')
+      .split(/\s+/)
+      .filter(w => w.length > 2 && !/^(the|and|for|with|that|this|from|into|your|model|print|3d|stl)$/i.test(w))
+      .slice(0, 4)
+      .join(' ');
+    if (postScrapeKeywords) {
+      const etsyData = await firecrawlScrape(
+        `https://www.etsy.com/search?q=${encodeURIComponent(postScrapeKeywords)}&explicit=1`,
+        1500, 12000
+      );
+      if (etsyData) {
+        etsyRealData = parseEtsyData(etsyData.data?.markdown || '', postScrapeKeywords);
+      }
     }
   }
 
@@ -87,6 +165,7 @@ module.exports = async (req, res) => {
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
+${etsyRealData ? etsyRealData + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -116,6 +195,7 @@ MARKET KNOWLEDGE — treat as ground truth for calibrating estimates:
 - Etsy audience: 55% of Etsy traffic is USA-based. 58% female. Over 50% under 35. Products must appeal to a US gift-buyer mindset to maximise reach.
 - Price ceiling by category (market-verified): functional desk items (monitor stands, organisers) — buyers resist above €35–40. Novelty and gift items — ceiling is higher, €20–55 depending on personalisation. Dice and DnD accessories — strong buyer willingness up to €30. Planters — generic designs struggle on Etsy; designer or character-themed planters command €15–30 and perform well in boutique retail and via influencer gifting. Bathroom accessories (toothbrush holders, soap dispensers, cotton jar lids) — purely functional designs top out at €20–25; designer or sculptural pieces positioned as décor reach €30–50 in boutique stores or own shop. Lamps — €60–150 possible but require brand trust and an own website.
 - Products that flop: generic phone holders and cable clips below €10 (Amazon undercuts at €2–6). Generic articulated dragons and flexi animals (10,000+ identical Etsy listings). Any item where drop-shipped versions exist at lower price. These are strong red flags — penalise score accordingly.
+- COMPETITION CALIBRATION — real Etsy listing counts for known saturated categories. ALWAYS use these as hard anchors when estimating etsyListings — do not guess lower than these ranges: Fidget toys, fidget cubes, fidget spinners, fidget rings, sensory toys: 60,000–120,000 listings (extreme competition — score must reflect this). Articulated/flexi animals (dragons, fish, cats, dogs, octopus, sharks): 30,000–80,000 listings. Generic keychains with no character angle: 100,000+ listings. Generic cable clips, cord management: 20,000–40,000 listings. Generic phone stands/holders: 40,000–70,000 listings. Generic bookmarks: 50,000+ listings. Generic planters: 40,000–60,000 listings. Laptop stands/risers (generic): 10,000–15,000 listings. Dice towers and DnD accessories: 5,000–12,000 listings. Monitor stands/risers with unique angle: 3,000–8,000 listings. Miniatures (tabletop, busts): 8,000–20,000 listings. Custom name signs: 200,000+ listings but high personalisation differentiates effectively. AirPods/Apple Watch holders without IP: 8,000–15,000 listings. Bathroom accessories (toothbrush holders, dispensers): 25,000–50,000 listings. When the product clearly falls into a known-saturated category above, set etsyListings to the upper half of the range or higher — underestimating competition is the most common calibration error.
 - Top-performing product patterns (market-verified): (1) Dice and DnD accessories — evergreen, passionate buyers, strong search volume. (2) Tech accessory holders (Echo Dot, AirPods, Apple Watch chargers) with pop-culture or character angle — high revenue but significant IP risk. (3) Personalised name items — evergreen, highest conversion rate, justifies €6–14 premium per order. (4) Planters with a twist (animal, food-themed, character-adjacent without licensed IP) — low competition relative to view counts. (5) Monitor stands and risers — very low competition vs. strong search volume, strong B2B angle for offices.
 - Revenue benchmarks: top performers earn €500–€5,000/month. Mid-tier: €150–€500/month. Beginners with a proven product: €50–€200/month in first 6 months.
 - Etsy SEO reality: keyword-dense titles, all 13 tags used, and long-tail descriptions matter as much as product quality. Review accumulation is a compounding moat — a new seller needs a strategy to get first reviews fast.
@@ -254,6 +334,8 @@ IMPORTANT RULES:
 
   // ── 3. Call Claude ───────────────────────────────────────────────────────
   let claudeJson;
+  const clAbort = new AbortController();
+  const clTimeout = setTimeout(() => clAbort.abort(), 42000);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -261,12 +343,15 @@ IMPORTANT RULES:
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'prompt-caching-2024-07-31',
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 4096,
-        messages: [{ role: 'user', content: prompt }],
+        system: [{ type: 'text', text: prompt.split('Product data:')[0].trim(), cache_control: { type: 'ephemeral' } }],
+        messages: [{ role: 'user', content: 'Product data:\n' + prompt.split('Product data:').slice(1).join('Product data:') }],
       }),
+      signal: clAbort.signal,
     });
 
     if (!claudeResp.ok) {
@@ -277,6 +362,8 @@ IMPORTANT RULES:
     claudeJson = await claudeResp.json();
   } catch (e) {
     return res.status(502).json({ error: 'analysis_failed', message: e.message });
+  } finally {
+    clearTimeout(clTimeout);
   }
 
   const rawText = (claudeJson.content?.[0]?.text || '').trim();

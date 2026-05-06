@@ -450,6 +450,33 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .offer-lock-sub{font-size:12.5px;color:rgba(255,255,255,0.65);line-height:1.5;max-width:220px}
 .offer-lock-score{display:inline-block;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:8px;padding:5px 14px;font-family:"DM Mono",sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:.06em;margin-top:2px}
 .offer-cta-hint{font-size:11.5px;color:var(--ink3);text-align:center;line-height:1.5;margin-top:12px}
+/* MeshMinds Pro Banner */
+.pro-wrap{margin-top:18px}
+.pro-fomo-bar{background:linear-gradient(135deg,#0f172a,#1e1b4b);border-radius:12px 12px 0 0;padding:12px 15px 11px;display:flex;align-items:flex-start;gap:9px}
+.pro-fomo-ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.pro-fomo-txt{font-size:12.5px;color:rgba(255,255,255,0.7);line-height:1.45}
+.pro-fomo-txt b{color:#fbbf24;font-weight:700}
+.pro-card{background:#0f172a;border:1px solid rgba(251,191,36,0.18);border-top:none;border-radius:0 0 12px 12px;padding:14px 15px 16px}
+.pro-card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.pro-badge-pill{font-family:"DM Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:linear-gradient(90deg,#f59e0b,#fbbf24);color:#0f172a;border-radius:20px;padding:3px 9px;flex-shrink:0}
+.pro-card-name{font-family:"Bebas Neue",sans-serif;font-size:20px;color:#fff;letter-spacing:.03em;line-height:1;flex:1}
+.pro-price-tag{display:flex;align-items:baseline;gap:2px;flex-shrink:0}
+.pro-price-big{font-family:"Bebas Neue",sans-serif;font-size:26px;color:#fbbf24;line-height:1}
+.pro-price-per{font-size:10px;color:rgba(255,255,255,0.35);font-family:"DM Mono",sans-serif;margin-left:1px}
+.pro-headline{font-family:"Bebas Neue",sans-serif;font-size:21px;color:#fff;letter-spacing:.02em;line-height:1.2;margin-bottom:12px}
+.pro-features-list{display:flex;flex-direction:column;gap:6px;margin-bottom:13px}
+.pro-feat{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.4}
+.pro-feat-ico{flex-shrink:0;color:#34d399;font-size:11px;margin-top:2px}
+.pro-feat-hot{color:rgba(255,255,255,0.85)}
+.pro-feat-hot .pro-feat-ico{color:#f97316}
+.pro-early-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(251,191,36,0.07);border:1px solid rgba(251,191,36,0.18);border-radius:8px;margin-bottom:12px}
+.pro-early-dot{width:6px;height:6px;border-radius:50%;background:#fbbf24;flex-shrink:0;animation:pro-pulse 1.8s ease-in-out infinite}
+@keyframes pro-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.7)}}
+.pro-early-txt{font-size:11px;color:rgba(255,255,255,0.5);font-family:"DM Mono",sans-serif;letter-spacing:.02em}
+.pro-early-txt b{color:#fbbf24}
+.pro-cta-btn{display:block;width:100%;box-sizing:border-box;padding:13px 16px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#0f172a;font-size:13.5px;font-weight:800;font-family:"DM Sans",sans-serif;border-radius:10px;text-align:center;text-decoration:none;letter-spacing:-.01em;margin-bottom:9px;transition:opacity 0.15s}
+.pro-cta-btn:active{opacity:0.82}
+.pro-tagline{font-size:11px;color:rgba(255,255,255,0.28);text-align:center;font-family:"DM Mono",sans-serif;letter-spacing:.05em}
 </style>
 </head>
 <body>
@@ -977,6 +1004,38 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="signals-hd" id="risk-hd" style="display:none">Risks to consider</div>
         <div id="signals-risks" style="margin-bottom:4px"></div>
 
+        <!-- MeshMinds Pro upsell -->
+        <div class="pro-wrap">
+          <div class="pro-fomo-bar">
+            <span class="pro-fomo-ico">👁</span>
+            <div class="pro-fomo-txt">Du siehst dein Ergebnis. <b>Pro-Member sehen alle <span id="pro-count">847</span> validierten Produkte</b> + was diese Woche trending ist.</div>
+          </div>
+          <div class="pro-card">
+            <div class="pro-card-head">
+              <span class="pro-badge-pill">Pro</span>
+              <span class="pro-card-name">MeshMinds Pro</span>
+              <div class="pro-price-tag">
+                <span class="pro-price-big">$9</span>
+                <span class="pro-price-per">/mo</span>
+              </div>
+            </div>
+            <div class="pro-headline">3.000 Stunden Etsy-Daten.<br>$250K Umsatz. Jetzt für $9/Monat.</div>
+            <div class="pro-features-list">
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Alle <span class="pro-count-inline">847</span> validierten Produkte + Community-Scores</span></div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Top Keywords der letzten 30 Tage</span></div>
+              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">🔥</span><span><b>Trending Now</b> — was gerade heiß validiert wird</span></div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Meine persönliche Hot List — Produkte die ich selbst drucken würde (1×/Monat)</span></div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Benchmark-Daten aus meinem $250K Etsy-Store</span></div>
+            </div>
+            <div class="pro-early-row">
+              <span class="pro-early-dot"></span>
+              <span class="pro-early-txt">Early Adopter: Erste 100 Member zu <b>$9</b> — danach $19/Monat</span>
+            </div>
+            <a href="#" id="pro-cta-btn" class="pro-cta-btn" target="_blank" rel="noopener">Jetzt Pro werden — $9/Monat →</a>
+            <div class="pro-tagline">Andere raten. Du weißt es.</div>
+          </div>
+        </div>
+
       </div>
 
       <!-- HOW TO SELL IT -->
@@ -1377,6 +1436,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 <script>
 (function(){
+var PRO_VALIDATED_COUNT=847; /* update this number as real validations accumulate */
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
@@ -1673,6 +1733,8 @@ function drawRevenueChart(currentPrice){
 }
 
 function populate(data){
+  /* Sync Pro banner counts */
+  document.querySelectorAll("#pro-count,.pro-count-inline").forEach(function(el){el.textContent=PRO_VALIDATED_COUNT;});
   function obj(v){if(typeof v==="string"){try{return JSON.parse(v);}catch(e){}}return v||{};}
   var p=obj(data.product);
   var m=obj(data.market);

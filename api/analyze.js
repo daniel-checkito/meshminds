@@ -152,14 +152,77 @@ module.exports = async (req, res) => {
     return result;
   }
 
+  // Parse competitor listings from Etsy search + DuckDuckGo results
+  function parseCompetitorRaw(etsyMd, ddgMd) {
+    const seen = new Set();
+    const items = [];
+
+    // Match [Title](etsy_listing_url) together so title is never from a different listing
+    const etsyListingRe = /\[([^\]]{5,120})\]\((https?:\/\/(?:www\.)?etsy\.com\/listing\/(\d+)\/[a-z0-9-]+)[^)]*\)/gi;
+
+    // Extract Etsy listing URLs + context from Etsy search markdown
+    if (etsyMd) {
+      let m;
+      while ((m = etsyListingRe.exec(etsyMd)) !== null && items.length < 4) {
+        const listingId = m[3];
+        if (seen.has(listingId)) continue;
+        seen.add(listingId);
+        const url = m[2].split('?')[0];
+        // Price and reviews come AFTER the URL line
+        const after = etsyMd.slice(m.index + m[0].length, m.index + m[0].length + 300);
+        const priceMatch = after.match(/\$\s*(\d+(?:\.\d{2})?)/);
+        const reviewMatch = after.match(/\((\d[\d,]+)\s*(?:reviews?|sales?|ratings?)?\)/i);
+        const soldMatch = after.match(/(\d[\d,]+)\s*sold/i);
+        items.push({
+          url,
+          title: m[1].replace(/\s+/g, ' ').trim(),
+          price: priceMatch ? `$${priceMatch[1]}` : null,
+          reviews: reviewMatch ? parseInt(reviewMatch[1].replace(/,/g, ''), 10) : null,
+          sold: soldMatch ? parseInt(soldMatch[1].replace(/,/g, ''), 10) : null,
+          source: 'etsy',
+        });
+      }
+    }
+
+    // Extract results from DuckDuckGo — Etsy, Amazon Handmade, and craft marketplaces
+    if (ddgMd) {
+      const ddgLinkRe = /\[([^\]]{5,120})\]\((https?:\/\/(?:www\.etsy\.com\/listing|www\.amazon\.com\/[^)]*handmade|amazon\.co\.uk\/[^)]*handmade|notonthehighstreet\.com|folksy\.com)[^)]*)\)/gi;
+      let d;
+      while ((d = ddgLinkRe.exec(ddgMd)) !== null && items.length < 6) {
+        const rawUrl = d[2].split('?')[0];
+        const key = rawUrl.replace(/https?:\/\/(www\.)?/, '').substring(0, 50);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        const after = ddgMd.slice(d.index + d[0].length, d.index + d[0].length + 300);
+        const priceMatch = after.match(/\$\s*(\d+(?:\.\d{2})?)/);
+        const reviewMatch = after.match(/\((\d[\d,]+)\)/);
+        const domain = rawUrl.match(/https?:\/\/(?:www\.)?([^/]+)/)?.[1] || 'unknown';
+        items.push({
+          url: rawUrl,
+          title: d[1].replace(/\s+/g, ' ').trim(),
+          price: priceMatch ? `$${priceMatch[1]}` : null,
+          reviews: reviewMatch ? parseInt(reviewMatch[1].replace(/,/g, ''), 10) : null,
+          sold: null,
+          source: domain,
+        });
+      }
+    }
+
+    return items.slice(0, 5);
+  }
+
   const urlKeywords = scrapeUrl ? keywordsFromUrl(scrapeUrl) : '';
 
+  let competitorRaw = [];
+
   if (scrapeUrl && urlKeywords) {
-    // Run product scrape + Etsy search scrape in parallel
-    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(urlKeywords)}&explicit=1`;
-    const [fcData, etsyData] = await Promise.all([
+    // Run all 3 scrapes in parallel: product page + Etsy search + DuckDuckGo competitor search
+    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(urlKeywords)}&explicit=1&sort_on=most_relevant`;
+    const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(urlKeywords + ' buy handmade')}&kl=us-en`;
+    const [fcData, etsyData, ddgData] = await Promise.all([
       firecrawlScrape(scrapeUrl, 1000, 18000),
       firecrawlScrape(etsySearchUrl, 500, 12000),
+      firecrawlScrape(ddgUrl, 500, 10000),
     ]);
     if (fcData) {
       const extracted = extractProductContext(fcData);
@@ -167,11 +230,12 @@ module.exports = async (req, res) => {
       imageUrl = extracted.imageUrl;
       sourceUrl = extracted.sourceUrl;
     }
-    if (etsyData) {
-      etsyRealData = parseEtsyData(etsyData.data?.markdown || '', urlKeywords);
-    }
+    const etsyMd = etsyData?.data?.markdown || '';
+    const ddgMd = ddgData?.data?.markdown || '';
+    if (etsyMd) etsyRealData = parseEtsyData(etsyMd, urlKeywords);
+    competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
   } else if (scrapeUrl) {
-    // No URL keywords — scrape product first, then Etsy
+    // No URL keywords — scrape product first, derive keywords, then search
     const fcData = await firecrawlScrape(scrapeUrl, 1000, 18000);
     if (fcData) {
       const extracted = extractProductContext(fcData);
@@ -179,7 +243,6 @@ module.exports = async (req, res) => {
       imageUrl = extracted.imageUrl;
       sourceUrl = extracted.sourceUrl;
     }
-    // Derive keywords from scraped title
     const titleMatch = productContext.match(/TITLE:\s*(.+)/);
     const rawTitle = (titleMatch?.[1] || description || '').trim();
     const postScrapeKeywords = rawTitle
@@ -189,13 +252,16 @@ module.exports = async (req, res) => {
       .slice(0, 4)
       .join(' ');
     if (postScrapeKeywords) {
-      const etsyData = await firecrawlScrape(
-        `https://www.etsy.com/search?q=${encodeURIComponent(postScrapeKeywords)}&explicit=1`,
-        500, 10000
-      );
-      if (etsyData) {
-        etsyRealData = parseEtsyData(etsyData.data?.markdown || '', postScrapeKeywords);
-      }
+      const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(postScrapeKeywords)}&explicit=1&sort_on=most_relevant`;
+      const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(postScrapeKeywords + ' buy handmade')}&kl=us-en`;
+      const [etsyData, ddgData] = await Promise.all([
+        firecrawlScrape(etsySearchUrl, 500, 10000),
+        firecrawlScrape(ddgUrl, 500, 10000),
+      ]);
+      const etsyMd = etsyData?.data?.markdown || '';
+      const ddgMd = ddgData?.data?.markdown || '';
+      if (etsyMd) etsyRealData = parseEtsyData(etsyMd, postScrapeKeywords);
+      competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
     }
   }
 
@@ -206,11 +272,24 @@ module.exports = async (req, res) => {
   }
 
   // ── 2. Build the Claude prompt (ported from n8n "Message a model" node) ──
+  // Build competitor context string for the prompt
+  const competitorContext = competitorRaw.length > 0
+    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy search + DuckDuckGo — these are REAL results):\n' +
+      competitorRaw.map((c, i) =>
+        `${i + 1}. URL: ${c.url}\n   Title: "${c.title}"` +
+        (c.price ? `\n   Price: ${c.price}` : '') +
+        (c.reviews ? `\n   Reviews: ${c.reviews}` : '') +
+        (c.sold ? `\n   Sold: ${c.sold}` : '') +
+        `\n   Source: ${c.source}`
+      ).join('\n\n') +
+      '\nFor each competitor above, include it in the "competitors" array with your analysis of why it works and estimated monthly sales.'
+    : '';
+
   const prompt = `You are an expert Etsy seller, 3D printing business analyst, and product compliance specialist. Your job is to evaluate whether a 3D printed model is worth selling — and whether 3D printing is even the right manufacturing method.
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
-${etsyRealData ? etsyRealData + '\n' : ''}
+${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -351,6 +430,16 @@ Your analysis must follow this EXACT JSON schema. Every field is required.
       "difficulty": <"low" | "medium" | "high">,
       "note": <string, one practical tip — supplier data sheet, self-declaration eligibility, lead time, or a common pitfall>
     }
+  ],
+  "competitors": [
+    {
+      "url": <string — exact URL from the LIVE COMPETITOR LISTINGS above; use only URLs provided, do not invent>,
+      "name": <string — listing title, max 60 chars, truncate with ... if needed>,
+      "platform": <string — "Etsy" | "Amazon Handmade" | "Not on the High Street" | "Folksy" | other marketplace name>,
+      "estPrice": <string — price from the scraped data if available, else estimate e.g. "$18–$28">,
+      "estMonthlySales": <string — estimate based on reviews/sold count: if reviews > 1000 say "100–200/mo", reviews 500–1000 say "50–100/mo", reviews 100–500 say "20–60/mo", reviews < 100 say "5–20/mo". If no review data, estimate from category averages>,
+      "whyItWorks": <string — 1–2 concrete sentences: what specifically makes this listing win — title SEO, first photo style, personalisation hook, price positioning, review velocity, niche angle. Be specific, not generic>
+    }
   ]
 }
 IMPORTANT RULES:
@@ -375,6 +464,7 @@ IMPORTANT RULES:
 - On CGTrader (cgtrader.com): look for product type, price, star rating, and review count
 - On Thangs (thangs.com): look for "Downloads", "Views", "Likes"
 - Never include a literal double-quote character inside any JSON string value — rephrase or use single quotes
+- competitors: use ONLY URLs from the LIVE COMPETITOR LISTINGS section. If no competitor data was provided, return an empty array []. Never invent URLs or listing IDs.
 - Return ONLY the JSON object. No other text.`;
 
   // ── 3. Call Claude ───────────────────────────────────────────────────────

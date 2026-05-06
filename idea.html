@@ -708,6 +708,16 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .erank-comp-lbl{font-size:10px;font-weight:700;font-family:"DM Mono",sans-serif}
 .erank-insight{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 10px;background:rgba(255,255,255,.7);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.45;display:none}
 .erank-insight.show{display:flex}
+.comp-card{border:1.5px solid var(--line);border-radius:12px;padding:13px 14px 12px;background:#fff;border-left-width:4px;border-left-color:var(--acc)}
+.comp-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.comp-name{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.35;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.comp-platform{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:6px;background:#f0fdf4;color:#15803d;letter-spacing:.05em;text-transform:uppercase;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.comp-url{display:block;font-size:10px;color:var(--acc);font-family:"DM Mono",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;margin-bottom:8px}
+.comp-url:hover{text-decoration:underline}
+.comp-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.comp-sales{font-size:10.5px;font-weight:700;font-family:"DM Mono",sans-serif;color:var(--good);background:#f0fdf4;padding:2px 8px;border-radius:6px}
+.comp-price{font-size:10.5px;font-weight:700;font-family:"DM Mono",sans-serif;color:var(--ink2)}
+.comp-why{font-size:11.5px;color:var(--ink2);line-height:1.45;padding-top:8px;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -1066,7 +1076,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div style="font-size:11.5px;color:var(--ink3);margin-bottom:14px;line-height:1.4" id="loading-phase">Scraping product page…</div>
           <div style="display:flex;flex-direction:column;gap:0;background:#f7f7f7;border-radius:11px;overflow:hidden;border:1px solid var(--line)">
             <div class="loading-step" id="ls0" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Scraping product page</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Reading title, tags, license and print specs from MakerWorld / Printables</div></div></div>
-            <div class="loading-step" id="ls1" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Live Etsy search scan</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Counting real listings and reading avg prices from Etsy search results</div></div></div>
+            <div class="loading-step" id="ls1" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Market scan &amp; top competitors</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Live listing count from Etsy + top competing products from Etsy and Google</div></div></div>
             <div class="loading-step" id="ls2" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Revenue &amp; profit model</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Calculating print cost, Etsy fees, margin and monthly income estimate</div></div></div>
             <div class="loading-step" id="ls3" style="padding:10px 14px"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Legal &amp; copyright check</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Checking license, IP risk, Etsy policy compliance and required certifications</div></div></div>
           </div>
@@ -1184,6 +1194,12 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             </div>
           </div>
           <div class="erank-insight" id="ins"><div class="ins-dot"></div><span id="ins-text"></span></div>
+        </div>
+
+        <!-- Competitor listings -->
+        <div id="competitors-section" style="display:none">
+          <div class="sell-section-hd">Top competitors selling this</div>
+          <div id="competitors-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px"></div>
         </div>
 
         <!-- Platform ranking -->
@@ -1713,7 +1729,7 @@ var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
 })();
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
-var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
+var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[],competitors:[{url:"https://www.etsy.com/listing/1234567890/adjustable-laptop-stand-desk-riser",name:"Adjustable Laptop Stand Desk Riser - Ergonomic Monitor Stand",platform:"Etsy",estPrice:"$26.99",estMonthlySales:"40–80/mo",whyItWorks:"Leads with 'ergonomic' in the title targeting the WFH buyer keyword. First photo shows the stand in a styled home office with a MacBook, which converts 2–3x better than plain product shots."},{url:"https://www.etsy.com/listing/9876543210/personalised-wooden-laptop-riser",name:"Personalised Laptop Stand - Custom Name Engraved - Office Gift",platform:"Etsy",estPrice:"$34.99",estMonthlySales:"60–120/mo",whyItWorks:"Custom name engraving justifies a $8 price premium and dominates the gift buyer segment. 'Office gift' in the title captures high-intent holiday shoppers."},{url:"https://www.amazon.com/dp/B0FAKE12345/ref=sr_1_1",name:"3D Printed Laptop Riser - Adjustable Height - Multiple Colors",platform:"Amazon",estPrice:"$19.99",estMonthlySales:"100–200/mo",whyItWorks:"Lower price point and Prime shipping dominate on Amazon. Multiple color variants in one listing boost click-through rate and rank signal."}]};
 function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
 function selectCountry(el){
   document.querySelectorAll('.country-chip').forEach(function(c){c.classList.remove('sel');});
@@ -2110,6 +2126,8 @@ function populate(data){
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
   if(m.searchVolume)renderCountryChart(m.searchVolume);
+  /* Competitor listings */
+  buildCompetitors(data.competitors);
   /* Show pro insights gate in sell section */
   var pig=q("pro-insights-gate");if(pig)pig.style.display="";
   /* Manufacturing verdict */
@@ -2469,6 +2487,33 @@ function renderRoadmapSteps(){
     list.parentElement.insertBefore(lockBlock,list.nextSibling);
   }
 }
+function buildCompetitors(competitors){
+  var sec=q("competitors-section");
+  var list=q("competitors-list");
+  if(!sec||!list)return;
+  if(!Array.isArray(competitors)||competitors.length===0){sec.style.display="none";return;}
+  var validComps=competitors.filter(function(c){return c&&c.url&&c.whyItWorks;});
+  if(validComps.length===0){sec.style.display="none";return;}
+  sec.style.display="";
+  list.innerHTML=validComps.map(function(c){
+    var domain="";
+    try{var u=new URL(c.url);domain=u.hostname.replace(/^www\./,"");}catch(_){}
+    var shortUrl=domain+(c.url.replace(/https?:\/\/(www\.)?/,"").length>50?c.url.replace(/https?:\/\/(www\.)?/,"").substring(0,48)+"…":c.url.replace(/https?:\/\/(www\.)?/,""));
+    return '<div class="comp-card">'
+      +'<div class="comp-card-top">'
+      +'<div class="comp-name">'+esc(c.name||"Competitor listing")+'</div>'
+      +'<span class="comp-platform">'+esc(c.platform||"Etsy")+'</span>'
+      +'</div>'
+      +'<a class="comp-url" href="'+esc(c.url)+'" target="_blank" rel="noopener">'+esc(shortUrl)+'</a>'
+      +'<div class="comp-meta">'
+      +(c.estMonthlySales?'<span class="comp-sales">~'+esc(c.estMonthlySales)+' est. sales</span>':'')
+      +(c.estPrice?'<span class="comp-price">'+esc(c.estPrice)+'</span>':'')
+      +'</div>'
+      +'<div class="comp-why">'+esc(c.whyItWorks)+'</div>'
+      +'</div>';
+  }).join('');
+}
+function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function buildRoadmap(){
   var section=q('roadmap-section');if(!section)return;
   var tabs=q('roadmap-tabs');
@@ -2737,6 +2782,7 @@ function reset(){
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
   if(q("pro-insights-gate"))q("pro-insights-gate").style.display="none";
+  if(q("competitors-section"))q("competitors-section").style.display="none";
 }
 
 var CERT_INFO={

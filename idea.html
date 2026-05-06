@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrintChecker - Will your 3D print actually sell?</title>
+<title>3D Ideas to Sell - Will your 3D print actually sell?</title>
 <meta name="description" content="Paste a link to any 3D model. We check demand, profit and legal risk in seconds - powered by real Etsy data and AI.">
-<meta property="og:title" content="PrintChecker - Will your 3D print actually sell?">
+<meta property="og:title" content="3D Ideas to Sell - Will your 3D print actually sell?">
 <meta property="og:description" content="Paste a link to any 3D model. We check demand, profit and legal risk in seconds - powered by real Etsy data and AI.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PrintChecker - Will your 3D print actually sell?">
+<meta name="twitter:title" content="3D Ideas to Sell - Will your 3D print actually sell?">
 <meta name="twitter:description" content="Real Etsy data + AI analysis. Know if your 3D print idea is worth selling before you waste filament.">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
@@ -678,7 +678,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <div class="try-eg" id="try-eg-hint">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('ui').focus();document.getElementById('ui').dispatchEvent(new Event('input'))">Try an example →</button></div>
+    <div class="try-eg" id="try-eg-hint">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">Try an example →</button></div>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div>
     </div>
@@ -927,34 +927,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="q-step-sub">Helps us tailor the strategy and profit estimate to your setup.</div>
 
         <div class="q-block">
-          <div class="q-sec-title">What are you trying to do?</div>
-          <div class="q-sec-sub">This shapes the whole strategy - pricing, platform, and how we frame the results.</div>
-          <div class="chips chips-list" id="q-goal">
-            <button class="chip chip-list" data-v="testing">
-              <span class="chip-ico">🔍</span>
-              <span class="chip-content">
-                <span class="chip-name">Just checking if it sells</span>
-                <span class="chip-desc">I want to know before I waste filament on something nobody wants.</span>
-              </span>
-            </button>
-            <button class="chip chip-list" data-v="side-hustle">
-              <span class="chip-ico">💰</span>
-              <span class="chip-content">
-                <span class="chip-name">Side income (€200–€1k/mo)</span>
-                <span class="chip-desc">I want to make real money without going full-time.</span>
-              </span>
-            </button>
-            <button class="chip chip-list" data-v="business">
-              <span class="chip-ico">🚀</span>
-              <span class="chip-content">
-                <span class="chip-name">Building a real business</span>
-                <span class="chip-desc">I'm serious about scaling this into a reliable income stream.</span>
-              </span>
-            </button>
-          </div>
-        </div>
-
-        <div class="q-block">
           <div class="q-sec-title">Selling experience?</div>
           <div class="q-sec-sub">Calibrates how detailed and technical the advice gets.</div>
           <div class="chips g2" id="q-exp">
@@ -1012,34 +984,25 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="q-block">
           <div class="q-sec-title">Where are you selling from?</div>
           <div class="q-sec-sub">Affects VAT rules and which legal certificates apply to you.</div>
-          <select id="sell-from" class="sel-inp">
-            <option value="">Select your country</option>
-            <option value="NL">🇳🇱 Netherlands</option>
-            <option value="US">🇺🇸 United States</option>
-            <option value="GB">🇬🇧 United Kingdom</option>
-            <option value="DE">🇩🇪 Germany</option>
-            <option value="FR">🇫🇷 France</option>
-            <option value="BE">🇧🇪 Belgium</option>
-            <option value="CA">🇨🇦 Canada</option>
-            <option value="AU">🇦🇺 Australia</option>
-            <option value="SE">🇸🇪 Sweden</option>
-            <option value="CH">🇨🇭 Switzerland</option>
-            <option value="IT">🇮🇹 Italy</option>
-            <option value="ES">🇪🇸 Spain</option>
-            <option value="PL">🇵🇱 Poland</option>
-            <option value="NO">🇳🇴 Norway</option>
-            <option value="DK">🇩🇰 Denmark</option>
-            <option value="AT">🇦🇹 Austria</option>
-            <option value="PT">🇵🇹 Portugal</option>
-            <option value="IE">🇮🇪 Ireland</option>
-            <option value="FI">🇫🇮 Finland</option>
-            <option value="JP">🇯🇵 Japan</option>
-            <option value="SG">🇸🇬 Singapore</option>
-            <option value="KR">🇰🇷 South Korea</option>
-            <option value="CZ">🇨🇿 Czech Republic</option>
-            <option value="NZ">🇳🇿 New Zealand</option>
-            <option value="UA">🇺🇦 Ukraine</option>
-          </select>
+          <input type="hidden" id="sell-from" value="">
+          <div class="country-chips" id="country-chips">
+            <div class="country-chip" data-v="US" onclick="selectCountry(this)"><span class="cc-flag">🇺🇸</span><span class="cc-name">USA</span></div>
+            <div class="country-chip" data-v="GB" onclick="selectCountry(this)"><span class="cc-flag">🇬🇧</span><span class="cc-name">UK</span></div>
+            <div class="country-chip" data-v="DE" onclick="selectCountry(this)"><span class="cc-flag">🇩🇪</span><span class="cc-name">Germany</span></div>
+            <div class="country-chip" data-v="AU" onclick="selectCountry(this)"><span class="cc-flag">🇦🇺</span><span class="cc-name">Australia</span></div>
+            <div class="country-chip" data-v="CA" onclick="selectCountry(this)"><span class="cc-flag">🇨🇦</span><span class="cc-name">Canada</span></div>
+            <div class="country-chip" data-v="FR" onclick="selectCountry(this)"><span class="cc-flag">🇫🇷</span><span class="cc-name">France</span></div>
+            <div class="country-chip" data-v="NL" onclick="selectCountry(this)"><span class="cc-flag">🇳🇱</span><span class="cc-name">Netherlands</span></div>
+            <div class="country-chip" data-v="AT" onclick="selectCountry(this)"><span class="cc-flag">🇦🇹</span><span class="cc-name">Austria</span></div>
+            <div class="country-chip" data-v="CH" onclick="selectCountry(this)"><span class="cc-flag">🇨🇭</span><span class="cc-name">Switzerland</span></div>
+            <div class="country-chip" data-v="IT" onclick="selectCountry(this)"><span class="cc-flag">🇮🇹</span><span class="cc-name">Italy</span></div>
+            <div class="country-chip" data-v="IN" onclick="selectCountry(this)"><span class="cc-flag">🇮🇳</span><span class="cc-name">India</span></div>
+            <div class="country-chip" data-v="JP" onclick="selectCountry(this)"><span class="cc-flag">🇯🇵</span><span class="cc-name">Japan</span></div>
+            <div class="country-chip" data-v="SE" onclick="selectCountry(this)"><span class="cc-flag">🇸🇪</span><span class="cc-name">Sweden</span></div>
+            <div class="country-chip" data-v="ES" onclick="selectCountry(this)"><span class="cc-flag">🇪🇸</span><span class="cc-name">Spain</span></div>
+            <div class="country-chip" data-v="EU" onclick="selectCountry(this)"><span class="cc-flag">🇪🇺</span><span class="cc-name">EU (other)</span></div>
+            <div class="country-chip" data-v="OTHER" onclick="selectCountry(this)"><span class="cc-flag">🌍</span><span class="cc-name">Other</span></div>
+          </div>
         </div>
 
       </div>
@@ -1132,7 +1095,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
                 <span id="verdict-text">Analyzing</span>
               </div>
             </div>
-            <div class="ring-wrap" style="width:56px;height:56px;flex-shrink:0"><canvas id="ring" width="44" height="44" style="width:56px;height:56px;display:block"></canvas><div class="ring-n" id="rn" style="color:var(--ink3);font-size:13px">-</div></div>
+            <div class="ring-wrap" style="width:56px;height:56px;flex-shrink:0"><canvas id="ring" style="width:56px;height:56px;display:block"></canvas><div class="ring-n" id="rn" style="color:var(--ink3);font-size:13px">-</div></div>
           </div>
           <div class="score-bars">
             <div class="score-bar-row">
@@ -1172,37 +1135,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="signals-hd" id="risk-hd" style="display:none">Risks to consider</div>
         <div id="signals-risks" style="margin-bottom:4px"></div>
 
-        <!-- MeshMinds Pro upsell -->
-        <div class="pro-wrap">
-          <div class="pro-fomo-bar">
-            <span class="pro-fomo-ico">👁</span>
-            <div class="pro-fomo-txt">You see your result. <b>Pro members see all <span id="pro-count">847</span> validated products</b> + what's trending this week.</div>
-          </div>
-          <div class="pro-card">
-            <div class="pro-card-head">
-              <span class="pro-badge-pill">Pro</span>
-              <span class="pro-card-name">MeshMinds Pro</span>
-              <div class="pro-price-tag">
-                <span class="pro-price-big">$9</span>
-                <span class="pro-price-per">/mo</span>
-              </div>
-            </div>
-            <div class="pro-headline">3,000 hours of Etsy data.<br>$250K revenue. Now $9/month.</div>
-            <div class="pro-features-list">
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>All <span class="pro-count-inline">847</span> validated products + community scores</span></div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Top keywords from the last 30 days</span></div>
-              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">🔥</span><span><b>Trending Now</b> — what's being validated right now</span></div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>My personal hot list — products I'd print myself (updated monthly)</span></div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span><span>Benchmark data from my $250K Etsy store</span></div>
-            </div>
-            <div class="pro-early-row">
-              <span class="pro-early-dot"></span>
-              <span class="pro-early-txt">Early Adopter: First 100 members at <b>$9</b> — then $19/month</span>
-            </div>
-            <a href="https://buy.stripe.com/PLACEHOLDER" id="pro-cta-btn" class="pro-cta-btn" target="_blank" rel="noopener">Go Pro now — $9/month →</a>
-            <div class="pro-tagline">Others guess. You know.</div>
-          </div>
-        </div>
 
       </div>
 
@@ -1412,7 +1344,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
                 <span class="pro-badge-pill">Pro</span>
                 <span class="pro-card-name">The Full Catalogue</span>
                 <div class="pro-price-tag">
-                  <span class="pro-price-big">$9</span>
+                  <span class="pro-price-big">$12</span>
                   <span class="pro-price-per">/mo</span>
                 </div>
               </div>
@@ -1426,9 +1358,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               </div>
               <div class="pro-early-row">
                 <span class="pro-early-dot"></span>
-                <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $9/mo (then $19)</span>
+                <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $12/mo (then $19)</span>
               </div>
-              <a href="https://buy.stripe.com/PLACEHOLDER" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Get Pro access — $9/month →</a>
+              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Get Pro access — $12/month →</a>
               <div class="pro-tagline">Cancel anytime · no commitment</div>
             </div>
           </div>
@@ -1475,19 +1407,25 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Blurred ideas preview -->
+        <!-- Blurred image catalogue preview -->
         <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Pro members see all <span id="s8-bl-count">847</span> scored products</div>
-        <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:0">
-          <div class="bl-row"><span class="bl-rank">#1</span><div class="bl-score">94</div><div class="bl-info"><div class="bl-name">Custom Name Plaque</div><div class="bl-meta">Decor · €18 avg</div></div><div class="bl-right"><div class="bl-price">€340/mo</div><div class="bl-verdict">Start selling</div></div></div>
-          <div class="bl-row"><span class="bl-rank">#2</span><div class="bl-score">91</div><div class="bl-info"><div class="bl-name">Geometric Candle Holder</div><div class="bl-meta">Home · €14 avg</div></div><div class="bl-right"><div class="bl-price">€280/mo</div><div class="bl-verdict">Start selling</div></div></div>
-          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#3</span><div class="bl-score warn">88</div><div class="bl-info"><div class="bl-name">Modular Desk Organiser</div><div class="bl-meta">Functional · €24 avg</div></div><div class="bl-right"><div class="bl-price">€390/mo</div><div class="bl-verdict">Good niche</div></div></div>
-          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#4</span><div class="bl-score">86</div><div class="bl-info"><div class="bl-name">DnD Dice Tower</div><div class="bl-meta">Gaming · €28 avg</div></div><div class="bl-right"><div class="bl-price">€450/mo</div><div class="bl-verdict">Start selling</div></div></div>
-          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#5</span><div class="bl-score">83</div><div class="bl-info"><div class="bl-name">Apple Watch Stand</div><div class="bl-meta">Tech · €19 avg</div></div><div class="bl-right"><div class="bl-price">€310/mo</div><div class="bl-verdict">Good niche</div></div></div>
-          <div class="bl-blur-overlay">
-            <div class="bl-lock-card" style="margin:0 0">
+        <div style="position:relative;border-radius:12px;overflow:hidden">
+          <div class="eg-grid" style="margin-bottom:0">
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div><div class="eg-vol">16.6k</div><div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div></div></div>
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div><div class="eg-vol">9.2k</div><div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div></div></div>
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div><div class="eg-vol">7.8k</div><div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div><div class="eg-vol">22.1k</div><div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div><div class="eg-vol">11.3k</div><div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div><div class="eg-vol">14.2k</div><div class="eg-info"><div class="eg-name">Name Plaque</div><div class="eg-meta">Decor</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="68.3 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">84</text></svg></div><div class="eg-info"><div class="eg-name">Hex Organizer</div><div class="eg-meta">Home</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">88</text></svg></div><div class="eg-info"><div class="eg-name">Watch Stand</div><div class="eg-meta">Tech</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#1d4ed8" stroke-width="3.5" stroke-dasharray="57.2 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#1d4ed8" font-size="8" font-weight="800" font-family="DM Mono,monospace">70</text></svg></div><div class="eg-info"><div class="eg-name">DnD Dice Tower</div><div class="eg-meta">Gaming</div></div></div></div>
+          </div>
+          <div class="bl-blur-overlay" style="height:260px">
+            <div class="bl-lock-card" style="margin:0">
               <div class="bl-lock-title">See all <span id="s8-bl-count2">847</span> scored products</div>
               <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
-              <a href="#" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro — $9/month →</a>
+              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro — $12/month →</a>
             </div>
           </div>
         </div>
@@ -1634,7 +1572,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <h3>What we collect</h3>
       <p>Your email address and the link you analyse, plus the analysis result (score, verdict, market data). Your email is used to send occasional tips and updates - only if you tick the box. Analysis results are saved and used solely to improve this tool - never shared or used for any other purpose.</p>
       <h3>Who collects it</h3>
-      <p>PrintChecker is operated by Daniel Haag (<a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>), Theodorstraße 8, 12099 Berlin. We never sell your data to third parties.</p>
+      <p>3D Ideas to Sell is operated by Daniel Haag (<a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a>), Theodorstraße 8, 12099 Berlin. We never sell your data to third parties.</p>
       <h3>Your rights</h3>
       <p>Unsubscribe anytime via the link in any email. To request deletion or data access, email <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a> or DM <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener">@meshminds3d</a> on Instagram.</p>
       <h3>Full privacy policy</h3>
@@ -1646,64 +1584,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <!-- ── Landing page sections ─────────────────────────────────────────────── -->
 <div class="lp">
 
-  <!-- Simplified animation widget -->
-  <div class="lp-sec" style="padding-top:24px;padding-bottom:8px">
-    <div class="val-widget">
-  <div class="val-hdr">
-    <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>
-    <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>
-    <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
-    <span class="val-brand">meshminds · idea validator</span>
-  </div>
-  <div class="val-body">
-    <!-- State A: paste URL -->
-    <div class="val-state-a">
-      <div class="val-url-row">
-        <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span>
-        <span class="val-url-go">Check →</span>
-      </div>
-      <div class="val-scanning">
-        <span class="val-scan-dot"></span>
-        Scanning 8,400 Etsy listings for this niche…
-      </div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
-        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
-        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · Thingiverse · any link</span>
-      </div>
-    </div>
-    <!-- State B: result -->
-    <div class="val-state-b">
-      <div class="val-result-row">
-        <div class="val-ring-wrap">
-          <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
-            <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
-            <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
-          </svg>
-          <div class="val-score-num">87</div>
-        </div>
-        <div>
-          <div class="val-verdict">✓ Start selling</div>
-          <div class="val-verdict-title">Strong demand in your niche</div>
-          <div class="val-verdict-sub">Low competition · €28 avg price</div>
-        </div>
-      </div>
-      <div class="val-data-grid">
-        <div class="val-data-cell"><div class="val-data-val">8.4K</div><div class="val-data-lbl">Etsy searches/mo</div></div>
-        <div class="val-data-cell"><div class="val-data-val">€28</div><div class="val-data-lbl">avg sale price</div></div>
-        <div class="val-data-cell"><div class="val-data-val g">LOW</div><div class="val-data-lbl">legal risk</div></div>
-        <div class="val-data-cell"><div class="val-data-val">€310</div><div class="val-data-lbl">est. profit/mo</div></div>
-      </div>
-      <div class="val-source">Real data · 3,000h Etsy research · $250K verified revenue</div>
-    </div>
-  </div>
-</div>
-  </div>
-
-  <div class="lp-divider"></div>
-
   <!-- Popular prints -->
-  <div class="lp-sec" style="padding-bottom:16px">
+  <div class="lp-sec" style="padding-top:24px;padding-bottom:16px">
     <div class="section-lbl">Popular prints analysed</div>
     <div class="eg-grid" style="margin-bottom:16px">
       <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div><div class="eg-vol">16.6k</div><div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div></div></div>
@@ -1722,9 +1604,85 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
   <div class="lp-divider"></div>
 
+  <!-- Simplified animation widget -->
+  <div class="lp-sec" style="padding-bottom:8px">
+    <div class="val-widget">
+  <div class="val-hdr">
+    <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+    <span class="val-brand">meshminds · idea validator</span>
+  </div>
+  <div class="val-body">
+    <!-- State A: paste URL + scan -->
+    <div class="val-state-a" style="position:absolute;inset:0;padding:12px 14px 12px;display:flex;flex-direction:column;gap:0">
+      <span class="val-click-cursor">👆</span>
+      <div class="val-main-row">
+        <img class="val-thumb" src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp" alt="Geometric Planter" loading="lazy">
+        <div class="val-url-col">
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px">Paste any model link</div>
+          <div class="val-url-row" style="margin-bottom:0">
+            <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span><span class="val-cursor-blink"></span>
+            <span class="val-url-go">Check →</span>
+          </div>
+          <div class="val-scan-prog"><div class="val-scan-fill"></div></div>
+          <div class="val-scanning">
+            <span class="val-scan-dot"></span>
+            Scanning 8,400 Etsy listings…
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · any link</span>
+      </div>
+    </div>
+    <!-- State B: result -->
+    <div class="val-state-b" style="position:absolute;inset:0;padding:12px 14px 12px;display:flex;flex-direction:column;gap:8px;opacity:0">
+      <div class="val-main-row" style="margin-bottom:0">
+        <img class="val-thumb" src="https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp" alt="Geometric Planter" loading="lazy">
+        <div style="flex:1;min-width:0">
+          <div class="val-result-row" style="margin-bottom:0">
+            <div class="val-ring-wrap">
+              <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
+                <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
+                <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
+              </svg>
+              <div class="val-score-num">87</div>
+            </div>
+            <div>
+              <div class="val-verdict">✓ Start selling</div>
+              <div class="val-verdict-title">Strong demand found</div>
+              <div class="val-verdict-sub">Low competition · €28 avg</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="val-data-grid">
+        <div class="val-data-cell"><div class="val-data-val">8.4K</div><div class="val-data-lbl">Etsy searches/mo</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€28</div><div class="val-data-lbl">avg sale price</div></div>
+        <div class="val-data-cell"><div class="val-data-val g">LOW</div><div class="val-data-lbl">legal risk</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€310</div><div class="val-data-lbl">est. profit/mo</div></div>
+      </div>
+      <div class="val-source">Real data · 3,000h Etsy research · $250K verified revenue</div>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <div class="lp-divider"></div>
+
   <!-- Social proof -->
   <div class="lp-sec" style="padding-bottom:24px">
-    <div class="lp-eyebrow">Built by a real seller</div>
+    <div class="seller-profile-row">
+      <div class="seller-avatar">DH</div>
+      <div>
+        <div class="lp-eyebrow" style="margin-bottom:2px">Built by a real seller</div>
+        <div style="font-size:13px;font-weight:700;color:var(--ink)">Daniel Haag</div>
+        <div class="seller-handle">@meshminds3d</div>
+      </div>
+    </div>
     <div class="stat-grid" style="margin-bottom:14px">
       <div class="stat-cell"><div class="stat-n">$250K</div><div class="stat-l">Verified Etsy revenue</div></div>
       <div class="stat-cell"><div class="stat-n">847</div><div class="stat-l">Products validated</div></div>
@@ -1764,13 +1722,21 @@ var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImag
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[]};
 function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
+function selectCountry(el){
+  document.querySelectorAll('.country-chip').forEach(function(c){c.classList.remove('sel');});
+  el.classList.add('sel');
+  var inp=document.getElementById('sell-from');
+  if(inp)inp.value=el.dataset.v||'';
+}
 
 var q=id=>document.getElementById(id);
 var ease=t=>1-Math.pow(1-t,3);
 
-var rc=q("ring"),cx=rc.getContext("2d"),CX=22,CY=22,R=17,TH=4.5,rv=0;
+var rc=q("ring"),_dpr=Math.round(window.devicePixelRatio||1);rc.width=56*_dpr;rc.height=56*_dpr;
+var cx=rc.getContext("2d");cx.scale(_dpr,_dpr);
+var CX=28,CY=28,R=22,TH=5.5,rv=0;
 function ring(p,c){
-  cx.clearRect(0,0,44,44);
+  cx.clearRect(0,0,56,56);
   cx.beginPath();cx.lineWidth=TH;cx.lineCap="round";cx.strokeStyle="#e8e8e8";cx.arc(CX,CY,R,0,Math.PI*2);cx.stroke();
   if(p>0){cx.beginPath();cx.strokeStyle=c;cx.arc(CX,CY,R,-Math.PI/2,-Math.PI/2+Math.PI*2*p);cx.stroke();}
 }
@@ -2373,6 +2339,21 @@ function analyze(){
   q("btn").style.display="none";
   if(q("try-eg-hint"))q("try-eg-hint").style.display="none";
 
+  /* Skip quiz if returning user or example URL */
+  if(input===EXAMPLE_URL){
+    populate(EXAMPLE_DATA);
+    analysisComplete=true;
+    step=5;dots(5);slide(5);
+    showFooter(true);showBack(true);
+    setBtn2("How to sell it","",false);
+    revealScore();populateLegalCerts();
+    busy=false;
+    return;
+  }
+  if(localStorage.getItem('mm_gate')){
+    runAnalysis();
+    return;
+  }
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);showBack(true);busy=false;
 }
 

@@ -1075,12 +1075,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <div class="btitle" id="btitle-el"></div>
               <div class="bauth"><span id="bauth-el"></span> <span class="bfol">Follow</span></div>
               <div class="btags" id="btags-el"></div>
-              <div class="sg4">
-                <div class="si2"><div class="sk">👍 Likes</div><div class="sv hi" id="sv0"></div></div>
-                <div class="si2"><div class="sk">🔖 Saves</div><div class="sv hi" id="sv1"></div></div>
-                <div class="si2"><div class="sk">⬇ Downloads</div><div class="sv" id="sv2"></div></div>
-                <div class="si2"><div class="sk">🖨 Prints</div><div class="sv" id="sv3"></div></div>
-              </div>
             </div>
           </div>
         </div>
@@ -1312,6 +1306,12 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- STEP 8: Community offer -->
       <div class="panel" id="offer-panel">
         <div class="res-sec-hd"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Your next step</span></div>
+
+        <!-- Contextual roadmap -->
+        <div id="roadmap-section" style="margin-bottom:16px;display:none">
+          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Your roadmap <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
+          <div id="roadmap-steps" style="display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)"></div>
+        </div>
 
         <!-- Score badge -->
         <div class="offer-score-badge" id="offer-badge">
@@ -1937,8 +1937,11 @@ function drawRevenueChart(currentPrice){
   var canvas=q("rev-chart");
   if(!canvas||!baseRevData)return;
   var dpr=window.devicePixelRatio||1;
-  var W=canvas.offsetWidth||300,H=68,pad=6;
+  var W=canvas.offsetWidth||300;
+  var H=96;
+  var padL=8,padR=8,padT=16,padB=22;
   canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
+  canvas.style.height=H+"px";
   var ctx=canvas.getContext("2d");
   ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
@@ -1948,7 +1951,6 @@ function drawRevenueChart(currentPrice){
   var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units;
   var costPerUnit=baseUnits>0?baseRevData.printCost/baseUnits:0;
 
-  /* Keep units as float — rounding causes staircase jumps */
   var pts=[];
   for(var p=slMin;p<=slMax;p++){
     var el=p>=basePrice?1.5:0.8;
@@ -1961,15 +1963,15 @@ function drawRevenueChart(currentPrice){
   var minNet=Math.min(0,Math.min.apply(null,pts));
   var range=maxNet-minNet||1;
 
-  function xOf(p){return pad+(p-slMin)/(slMax-slMin)*(W-pad*2);}
-  function yOf(net){return pad+(maxNet-net)/range*(H-pad*2);}
+  var chartX1=padL,chartX2=W-padR,chartY1=padT,chartY2=H-padB;
+  function xOf(p){return chartX1+(p-slMin)/(slMax-slMin)*(chartX2-chartX1);}
+  function yOf(net){return chartY1+(maxNet-net)/range*(chartY2-chartY1);}
   var zeroY=yOf(0);
 
-  /* Build screen-space point array */
   var sPts=pts.map(function(net,i){return{x:xOf(slMin+i),y:yOf(net)};});
 
-  /* Catmull-Rom cubic Bezier smooth path */
   function smoothPath(){
+    if(sPts.length===0)return;
     ctx.moveTo(sPts[0].x,sPts[0].y);
     for(var i=0;i<sPts.length-1;i++){
       var p0=sPts[Math.max(0,i-1)],p1=sPts[i],p2=sPts[i+1],p3=sPts[Math.min(sPts.length-1,i+2)];
@@ -1979,46 +1981,92 @@ function drawRevenueChart(currentPrice){
     }
   }
 
-  /* Sweet-spot background */
-  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
-  var sx1=xOf(Math.max(sweetLow,slMin)),sx2=xOf(Math.min(sweetHigh,slMax));
-  ctx.fillStyle="rgba(21,128,61,0.07)";
-  ctx.fillRect(sx1,0,sx2-sx1,H);
+  /* Rounded clip region */
+  ctx.save();
+  ctx.beginPath();
+  var r=6;
+  ctx.moveTo(chartX1+r,chartY1);ctx.lineTo(chartX2-r,chartY1);ctx.arcTo(chartX2,chartY1,chartX2,chartY1+r,r);
+  ctx.lineTo(chartX2,chartY2-r);ctx.arcTo(chartX2,chartY2,chartX2-r,chartY2,r);
+  ctx.lineTo(chartX1+r,chartY2);ctx.arcTo(chartX1,chartY2,chartX1,chartY2-r,r);
+  ctx.lineTo(chartX1,chartY1+r);ctx.arcTo(chartX1,chartY1,chartX1+r,chartY1,r);
+  ctx.closePath();
+  ctx.clip();
 
-  if(minNet<0){
-    ctx.beginPath();ctx.moveTo(pad,zeroY);ctx.lineTo(W-pad,zeroY);
-    ctx.strokeStyle="rgba(0,0,0,0.1)";ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
-    ctx.setLineDash([]);
+  /* Background */
+  ctx.fillStyle="#f9f8f6";
+  ctx.fillRect(chartX1,chartY1,chartX2-chartX1,chartY2-chartY1);
+
+  /* Sweet-spot highlight */
+  var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
+  var sx1=Math.max(xOf(sweetLow),chartX1),sx2=Math.min(xOf(sweetHigh),chartX2);
+  if(sx2>sx1){
+    ctx.fillStyle="rgba(21,128,61,0.11)";
+    ctx.fillRect(sx1,chartY1,sx2-sx1,chartY2-chartY1);
   }
 
-  /* Filled area */
+  /* Zero baseline */
+  if(minNet<0&&zeroY<chartY2&&zeroY>chartY1){
+    ctx.beginPath();ctx.moveTo(chartX1,zeroY);ctx.lineTo(chartX2,zeroY);
+    ctx.strokeStyle="rgba(0,0,0,0.12)";ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
+  }
+
+  /* Filled area under curve */
   ctx.beginPath();
-  ctx.moveTo(sPts[0].x,zeroY);
+  ctx.moveTo(sPts[0].x,Math.min(zeroY,chartY2));
   ctx.lineTo(sPts[0].x,sPts[0].y);
   smoothPath();
-  ctx.lineTo(sPts[sPts.length-1].x,zeroY);
+  ctx.lineTo(sPts[sPts.length-1].x,Math.min(zeroY,chartY2));
   ctx.closePath();
-  var grad=ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,"rgba(245,158,11,0.22)");
-  grad.addColorStop(1,"rgba(245,158,11,0.03)");
-  ctx.fillStyle=grad;ctx.fill();
+  var fillGrad=ctx.createLinearGradient(0,chartY1,0,chartY2);
+  fillGrad.addColorStop(0,"rgba(21,128,61,0.25)");
+  fillGrad.addColorStop(0.6,"rgba(21,128,61,0.08)");
+  fillGrad.addColorStop(1,"rgba(21,128,61,0.02)");
+  ctx.fillStyle=fillGrad;ctx.fill();
 
-  /* Smooth stroke */
+  /* Curve stroke with gradient */
   ctx.beginPath();
   smoothPath();
-  ctx.strokeStyle="#f59e0b";ctx.lineWidth=2;ctx.lineJoin="round";ctx.stroke();
+  var lineGrad=ctx.createLinearGradient(chartX1,0,chartX2,0);
+  lineGrad.addColorStop(0,"#d97706");
+  lineGrad.addColorStop(0.45,"#15803d");
+  lineGrad.addColorStop(0.75,"#15803d");
+  lineGrad.addColorStop(1,"#b91c1c");
+  ctx.strokeStyle=lineGrad;ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.lineCap="round";ctx.stroke();
+
+  ctx.restore();
+
+  /* Sweet-spot label above chart */
+  if(sx2>sx1&&(sx2-sx1)>40){
+    ctx.font="600 8px 'DM Mono',monospace";
+    ctx.fillStyle="rgba(21,128,61,0.72)";
+    ctx.textAlign="center";
+    ctx.fillText("SWEET SPOT",Math.min(Math.max((sx1+sx2)/2,chartX1+36),chartX2-36),padT-4);
+  }
 
   /* Current price marker */
-  var ci=currentPrice-slMin;
+  var ci=Math.round(currentPrice)-slMin;
   if(ci>=0&&ci<sPts.length){
     var mx=sPts[ci].x,my=sPts[ci].y;
-    ctx.beginPath();ctx.moveTo(mx,H);ctx.lineTo(mx,0);
-    ctx.strokeStyle="rgba(0,0,0,0.15)";ctx.lineWidth=1;ctx.stroke();
+    ctx.save();
+    ctx.beginPath();ctx.moveTo(mx,chartY2);ctx.lineTo(mx,chartY1);
+    ctx.strokeStyle="rgba(0,0,0,0.1)";ctx.lineWidth=1;ctx.stroke();
+    var dotColor=pts[ci]>=0?"#15803d":"#dc2626";
     ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
-    ctx.fillStyle=pts[ci]>=0?"#15803d":"#dc2626";ctx.fill();
+    ctx.fillStyle=dotColor;ctx.fill();
     ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
-    ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.stroke();
+    ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
+    ctx.restore();
   }
+
+  /* X-axis labels */
+  ctx.font="10px 'DM Mono',monospace";
+  ctx.fillStyle="#aaa";
+  ctx.textAlign="left";
+  ctx.fillText("€"+slMin,chartX1,H-4);
+  ctx.textAlign="center";
+  ctx.fillText("€"+Math.round(basePrice),xOf(basePrice),H-4);
+  ctx.textAlign="right";
+  ctx.fillText("€"+slMax,chartX2,H-4);
 }
 
 function populate(data){
@@ -2261,6 +2309,86 @@ function populateCopyright(c){
     else if(anyMed){banner.className="cp-banner warn";banner.textContent="⚠️ Some risks to be aware of  -  read details";}
     else{banner.className="cp-banner";banner.textContent="✅ No legal issues found  -  safe to sell";}
   }
+}
+
+function buildRoadmap(){
+  var section=q("roadmap-section"),list=q("roadmap-steps");
+  if(!section||!list)return;
+  var score=lastScore!==null?lastScore:0;
+  var isNew=qExp==="new"||qExp==="";
+  var isSome=qExp==="some";
+  var isActive=qExp==="active"||qExp==="pro";
+  var wantsEtsy=!qMarketplace||qMarketplace==="etsy";
+  var wantsSocial=qMarketplace==="social";
+  var wantsOwn=qMarketplace==="own";
+  var wantsLocal=qMarketplace==="local";
+  var steps=[];
+  if(score<50){
+    steps=[
+      {n:"1",ico:"🔍",title:"Research a better niche",desc:"Score below 50 — look for a product with lower competition and higher search demand before printing."},
+      {n:"2",ico:"✏️",title:"Refine your design angle",desc:"Add personalisation or a seasonal twist to stand out from generic listings already on Etsy."},
+      {n:"3",ico:"🔁",title:"Check another product",desc:"Use the validator on 2–3 ideas to find your strongest candidate before investing in filament."}
+    ];
+  } else if(wantsEtsy&&isNew){
+    steps=[
+      {n:"1",ico:"🏪",title:"Open your Etsy store",desc:"Takes 15 min. Choose a name that hints at your niche — you can always change it later."},
+      {n:"2",ico:"📸",title:"Print & photograph your first unit",desc:"Shoot in natural light with a clean background. Aim for 5+ photos including a lifestyle shot."},
+      {n:"3",ico:"🏷️",title:"Write a keyword-rich listing title",desc:"Start with the most searched term (e.g. 'Geometric Planter 3D Print'). Use Etsy Search Suggest to find real buyer phrases."},
+      {n:"4",ico:"📱",title:"Post a 30-sec process reel",desc:"Film the print coming off the bed and show the final product. Tag #3DPrinting and link your Etsy in bio."},
+      {n:"5",ico:"📊",title:"Monitor & adjust after 14 days",desc:"If views are low, tweak the title. If views are high but no sales, lower the price by €3–5 and re-photograph."}
+    ];
+  } else if(wantsEtsy&&isSome){
+    steps=[
+      {n:"1",ico:"➕",title:"Add listing to your Etsy shop",desc:"Use your best-performing listing as a template — copy tags and category. Change title and photos."},
+      {n:"2",ico:"🎁",title:"Create a bundle or gift set",desc:"Pair it with a complementary product. Bundles increase order value by an average of 40%."},
+      {n:"3",ico:"🔥",title:"Run a 7-day Etsy ad test",desc:"Set a $1–3/day budget. Check cost-per-click after 7 days and cut any keyword spending over $0.80 CPC."},
+      {n:"4",ico:"📱",title:"Post one TikTok or Reel",desc:"Show the before/after of your workspace or print time-lapse. Early organic reach is free."}
+    ];
+  } else if(wantsEtsy&&isActive){
+    steps=[
+      {n:"1",ico:"⚡",title:"List immediately — market is ready",desc:"This score shows clear buyer demand. Get the listing live while the niche is not yet saturated."},
+      {n:"2",ico:"🌟",title:"Add personalisation from day one",desc:"Custom name or text options can add €8–15 to your AOV and drive repeat buyers."},
+      {n:"3",ico:"📅",title:"Plan seasonal variants",desc:"Map the next 3 seasonal events (Easter, Mother's Day, Christmas) and schedule variant listings 6 weeks ahead."},
+      {n:"4",ico:"💰",title:"Scale with Etsy ads once profitable",desc:"Once you hit €200+/mo net profit, reinvest 10–15% into ads to amplify the bestsellers."}
+    ];
+  } else if(wantsSocial){
+    steps=[
+      {n:"1",ico:"📱",title:"Film a 30-second print reveal",desc:"Unboxing and reveal videos consistently outperform talking-head content for physical products."},
+      {n:"2",ico:"🔗",title:"Add a link in bio",desc:"Use Linktree or a simple Carrd page linking to your Etsy or DM-to-order flow."},
+      {n:"3",ico:"💬",title:"Engage DMs fast",desc:"First 24 hours of DMs after a viral post are gold. Have a price and payment link ready to send instantly."},
+      {n:"4",ico:"🛍️",title:"Open an Etsy shop once you get 5+ DM orders",desc:"Social proof + a marketplace listing = much higher conversion than DMs alone."}
+    ];
+  } else if(wantsOwn){
+    steps=[
+      {n:"1",ico:"🏪",title:"Validate on Etsy first",desc:"Own-shop traffic requires marketing budget. Prove the product sells on Etsy for 30 days, then migrate."},
+      {n:"2",ico:"🛒",title:"Set up Shopify or Gumroad",desc:"Gumroad is free and instant. Shopify gives more control once you're at €1k+/mo."},
+      {n:"3",ico:"✉️",title:"Build an email list from day one",desc:"Add a post-purchase email signup offering a 10% discount on the next order. Your list = your safety net."},
+      {n:"4",ico:"📢",title:"Drive traffic with content",desc:"Pinterest pins and YouTube shorts have long shelf-lives. One good video can drive traffic for 2+ years."}
+    ];
+  } else if(wantsLocal){
+    steps=[
+      {n:"1",ico:"🗓️",title:"Book a local craft market stall",desc:"Search Eventbrite or Facebook Events for upcoming markets. A 1-day stall costs €30–80 and gives immediate buyer feedback."},
+      {n:"2",ico:"🏷️",title:"Price for in-person psychology",desc:"Odd prices (€17, €23) feel more considered than round numbers. Offer a 3-for-€49 bundle."},
+      {n:"3",ico:"📸",title:"Collect photos at the stall",desc:"Real people holding your product makes the best social content. Ask permission and post day-of."},
+      {n:"4",ico:"🛒",title:"Add an Etsy QR code to your display",desc:"Buyers who don't buy today can order online later. A QR code to your Etsy costs nothing."}
+    ];
+  } else {
+    steps=[
+      {n:"1",ico:"✅",title:"Start listing this week",desc:"Market conditions for this product are favourable. Delay is your biggest competitor."},
+      {n:"2",ico:"📸",title:"Invest in quality photos",desc:"Listings with 7+ lifestyle photos convert 2–3× better than product-only shots."},
+      {n:"3",ico:"📱",title:"Create one short video",desc:"A 30-second print process or reveal video drives organic reach at zero cost."},
+      {n:"4",ico:"📊",title:"Review performance after 30 days",desc:"Check views, conversion rate and revenue. One tweak to title or photos can double clicks."}
+    ];
+  }
+  list.innerHTML=steps.map(function(s,i){
+    return '<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fff;border-bottom:1px solid var(--line)'+(i===steps.length-1?';border-bottom:none':'')+'">'
+      +'<div style="width:28px;height:28px;border-radius:8px;background:rgba(255,92,0,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px">'+s.ico+'</div>'
+      +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.3">'+s.title+'</div>'
+      +'<div style="font-size:11.5px;color:var(--ink3);line-height:1.4">'+s.desc+'</div></div>'
+      +'<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--line2);flex-shrink:0;line-height:1;padding-top:2px">'+s.n+'</div>'
+      +'</div>';
+  }).join("");
+  section.style.display="";
 }
 
 function updateOfferPanel(){
@@ -2699,7 +2827,7 @@ q("btn2").addEventListener("click",function(){
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
   else{reset();}
 });
 

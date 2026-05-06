@@ -766,63 +766,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="stat-cell"><div class="stat-n">1 in 4</div><div class="stat-l">Ideas has IP risk</div></div>
         </div>
 
-        <div class="ban-warn">
-          <div class="ban-warn-ico">🚫</div>
-          <div class="ban-warn-body"><b>Etsy bans shops for selling unlicensed prints.</b> Since March 2026, reselling 3D prints without a verified commercial license can get your shop suspended. We check the license and flag the risk before you list - so you don't lose your shop over a technicality.</div>
-        </div>
-
-        <div class="section-lbl">How it works</div>
-        <div class="how-steps">
-          <div class="how-step">
-            <span class="how-num">01</span>
-            <div>
-              <div class="how-title">Paste any model link</div>
-              <div class="how-desc">MakerWorld, Printables, Cults3D, Thingiverse — or describe what you're thinking of printing.</div>
-              <div class="how-time">~5 seconds</div>
-            </div>
-          </div>
-          <div class="how-step">
-            <span class="how-num">02</span>
-            <div>
-              <div class="how-title">Answer 3 quick questions</div>
-              <div class="how-desc">Your printer setup, price range, and target market - personalises the analysis.</div>
-              <div class="how-time">~30 seconds</div>
-            </div>
-          </div>
-          <div class="how-step">
-            <span class="how-num">03</span>
-            <div>
-              <div class="how-title">Get your score + verdict</div>
-              <div class="how-desc">A 0–100 sellability score with a plain-English recommendation: print it, skip it, or tweak your niche.</div>
-              <div class="how-time">Instant</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section-lbl">What we check</div>
-        <div class="chk-list">
-          <div class="chk-card">
-            <div class="chk-ico">📊</div>
-            <div>
-              <div class="chk-title">Market Demand <span class="chk-save">saves 45 min</span></div>
-              <div class="chk-desc">Search volume &amp; marketplace demand - see if buyers are actually searching for this.</div>
-            </div>
-          </div>
-          <div class="chk-card">
-            <div class="chk-ico">⚖️</div>
-            <div>
-              <div class="chk-title">Copyright &amp; Legal <span class="chk-save">saves 30 min</span></div>
-              <div class="chk-desc">Platform ToS, IP flags &amp; local law - so you don't get your shop banned or sued.</div>
-            </div>
-          </div>
-          <div class="chk-card">
-            <div class="chk-ico">💰</div>
-            <div>
-              <div class="chk-title">Profit Estimate <span class="chk-save">saves 45 min</span></div>
-              <div class="chk-desc">Material cost, print time &amp; fees - is it actually worth your machine hours?</div>
-            </div>
-          </div>
-        </div>
 
       </div>
 
@@ -1456,6 +1399,59 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           Questions? DM @meshminds3d
         </a>
 
+        <div class="lp-divider" style="margin:16px 0"></div>
+
+        <!-- Comparison: Free vs Pro -->
+        <div style="margin-bottom:4px">
+          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:10px">MeshMinds Pro</div>
+          <table class="cmp-table">
+            <thead><tr><th>Feature</th><th>Free</th><th>Pro</th></tr></thead>
+            <tbody>
+              <tr><td>Your product score &amp; verdict</td><td><span class="cmp-tick">✓</span></td><td><span class="cmp-tick">✓</span></td></tr>
+              <tr><td>Revenue &amp; legal analysis</td><td><span class="cmp-tick">✓</span></td><td><span class="cmp-tick">✓</span></td></tr>
+              <tr><td>All validated products + scores</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
+              <tr><td>🔥 Trending Now list</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-hot">🔥 Live</span></td></tr>
+              <tr><td>Monthly Hot List</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
+              <tr><td>$250K benchmark data</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- FAQ (2 items) -->
+        <div class="faq-list" style="margin-bottom:14px">
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">
+              <span>Where does the data come from?</span>
+              <span class="faq-chevron">⌄</span>
+            </button>
+            <div class="faq-a">Every score is derived from real Etsy sales data — $250K in verified revenue from my own store, plus 3,000+ hours of market research. Not AI guesses. Real numbers.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">
+              <span>Can I cancel Pro anytime?</span>
+              <span class="faq-chevron">⌄</span>
+            </button>
+            <div class="faq-a">Yes. No contracts, no questions. Cancel in one click. Your access stays active until the end of the billing period.</div>
+          </div>
+        </div>
+
+        <!-- Blurred ideas preview -->
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Pro members see all <span id="s8-bl-count">847</span> scored products</div>
+        <div style="position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin-bottom:0">
+          <div class="bl-row"><span class="bl-rank">#1</span><div class="bl-score">94</div><div class="bl-info"><div class="bl-name">Custom Name Plaque</div><div class="bl-meta">Decor · €18 avg</div></div><div class="bl-right"><div class="bl-price">€340/mo</div><div class="bl-verdict">Start selling</div></div></div>
+          <div class="bl-row"><span class="bl-rank">#2</span><div class="bl-score">91</div><div class="bl-info"><div class="bl-name">Geometric Candle Holder</div><div class="bl-meta">Home · €14 avg</div></div><div class="bl-right"><div class="bl-price">€280/mo</div><div class="bl-verdict">Start selling</div></div></div>
+          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#3</span><div class="bl-score warn">88</div><div class="bl-info"><div class="bl-name">Modular Desk Organiser</div><div class="bl-meta">Functional · €24 avg</div></div><div class="bl-right"><div class="bl-price">€390/mo</div><div class="bl-verdict">Good niche</div></div></div>
+          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#4</span><div class="bl-score">86</div><div class="bl-info"><div class="bl-name">DnD Dice Tower</div><div class="bl-meta">Gaming · €28 avg</div></div><div class="bl-right"><div class="bl-price">€450/mo</div><div class="bl-verdict">Start selling</div></div></div>
+          <div class="bl-row" style="filter:blur(4px);user-select:none"><span class="bl-rank">#5</span><div class="bl-score">83</div><div class="bl-info"><div class="bl-name">Apple Watch Stand</div><div class="bl-meta">Tech · €19 avg</div></div><div class="bl-right"><div class="bl-price">€310/mo</div><div class="bl-verdict">Good niche</div></div></div>
+          <div class="bl-blur-overlay">
+            <div class="bl-lock-card" style="margin:0 0">
+              <div class="bl-lock-title">See all <span id="s8-bl-count2">847</span> scored products</div>
+              <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
+              <a href="#" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro — $9/month →</a>
+            </div>
+          </div>
+        </div>
+
         <div style="display:none" class="winner-cards">
           <div class="winner-card">
             <div class="winner-card-top" style="background:linear-gradient(135deg,#fef9c3,#fde68a)">✍️
@@ -1610,73 +1606,58 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <!-- ── Landing page sections ─────────────────────────────────────────────── -->
 <div class="lp">
 
-  <!-- How it works animation widget -->
+  <!-- Simplified animation widget -->
   <div class="lp-sec" style="padding-top:24px;padding-bottom:8px">
-    <div class="demo-widget">
-      <div class="demo-widget-hdr">
-        <span class="demo-dot" style="background:#ef4444"></span>
-        <span class="demo-dot" style="background:#f59e0b"></span>
-        <span class="demo-dot" style="background:#22c55e"></span>
-        <span class="demo-brand">meshminds — idea validator</span>
+    <div class="val-widget">
+  <div class="val-hdr">
+    <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block"></span>
+    <span style="width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block"></span>
+    <span class="val-brand">meshminds · idea validator</span>
+  </div>
+  <div class="val-body">
+    <!-- State A: paste URL -->
+    <div class="val-state-a">
+      <div class="val-url-row">
+        <span class="val-url-text">makerworld.com/en/models/geometric-planter-v2</span>
+        <span class="val-url-go">Check →</span>
       </div>
-      <div class="demo-frames">
-        <div class="demo-frame">
-          <div class="demo-step-lbl">Step 01 — Paste any model link</div>
-          <div class="demo-inp-row">
-            <span class="demo-inp-text">printables.com/model/geometric-planter</span>
-            <span class="demo-inp-cursor"></span>
-            <span class="demo-inp-go">Check →</span>
-          </div>
-          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:2px">
-            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
-            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
-            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D</span>
-            <span style="font-size:10px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">+ any link</span>
-          </div>
-          <div style="font-size:10.5px;color:var(--ink3);margin-top:4px">No account needed · free to start</div>
-        </div>
-        <div class="demo-frame">
-          <div class="demo-step-lbl">Step 02 — Tell us your setup</div>
-          <div class="demo-chips-row">
-            <span class="demo-chip on">FDM printer</span>
-            <span class="demo-chip on">1 printer</span>
-            <span class="demo-chip">2 printers</span>
-          </div>
-          <div class="demo-chips-row">
-            <span class="demo-chip on">Sell on Etsy</span>
-            <span class="demo-chip">eBay</span>
-            <span class="demo-chip">Local</span>
-          </div>
-          <div style="font-size:10.5px;color:var(--ink3);margin-top:2px">Personalises your revenue estimate &amp; strategy</div>
-        </div>
-        <div class="demo-frame">
-          <div class="demo-step-lbl">Step 03 — Your score &amp; strategy</div>
-          <div class="demo-score-row">
-            <div class="demo-ring-wrap">
-              <svg width="52" height="52" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="var(--surf2)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/></svg>
-              <div class="demo-ring-lbl">87</div>
-            </div>
-            <div class="demo-score-info">
-              <div class="demo-verdict-tag">✓ Good for the right audience</div>
-              <div style="font-size:11px;color:var(--ink3)">Demand ↑ · Low IP risk · Strong margin</div>
-            </div>
-          </div>
-          <div class="demo-rev-row">
-            <div class="demo-rev-cell"><div class="demo-rev-val">€22</div><div class="demo-rev-lbl">sell price</div></div>
-            <div class="demo-rev-cell"><div class="demo-rev-val">€310</div><div class="demo-rev-lbl">est. profit/mo</div></div>
-            <div class="demo-rev-cell"><div class="demo-rev-val">LOW</div><div class="demo-rev-lbl">legal risk</div></div>
-          </div>
-        </div>
+      <div class="val-scanning">
+        <span class="val-scan-dot"></span>
+        Scanning 8,400 Etsy listings for this niche…
       </div>
-      <div class="demo-widget-footer">
-        <span style="font-size:10px;color:var(--ink3);font-family:'DM Mono',sans-serif">Free analysis · no signup</span>
-        <div class="demo-step-dots">
-          <span class="demo-step-dot active"></span>
-          <span class="demo-step-dot"></span>
-          <span class="demo-step-dot"></span>
-        </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">MakerWorld</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Printables</span>
+        <span style="font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:2px 7px;font-family:'DM Mono',sans-serif">Cults3D · Thingiverse · any link</span>
       </div>
     </div>
+    <!-- State B: result -->
+    <div class="val-state-b">
+      <div class="val-result-row">
+        <div class="val-ring-wrap">
+          <svg width="52" height="52" viewBox="0 0 34 34" style="display:block">
+            <circle cx="17" cy="17" r="13" fill="none" stroke="#e8e8e8" stroke-width="3"/>
+            <circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/>
+          </svg>
+          <div class="val-score-num">87</div>
+        </div>
+        <div>
+          <div class="val-verdict">✓ Start selling</div>
+          <div class="val-verdict-title">Strong demand in your niche</div>
+          <div class="val-verdict-sub">Low competition · €28 avg price</div>
+        </div>
+      </div>
+      <div class="val-data-grid">
+        <div class="val-data-cell"><div class="val-data-val">8.4K</div><div class="val-data-lbl">Etsy searches/mo</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€28</div><div class="val-data-lbl">avg sale price</div></div>
+        <div class="val-data-cell"><div class="val-data-val g">LOW</div><div class="val-data-lbl">legal risk</div></div>
+        <div class="val-data-cell"><div class="val-data-val">€310</div><div class="val-data-lbl">est. profit/mo</div></div>
+      </div>
+      <div class="val-source">Real data · 3,000h Etsy research · $250K verified revenue</div>
+    </div>
+  </div>
+</div>
   </div>
 
   <div class="lp-divider"></div>
@@ -1697,28 +1678,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="stat-cell"><div class="stat-n">50+</div><div class="stat-l">Legal rules checked</div></div>
       <div class="stat-cell"><div class="stat-n">1 in 4</div><div class="stat-l">Ideas has IP risk</div></div>
     </div>
-    <div class="ban-warn">
-      <div class="ban-warn-ico">🚫</div>
-      <div class="ban-warn-body"><b>Etsy bans shops for selling unlicensed prints.</b> Since March 2026, reselling 3D prints without a verified commercial license can get your shop suspended. We check the license and flag the risk before you list.</div>
-    </div>
-  </div>
-
-  <div class="lp-divider"></div>
-
-  <!-- How it works steps -->
-  <div class="lp-sec" style="padding-bottom:16px">
-    <div class="section-lbl">How it works</div>
-    <div class="how-steps">
-      <div class="how-step"><span class="how-num">01</span><div><div class="how-title">Paste any model link</div><div class="how-desc">MakerWorld, Printables, Cults3D, Thingiverse — or any product page.</div><div class="how-time">~5 seconds</div></div></div>
-      <div class="how-step"><span class="how-num">02</span><div><div class="how-title">Answer 3 quick questions</div><div class="how-desc">Your printer setup, price range, and target market.</div><div class="how-time">~30 seconds</div></div></div>
-      <div class="how-step"><span class="how-num">03</span><div><div class="how-title">Get your score + verdict</div><div class="how-desc">A 0–100 sellability score: print it, skip it, or tweak your niche.</div><div class="how-time">Instant</div></div></div>
-    </div>
-    <div class="section-lbl" style="margin-top:20px">What we check</div>
-    <div class="chk-list">
-      <div class="chk-card"><div class="chk-ico">📊</div><div><div class="chk-title">Market Demand <span class="chk-save">saves 45 min</span></div><div class="chk-desc">Search volume &amp; marketplace demand — see if buyers are actually searching for this.</div></div></div>
-      <div class="chk-card"><div class="chk-ico">⚖️</div><div><div class="chk-title">Copyright &amp; Legal <span class="chk-save">saves 30 min</span></div><div class="chk-desc">Platform ToS, IP flags &amp; local law — so you don't get your shop banned or sued.</div></div></div>
-      <div class="chk-card"><div class="chk-ico">💰</div><div><div class="chk-title">Profit Estimate <span class="chk-save">saves 45 min</span></div><div class="chk-desc">Material cost, print time &amp; fees — is it actually worth your machine hours?</div></div></div>
-    </div>
   </div>
 
   <div class="lp-divider"></div>
@@ -1736,195 +1695,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="quote-who">Daniel Haag · €160K+ Etsy · #1 of 0.1% sellers</div>
     </div>
   </div>
-
-  <div class="lp-divider"></div>
-
-  <!-- Pro comparison -->
-  <div class="lp-sec">
-    <div class="lp-eyebrow-gold lp-eyebrow">MeshMinds Pro</div>
-    <div class="lp-h2">See what others can't.</div>
-    <div class="lp-sub">Your free result shows your product. Pro shows the whole market.</div>
-
-    <table class="cmp-table">
-      <thead>
-        <tr>
-          <th>Feature</th>
-          <th>Free</th>
-          <th>Pro</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Your product score &amp; verdict</td>
-          <td><span class="cmp-tick">✓</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-        <tr>
-          <td>Revenue &amp; legal analysis</td>
-          <td><span class="cmp-tick">✓</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-        <tr>
-          <td>All validated products + scores</td>
-          <td><span class="cmp-dash">—</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-        <tr>
-          <td>Top keywords (last 30 days)</td>
-          <td><span class="cmp-dash">—</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-        <tr>
-          <td>🔥 Trending Now</td>
-          <td><span class="cmp-dash">—</span></td>
-          <td><span class="cmp-hot">🔥 Live</span></td>
-        </tr>
-        <tr>
-          <td>Monthly Hot List</td>
-          <td><span class="cmp-dash">—</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-        <tr>
-          <td>$250K benchmark data</td>
-          <td><span class="cmp-dash">—</span></td>
-          <td><span class="cmp-tick">✓</span></td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="cmp-price-row">
-      <div class="cmp-price-big">$9</div>
-      <div class="cmp-price-detail">
-        <div class="cmp-price-was">$19/month</div>
-        <div class="cmp-price-note">Early adopter price — first 100 members only. Cancel anytime.</div>
-        <div class="cmp-spots">
-          <span class="cmp-spots-dot"></span>
-          <span id="lp-spots">33 of 100 spots left</span>
-        </div>
-      </div>
-    </div>
-
-    <a href="#" id="lp-pro-cta" class="lp-cta-btn" target="_blank" rel="noopener">Get Pro — $9/month →</a>
-    <div class="lp-cta-sub">Start free · upgrade anytime · no commitment</div>
-  </div>
-
-  <div class="lp-divider"></div>
-
-  <!-- FAQ -->
-  <div class="lp-sec">
-    <div class="lp-eyebrow">Common questions</div>
-    <div class="lp-h2">FAQ</div>
-
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          <span>What's in the monthly Hot List?</span>
-          <span class="faq-chevron">⌄</span>
-        </button>
-        <div class="faq-a">Once a month I publish the products I would personally print and sell right now — based on my own Etsy data and current market trends. Not curated picks. My actual list.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          <span>Can I cancel anytime?</span>
-          <span class="faq-chevron">⌄</span>
-        </button>
-        <div class="faq-a">Yes. No contracts, no questions asked. Cancel in one click from your account. Your access stays active until the end of the billing period.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="toggleFaq(this)">
-          <span>Where does the data come from?</span>
-          <span class="faq-chevron">⌄</span>
-        </button>
-        <div class="faq-a">Every score and benchmark is derived from real Etsy sales data — $250K in verified revenue from my own store, plus 3,000+ hours of market research. The validator runs on Claude (Anthropic) and live Etsy search data.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="lp-divider"></div>
-
-  <!-- Blurred ideas preview -->
-  <div style="padding:28px 20px 0">
-    <div class="lp-eyebrow-gold lp-eyebrow">Pro members only</div>
-    <div class="lp-h2">All scored ideas.</div>
-    <div class="lp-sub" style="margin-bottom:16px">Every product analysed by the community — with scores, verdicts, and revenue estimates. Pro unlocks the full list.</div>
-  </div>
-  <div style="position:relative;padding-bottom:0">
-    <div class="blurred-list" style="margin:0 20px;filter:blur(0)">
-      <!-- Row 1 visible (teaser) -->
-      <div class="bl-row">
-        <span class="bl-rank">#1</span>
-        <div class="bl-score">94</div>
-        <div class="bl-info"><div class="bl-name">Custom Name Plaque</div><div class="bl-meta">Decor · €18 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€340/mo</div><div class="bl-verdict">Start selling</div></div>
-      </div>
-      <!-- Row 2 visible (teaser) -->
-      <div class="bl-row">
-        <span class="bl-rank">#2</span>
-        <div class="bl-score">91</div>
-        <div class="bl-info"><div class="bl-name">Geometric Candle Holder</div><div class="bl-meta">Home · €14 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€280/mo</div><div class="bl-verdict">Start selling</div></div>
-      </div>
-      <!-- Rows 3–10 blurred -->
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#3</span>
-        <div class="bl-score warn">88</div>
-        <div class="bl-info"><div class="bl-name">Modular Desk Organiser</div><div class="bl-meta">Functional · €24 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€390/mo</div><div class="bl-verdict">Good niche</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#4</span>
-        <div class="bl-score">86</div>
-        <div class="bl-info"><div class="bl-name">DnD Dice Tower</div><div class="bl-meta">Gaming · €28 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€450/mo</div><div class="bl-verdict">Start selling</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#5</span>
-        <div class="bl-score">83</div>
-        <div class="bl-info"><div class="bl-name">Apple Watch Stand</div><div class="bl-meta">Tech · €19 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€310/mo</div><div class="bl-verdict">Good niche</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#6</span>
-        <div class="bl-score warn">74</div>
-        <div class="bl-info"><div class="bl-name">Succulent Planter Set</div><div class="bl-meta">Home · €12 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€190/mo</div><div class="bl-verdict">One fix away</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#7</span>
-        <div class="bl-score">79</div>
-        <div class="bl-info"><div class="bl-name">Hex Wall Shelf</div><div class="bl-meta">Decor · €32 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€520/mo</div><div class="bl-verdict">Good niche</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#8</span>
-        <div class="bl-score warn">68</div>
-        <div class="bl-info"><div class="bl-name">Phone Stand w/ Cable Mgmt</div><div class="bl-meta">Functional · €11 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€140/mo</div><div class="bl-verdict">One fix away</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#9</span>
-        <div class="bl-score bad">31</div>
-        <div class="bl-info"><div class="bl-name">Disney Character Cookie Cutter</div><div class="bl-meta">Kitchen · €6 avg</div></div>
-        <div class="bl-right"><div class="bl-price">—</div><div class="bl-verdict" style="color:#b91c1c">IP risk</div></div>
-      </div>
-      <div class="bl-row" style="filter:blur(5px);user-select:none">
-        <span class="bl-rank">#10</span>
-        <div class="bl-score">81</div>
-        <div class="bl-info"><div class="bl-name">Monitor Riser w/ Drawer</div><div class="bl-meta">Office · €38 avg</div></div>
-        <div class="bl-right"><div class="bl-price">€610/mo</div><div class="bl-verdict">Start selling</div></div>
-      </div>
-    </div>
-    <!-- Fade + lock overlay -->
-    <div class="bl-blur-overlay">
-      <div class="bl-lock-card">
-        <div class="bl-lock-title">Pro members see all <span id="bl-count">847</span> scored products</div>
-        <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
-        <a href="#" id="bl-pro-cta" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro — $9/month →</a>
-      </div>
-    </div>
-  </div>
-
-  <div style="height:24px"></div>
 
 </div>
 <!-- ── End landing sections ───────────────────────────────────────────────── -->
@@ -1947,6 +1717,8 @@ var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
   var oc=document.getElementById('offer-pro-count');if(oc)oc.textContent=PRO_VALIDATED_COUNT;
   var oc2=document.getElementById('offer-pro-count2');if(oc2)oc2.textContent=PRO_VALIDATED_COUNT;
   var os=document.getElementById('offer-spots');if(os)os.textContent=PRO_SPOTS_LEFT+' spots left';
+  var s8=document.getElementById('s8-bl-count');if(s8)s8.textContent=PRO_VALIDATED_COUNT;
+  var s8b=document.getElementById('s8-bl-count2');if(s8b)s8b.textContent=PRO_VALIDATED_COUNT;
 })();
 var step=0,busy=false,lastURL="",lastIsURL=true,lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
@@ -2653,8 +2425,16 @@ function runAnalysis(){
     showGateError(msg);
   });
 
-  /* Immediately move to email gate – user fills email while analysis runs */
-  step=4;dots(4);slide(4);
+  /* Move to email gate – or skip if user already consented */
+  if(localStorage.getItem('mm_gate')){
+    step=4;dots(4);slide(4);
+    if(q("gate-content"))q("gate-content").style.display="none";
+    if(q("loading-overlay"))q("loading-overlay").style.display="";
+    waitingForAnalysis=true;
+    startLoadingAnim();
+  } else {
+    step=4;dots(4);slide(4);
+  }
   showFooter(false);
   busy=false;
 }
@@ -2879,6 +2659,7 @@ q("btn-email").addEventListener("click",function(){
     method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
     body:JSON.stringify({email:email,consent:consent,timestamp:new Date().toISOString()})
   }).catch(function(){});
+  localStorage.setItem('mm_gate','1');
   if(analysisComplete){
     /* Analysis already done - skip loading overlay, go straight to results */
     step=5;dots(5);slide(5);showFooter(true);showBack(true);

@@ -411,7 +411,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .chip-price{font-family:"Bebas Neue",sans-serif !important;font-size:22px !important;font-weight:400 !important;letter-spacing:.02em;color:var(--ink)}
 .chip-badge{position:absolute;top:8px;right:8px;font-size:8px;font-weight:700;color:#fff;background:var(--acc);padding:2px 6px;border-radius:4px;letter-spacing:.07em;text-transform:uppercase;font-family:"DM Mono",sans-serif;white-space:nowrap}
 .chips-list{display:flex;flex-direction:column;gap:8px}
-.chip-list{display:flex;flex-direction:row;align-items:center;gap:12px;padding:13px 14px;text-align:left;width:100%;min-height:auto}
+.chip-list{display:flex;flex-direction:row;align-items:center;gap:12px;padding:13px 14px;text-align:left;width:100%;min-height:52px}
 .chip-list .chip-ico{font-size:20px;flex-shrink:0;width:26px;text-align:center;line-height:1}
 .chip-content{flex:1;min-width:0}
 .chip-content .chip-name{display:block;font-size:14px;font-weight:600;color:var(--ink);line-height:1.3}
@@ -688,6 +688,17 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .cd-legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .cd-legend-label{flex:1;color:var(--ink2);font-weight:600}
 .cd-legend-pct{font-family:"DM Mono",sans-serif;font-size:10px;color:var(--ink3)}
+.erank-panel{background:#f7f5f2;border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.erank-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-radius:8px;overflow:hidden;margin-bottom:0}
+.erank-cell{background:#fff;padding:10px 10px 9px;text-align:center}
+.erank-lbl{font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif;margin-bottom:3px}
+.erank-val{font-size:18px;font-weight:800;color:var(--ink);font-family:"DM Mono",sans-serif;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:2px}
+.erank-sub{font-size:9.5px;color:var(--ink3);font-family:"DM Mono",sans-serif}
+.erank-comp-bar{height:10px;background:linear-gradient(90deg,#10b981 0%,#f59e0b 50%,#ef4444 100%);border-radius:20px;position:relative;overflow:hidden}
+.erank-comp-fill{position:absolute;right:0;top:0;height:100%;background:rgba(247,245,242,.85);border-radius:0 20px 20px 0;transition:width .6s ease}
+.erank-comp-lbl{font-size:10px;font-weight:700;font-family:"DM Mono",sans-serif}
+.erank-insight{display:flex;align-items:flex-start;gap:8px;margin-top:10px;padding:9px 10px;background:rgba(255,255,255,.7);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.45;display:none}
+.erank-insight.show{display:flex}
 </style>
 </head>
 <body>
@@ -1139,6 +1150,37 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div class="panel">
         <div class="res-sec-hd res-sec-hd-sell"><span class="res-sec-ico">💸</span><span class="res-sec-lbl">How to sell it</span></div>
 
+        <!-- eRank-style market data -->
+        <div class="erank-panel" id="erank-panel" style="display:none">
+          <div class="erank-row">
+            <div class="erank-cell">
+              <div class="erank-lbl">Etsy searches</div>
+              <div class="erank-val" id="msv0">-</div>
+              <div class="erank-sub" id="msub0"></div>
+            </div>
+            <div class="erank-cell">
+              <div class="erank-lbl">Listings</div>
+              <div class="erank-val" id="msv1">-</div>
+              <div class="erank-sub" id="msub1"></div>
+            </div>
+            <div class="erank-cell">
+              <div class="erank-lbl">Top seller</div>
+              <div class="erank-val" id="msv2">-</div>
+              <div class="erank-sub">sales this mo</div>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+              <span style="font-size:10px;font-weight:700;color:var(--ink3);font-family:'DM Mono',sans-serif;text-transform:uppercase;letter-spacing:.08em">Competition</span>
+              <span class="erank-comp-lbl" id="erank-comp-lbl">-</span>
+            </div>
+            <div class="erank-comp-bar">
+              <div class="erank-comp-fill" id="erank-comp-fill"></div>
+            </div>
+          </div>
+          <div class="erank-insight" id="ins"><div class="ins-dot"></div><span id="ins-text"></span></div>
+        </div>
+
         <!-- Platform ranking -->
         <div class="sell-section-hd">Where to sell</div>
         <div class="platform-cards">
@@ -1253,30 +1295,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Seasonal timing -->
-        <div class="sell-section-hd">Best selling seasons</div>
-        <div class="season-bars" id="season-bars">
-          <div class="season-bar-row">
-            <span class="season-bar-lbl">Spring</span>
-            <div class="season-bar-track"><div class="season-bar-fill" style="width:80%;background:#10b981"></div></div>
-            <span class="season-bar-tag sb-peak">Peak</span>
-          </div>
-          <div class="season-bar-row">
-            <span class="season-bar-lbl">Summer</span>
-            <div class="season-bar-track"><div class="season-bar-fill" style="width:50%;background:#f59e0b"></div></div>
-            <span class="season-bar-tag sb-steady">Steady</span>
-          </div>
-          <div class="season-bar-row">
-            <span class="season-bar-lbl">Autumn</span>
-            <div class="season-bar-track"><div class="season-bar-fill" style="width:72%;background:#3b82f6"></div></div>
-            <span class="season-bar-tag sb-strong">Strong</span>
-          </div>
-          <div class="season-bar-row">
-            <span class="season-bar-lbl">Winter</span>
-            <div class="season-bar-track"><div class="season-bar-fill" style="width:95%;background:#ef4444"></div></div>
-            <span class="season-bar-tag sb-peak">Peak</span>
-          </div>
-        </div>
 
       </div>
 
@@ -1382,29 +1400,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <div class="pro-tagline">Cancel anytime · no commitment</div>
             </div>
           </div>
-        </div>
-
-        <a href="https://instagram.com/meshminds3d" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--line);background:#fff;color:var(--ink2);font-size:13px;font-weight:600;text-decoration:none;margin-top:10px;box-sizing:border-box">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-          Questions? DM @meshminds3d
-        </a>
-
-        <div class="lp-divider" style="margin:16px 0"></div>
-
-        <!-- Comparison: Free vs Pro -->
-        <div style="margin-bottom:4px">
-          <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:10px">MeshMinds Pro</div>
-          <table class="cmp-table">
-            <thead><tr><th>Feature</th><th>Free</th><th>Pro</th></tr></thead>
-            <tbody>
-              <tr><td>Your product score &amp; verdict</td><td><span class="cmp-tick">✓</span></td><td><span class="cmp-tick">✓</span></td></tr>
-              <tr><td>Revenue &amp; legal analysis</td><td><span class="cmp-tick">✓</span></td><td><span class="cmp-tick">✓</span></td></tr>
-              <tr><td>All validated products + scores</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
-              <tr><td>🔥 Trending Now list</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-hot">🔥 Live</span></td></tr>
-              <tr><td>Monthly Hot List</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
-              <tr><td>$250K benchmark data</td><td><span class="cmp-dash">—</span></td><td><span class="cmp-tick">✓</span></td></tr>
-            </tbody>
-          </table>
         </div>
 
         <!-- Save results -->
@@ -2132,6 +2127,19 @@ function populate(data){
   if(q("msub2"))q("msub2").textContent=m.topSellerSales?"sales · active":"";
   if(q("msv3"))q("msv3").textContent=m.printTime||"-";
   if(q("msub3"))q("msub3").textContent=m.unitsPerDay||"";
+  /* Show eRank panel and set competition bar */
+  var epanel=q("erank-panel");
+  if(epanel&&m.searchVolume){
+    epanel.style.display="";
+    var ratio=m.etsyListings&&m.searchVolume?(m.etsyListings/m.searchVolume):0;
+    var compPct=Math.min(100,Math.round(ratio*20));
+    var compLbl=compPct<30?"Low":compPct<60?"Medium":"High";
+    var compColor=compPct<30?"#10b981":compPct<60?"#f59e0b":"#ef4444";
+    var fill=q("erank-comp-fill");
+    if(fill)fill.style.width=(100-compPct)+"%";
+    var lbl=q("erank-comp-lbl");
+    if(lbl){lbl.textContent=compLbl;lbl.style.color=compColor;}
+  }
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
   if(m.searchVolume)renderCountryChart(m.searchVolume);
@@ -2433,56 +2441,36 @@ function renderRoadmapSteps(){
   var steps=[];
   if(score<50){
     steps=[
-      {ico:'🔍',title:'Research a better niche',desc:'Score below 50 - look for a product with lower competition and higher search demand before printing.'},
-      {ico:'✏️',title:'Refine your design angle',desc:'Add personalisation or a seasonal twist to stand out from generic listings already on Etsy.'},
-      {ico:'🔁',title:'Check another product',desc:'Use the validator on 2–3 ideas to find your strongest candidate before investing in filament.'}
+      {ico:'🔍',title:'Research a stronger niche',desc:'Look for a product with lower competition and higher search demand.'},
+      {ico:'✏️',title:'Add a unique angle',desc:'Personalisation or a seasonal variant can lift a weak score by 20+ points.'},
+      {ico:'🔁',title:'Check another product',desc:'Run 2-3 ideas through the validator to find your best candidate.'}
     ];
   } else if(platform==='etsy'||platform===''){
     var isNew=qExp==='new'||qExp==='';
     if(isNew){
       steps=[
-        {ico:'🏪',title:'Open your Etsy store',desc:'Takes 15 min. Choose a name that hints at your niche - you can always change it later.'},
-        {ico:'📸',title:'Print & photograph your first unit',desc:'Shoot in natural light with a clean background. Aim for 5+ photos including a lifestyle shot.'},
-        {ico:'🏷️',title:'Write a keyword-rich listing title',desc:"Start with the most searched term (e.g. 'Geometric Planter 3D Print'). Use Etsy Search Suggest to find real buyer phrases."},
-        {ico:'📱',title:'Post a 30-sec process reel',desc:'Film the print coming off the bed and show the final product. Tag #3DPrinting and link your Etsy in bio.'},
-        {ico:'📊',title:'Monitor & adjust after 14 days',desc:'If views are low, tweak the title. If views are high but no sales, lower the price by €3–5 and re-photograph.'}
+        {ico:'🏪',title:'Open your Etsy store',desc:'Takes 15 min. Pick a name that hints at your niche.'},
+        {ico:'📸',title:'Print, photograph, list',desc:'Natural light, 5+ photos, keyword-rich title. Get it live this week.'},
+        {ico:'📊',title:'Check stats after 14 days',desc:'Low views = fix the title. Views but no sales = lower the price by €3-5.'}
       ];
     } else {
       steps=[
-        {ico:'➕',title:'Add listing to your Etsy shop',desc:'Use your best-performing listing as a template - copy tags and category. Change title and photos.'},
-        {ico:'🎁',title:'Create a bundle or gift set',desc:'Pair it with a complementary product. Bundles increase order value by an average of 40%.'},
-        {ico:'🔥',title:'Run a 7-day Etsy ad test',desc:'Set a $1–3/day budget. Check cost-per-click after 7 days and cut any keyword spending over $0.80 CPC.'},
-        {ico:'📱',title:'Post one TikTok or Reel',desc:'Show the before/after of your workspace or print time-lapse. Early organic reach is free.'}
+        {ico:'➕',title:'List it in your shop',desc:'Copy your best-performing listing as a template for tags and category.'},
+        {ico:'🎁',title:'Bundle it',desc:'Pair with a related product. Bundles lift average order value by ~40%.'},
+        {ico:'🔥',title:'Run a 7-day ad test',desc:'$1-3/day Etsy Ads. Cut keywords above $0.80 CPC after one week.'}
       ];
     }
   } else if(platform==='social'){
     steps=[
-      {ico:'📱',title:'Film a 30-second print reveal',desc:'Unboxing and reveal videos consistently outperform talking-head content for physical products.'},
-      {ico:'🔗',title:'Add a link in bio',desc:'Use Linktree or a simple Carrd page linking to your Etsy or DM-to-order flow.'},
-      {ico:'💬',title:'Engage DMs fast',desc:'First 24 hours of DMs after a viral post are gold. Have a price and payment link ready to send instantly.'},
-      {ico:'🛍️',title:'Open an Etsy shop once you get 5+ DM orders',desc:'Social proof + a marketplace listing = much higher conversion than DMs alone.'}
-    ];
-  } else if(platform==='own'){
-    steps=[
-      {ico:'🏪',title:'Validate on Etsy first',desc:'Own-shop traffic requires marketing budget. Prove the product sells on Etsy for 30 days, then migrate.'},
-      {ico:'🛒',title:'Set up Shopify or Gumroad',desc:'Gumroad is free and instant. Shopify gives more control once you\'re at €1k+/mo.'},
-      {ico:'✉️',title:'Build an email list from day one',desc:'Add a post-purchase email signup offering a 10% discount on the next order. Your list = your safety net.'},
-      {ico:'📢',title:'Drive traffic with content',desc:'Pinterest pins and YouTube shorts have long shelf-lives. One good video can drive traffic for 2+ years.'}
-    ];
-  } else if(platform==='local'){
-    steps=[
-      {ico:'🗓️',title:'Book a local craft market stall',desc:'Search Eventbrite or Facebook Events for upcoming markets. A 1-day stall costs €30–80 and gives immediate buyer feedback.'},
-      {ico:'🏷️',title:'Price for in-person psychology',desc:'Odd prices (€17, €23) feel more considered than round numbers. Offer a 3-for-€49 bundle.'},
-      {ico:'📸',title:'Collect photos at the stall',desc:'Real people holding your product makes the best social content. Ask permission and post day-of.'},
-      {ico:'🛒',title:'Add an Etsy QR code to your display',desc:'Buyers who don\'t buy today can order online later. A QR code to your Etsy costs nothing.'}
+      {ico:'📱',title:'Film a 30-second reveal',desc:'Unboxing and reveal videos beat talking-head content for physical products.'},
+      {ico:'🔗',title:'Link in bio',desc:'Use Linktree or a simple page. Have a price and payment link ready to send.'},
+      {ico:'🛍️',title:'Convert DMs to Etsy sales',desc:'5+ DM orders is your signal to open a proper shop listing.'}
     ];
   } else if(platform==='b2b'){
     steps=[
-      {ico:'🗂️',title:'Identify 5 local target businesses',desc:'Offices, coworking spaces, restaurants, boutique home stores, interior designers - anyone who buys décor or functional products in bulk.'},
-      {ico:'🖨️',title:'Print one sample, photograph it well',desc:'A physical sample is worth 100 emails. It costs €5–15 in filament and is your entire sales pitch.'},
-      {ico:'📧',title:'Send a short cold pitch with photo + price list',desc:'3 sentences max: what it is, what problem it solves for them, and your per-unit + 10-unit bulk price. Follow up once after 5 days.'},
-      {ico:'💰',title:'Offer bulk pricing: 10+ units at 25–30% below retail',desc:'B2B buyers expect volume discounts. A €20 retail item at €14 × 20 units = €280 from one order - equivalent to weeks of Etsy sales.'},
-      {ico:'🔄',title:'Turn repeat orders into case studies',desc:'Ask for a photo of the product in use. One B2B client photo in a real office or shop is your best sales tool for the next client.'}
+      {ico:'🖨️',title:'Print one sample',desc:'A physical sample is your entire pitch. Cost: €5-15 in filament.'},
+      {ico:'📧',title:'Send a short cold pitch',desc:'3 sentences: what it is, what it does for them, and your bulk price. Follow up once.'},
+      {ico:'💰',title:'Offer bulk pricing',desc:'10+ units at 25-30% below retail. One B2B client can beat weeks of Etsy sales.'}
     ];
   }
   list.innerHTML=steps.map(function(s,i){
@@ -2501,15 +2489,13 @@ function buildRoadmap(){
     var tabDefs=[
       {id:'etsy',label:'🛒 Etsy'},
       {id:'social',label:'📱 Social'},
-      {id:'own',label:'🏪 Own Shop'},
-      {id:'local',label:'📍 Local'},
       {id:'b2b',label:'🤝 B2B'}
     ];
     /* Default: match quiz answer or Etsy */
     var defaultTab=qMarketplace||'etsy';
     tabs.innerHTML=tabDefs.map(function(t){
       var on=t.id===defaultTab;
-      return '<button class="rm-tab'+(on?' rm-tab-on':'')+'" onclick="setRoadmapTab(\''+t.id+'\',this)" style="font-family:\'DM Mono\',monospace;font-size:10px;padding:6px 11px;border-radius:20px;border:1.5px solid '+(on?'var(--acc)':'var(--line)')+';background:'+(on?'rgba(255,92,0,.08)':'#fff')+';color:'+(on?'var(--acc)':'var(--ink3)')+';cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent;transition:all .15s">'+t.label+'</button>';
+      return '<button class="rm-tab'+(on?' rm-tab-on':'')+'" onclick="setRoadmapTab(\''+t.id+'\',this)" style="font-family:\'DM Mono\',monospace;font-size:11px;padding:9px 14px;border-radius:20px;border:1.5px solid '+(on?'var(--acc)':'var(--line)')+';background:'+(on?'rgba(255,92,0,.08)':'#fff')+';color:'+(on?'var(--acc)':'var(--ink3)')+';cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent;transition:all .15s">'+t.label+'</button>';
     }).join('');
   }
   roadmapPlatform=qMarketplace||'etsy';

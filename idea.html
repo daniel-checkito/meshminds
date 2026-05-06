@@ -443,11 +443,20 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .platform-card{border:1.5px solid var(--line);border-radius:12px;padding:11px 13px;background:#fff;display:flex;align-items:flex-start;gap:10px;border-left-width:4px}
 .platform-card-etsy{border-left-color:var(--acc)}
 .platform-card-ig{border-left-color:#e1306c}
+.platform-card-amz{border-left-color:#f90}
+.platform-card-stl{border-left-color:#6366f1}
 .platform-card-shop{border-left-color:#96bf48}
 .platform-rank{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 7px;border-radius:6px;letter-spacing:.06em;text-transform:uppercase;flex-shrink:0;margin-top:2px}
 .pr-primary{background:#fff7ed;color:var(--acc)}
-.pr-growth{background:#f0fdf4;color:#15803d}
+.pr-growth{background:#fefce8;color:#b45309}
+.pr-passive{background:#ede9fe;color:#6366f1}
 .pr-scale{background:#eff6ff;color:#1d4ed8}
+.pro-insights-gate{position:relative;margin-top:18px;margin-bottom:4px;border-radius:13px;overflow:hidden;border:1.5px solid var(--line)}
+.pro-insights-blur{padding:14px;filter:blur(5px);pointer-events:none;user-select:none;background:#fafafa}
+.pro-insights-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink)}
+.pro-insights-row:last-child{border-bottom:none;padding-bottom:0}
+.pro-insights-val{font-family:"DM Mono",monospace;font-size:11px;font-weight:700;color:var(--acc);flex-shrink:0;margin-left:10px}
+.pro-insights-lock{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.82);backdrop-filter:blur(2px);padding:16px}
 .platform-name{font-family:"Bebas Neue",sans-serif;font-size:16px;letter-spacing:.02em;color:var(--ink);line-height:1.1}
 .platform-desc{font-size:11.5px;color:var(--ink2);line-height:1.4;margin-top:3px}
 .tactic-rows{background:#fafafa;border-radius:11px;padding:2px 12px;margin-bottom:16px}
@@ -703,11 +712,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 </head>
 <body>
 <div class="phone">
-
-  <div id="proto-bar">
-    <span>🚧 <b>Early beta</b> - Results are not 100% reliable but get better over time.</span>
-    <button class="proto-close" onclick="document.getElementById('proto-bar').style.display='none'" aria-label="Dismiss">✕</button>
-  </div>
 
   <div class="hdr">
     <div id="submit-block">
@@ -1058,12 +1062,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <canvas id="loading-ring" width="110" height="110"></canvas>
             <div id="loading-pct" style="position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;font-family:'DM Mono',sans-serif;color:#f59e0b;letter-spacing:-.02em">0%</div>
           </div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:5px">Preparing your report…</div>
-          <div style="font-size:12px;color:var(--ink3);margin-bottom:18px" id="loading-phase">Fetching Etsy market data…</div>
-          <div style="display:flex;flex-direction:column;gap:9px;background:#f7f7f7;border-radius:11px;padding:13px 16px">
-            <div class="loading-step" id="ls0"><div class="ls-dot"></div><span>Market demand &amp; search volume</span></div>
-            <div class="loading-step" id="ls1"><div class="ls-dot"></div><span>Revenue &amp; profit modelling</span></div>
-            <div class="loading-step" id="ls2"><div class="ls-dot"></div><span>Legal &amp; copyright check</span></div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:3px">Analyzing your product…</div>
+          <div style="font-size:11.5px;color:var(--ink3);margin-bottom:14px;line-height:1.4" id="loading-phase">Scraping product page…</div>
+          <div style="display:flex;flex-direction:column;gap:0;background:#f7f7f7;border-radius:11px;overflow:hidden;border:1px solid var(--line)">
+            <div class="loading-step" id="ls0" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Scraping product page</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Reading title, tags, license and print specs from MakerWorld / Printables</div></div></div>
+            <div class="loading-step" id="ls1" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Live Etsy search scan</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Counting real listings and reading avg prices from Etsy search results</div></div></div>
+            <div class="loading-step" id="ls2" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Revenue &amp; profit model</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Calculating print cost, Etsy fees, margin and monthly income estimate</div></div></div>
+            <div class="loading-step" id="ls3" style="padding:10px 14px"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Legal &amp; copyright check</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Checking license, IP risk, Etsy policy compliance and required certifications</div></div></div>
           </div>
         </div>
       </div>
@@ -1075,7 +1080,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="browser" id="browser-el">
           <div class="bb"><div class="bds"><span class="bd"></span><span class="bd"></span><span class="bd"></span></div><div class="bu"></div></div>
           <div class="bbody">
-            <div class="bimg"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none'"></div>
+            <div class="bimg" id="bimg-wrap"><img id="bimg-el" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none" onerror="this.style.display='none';document.getElementById('bimg-placeholder').style.display='flex'"><div id="bimg-placeholder" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;flex-direction:column;gap:3px;background:var(--surf2);color:var(--ink3)"><span style="font-size:18px">🖼</span><span style="font-size:9px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em">No image</span></div></div>
             <div>
               <div class="btitle" id="btitle-el"></div>
               <div class="bauth"><span id="bauth-el"></span> <span class="bfol">Follow</span></div>
@@ -1188,21 +1193,28 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <span class="platform-rank pr-primary">Primary</span>
             <div>
               <div class="platform-name">Etsy</div>
-              <div class="platform-desc">Largest buyer intent for handmade. Optimise titles with niche keywords and add multiple listing variations.</div>
+              <div class="platform-desc">Highest buyer intent for handmade. Optimise titles with niche keywords and add listing variations.</div>
             </div>
           </div>
-          <div class="platform-card platform-card-ig">
+          <div class="platform-card platform-card-amz">
             <span class="platform-rank pr-growth">Growth</span>
             <div>
-              <div class="platform-name">Instagram / TikTok</div>
-              <div class="platform-desc">Short videos of the print process drive organic traffic and shares. Link to your Etsy shop in bio.</div>
+              <div class="platform-name">Amazon Handmade</div>
+              <div class="platform-desc">Larger audience with badge-verified sellers. Higher competition but stronger repeat buyer rate and Prime trust.</div>
+            </div>
+          </div>
+          <div class="platform-card platform-card-stl">
+            <span class="platform-rank pr-passive">Passive</span>
+            <div>
+              <div class="platform-name">Sell the STL file</div>
+              <div class="platform-desc">List on Cults3D, Gumroad, or Printables. One upload earns forever — no printing, no shipping, no stock.</div>
             </div>
           </div>
           <div class="platform-card platform-card-shop">
             <span class="platform-rank pr-scale">Scale</span>
             <div>
               <div class="platform-name">Own shop</div>
-              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers - higher margins and full brand control.</div>
+              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers — higher margins and full brand control.</div>
             </div>
           </div>
         </div>
@@ -1218,24 +1230,10 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
           <div id="price-ctx" class="price-ctx" style="display:none"></div>
           <div id="sweet-spot-hint" class="q-hint" style="margin-top:6px"></div>
-          <div class="price-margin-row">
-            <span class="price-margin-lbl">Margin</span>
-            <span class="price-margin-val" id="margin-val">-</span>
-            <span class="price-margin-lbl"> · </span>
-            <span class="price-margin-val" id="margin-units">-</span>
-            <span class="price-margin-lbl"> units · </span>
-            <span class="price-margin-val" id="margin-net">-</span>
-          </div>
-          <canvas id="rev-chart" style="width:100%;display:block;margin-top:12px;border-radius:6px"></canvas>
+          <canvas id="rev-chart" style="width:100%;display:block;margin-top:10px;border-radius:6px"></canvas>
         </div>
 
-        <!-- Revenue summary cards -->
-        <div class="rcards">
-          <div class="rc" id="rc0"><div class="rc-ico">📦</div><div class="rc-val" id="rv0">-</div><div class="rc-lbl">units/mo</div></div>
-          <div class="rc" id="rc1"><div class="rc-ico">💰</div><div class="rc-val" id="rv1">-</div><div class="rc-lbl">gross rev</div></div>
-          <div class="rc" id="rc2"><div class="rc-ico">🖨</div><div class="rc-val" id="rv2">-</div><div class="rc-lbl">print cost</div></div>
-        </div>
-        <div class="hero" id="hero">
+        <div class="hero" id="hero" style="margin-top:12px">
           <div class="h-eye">Est. monthly profit</div>
           <div class="h-big" id="hbig">€-</div>
           <div class="h-sub" id="hsub">at your current price</div>
@@ -1247,51 +1245,19 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Personalisation callout -->
-        <div class="sell-person-card">
-          <div class="sell-person-eyebrow">Boost your revenue</div>
-          <div class="sell-person-title">Personalisation = higher AOV</div>
-          <div class="sell-person-row">
-            <span>Custom name or text engraving</span>
-            <span class="sell-person-aov">+€8 AOV</span>
+        <!-- Pro insights teaser -->
+        <div class="pro-insights-gate" id="pro-insights-gate" style="display:none">
+          <div class="pro-insights-blur">
+            <div class="pro-insights-row"><span>Top search keywords</span><span class="pro-insights-val">cat decor gift, cute desk toy...</span></div>
+            <div class="pro-insights-row"><span>Best time to list</span><span class="pro-insights-val">Thu–Fri, 8–10am EST</span></div>
+            <div class="pro-insights-row"><span>Competitor weak spot</span><span class="pro-insights-val">No personalisation offered</span></div>
+            <div class="pro-insights-row"><span>847 similar products scored</span><span class="pro-insights-val">See full catalogue →</span></div>
           </div>
-          <div class="sell-person-row">
-            <span>Gift wrapping &amp; message card</span>
-            <span class="sell-person-aov">+€5 AOV</span>
-          </div>
-          <div class="sell-person-row">
-            <span>Painted or premium colour finish</span>
-            <span class="sell-person-aov">+€12 AOV</span>
-          </div>
-        </div>
-
-        <!-- Differentiation tactics -->
-        <div class="sell-section-hd">Stand out from copycats</div>
-        <div class="tactic-rows">
-          <div class="tactic-row" onclick="this.classList.toggle('open')">
-            <span class="tactic-impact ti-high">High</span>
-            <span class="tactic-text">Add personalisation - a custom name or text option converts browsers into buyers and justifies a higher price.</span>
-            <span class="tactic-chevron">›</span>
-          </div>
-          <div class="tactic-row" onclick="this.classList.toggle('open')">
-            <span class="tactic-impact ti-high">High</span>
-            <span class="tactic-text">Bundle 2–3 matching pieces as a gift set. Increases average order value with no extra listing effort.</span>
-            <span class="tactic-chevron">›</span>
-          </div>
-          <div class="tactic-row" onclick="this.classList.toggle('open')">
-            <span class="tactic-impact ti-med">Med</span>
-            <span class="tactic-text">Create seasonal variants (Christmas, Valentine's, Halloween). Each one ranks separately in search.</span>
-            <span class="tactic-chevron">›</span>
-          </div>
-          <div class="tactic-row" onclick="this.classList.toggle('open')">
-            <span class="tactic-impact ti-med">Med</span>
-            <span class="tactic-text">Photograph every colour option you offer. Listings with 7+ photos get significantly more clicks.</span>
-            <span class="tactic-chevron">›</span>
-          </div>
-          <div class="tactic-row" onclick="this.classList.toggle('open')">
-            <span class="tactic-impact ti-low">Low</span>
-            <span class="tactic-text">Include a printed care card insert. Adds perceived value and encourages reviews &amp; repeat purchases.</span>
-            <span class="tactic-chevron">›</span>
+          <div class="pro-insights-lock">
+            <div style="font-size:22px;margin-bottom:6px">🔒</div>
+            <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px">Pro members see this</div>
+            <div style="font-size:11px;color:var(--ink2);text-align:center;line-height:1.45;margin-bottom:12px;max-width:220px">Keywords, competitor gaps, trending data and the full catalogue of 847 scored products.</div>
+            <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="btn" style="margin:0;padding:10px 20px;font-size:12px;width:auto;display:inline-block;text-decoration:none" target="_blank" rel="noopener">Unlock Pro — $12/mo →</a>
           </div>
         </div>
 
@@ -1372,8 +1338,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <!-- Pro catalogue card -->
           <div class="pro-wrap" id="skool-card" style="margin-top:0">
             <div class="pro-fomo-bar">
-              <span class="pro-fomo-ico">📂</span>
-              <div class="pro-fomo-txt">You just saw <b>your</b> result. Pro members see <b>everyone's</b> - all <span id="offer-pro-count">847</span> scored products.</div>
+              <span class="pro-fomo-ico">🔥</span>
+              <div class="pro-fomo-txt">You checked 1 product. Pro members are scanning the full catalogue — <b><span id="offer-pro-count">847</span> scored products</b> with prices, verdicts and revenue data. You only see yours.</div>
             </div>
             <div class="pro-card">
               <div class="pro-card-head">
@@ -1384,7 +1350,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
                   <span class="pro-price-per">/mo</span>
                 </div>
               </div>
-              <div class="pro-headline">Every product we've ever scored - with revenue estimates, verdicts, and trending data. Your shortcut to knowing what sells before you waste filament.</div>
+              <div class="pro-headline">Stop guessing what sells. Pro gives you the full catalogue of validated products — with revenue estimates, keywords and the competition gap you need to win on Etsy.</div>
               <div class="pro-features-list">
                 <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">🔥</span>Live Trending Now list - what's hot this week</div>
                 <div class="pro-feat"><span class="pro-feat-ico">✓</span>All <span id="offer-pro-count2">847</span> validated products + scores + revenue</div>
@@ -1396,8 +1362,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
                 <span class="pro-early-dot"></span>
                 <span class="pro-early-txt">Early adopter price - <b id="offer-spots">33 spots left</b> at $12/mo - locked in for life</span>
               </div>
-              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Get Pro access - $12/month →</a>
-              <div class="pro-tagline">Cancel anytime · no commitment</div>
+              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">See what's already selling — $12/mo →</a>
+              <div class="pro-tagline">Cancel anytime · no commitment · early-adopter price locked for life</div>
             </div>
           </div>
         </div>
@@ -1809,18 +1775,17 @@ function startLoadingAnim(){
   loadingProgress=0;
   var t0=null;
   var phases=[
-    {at:0,text:"Fetching Etsy market data…",step:"ls0"},
-    {at:0.32,text:"Calculating revenue potential…",step:"ls1"},
-    {at:0.62,text:"Running legal & copyright check…",step:"ls2"}
+    {at:0,    text:"Scraping product page…",         step:"ls0"},
+    {at:0.22, text:"Scanning Etsy live listings…",   step:"ls1"},
+    {at:0.50, text:"Calculating profit model…",      step:"ls2"},
+    {at:0.72, text:"Running copyright check…",       step:"ls3"}
   ];
   var activePhase=-1;
-  if(q("ls0"))q("ls0").classList.remove("active","done");
-  if(q("ls1"))q("ls1").classList.remove("active","done");
-  if(q("ls2"))q("ls2").classList.remove("active","done");
+  ["ls0","ls1","ls2","ls3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("active","done");});
   function tick(ts){
     if(!t0)t0=ts;
     var elapsed=ts-t0;
-    var p=0.87*(1-Math.exp(-elapsed/9500));
+    var p=0.88*(1-Math.exp(-elapsed/8500));
     loadingProgress=p;
     drawLoadingRing(p,"#f59e0b");
     for(var i=phases.length-1;i>=0;i--){
@@ -1841,7 +1806,7 @@ function startLoadingAnim(){
 
 function completeLoadingAnim(callback){
   if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
-  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el){el.classList.remove("active");el.classList.add("done");}});
+  ["ls0","ls1","ls2","ls3"].forEach(function(id){var el=q(id);if(el){el.classList.remove("active");el.classList.add("done");}});
   if(q("loading-phase"))q("loading-phase").textContent="Report ready!";
   var startP=loadingProgress,t0=null;
   function tick(ts){
@@ -2113,7 +2078,9 @@ function populate(data){
   if(q("btitle-el"))q("btitle-el").textContent=p.title||"-";
   if(q("bauth-el"))q("bauth-el").textContent=p.author||"-";
   if(q("btags-el")&&p.tags)q("btags-el").innerHTML=(p.tags||[]).map(function(t){return'<span class="btag">'+t+'</span>';}).join("");
-  if(p.image){var img=document.querySelector(".bimg img");if(img){img.src=p.image;img.style.display="";}}
+  var bimgEl=q("bimg-el"),bimgPh=q("bimg-placeholder");
+  if(p.image){if(bimgEl){bimgEl.src=p.image;bimgEl.style.display="";}if(bimgPh)bimgPh.style.display="none";}
+  else{if(bimgEl)bimgEl.style.display="none";if(bimgPh)bimgPh.style.display="flex";}
   if(q("sv0"))q("sv0").textContent=fmt(p.likes);
   if(q("sv1"))q("sv1").textContent=fmt(p.saves);
   if(q("sv2"))q("sv2").textContent=p.downloads||"-";
@@ -2143,6 +2110,8 @@ function populate(data){
   if(q("ins-text"))q("ins-text").innerHTML=m.insight||"";
   if(q("ins"))q("ins").classList.add("show");
   if(m.searchVolume)renderCountryChart(m.searchVolume);
+  /* Show pro insights gate in sell section */
+  var pig=q("pro-insights-gate");if(pig)pig.style.display="";
   /* Manufacturing verdict */
   var mfg=obj(data.manufacturing);
   if(mfg&&mfg.verdict){
@@ -2473,14 +2442,32 @@ function renderRoadmapSteps(){
       {ico:'💰',title:'Offer bulk pricing',desc:'10+ units at 25-30% below retail. One B2B client can beat weeks of Etsy sales.'}
     ];
   }
-  list.innerHTML=steps.map(function(s,i){
-    return '<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fff;'+(i<steps.length-1?'border-bottom:1px solid var(--line)':'')+'">'
+  function stepHtml(s,i,border){
+    return '<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;background:#fff;'+(border?'border-bottom:1px solid var(--line)':'')+'">'
       +'<div style="width:28px;height:28px;border-radius:8px;background:rgba(255,92,0,.09);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px">'+s.ico+'</div>'
       +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.3">'+s.title+'</div>'
       +'<div style="font-size:11.5px;color:var(--ink3);line-height:1.4">'+s.desc+'</div></div>'
       +'<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--line2);flex-shrink:0;line-height:1;padding-top:2px">'+(i+1)+'</div>'
       +'</div>';
-  }).join('');
+  }
+  /* Show only step 1 free; lock steps 2+3 */
+  list.innerHTML=stepHtml(steps[0],0,false);
+  /* Remove old lock block if present */
+  var oldLock=q('rm-lock-block');if(oldLock)oldLock.remove();
+  if(steps.length>1){
+    var blurHtml=steps.slice(1).map(function(s,i){return stepHtml(s,i+1,i<steps.length-2);}).join('');
+    var lockBlock=document.createElement('div');
+    lockBlock.id='rm-lock-block';
+    lockBlock.style.cssText='position:relative;margin-top:8px;border-radius:12px;overflow:hidden;border:1.5px solid var(--line)';
+    lockBlock.innerHTML='<div style="filter:blur(4px);pointer-events:none;user-select:none">'+blurHtml+'</div>'
+      +'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.82);backdrop-filter:blur(2px);padding:16px">'
+      +'<div style="font-size:20px">🔒</div>'
+      +'<div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:2px">Steps 2 &amp; 3 are Pro only</div>'
+      +'<div style="font-size:11px;color:var(--ink2);text-align:center;max-width:210px;line-height:1.45;margin-bottom:10px">Plus keywords, competitor gaps and the full 847-product catalogue.</div>'
+      +'<a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" style="display:inline-block;padding:10px 20px;background:var(--acc);color:#fff;font-size:12px;font-weight:800;border-radius:10px;text-decoration:none;font-family:\'DM Sans\',sans-serif;letter-spacing:-.01em" target="_blank" rel="noopener">Unlock Pro — $12/mo →</a>'
+      +'</div>';
+    list.parentElement.insertBefore(lockBlock,list.nextSibling);
+  }
 }
 function buildRoadmap(){
   var section=q('roadmap-section');if(!section)return;
@@ -2505,28 +2492,26 @@ function buildRoadmap(){
 
 function updateOfferPanel(){
   var score=lastScore!==null?lastScore:0;
-  var unlocked=score>=60;
   var badge=q("offer-badge"),badgeIco=q("offer-badge-ico"),badgeTxt=q("offer-badge-txt"),badgeNum=q("offer-badge-num");
   if(badgeNum)badgeNum.textContent=score;
-  if(unlocked){
-    if(badge){badge.className="offer-score-badge"+(score>=70?"":" warn");}
-    if(badgeIco)badgeIco.textContent=score>=70?"🏆":"✅";
-    if(badgeTxt){
-      badgeTxt.textContent=score>=70?"You found a winner - time to sell it.":"Solid print. Here's how to move forward.";
-      badgeTxt.className="offer-score-txt"+(score>=70?"":" warn");
-    }
-    if(badgeNum)badgeNum.className="offer-score-num"+(score>=70?"":" warn");
-    if(q("offer-lock"))q("offer-lock").style.display="none";
-    if(q("skool-card"))q("skool-card").style.opacity="1";
+  if(score>=70){
+    if(badge)badge.className="offer-score-badge";
+    if(badgeIco)badgeIco.textContent="🏆";
+    if(badgeTxt){badgeTxt.textContent="You found a winner - time to sell it.";badgeTxt.className="offer-score-txt";}
+    if(badgeNum)badgeNum.className="offer-score-num";
+  } else if(score>=50){
+    if(badge)badge.className="offer-score-badge warn";
+    if(badgeIco)badgeIco.textContent="✅";
+    if(badgeTxt){badgeTxt.textContent="Solid print. Here's how to move forward.";badgeTxt.className="offer-score-txt warn";}
+    if(badgeNum)badgeNum.className="offer-score-num warn";
   } else {
     if(badge)badge.className="offer-score-badge bad";
     if(badgeIco)badgeIco.textContent="⚠️";
-    if(badgeTxt){badgeTxt.textContent="Score too low to unlock this offer. Try a better print.";badgeTxt.className="offer-score-txt bad";}
+    if(badgeTxt){badgeTxt.textContent="Low score - find a stronger niche or add a unique angle.";badgeTxt.className="offer-score-txt bad";}
     if(badgeNum)badgeNum.className="offer-score-num bad";
-    if(q("offer-lock")){q("offer-lock").style.display="flex";}
-    if(q("offer-lock-score"))q("offer-lock-score").textContent="Your score: "+score+" / 100";
-    if(q("skool-card"))q("skool-card").style.opacity="0.35";
   }
+  if(q("offer-lock"))q("offer-lock").style.display="none";
+  if(q("skool-card"))q("skool-card").style.opacity="1";
 }
 
 function revealScore(){
@@ -2746,11 +2731,12 @@ function reset(){
   loadingProgress=0;
   if(q("loading-overlay"))q("loading-overlay").style.display="none";
   if(q("gate-content"))q("gate-content").style.display="";
-  ["ls0","ls1","ls2"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
+  ["ls0","ls1","ls2","ls3"].forEach(function(id){var el=q(id);if(el)el.className="loading-step";});
   ["rc0","rc1","rc2"].forEach(function(id){var el=q(id);if(el)el.classList.remove("show");});
   if(q("ins"))q("ins").classList.remove("show");
   if(q("hero"))q("hero").className="hero";
   if(q("hbd"))q("hbd").classList.remove("show");
+  if(q("pro-insights-gate"))q("pro-insights-gate").style.display="none";
 }
 
 var CERT_INFO={

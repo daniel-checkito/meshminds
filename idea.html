@@ -728,6 +728,21 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   .phone{max-width:480px}
   body{display:flex;align-items:flex-start;justify-content:center;padding:32px 20px;min-height:100vh}
 }
+
+/* ── Landing preview cards ── */
+#landing-preview{margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+.lp-head{font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;color:var(--ink);margin-bottom:5px}
+.lp-sub{font-size:12px;color:var(--ink3);line-height:1.45;margin-bottom:12px}
+#landing-preview-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.lp-card{display:flex;align-items:center;gap:10px;padding:9px;background:var(--surf);border:1px solid var(--line);border-radius:12px;cursor:pointer;text-align:left;font-family:'DM Sans',sans-serif;transition:transform .12s,border-color .12s}
+.lp-card:hover{transform:translateY(-1px);border-color:var(--line2)}
+.lp-img{width:54px;height:54px;border-radius:9px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--surf2)}
+.lp-body{flex:1;min-width:0}
+.lp-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:5px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-row{display:flex;align-items:center;gap:7px}
+.lp-score{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;border-radius:5px;padding:2px 7px;line-height:1.3}
+.lp-verdict{font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (min-width:520px){#landing-preview-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -799,6 +814,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div id="idea-error" style="display:none;font-size:12px;color:var(--bad);margin-top:6px;padding:8px 12px;background:#fee2e2;border-radius:8px;border:1px solid #fca5a5"></div>
       </div>
       <div id="url-error" style="display:none;font-size:12px;color:var(--bad);margin-top:-4px;margin-bottom:6px;padding:0 4px"></div>
+
+      <!-- Landing preview cards -->
+      <div id="landing-preview">
+        <div class="lp-head">See what you'll get</div>
+        <div class="lp-sub">These are real scored products. Click one to preview the depth of analysis you'll get for your own product.</div>
+        <div id="landing-preview-grid"></div>
+      </div>
     </div>
     <div class="vbar" id="vbar" style="display:none">
       <div class="vr">
@@ -1215,6 +1237,23 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div id="country-legend" style="display:flex;flex-direction:column;gap:5px;flex:1"></div>
           </div>
           <div style="font-size:10px;color:var(--ink3);margin-top:8px;line-height:1.4">Based on Etsy search data for similar products across global markets. Estimated distribution.</div>
+        </div>
+
+        <!-- Feedback widget -->
+        <div id="feedback-widget" style="display:none;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)">
+          <div id="fb-signed-in" style="display:none">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:9px">How accurate was this score?</div>
+            <div style="display:flex;gap:6px;margin-bottom:9px;flex-wrap:wrap">
+              <button class="fb-btn" data-rating="1" onclick="submitFeedback(1)" style="flex:1;min-width:0;padding:10px 8px;border:1.5px solid var(--line2);border-radius:10px;background:#fafafa;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s">👍 Spot on</button>
+              <button class="fb-btn" data-rating="0" onclick="submitFeedback(0)" style="flex:1;min-width:0;padding:10px 8px;border:1.5px solid var(--line2);border-radius:10px;background:#fafafa;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s">🤏 Mostly right</button>
+              <button class="fb-btn" data-rating="-1" onclick="submitFeedback(-1)" style="flex:1;min-width:0;padding:10px 8px;border:1.5px solid var(--line2);border-radius:10px;background:#fafafa;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s">👎 Way off</button>
+            </div>
+            <textarea id="fb-comment" maxlength="1000" placeholder="What did we get wrong? (optional)" style="width:100%;height:36px;padding:9px 11px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:#fafafa;outline:none;resize:none;transition:all .2s;box-sizing:border-box" onfocus="this.style.height='80px';this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)';if(!this.value)this.style.height='36px'"></textarea>
+            <div id="fb-thanks" style="display:none;font-size:12px;color:var(--good);font-weight:600;margin-top:8px;font-family:'DM Sans',sans-serif">Thanks — your feedback helps us calibrate the AI.</div>
+          </div>
+          <div id="fb-signed-out" style="display:none">
+            <a href="/login" style="display:block;font-size:13px;color:var(--acc);font-weight:600;text-decoration:none;text-align:center;padding:10px;background:var(--surf);border:1px dashed var(--line2);border-radius:10px">Sign in to give feedback and save your scans →</a>
+          </div>
         </div>
 
       </div>
@@ -2247,6 +2286,7 @@ function populate(data){
 
   populateCopyright(data.copyright||{});
   populateVerdictCard(data);
+  showFeedbackWidget();
   /* Store score  -  only reveal ring/vbar after email gate is passed */
   pendingScore={score:score!==null?score:0.85,color:scoreColor,msg:verdictMsg,note:p.note||null};
   if(step>=5)revealScore();
@@ -2738,7 +2778,7 @@ function runAnalysis(){
     populate(data);
     analysisComplete=true;
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
-    (function(){try{var tok=localStorage.getItem('sb_access_token');if(!tok)return;var title=(data.product&&data.product.title)?data.product.title:(lastIsURL?lastURL:'Idea').slice(0,200);fetch('/api/account/save-scan',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({url:lastIsURL?lastURL:'',title:title,score:data.score||null,verdict:data.verdict||'',imageUrl:(data.product&&data.product.image)||null,profitEst:(data.revenue&&data.revenue.netProfit)?'~€'+Math.round(data.revenue.netProfit)+'/mo':null,fullData:data})}).then(function(r){return r.json();}).then(function(j){if(j&&j.id){window.lastScanId=j.id;}}).catch(function(){});}catch(e){}})();
+    (function(){try{var tok=localStorage.getItem('sb_access_token');if(!tok)return;var title=(data.product&&data.product.title)?data.product.title:(lastIsURL?lastURL:'Idea').slice(0,200);fetch('/api/account/save-scan',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({url:lastIsURL?lastURL:'',title:title,score:data.score||null,verdict:data.verdict||'',imageUrl:(data.product&&data.product.image)||null,profitEst:(data.revenue&&data.revenue.netProfit)?'~€'+Math.round(data.revenue.netProfit)+'/mo':null,fullData:data})}).then(function(r){return r.json();}).then(function(j){if(j&&j.id){window.lastScanId=j.id;showFeedbackWidget();}}).catch(function(){});}catch(e){}})();
     if(waitingForAnalysis){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){
@@ -3148,8 +3188,170 @@ window.setMode=function(mode){
 };
 })();
 
+/* ── Feedback widget ─────────────────────────────────────────── */
+function showFeedbackWidget(){
+  var w=document.getElementById('feedback-widget');if(!w)return;
+  w.style.display='';
+  var tok=localStorage.getItem('sb_access_token');
+  var hasScan=!!window.lastScanId;
+  var si=document.getElementById('fb-signed-in');
+  var so=document.getElementById('fb-signed-out');
+  if(tok&&hasScan){if(si)si.style.display='';if(so)so.style.display='none';}
+  else if(!tok){if(si)si.style.display='none';if(so)so.style.display='';}
+  else {if(si)si.style.display='none';if(so)so.style.display='none';w.style.display='none';}
+}
+function submitFeedback(rating){
+  var tok=localStorage.getItem('sb_access_token');
+  var sid=window.lastScanId;
+  if(!tok||!sid)return;
+  var ta=document.getElementById('fb-comment');
+  var comment=ta?ta.value.slice(0,1000):'';
+  var btns=document.querySelectorAll('#fb-signed-in .fb-btn');
+  for(var i=0;i<btns.length;i++){
+    var b=btns[i];b.disabled=true;
+    if(parseInt(b.getAttribute('data-rating'),10)===rating){
+      b.style.background='var(--acc)';b.style.color='#fff';b.style.borderColor='var(--acc)';
+    } else { b.style.opacity='.5'; }
+  }
+  fetch('/api/account/save-scan',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({action:'feedback',scanId:sid,rating:rating,comment:comment})}).catch(function(){});
+  var th=document.getElementById('fb-thanks');if(th)th.style.display='';
+}
+window.showFeedbackWidget=showFeedbackWidget;
+window.submitFeedback=submitFeedback;
+
+/* ── Landing preview product cards ───────────────────────────── */
+(function(){
+  var PREVIEW_PRODUCTS = {
+    "Personalised Name Sign": {
+      score: 94, cat: "Decor", verdict: "Top seller",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp",
+      verified: true,
+      monthlySearches: "16,600", competition: "Low–Medium", avgPrice: "$18–$28",
+      estProfit: "~$140/mo", printTime: "3h",
+      why: "Personalisation is the #1 conversion driver on Etsy. Buyers are willing to pay 40% more for a product with their name or a loved one's name. Gift buyers have low price sensitivity — they care about the story, not the cost.",
+      competitors: [
+        {name:"Custom Neon Name Sign", url:"https://www.etsy.com/listing/123456/custom-neon-name-sign", platform:"Etsy", price:"$24.99", sales:"80–120/mo", why:"Lifestyle photo of the sign lit in a bedroom converts. Title front-loads 'custom name sign'."}
+      ]
+    },
+    "Articulated Dragon": {
+      score: 79, cat: "Toy / Art", verdict: "Good seller",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp",
+      verified: false,
+      monthlySearches: "22,100", competition: "High", avgPrice: "$18–$35",
+      estProfit: "~$62/mo", printTime: "8h",
+      why: "Articulated prints showcase what FDM can do that no other process can. The challenge is high competition and long print times limiting margins. Adding personalisation creates urgency and differentiation.",
+      competitors: [
+        {name:"Articulated Dragon Fidget Toy", url:"https://www.etsy.com/listing/123890/articulated-dragon", platform:"Etsy", price:"$24.99", sales:"40–70/mo", why:"'Fidget toy' captures stress-relief buyers with higher price tolerance."}
+      ]
+    },
+    "Dice Tower": {
+      score: 58, cat: "Gaming", verdict: "Marginal",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",
+      verified: false,
+      monthlySearches: "3,100", competition: "High", avgPrice: "$18–$35",
+      estProfit: "~$28/mo", printTime: "7h",
+      why: "The DnD accessories market is passionate but oversaturated with dice towers. Long print times hurt margin. Best angle is a themed tower with a personalisation option.",
+      competitors: []
+    },
+    "Generic Phone Stand": {
+      score: 38, cat: "Functional", verdict: "Skip",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp",
+      verified: false,
+      monthlySearches: "11,300", competition: "Very High", avgPrice: "$8–$14",
+      estProfit: "~$12/mo", printTime: "2h",
+      why: "Too generic. Competes directly with $8 Amazon stands. Without a niche angle (specific phone model, bedside, kitchen recipe stand) this is a losing race to the bottom on price.",
+      competitors: []
+    }
+  };
+  function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function colorFor(s){return s>=70?'g':s>=50?'y':'r';}
+  function badgeBg(c){return c==='g'?'#dcfce7':c==='y'?'#fef9c3':'#fee2e2';}
+  function badgeFg(c){return c==='g'?'#15803d':c==='y'?'#92400e':'#991b1b';}
+  function renderCards(){
+    var host=document.getElementById('landing-preview-grid');if(!host)return;
+    var html='';
+    Object.keys(PREVIEW_PRODUCTS).forEach(function(name){
+      var d=PREVIEW_PRODUCTS[name];var c=colorFor(d.score);
+      html+='<button class="lp-card" onclick="openPreviewModal('+JSON.stringify(name).replace(/"/g,'&quot;')+')">'+
+        '<div class="lp-img" style="background-image:url('+escH(d.img)+')"></div>'+
+        '<div class="lp-body">'+
+          '<div class="lp-name">'+escH(name)+'</div>'+
+          '<div class="lp-row"><span class="lp-score" style="background:'+badgeBg(c)+';color:'+badgeFg(c)+'">'+d.score+'</span>'+
+          '<span class="lp-verdict">'+escH(d.verdict)+'</span></div>'+
+        '</div>'+
+      '</button>';
+    });
+    host.innerHTML=html;
+  }
+  function openPreviewModal(name){
+    var d=PREVIEW_PRODUCTS[name];if(!d)return;
+    var c=colorFor(d.score);
+    var compsHtml=d.competitors.length?d.competitors.map(function(x){
+      return '<div class="pm-comp-card">'+
+        '<div class="pm-comp-name">'+escH(x.name)+'</div>'+
+        '<a href="'+escH(x.url)+'" target="_blank" rel="noopener" class="pm-comp-url">'+escH(x.url.replace(/https?:\/\/(www\.)?/,'').slice(0,50))+'</a>'+
+        '<div class="pm-comp-meta">'+
+          '<span class="pm-comp-tag" style="background:#f0fdf4;color:#15803d">'+escH(x.platform)+'</span>'+
+          '<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">'+escH(x.price)+'</span>'+
+          '<span class="pm-comp-tag" style="background:#eff6ff;color:#1d4ed8">'+escH(x.sales)+'</span>'+
+        '</div>'+
+        '<div class="pm-comp-why">'+escH(x.why)+'</div>'+
+      '</div>';
+    }).join(''):'<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
+    var verdictBg=c==='g'?'#dcfce7':c==='y'?'#fef9c3':'#fee2e2';
+    var verdictFg=c==='g'?'#15803d':c==='y'?'#92400e':'#991b1b';
+    document.getElementById('lp-modal-content').innerHTML=
+      (d.verified?'<div style="margin-bottom:10px"><span style="display:inline-flex;align-items:center;gap:3px;font-family:\'DM Mono\',monospace;font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#dbeafe;color:#1d4ed8;border-radius:4px;padding:3px 9px">✓ Daniel Verified</span></div>':'')+
+      '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">'+
+        '<div style="width:72px;height:72px;border-radius:10px;flex-shrink:0;background:var(--surf2) center/cover no-repeat;background-image:url('+escH(d.img)+')"></div>'+
+        '<div>'+
+          '<div style="font-size:11px;color:var(--ink3);font-family:\'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">'+escH(d.cat)+'</div>'+
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--ink);line-height:1.1;margin-bottom:4px">'+escH(name)+'</div>'+
+          '<div style="display:flex;align-items:center;gap:8px">'+
+            '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:36px;line-height:1;color:'+verdictFg+'">'+d.score+'</div>'+
+            '<span style="font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 9px;background:'+verdictBg+';color:'+verdictFg+'">'+escH(d.verdict)+'</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="margin-bottom:16px">'+
+        '<div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Market data</div>'+
+        '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px">'+
+          '<div style="flex:1;min-width:80px;background:var(--surf);border-radius:9px;padding:9px 11px"><div style="font-family:\'DM Mono\',monospace;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px">'+escH(d.monthlySearches)+'</div><div style="font-size:10px;color:var(--ink3)">Monthly searches</div></div>'+
+          '<div style="flex:1;min-width:80px;background:var(--surf);border-radius:9px;padding:9px 11px"><div style="font-family:\'DM Mono\',monospace;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px">'+escH(d.competition)+'</div><div style="font-size:10px;color:var(--ink3)">Competition</div></div>'+
+          '<div style="flex:1;min-width:80px;background:var(--surf);border-radius:9px;padding:9px 11px"><div style="font-family:\'DM Mono\',monospace;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px">'+escH(d.avgPrice)+'</div><div style="font-size:10px;color:var(--ink3)">Avg. price</div></div>'+
+          '<div style="flex:1;min-width:80px;background:var(--surf);border-radius:9px;padding:9px 11px"><div style="font-family:\'DM Mono\',monospace;font-size:16px;font-weight:700;color:#15803d;line-height:1;margin-bottom:2px">'+escH(d.estProfit)+'</div><div style="font-size:10px;color:var(--ink3)">Est. profit</div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="margin-bottom:16px">'+
+        '<div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Why it sells</div>'+
+        '<div style="font-size:13px;color:var(--ink2);line-height:1.55;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;padding:12px 13px">'+escH(d.why)+'</div>'+
+      '</div>'+
+      (d.competitors.length?'<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Top competitors</div>'+compsHtml+'</div>':'')+
+      '<button onclick="closePreviewModal()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer;margin-top:14px">Scan your own product →</button>';
+    document.getElementById('lp-overlay').style.display='';
+    document.body.style.overflow='hidden';
+  }
+  function closePreviewModal(e){
+    if(!e||e.target===document.getElementById('lp-overlay')){
+      document.getElementById('lp-overlay').style.display='none';
+      document.body.style.overflow='';
+    }
+  }
+  window.openPreviewModal=openPreviewModal;
+  window.closePreviewModal=closePreviewModal;
+  if(document.readyState!=='loading')renderCards();
+  else document.addEventListener('DOMContentLoaded',renderCards);
+})();
 
 </script>
+
+<!-- Landing preview modal -->
+<div id="lp-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;padding:0" onclick="closePreviewModal(event)">
+  <div id="lp-modal" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:#fff;border-radius:18px 18px 0 0;max-height:88vh;overflow-y:auto;padding:0 0 32px">
+    <div style="width:36px;height:4px;background:var(--line2);border-radius:2px;margin:12px auto 0"></div>
+    <div id="lp-modal-content" style="padding:16px 16px 0"></div>
+  </div>
+</div>
 
 </body>
 </html>

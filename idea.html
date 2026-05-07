@@ -3755,7 +3755,7 @@ window.submitFeedback=submitFeedback;
     'Kitchen':['decor','home_organization'],
     'Gaming':['dnd_gaming','toys_fidgets','miniatures_terrain']
   };
-  function renderRelatedWinners(catLabel,excludeCompetitors){
+  function renderRelatedWinners(catLabel,excludeCompetitors,limit){
     var winners=window._winnersCache||[];
     if(!winners.length)return '<div style="font-size:12px;color:var(--ink3);padding:8px 0">Couldn\'t load winners list.</div>';
     var ids=CAT_TO_CATEGORY_IDS[catLabel]||[];
@@ -3764,7 +3764,7 @@ window.submitFeedback=submitFeedback;
     var picks=winners
       .filter(function(w){return w.is_recommended!==false && ids.indexOf(w.category_id)!==-1 && !seen[String(w.name||'').toLowerCase()];})
       .sort(function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);})
-      .slice(0,3);
+      .slice(0,limit||3);
     if(!picks.length)return '<div style="font-size:12px;color:var(--ink3);padding:8px 0">No related winners on file yet for this niche.</div>';
     return picks.map(function(w){
       return '<div class="pm-comp-card">'+
@@ -3785,35 +3785,18 @@ window.submitFeedback=submitFeedback;
   function openPreviewModal(name){
     var d=PREVIEW_PRODUCTS[name];if(!d)return;
     var c=colorFor(d.score);
-    function compCard(x){
-      var dom='';try{dom=new URL(x.url).hostname.replace(/^www\./,'');}catch(_){}
-      var shortUrl=x.url.replace(/https?:\/\/(www\.)?/,'').slice(0,52);
-      return '<div class="pm-comp-card">'+
-        '<div class="pm-comp-top">'+
-          '<div class="pm-comp-name">'+escH(x.name)+'</div>'+
-          '<span class="pm-comp-tag" style="background:#f0fdf4;color:#15803d;flex-shrink:0">'+escH(x.platform)+'</span>'+
-        '</div>'+
-        (x.url?'<a href="'+escH(x.url)+'" target="_blank" rel="noopener" class="pm-comp-url">'+escH(shortUrl)+'</a>':'')+
-        '<div class="pm-comp-meta">'+
-          (x.price?'<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">'+escH(x.price)+'</span>':'')+
-          (x.sales?'<span class="pm-comp-tag" style="background:#eff6ff;color:#1d4ed8">'+escH(x.sales)+'</span>':'')+
-        '</div>'+
-        (x.why?'<div class="pm-comp-why">'+escH(x.why)+'</div>':'')+
-      '</div>';
-    }
-    var compsHtml=d.competitors.length?d.competitors.map(compCard).join(''):'<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
-
-    /* Enrich the modal with 3 real winners from data/winners.json that match
-       this product's broad category. Loaded once and cached. Renders inside
-       a separate 'Other winners in this niche' section. */
+    /* The hardcoded competitors arrays had placeholder URLs that read as
+       fake. We replace the whole 'Top competitors' section with up to 5
+       real entries from data/winners.json, matched to this product's
+       broad category. Loaded once and cached. */
     var winnersHtml='';
-    if(window._winnersCache){winnersHtml=renderRelatedWinners(d.cat,d.competitors);}
+    if(window._winnersCache){winnersHtml=renderRelatedWinners(d.cat,[],5);}
     else if(!window._winnersCachePending){
       window._winnersCachePending=true;
       fetch('/data/winners.json',{cache:'force-cache'}).then(function(r){return r.json();}).then(function(j){
         window._winnersCache=j&&j.winners?j.winners:[];
         var slot=document.getElementById('lp-related-winners');
-        if(slot)slot.innerHTML=renderRelatedWinners(d.cat,d.competitors);
+        if(slot)slot.innerHTML=renderRelatedWinners(d.cat,[],5);
       }).catch(function(){window._winnersCache=[];});
     }
     var verdictBg=c==='g'?'#dcfce7':c==='y'?'#fef9c3':'#fee2e2';
@@ -3844,8 +3827,7 @@ window.submitFeedback=submitFeedback;
         '<div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Why it sells</div>'+
         '<div style="font-size:13px;color:var(--ink2);line-height:1.55;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;padding:12px 13px">'+escH(d.why)+'</div>'+
       '</div>'+
-      (d.competitors.length?'<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Top competitors</div>'+compsHtml+'</div>':'')+
-      '<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Other winners in this niche</div><div id="lp-related-winners">'+(winnersHtml||'<div style="font-size:12px;color:var(--ink3);padding:8px 0">Loading similar success stories…</div>')+'</div></div>'+
+      '<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Real winners in this niche</div><div id="lp-related-winners">'+(winnersHtml||'<div style="font-size:12px;color:var(--ink3);padding:8px 0">Loading…</div>')+'</div></div>'+
       '<button onclick="closePreviewModal()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer;margin-top:14px">Scan your own product →</button>';
     document.getElementById('lp-overlay').style.display='';
     document.body.style.overflow='hidden';

@@ -2806,12 +2806,32 @@ function runAnalysis(){
   if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);}
   var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 90000);
   activeAnalysisTimeout=fetchTimeout;
-  fetch("/api/analyze",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    signal:fetchAbort.signal,
-    body:JSON.stringify(payload)
-  }).then(function(resp){
+  /* Two-stage flow: stage 1 (prepOnly) does the scrape + market searches in
+     its own 60s lambda. Stage 2 sends the prep payload and runs only the AI
+     call in a fresh 60s lambda. Each stage gets its own budget so neither
+     hits the ceiling. If prep fails (network blip), we silently fall back
+     to a single full call so the user still gets a result. */
+  function postAnalyze(extra){
+    return fetch("/api/analyze",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      signal:fetchAbort.signal,
+      body:JSON.stringify(Object.assign({},payload,extra))
+    });
+  }
+  postAnalyze({prepOnly:true})
+   .then(function(prepResp){
+     if(!prepResp.ok)return null;
+     return prepResp.json();
+   })
+   .then(function(prepData){
+     var nextBody={};
+     if(prepData&&prepData.ok&&prepData.prep)nextBody.prep=prepData.prep;
+     /* Stage 2: full analyze. If prep succeeded we send it along; if not, the
+        server-side path falls back to running everything end-to-end. */
+     return postAnalyze(nextBody);
+   })
+   .then(function(resp){
     clearTimeout(fetchTimeout);
     if(!resp.ok){
       return resp.text().then(function(text){

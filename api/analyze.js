@@ -45,9 +45,21 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Automated requests are not allowed.' });
   }
 
-  /* Daily quota: anonymous 25/day, free logged-in 50/day, pro unlimited */
+  const body = req.body || {};
+  const isIdeaMode = body.mode === 'idea';
+  /* Two-stage flow lets us split scrape and AI work into two lambdas, each
+     with its own 60s budget. Stage 1 = body.prepOnly; client gets back a prep
+     blob. Stage 2 = body.prep; we skip the scrape and go straight to the AI.
+     Backwards compat: if neither flag is set, run end-to-end as before. */
+  const isPrepOnly = body.prepOnly === true;
+  const hasPrep = body.prep && typeof body.prep === 'object';
+
+  /* Daily quota: anonymous 25/day, free logged-in 50/day, pro unlimited.
+     When stage 2 (hasPrep) is being called, quota was already charged in
+     stage 1 - skip the second check. */
   let _quotaUser = null, _quotaIsPro = false;
   let _quotaIpHash = '';
+  if (!hasPrep) {
   try {
     const { getUser, extractToken, hashIp, checkDailyLimit, adminQuery } = require('./_supabase');
     _quotaIpHash = hashIp(clientIp);
@@ -78,9 +90,30 @@ module.exports = async (req, res) => {
       return res.status(429).json({ error: upgradeMsg, quotaExceeded: true, used: quota.used, limit: quota.limit, isLoggedIn: !!_quotaUser });
     }
   } catch { /* fail open if Supabase is unreachable */ }
+  } else {
+    /* Stage 2 - re-derive auth state for persistence + Pro flag */
+    try {
+      const { getUser, extractToken, hashIp } = require('./_supabase');
+      _quotaIpHash = hashIp(clientIp);
+      const _tok = extractToken(req);
+      if (_tok) {
+        _quotaUser = await getUser(_tok);
+        if (_quotaUser?.id) {
+          const { adminQuery } = require('./_supabase');
+          try {
+            const profiles = await adminQuery({
+              table: 'profiles',
+              filters: `id=eq.${_quotaUser.id}`,
+              select: 'is_premium,premium_until',
+            });
+            const p = profiles?.[0];
+            _quotaIsPro = !!(p && p.is_premium && (!p.premium_until || new Date(p.premium_until) > new Date()));
+          } catch {}
+        }
+      }
+    } catch {}
+  }
 
-  const body = req.body || {};
-  const isIdeaMode = body.mode === 'idea';
 
   /* Validate URL is from a supported platform (URL mode only) */
   const rawBodyUrl = body.url || '';
@@ -457,6 +490,16 @@ module.exports = async (req, res) => {
 
   let competitorRaw = [];
 
+  /* Stage 2 fast path: client supplied a prep blob from stage 1, restore the
+     pre-scraped state and skip straight to the AI call. */
+  if (hasPrep) {
+    productContext = body.prep.productContext || '';
+    imageUrl = body.prep.imageUrl || '';
+    sourceUrl = body.prep.sourceUrl || '';
+    etsyRealData = body.prep.etsyRealData || '';
+    competitorRaw = Array.isArray(body.prep.competitorRaw) ? body.prep.competitorRaw : [];
+  } else {
+
   // ── Idea mode: skip product scrape, use user description as context ──
   if (isIdeaMode) {
     const ideaKeywords = ideaText.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/)
@@ -536,6 +579,24 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   if (!productContext) {
     const fallback = description || url || '';
     if (fallback) productContext = `DESCRIPTION: ${fallback}`;
+  }
+
+  } /* end if (!hasPrep) */
+
+  /* Stage 1 exit: prepOnly callers don't want the AI work, just the
+     scraped/prepared payload. Return now and let the client call /api/analyze
+     a second time with body.prep set. */
+  if (isPrepOnly) {
+    return res.status(200).json({
+      ok: true,
+      prep: {
+        productContext,
+        imageUrl,
+        sourceUrl,
+        etsyRealData,
+        competitorRaw,
+      },
+    });
   }
 
   // ── 2. Build the Claude prompt (ported from n8n "Message a model" node) ──

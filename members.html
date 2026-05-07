@@ -1040,14 +1040,18 @@ window.checkKeyword = checkKeyword;
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
-  // ── Auth gate ──────────────────────────────────────────────────────────────
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    window.location.href = '/login?returnTo=/members';
+  // ── Auth gate (demo mode if Supabase not configured) ──────────────────────
+  const supabaseConfigured = window.SUPABASE_URL && !window.SUPABASE_URL.startsWith('__');
+  let token = 'demo-token';
+  if (supabaseConfigured) {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = '/login?returnTo=/members';
+    } else {
+      token = session.access_token;
+      localStorage.setItem('sb_access_token', token);
+    }
   }
-
-  const token = session.access_token;
-  localStorage.setItem('sb_access_token', token);
 
   // ── Load profile for header ────────────────────────────────────────────────
   try {
@@ -1100,13 +1104,23 @@ window.checkKeyword = checkKeyword;
   }
 
   try {
-    const res = await fetch('/api/account/ideas', {
-      headers: { 'Authorization': 'Bearer ' + token },
-    });
     const list = document.getElementById('recentList');
-
-    if (!res.ok) throw new Error();
-    const { ideas } = await res.json();
+    let ideas;
+    if (!supabaseConfigured) {
+      // Demo mode — show static preview ideas
+      ideas = [
+        { id: 'd1', title: 'Personalised Mountain Name Sign', score: 92, verdict: 'Strong opportunity', created_at: '2026-05-06', profit_est: '€12–18' },
+        { id: 'd2', title: 'Modular Cable Tray (Standing Desk)', score: 84, verdict: 'Good opportunity', created_at: '2026-05-04', profit_est: '€8–14' },
+        { id: 'd3', title: 'Wall-Mounted Plant Holder', score: 78, verdict: 'Good opportunity', created_at: '2026-04-29', profit_est: '€6–11' },
+        { id: 'd4', title: 'Custom Pet Memorial Plaque', score: 88, verdict: 'Strong opportunity', created_at: '2026-04-26', profit_est: '€15–22' },
+      ];
+    } else {
+      const res = await fetch('/api/account/ideas', {
+        headers: { 'Authorization': 'Bearer ' + token },
+      });
+      if (!res.ok) throw new Error();
+      ideas = (await res.json()).ideas;
+    }
 
     document.getElementById('recentCount').textContent =
       ideas.length === 1 ? '1 idea' : `${ideas.length} ideas`;

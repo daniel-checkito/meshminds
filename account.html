@@ -271,15 +271,56 @@
   let userProfile = null;
   let ideas = [];
 
-  // ── Auth guard ────────────────────────────────────────────────────────────
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session) {
-    window.location.href = '/login?returnTo=/account';
+  // ── Demo mode: if Supabase not configured, show a preview account ────────
+  const supabaseConfigured = window.SUPABASE_URL && !window.SUPABASE_URL.startsWith('__');
+  const DEMO_PROFILE = {
+    email: 'preview@meshminds.com',
+    display_name: 'Daniel (Preview)',
+    avatar_url: '',
+    default_public: false,
+    plan: 'pro',
+    pro_since: '2025-08-14',
+    scan_count: 47,
+  };
+  const DEMO_IDEAS = [
+    { id: 'd1', title: 'Personalised Mountain Name Sign', url: 'https://makerworld.com/en/models/12345', score: 92, verdict: 'Strong opportunity', is_public: true, created_at: '2026-05-06T14:30:00Z', image_url: '', profit_est: '€12–18 / unit' },
+    { id: 'd2', title: 'Modular Cable Tray (Standing Desk)', url: 'https://printables.com/model/67890', score: 84, verdict: 'Good opportunity', is_public: true, created_at: '2026-05-04T10:12:00Z', image_url: '', profit_est: '€8–14 / unit' },
+    { id: 'd3', title: 'Articulated Dragon (generic)', url: 'https://cults3d.com/en/3d-model/dragon', score: 38, verdict: 'Saturated market', is_public: false, created_at: '2026-05-02T19:45:00Z', image_url: '', profit_est: '€2–4 / unit' },
+    { id: 'd4', title: 'Wall-Mounted Plant Holder (cottagecore)', url: 'https://makerworld.com/en/models/22222', score: 78, verdict: 'Good opportunity', is_public: true, created_at: '2026-04-29T08:20:00Z', image_url: '', profit_est: '€6–11 / unit' },
+    { id: 'd5', title: 'Custom Pet Memorial Plaque', url: '', score: 88, verdict: 'Strong opportunity', is_public: false, created_at: '2026-04-26T12:00:00Z', image_url: '', profit_est: '€15–22 / unit' },
+  ];
+
+  if (!supabaseConfigured) {
+    // Demo mode — render preview account without auth
+    currentUser = { email: DEMO_PROFILE.email, id: 'demo-user' };
+    accessToken = 'demo-token';
+    userProfile = DEMO_PROFILE;
+    ideas = DEMO_IDEAS;
+    showDemoBanner();
+    renderHeader();
+    renderSettings();
+    renderBilling();
+    renderIdeas();
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
   } else {
-    currentUser = session.user;
-    accessToken = session.access_token;
-    localStorage.setItem('sb_access_token', accessToken);
-    await init();
+    // ── Auth guard ──────────────────────────────────────────────────────────
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      window.location.href = '/login?returnTo=/account';
+    } else {
+      currentUser = session.user;
+      accessToken = session.access_token;
+      localStorage.setItem('sb_access_token', accessToken);
+      await init();
+    }
+  }
+
+  function showDemoBanner() {
+    const banner = document.createElement('div');
+    banner.style.cssText = 'background:linear-gradient(135deg,#fff7ed,#ffedd5);border-bottom:1px solid #fed7aa;padding:10px 16px;font-size:12px;color:#7c2d12;text-align:center;line-height:1.4';
+    banner.innerHTML = '👀 <strong>Preview mode</strong> — showing demo data. Connect Supabase to enable real accounts.';
+    document.body.insertBefore(banner, document.body.firstChild);
   }
 
   async function init() {
@@ -292,6 +333,11 @@
   }
 
   async function apiFetch(path, opts = {}) {
+    if (!supabaseConfigured) {
+      // Demo mode: simulate success without hitting any API
+      await new Promise(r => setTimeout(r, 200));
+      return { ok: true, demo: true };
+    }
     const res = await fetch(path, {
       ...opts,
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`, ...(opts.headers || {}) },
@@ -560,7 +606,7 @@
   };
 
   window.handleLogout = async function() {
-    await supabase.auth.signOut();
+    if (supabaseConfigured) await supabase.auth.signOut();
     localStorage.removeItem('sb_access_token');
     window.location.href = '/';
   };

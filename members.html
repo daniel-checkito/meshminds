@@ -190,7 +190,7 @@
     <div class="logo">Mesh<span>Minds</span></div>
     <div class="hdr-badge">Pro</div>
     <div class="hdr-right" id="hdrUserName">My Dashboard</div>
-    <a href="/account" class="hdr-avatar" id="hdrAvatar" title="My account">?</a>
+    <a href="/account" class="hdr-avatar" id="hdrAvatar" title="My account" aria-label="My account"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></a>
   </div>
 
   <!-- Tap hint (closes on click) -->
@@ -199,102 +199,6 @@
     <span><b>Tap any product card</b> to see the full score breakdown, competitors, and revenue projection.</span>
     <span style="margin-left:auto;font-size:11px;color:#a16207;font-weight:700">✕</span>
   </div>
-
-  <!-- Recently scored by the community -->
-  <div class="sec-hd">
-    <div>
-      <div class="sec-hd-label">🌍 Community feed</div>
-      <div class="sec-hd-title">Checked right now</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:5px">
-      <span style="width:6px;height:6px;border-radius:50%;background:#15803d;flex-shrink:0;animation:livepulse 2s ease-in-out infinite;display:inline-block"></span>
-      <span style="font-size:10px;color:var(--good);font-family:'DM Mono',monospace;font-weight:700">Live</span>
-    </div>
-  </div>
-  <style>@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}</style>
-
-  <div class="trend-scroll-wrap" style="margin-bottom:4px">
-    <div class="trend-strip">
-      <div class="trend-card" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
-        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
-          <div class="trend-hot-badge">2 min ago</div>
-        </div>
-        <div class="trend-body">
-          <div class="trend-name">Personalised Name Sign</div>
-          <div class="trend-meta"><span class="trend-score g">94</span><span class="trend-cat">🇩🇪 DE</span></div>
-        </div>
-      </div>
-      <div class="trend-card" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
-        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
-          <div class="trend-hot-badge">5 min ago</div>
-        </div>
-        <div class="trend-body">
-          <div class="trend-name">Cable Management Box</div>
-          <div class="trend-meta"><span class="trend-score g">88</span><span class="trend-cat">🇺🇸 US</span></div>
-        </div>
-      </div>
-      <div class="trend-card" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
-        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
-          <div class="trend-new-badge">12 min ago</div>
-        </div>
-        <div class="trend-body">
-          <div class="trend-name">Articulated Dragon</div>
-          <div class="trend-meta"><span class="trend-score g">79</span><span class="trend-cat">🇬🇧 UK</span></div>
-        </div>
-      </div>
-      <div class="trend-card" onclick="openProdModal('Dice Tower')" style="cursor:pointer">
-        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
-          <div class="trend-new-badge">18 min ago</div>
-        </div>
-        <div class="trend-body">
-          <div class="trend-name">Dice Tower</div>
-          <div class="trend-meta"><span class="trend-score y">68</span><span class="trend-cat">🇺🇸 US</span></div>
-        </div>
-      </div>
-      <div class="trend-card" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
-        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
-          <div class="trend-new-badge">24 min ago</div>
-        </div>
-        <div class="trend-body">
-          <div class="trend-name">Adjustable Phone Stand</div>
-          <div class="trend-meta"><span class="trend-score g">85</span><span class="trend-cat">🇳🇱 NL</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div style="height:1px;background:var(--line);margin:16px 16px 0"></div>
-
-  <!-- ── MY RECENT SCANS ── -->
-  <div class="sec-hd">
-    <div>
-      <div class="sec-hd-label">Your account</div>
-      <div class="sec-hd-title">Recently scored</div>
-    </div>
-    <div class="sec-hd-count" id="recentCount"></div>
-  </div>
-
-  <div class="recent-list" id="recentList">
-    <!-- Skeleton loaders while fetching -->
-    <div class="skeleton-card">
-      <div class="skel skel-thumb"></div>
-      <div class="skel-lines">
-        <div class="skel skel-line w80"></div>
-        <div class="skel skel-line w50"></div>
-      </div>
-      <div class="skel skel-circle"></div>
-    </div>
-    <div class="skeleton-card">
-      <div class="skel skel-thumb"></div>
-      <div class="skel-lines">
-        <div class="skel skel-line w80"></div>
-        <div class="skel skel-line w50"></div>
-      </div>
-      <div class="skel skel-circle"></div>
-    </div>
-  </div>
-
-
-  <div class="divider"></div>
 
   <!-- ── TRENDING THIS WEEK ── -->
   <div class="sec-hd">
@@ -643,6 +547,102 @@
 
 
   <div style="height:1px;background:var(--line);margin:20px 16px 0"></div>
+
+  <!-- Recently scored by the community -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">🌍 Community feed</div>
+      <div class="sec-hd-title">Checked right now</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px">
+      <span style="width:6px;height:6px;border-radius:50%;background:#15803d;flex-shrink:0;animation:livepulse 2s ease-in-out infinite;display:inline-block"></span>
+      <span style="font-size:10px;color:var(--good);font-family:'DM Mono',monospace;font-weight:700">Live</span>
+    </div>
+  </div>
+  <style>@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}</style>
+
+  <div class="trend-scroll-wrap" style="margin-bottom:4px">
+    <div class="trend-strip">
+      <div class="trend-card" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
+          <div class="trend-hot-badge">2 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Personalised Name Sign</div>
+          <div class="trend-meta"><span class="trend-score g">94</span><span class="trend-cat">🇩🇪 DE</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+          <div class="trend-hot-badge">5 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Cable Management Box</div>
+          <div class="trend-meta"><span class="trend-score g">88</span><span class="trend-cat">🇺🇸 US</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
+          <div class="trend-new-badge">12 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Articulated Dragon</div>
+          <div class="trend-meta"><span class="trend-score g">79</span><span class="trend-cat">🇬🇧 UK</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Dice Tower')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+          <div class="trend-new-badge">18 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Dice Tower</div>
+          <div class="trend-meta"><span class="trend-score y">68</span><span class="trend-cat">🇺🇸 US</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
+          <div class="trend-new-badge">24 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Adjustable Phone Stand</div>
+          <div class="trend-meta"><span class="trend-score g">85</span><span class="trend-cat">🇳🇱 NL</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:1px;background:var(--line);margin:16px 16px 0"></div>
+
+  <!-- ── MY RECENT SCANS ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Your account</div>
+      <div class="sec-hd-title">Recently scored</div>
+    </div>
+    <div class="sec-hd-count" id="recentCount"></div>
+  </div>
+
+  <div class="recent-list" id="recentList">
+    <!-- Skeleton loaders while fetching -->
+    <div class="skeleton-card">
+      <div class="skel skel-thumb"></div>
+      <div class="skel-lines">
+        <div class="skel skel-line w80"></div>
+        <div class="skel skel-line w50"></div>
+      </div>
+      <div class="skel skel-circle"></div>
+    </div>
+    <div class="skeleton-card">
+      <div class="skel skel-thumb"></div>
+      <div class="skel-lines">
+        <div class="skel skel-line w80"></div>
+        <div class="skel skel-line w50"></div>
+      </div>
+      <div class="skel skel-circle"></div>
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
 
   <!-- Keywords section -->
   <div class="sec-hd">

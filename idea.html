@@ -1652,15 +1652,26 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <h3>1. Controller</h3>
       <p>Daniel Haag, Theodorstraße 8, 12099 Berlin<br>Email: <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a></p>
       <h3>2. Data we collect</h3>
-      <p>When you enter your email address we store: email address, newsletter consent (yes/no), and a timestamp. Additionally the URL you analysed and the analysis result (score, verdict, and market data) are stored to improve this tool.</p>
+      <p><b>Always (necessary for service):</b> the URL or idea description you submit, the analysis result (score, verdict, market data), and a SHA-256-hashed version of your IP address used solely to enforce daily scan limits. Raw IP addresses are never stored.<br><br>
+      <b>If you sign up:</b> email address, hashed password (managed by Supabase Auth), and your saved scans. Public/private toggle controls visibility of saved scans.<br><br>
+      <b>If you enter your email on the free-tips form:</b> email address, marketing consent (yes/no), the URL/score/verdict you saw, and a timestamp.<br><br>
+      <b>With your consent (analytics, optional):</b> a random session ID stored in your browser, anonymous behavioural events (page views, button clicks), approximate country/city derived from your IP via ipapi.co, browser user-agent and screen width.</p>
       <h3>3. Purpose and legal basis</h3>
-      <p>Your email address is used to occasionally send you tips on selling 3D prints and updates about MeshMinds - only if you checked the consent box. Legal basis: Art. 6 (1)(a) GDPR (consent). Analysis results are used solely to improve this tool and are never shared with third parties or used for any other purpose. Legal basis: Art. 6 (1)(f) GDPR (legitimate interest in product improvement).</p>
-      <h3>4. Service providers (processors)</h3>
-      <p><b>Anthropic, PBC</b> (USA): AI analysis of product data via Claude. Anthropic is certified under the EU–US Data Privacy Framework.<br><br>
-      <b>Firecrawl</b> (USA): Web scraping of the MakerWorld product page to retrieve data.<br><br>
-      <b>Google LLC</b> (USA): Email data stored in Google Sheets. Google is certified under the EU–US Data Privacy Framework.</p>
+      <p><b>Scan analysis &amp; account:</b> Art. 6 (1)(b) GDPR — performance of the contract / pre-contractual measures.<br>
+      <b>IP hashing for rate limiting and abuse prevention:</b> Art. 6 (1)(f) GDPR — legitimate interest in protecting the service.<br>
+      <b>Marketing emails:</b> Art. 6 (1)(a) GDPR — your consent (the checkbox at email entry).<br>
+      <b>Analytics &amp; geo lookup:</b> Art. 6 (1)(a) GDPR — your consent (cookie banner). You can withdraw at any time.<br>
+      <b>Payments:</b> Art. 6 (1)(b) GDPR — Stripe processes payment data on a separate page; we never see your card details.</p>
+      <h3>4. Service providers (processors / sub-processors)</h3>
+      <p><b>Vercel Inc.</b> (USA, EU–US Data Privacy Framework certified): hosting and serverless functions. Receives every request including your IP address (used only in real time for routing &amp; abuse prevention; not retained by us in raw form).<br><br>
+      <b>Supabase Inc.</b> (data hosted in EU — Frankfurt): authentication, scan storage, email leads, rate-limit logs.<br><br>
+      <b>Anthropic, PBC</b> (USA, EU–US Data Privacy Framework certified): AI analysis of product data and idea descriptions via Claude. Inputs are not used for model training (per Anthropic's commercial terms).<br><br>
+      <b>Firecrawl</b> (USA): scraping of the MakerWorld / Printables / Cults3D product page and Etsy / eBay / Amazon Handmade search results. We send only public URLs — no personal data.<br><br>
+      <b>Stripe Payments Europe Ltd.</b> (Ireland): payment processing for Pro subscriptions. Card details are entered on Stripe's own page; we never receive them.<br><br>
+      <b>ipapi.co</b> (USA): IP-based geo lookup for analytics. Only loaded after you accept analytics in the cookie banner.<br><br>
+      <b>Google LLC</b> (USA, EU–US Data Privacy Framework certified): legacy email-leads sheet (in transition to Supabase) and the analytics endpoint that receives anonymous behavioural events when you accept the cookie banner.</p>
       <h3>5. Retention</h3>
-      <p>Email addresses are stored until you object or request deletion. Analysis logs are automatically deleted after 90 days.</p>
+      <p>Saved scans: kept until you delete them or close your account. Email leads: until you object or unsubscribe. IP-hash rate-limit logs: 30 days. Analytics events: 12 months. Server access logs (Vercel): up to 30 days for security purposes.</p>
       <h3>6. Your rights (GDPR)</h3>
       <p>You have the right to: access (Art. 15), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), objection (Art. 21), and withdrawal of consent (Art. 7 (3) GDPR). Contact us at: <a href="mailto:info.meshminds@gmail.com">info.meshminds@gmail.com</a></p>
       <h3>7. Right to lodge a complaint</h3>

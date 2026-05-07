@@ -813,6 +813,7 @@ IMPORTANT RULES:
       image_url: parsed?.product?.image || null,
       profit_est: profitNum ? `~€${Math.round(profitNum)}/mo` : null,
       is_public: false,
+      pro_locked: !!_quotaIsPro,
       full_data: parsed,
       ip_hash: _quotaUser?.id ? null : _quotaIpHash,
     };

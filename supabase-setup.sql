@@ -84,7 +84,8 @@ ALTER TABLE scans
   ADD COLUMN IF NOT EXISTS feedback_rating SMALLINT,    -- -1 / 0 / 1
   ADD COLUMN IF NOT EXISTS feedback_comment TEXT,
   ADD COLUMN IF NOT EXISTS feedback_at TIMESTAMPTZ,
-  ADD COLUMN IF NOT EXISTS ip_hash TEXT;                -- tags anonymous scans
+  ADD COLUMN IF NOT EXISTS ip_hash TEXT,                -- tags anonymous scans
+  ADD COLUMN IF NOT EXISTS pro_locked BOOLEAN NOT NULL DEFAULT FALSE;  -- scans saved while user was Pro stay private forever
 
 -- Allow anonymous scans (user_id NULL) — service role inserts these from analyze.js
 ALTER TABLE scans ALTER COLUMN user_id DROP NOT NULL;

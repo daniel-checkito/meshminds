@@ -26,13 +26,19 @@ module.exports = async (req, res) => {
 
     if (action === 'toggle' && id) {
       try {
-        // Verify this scan belongs to this user
+        // Verify this scan belongs to this user AND check pro-lock status
         const rows = await adminQuery({
           table: 'scans',
           filters: `id=eq.${id}&user_id=eq.${user.id}`,
-          select: 'id',
+          select: 'id,pro_locked',
         });
         if (!rows?.length) return res.status(403).json({ error: 'Not found' });
+
+        // Pro-locked scans are guaranteed private — they can never be flipped public,
+        // even if the user is no longer Pro. This backstops the marketing promise.
+        if (rows[0].pro_locked && Boolean(isPublic)) {
+          return res.status(200).json({ ok: false, locked: true, message: 'Scans saved while you were Pro stay private — that was the deal.' });
+        }
 
         await adminQuery({
           method: 'PATCH',

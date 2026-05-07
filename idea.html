@@ -52,8 +52,11 @@ body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .hero-bullets li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink2);line-height:1.4}
 .hb-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#dcfce7;color:#15803d;font-size:11px;font-weight:800;flex-shrink:0}
 
-.mode-btn{flex:1;padding:8px 12px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;background:transparent;color:var(--ink3);min-height:44px}
-.mode-btn-active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.mode-btn{flex:1;padding:11px 10px 10px;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;background:transparent;color:var(--ink3);min-height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.15;-webkit-tap-highlight-color:transparent}
+.mode-btn-ico{font-size:18px;line-height:1}
+.mode-btn-sub{font-size:9.5px;font-weight:500;color:var(--ink3);font-family:'DM Mono',monospace;letter-spacing:.04em;text-transform:uppercase;line-height:1.2}
+.mode-btn-active .mode-btn-sub{color:var(--acc)}
+.mode-btn-active{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
 .inp-card{background:var(--surf);border:1.5px solid var(--line2);border-radius:14px;overflow:hidden;margin-bottom:10px;transition:border-color .2s}
 .inp-card:focus-within{border-color:var(--acc)}
 .inp-inner{display:flex;align-items:center;padding:13px 13px 11px;gap:9px}
@@ -779,9 +782,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <li><span class="hb-tick">✓</span> Backed by €200K of my own Etsy sales</li>
         </ul>
       </div>
-      <div style="display:flex;background:var(--surf);border:1.5px solid var(--line);border-radius:11px;padding:3px;margin-bottom:12px" id="mode-toggle">
-        <button class="mode-btn mode-btn-active" id="mode-url" onclick="setMode('url')">🔗 Paste a URL</button>
-        <button class="mode-btn" id="mode-idea" onclick="setMode('idea')">💡 Describe your idea</button>
+      <div style="display:flex;gap:6px;background:var(--surf);border:1.5px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px" id="mode-toggle" role="tablist" aria-label="Choose how to validate your idea">
+        <button class="mode-btn mode-btn-active" id="mode-url" onclick="setMode('url')" role="tab" aria-selected="true"><span class="mode-btn-ico">🔗</span><span>Paste a model URL</span><span class="mode-btn-sub">MakerWorld · Printables · etc.</span></button>
+        <button class="mode-btn" id="mode-idea" onclick="setMode('idea')" role="tab" aria-selected="false"><span class="mode-btn-ico">💡</span><span>Describe your idea</span><span class="mode-btn-sub">No file yet? Start here.</span></button>
       </div>
       <div class="inp-card" id="inp-card">
         <div class="inp-inner">
@@ -861,6 +864,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 0 -->
       <div class="panel">
+
+        <div id="scan-history" style="display:none;background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 12px;margin-bottom:14px"></div>
 
         <div class="val-widget">
   <div class="val-hdr">
@@ -1127,6 +1132,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <div class="spin" id="sp-email" style="display:none"></div>
               <span id="bl-email">Get my free report →</span>
             </button>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:9px;font-size:11.5px;color:var(--ink2);font-weight:600">
+              <div style="display:flex">
+                <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#fde68a;border:2px solid #fff;font-size:9px;line-height:14px;text-align:center;color:#92400e;font-weight:800">D</span>
+                <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#bbf7d0;border:2px solid #fff;font-size:9px;line-height:14px;text-align:center;color:#15803d;font-weight:800;margin-left:-6px">M</span>
+                <span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:#bfdbfe;border:2px solid #fff;font-size:9px;line-height:14px;text-align:center;color:#1d4ed8;font-weight:800;margin-left:-6px">S</span>
+              </div>
+              <span><b id="gate-trust-count">1,200+</b> 3D-print sellers used this</span>
+            </div>
             <div class="gate-trust">Free forever &nbsp;·&nbsp; Unsubscribe anytime &nbsp;·&nbsp; <a onclick="openLegal('privacy')">Privacy notice</a></div>
           </div>
         </div>
@@ -1145,6 +1158,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div class="loading-step" id="ls2" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Revenue &amp; profit model</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Calculating print cost, Etsy fees, margin and monthly income estimate</div></div></div>
             <div class="loading-step" id="ls3" style="padding:10px 14px"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Legal &amp; copyright check</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Checking license, IP risk, Etsy policy compliance and required certifications</div></div></div>
           </div>
+          <button id="loading-cancel" onclick="cancelAnalysis()" style="margin-top:14px;background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer;text-decoration:underline;padding:6px 10px;font-family:'DM Sans',sans-serif">Cancel</button>
         </div>
       </div>
 
@@ -1692,55 +1706,44 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
   <div class="lp-sec" style="padding-bottom:8px">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;color:var(--ink);margin-bottom:4px">What we check</div>
-  <div style="font-size:12px;color:var(--ink3);margin-bottom:14px">Every scan runs the same 6 checks — in about 20 seconds, on real live data.</div>
-  <div style="display:grid;grid-template-columns:1fr;gap:8px">
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">🎯</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Sellability score 0–100 with clear verdict</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">Weighs Etsy demand-to-supply ratio, design quality, profit margin, IP risk, and platform fit. Calibrated against $250K of verified Etsy sales.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">🏆</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Live competitor research — Etsy, eBay, Amazon</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">We scrape Etsy search results, eBay sold listings (real completed-sale prices, not asks) and Amazon Handmade for your keywords — pulling top 5 listings with price, image, review count and sales velocity.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">💰</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Profitable price + monthly revenue estimate</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">Sweet-spot sell price built from competitor averages and your printer setup (units/day, filament cost at €0.025/g + 6% failure rate, Etsy's 12% fees) so the projection matches what you can actually print and ship.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">⚖️</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Legal &amp; compliance — GPSR, CE, IP, STL license</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">Reads the source page's license tab (MakerWorld, Printables, Cults3D, Thingiverse, MyMiniFactory, CGTrader, Thangs), checks 50+ trademark rules and Etsy's 2026 STL-license policy, and flags GPSR/CE/ASTM cert needs for your sell-from country.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">🏪</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Best marketplace + 3 tailored next steps</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">Picks Etsy / Amazon Handmade / STL repo / own shop based on your category, audience and experience level — plus a step-by-step roadmap (open shop → list → ad test → reviews) tuned to your goals.</div>
-      </div>
-    </div>
-    <div style="display:flex;align-items:flex-start;gap:11px;padding:11px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
-      <span style="font-size:20px;flex-shrink:0;line-height:1.3">🏭</span>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">Cool print or real business? (we tell you straight)</div>
-        <div style="font-size:11px;color:var(--ink3);line-height:1.4;margin-top:2px">Verdict on whether FDM is the right method or if injection-mould / resin / laser-cut would beat you on cost — including the break-even unit count where 3D printing stops being competitive.</div>
-      </div>
-    </div>
-  </div>
+  <div style="font-size:12px;color:var(--ink3);margin-bottom:14px">6 checks per scan — about 20 seconds, on real live data. Tap any to expand.</div>
+  <div id="wwc-list" style="display:grid;grid-template-columns:1fr;gap:8px"></div>
   <div style="margin-top:12px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:11.5px;color:var(--ink2);line-height:1.5">
     <b>Free to try:</b> 25 scans/day · 50/day with a free login · <b>unlimited with Pro</b>.
   </div>
 </div>
+<script>
+(function(){
+var WWC=[
+  {ico:'🎯',title:'Sellability score 0–100 with clear verdict',body:'Weighs Etsy demand-to-supply ratio, design quality, profit margin, IP risk, and platform fit. Calibrated against $250K of verified Etsy sales.'},
+  {ico:'🏆',title:'Live competitor research — Etsy, eBay, Amazon',body:'We scrape Etsy search results, eBay sold listings (real completed-sale prices, not asks) and Amazon Handmade for your keywords — pulling top 5 listings with price, image, review count and sales velocity.'},
+  {ico:'💰',title:'Profitable price + monthly revenue estimate',body:'Sweet-spot sell price built from competitor averages and your printer setup (units/day, filament cost at €0.025/g + 6% failure rate, Etsy\'s 12% fees) so the projection matches what you can actually print and ship.'},
+  {ico:'⚖️',title:'Legal & compliance — GPSR, CE, IP, STL license',body:'Reads the source page\'s license tab (MakerWorld, Printables, Cults3D, Thingiverse, MyMiniFactory, CGTrader, Thangs), checks 50+ trademark rules and Etsy\'s 2026 STL-license policy, and flags GPSR/CE/ASTM cert needs for your sell-from country.'},
+  {ico:'🏪',title:'Best marketplace + 3 tailored next steps',body:'Picks Etsy / Amazon Handmade / STL repo / own shop based on your category, audience and experience level — plus a step-by-step roadmap (open shop → list → ad test → reviews) tuned to your goals.'},
+  {ico:'🏭',title:'Cool print or real business? (we tell you straight)',body:'Verdict on whether FDM is the right method or if injection-mould / resin / laser-cut would beat you on cost — including the break-even unit count where 3D printing stops being competitive.'}
+];
+function escW(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+var host=document.getElementById('wwc-list');
+if(host){
+  host.innerHTML=WWC.map(function(w){
+    return '<details style="background:var(--surf);border-radius:10px;border:1px solid var(--line);padding:0">'
+      +'<summary style="display:flex;align-items:center;gap:11px;padding:11px 13px;cursor:pointer;list-style:none;-webkit-tap-highlight-color:transparent">'
+      +'<span style="font-size:20px;flex-shrink:0;line-height:1.3">'+w.ico+'</span>'
+      +'<span style="flex:1;min-width:0;font-size:13px;font-weight:700;color:var(--ink);line-height:1.3">'+escW(w.title)+'</span>'
+      +'<span style="font-size:14px;color:var(--ink3);transition:transform .15s ease" class="wwc-chev">›</span>'
+      +'</summary>'
+      +'<div style="padding:0 13px 12px 44px;font-size:11.5px;color:var(--ink2);line-height:1.5">'+escW(w.body)+'</div>'
+      +'</details>';
+  }).join('');
+  host.querySelectorAll('details').forEach(function(d){
+    d.addEventListener('toggle',function(){
+      var c=d.querySelector('.wwc-chev');
+      if(c)c.style.transform=d.open?'rotate(90deg)':'';
+    });
+  });
+}
+})();
+</script>
 
   <div class="lp-divider"></div>
 
@@ -1787,7 +1790,7 @@ var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
   var s8=document.getElementById('s8-bl-count');if(s8)s8.textContent=PRO_VALIDATED_COUNT;
   var s8b=document.getElementById('s8-bl-count2');if(s8b)s8b.textContent=PRO_VALIDATED_COUNT;
 })();
-var step=0,busy=false,ideaStep=1,lastURL="",lastIsURL=true,inputMode='url',lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
+var step=0,busy=false,ideaStep=1,lastURL="",lastIsURL=true,inputMode='url',lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null,activeAnalysisAbort=null,activeAnalysisTimeout=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[],competitors:[{url:"https://www.etsy.com/listing/1234567890/adjustable-laptop-stand-desk-riser",name:"Adjustable Laptop Stand Desk Riser - Ergonomic Monitor Stand",platform:"Etsy",estPrice:"$26.99",estMonthlySales:"40–80/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",whyItWorks:"Leads with 'ergonomic' in the title targeting the WFH buyer keyword. First photo shows the stand in a styled home office with a MacBook, which converts 2–3x better than plain product shots."},{url:"https://www.etsy.com/listing/9876543210/personalised-wooden-laptop-riser",name:"Personalised Laptop Stand - Custom Name Engraved - Office Gift",platform:"Etsy",estPrice:"$34.99",estMonthlySales:"60–120/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",whyItWorks:"Custom name engraving justifies a $8 price premium and dominates the gift buyer segment. 'Office gift' in the title captures high-intent holiday shoppers."},{url:"https://www.amazon.com/dp/B0FAKE12345/ref=sr_1_1",name:"3D Printed Laptop Riser - Adjustable Height - Multiple Colors",platform:"Amazon",estPrice:"$19.99",estMonthlySales:"100–200/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",whyItWorks:"Lower price point and Prime shipping dominate on Amazon. Multiple color variants in one listing boost click-through rate and rank signal."}],businessInspiration:[{id:"gantri",name:"Gantri",url:"https://gantri.com",location:"San Francisco, CA",scale:"Multi-designer marketplace",categories:["lighting_lamps","decor","desk_office"],theme:"platform_software",summary:"Designer-led desk-and-lighting platform that brings in independent designers and handles all production.",differentiator:"Marketplace model — they're the print farm AND the curator, so each new designer compounds catalogue depth."},{id:"wooj",name:"Wooj",url:"https://wooj.shop",location:"Brooklyn, NY",founder:"Sean Kim",scale:"~15,000 lamps/year",price_range:"€100–265",categories:["lighting_lamps","decor"],theme:"premium_design",summary:"Brooklyn print farm that scaled from a single viral pandemic-era design into a full home-decor brand.",differentiator:"Brand storytelling + restraint — reuses premade hardware across SKUs instead of redesigning every part. Founder builds in public on YouTube."},{id:"cruisecup",name:"CruiseCup",url:"https://cruisecup.com",location:"USA",founder:"Michael Satterlee (18)",scale:"~$300K in a single month",categories:["automotive_bike","tech_accessories"],theme:"viral_dtc",summary:"3D-printed beverage and can holders, sold direct via Shopify.",differentiator:"Viral Instagram/TikTok content as the engine — close to 1M views per launch — funnelling straight to checkout."}]};
 function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
@@ -2739,8 +2742,12 @@ function runAnalysis(){
   var payload=Object.assign(base,{category:qCat,marketplace:qMarketplace,priceRange:qPrice,printTime:qPrintTime,material:qMaterial,sellerGoal:qSellerGoal,printerCount:qPrinterCount,printerType:qPrinterType,experience:qExp,weeklyTime:qWeeklyTime,activeMarkets:qActiveMarkets,socialMedia:qSocialMedia,sellFrom:sellFrom,sellTo:sellTo,legalFlags:qLegalFlags});
 
   if(window.MM&&MM.track)MM.track('analyze_start',{label:isIdeaMode?'idea':'url',meta:{category:qCat||null,channels:isIdeaMode?ideaChannels:null}});
+  if(activeAnalysisAbort){try{activeAnalysisAbort.abort();}catch(_){}}
   var fetchAbort=new AbortController();
+  activeAnalysisAbort=fetchAbort;
+  if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);}
   var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 110000);
+  activeAnalysisTimeout=fetchTimeout;
   fetch("/api/analyze",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -2763,6 +2770,7 @@ function runAnalysis(){
     if(hint){hint.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#15803d;flex-shrink:0"></span>Report ready — enter your email to view it.';hint.style.background='#f0fdf4';hint.style.border='1px solid #86efac';hint.style.color='#15803d';}
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
     if(data&&data.scanId){window.lastScanId=data.scanId;if(typeof showFeedbackWidget==='function'){try{showFeedbackWidget();}catch(e){}}}
+    try{recordScanHistory(data);}catch(_){ }
     if(window.MM&&MM.track)MM.track('analyze_success',{label:isIdeaMode?'idea':'url',value:data&&typeof data.score==='number'?data.score:null,scan_id:data&&data.scanId||null});
     if(waitingForAnalysis){
       waitingForAnalysis=false;
@@ -2812,6 +2820,68 @@ function runAnalysis(){
   busy=false;
 }
 
+/* ── Local scan history (lets free users compare ideas without an account) ── */
+var SCAN_HISTORY_KEY='mm_scan_history';
+var SCAN_HISTORY_LIMIT=10;
+function loadScanHistory(){
+  try{var raw=localStorage.getItem(SCAN_HISTORY_KEY);return raw?JSON.parse(raw):[];}catch(_){return[];}
+}
+function saveScanHistory(list){
+  try{localStorage.setItem(SCAN_HISTORY_KEY,JSON.stringify(list.slice(0,SCAN_HISTORY_LIMIT)));}catch(_){ }
+}
+function recordScanHistory(data){
+  if(!data)return;
+  var title=(data.product&&data.product.title)||lastURL||'Untitled idea';
+  var entry={
+    id:data.scanId||(Date.now()+'-'+Math.random().toString(36).slice(2,8)),
+    title:String(title).slice(0,80),
+    score:typeof data.score==='number'?data.score:null,
+    verdict:data.verdict?String(data.verdict).slice(0,80):'',
+    image:(data.product&&data.product.image)||null,
+    url:lastIsURL?lastURL:null,
+    isIdea:!lastIsURL,
+    ts:Date.now()
+  };
+  var list=loadScanHistory().filter(function(e){return e.id!==entry.id;});
+  list.unshift(entry);
+  saveScanHistory(list);
+}
+function renderScanHistory(){
+  var host=q('scan-history');if(!host)return;
+  var list=loadScanHistory();
+  if(!list.length){host.style.display='none';return;}
+  host.style.display='';
+  function colorFor(s){return s==null?'#94a3b8':s>=70?'#15803d':s>=50?'#b45309':'#b91c1c';}
+  function bgFor(s){return s==null?'#f1f5f9':s>=70?'#dcfce7':s>=50?'#fef9c3':'#fee2e2';}
+  function ago(ts){var d=Math.max(1,Math.round((Date.now()-ts)/60000));if(d<60)return d+'m';if(d<1440)return Math.round(d/60)+'h';return Math.round(d/1440)+'d';}
+  host.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-family:\'DM Mono\',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3)">Your recent scans · compare</div><button onclick="clearScanHistory()" style="background:none;border:none;font-size:10.5px;color:var(--ink3);cursor:pointer;text-decoration:underline;padding:0">Clear</button></div>'
+   +'<div style="display:flex;flex-direction:column;gap:6px">'
+   +list.map(function(e){
+      var col=colorFor(e.score),bg=bgFor(e.score);
+      return '<div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#fff">'
+        +(e.image?'<div style="width:32px;height:32px;border-radius:6px;background:url(\''+esc(e.image)+'\') center/cover no-repeat;flex-shrink:0;background-color:var(--surf2)"></div>':'<div style="width:32px;height:32px;border-radius:6px;background:var(--surf2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">'+(e.isIdea?'💡':'🔗')+'</div>')
+        +'<div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(e.title)+'</div>'
+        +'<div style="font-size:10.5px;color:var(--ink3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(e.verdict||'')+' · '+ago(e.ts)+' ago</div></div>'
+        +'<span style="font-family:\'DM Mono\',monospace;font-size:12px;font-weight:800;border-radius:5px;padding:3px 8px;background:'+bg+';color:'+col+';flex-shrink:0">'+(e.score==null?'—':e.score)+'</span>'
+      +'</div>';
+    }).join('')
+   +'</div>';
+}
+function clearScanHistory(){try{localStorage.removeItem(SCAN_HISTORY_KEY);}catch(_){}renderScanHistory();}
+window.clearScanHistory=clearScanHistory;
+
+function cancelAnalysis(){
+  if(activeAnalysisAbort){try{activeAnalysisAbort.abort();}catch(_){}activeAnalysisAbort=null;}
+  if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);activeAnalysisTimeout=null;}
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  loadingProgress=0;
+  waitingForAnalysis=false;
+  analysisComplete=false;
+  if(window.MM&&MM.track)MM.track('analyze_cancel',{label:'user'});
+  reset();
+}
+window.cancelAnalysis=cancelAnalysis;
+
 function reset(){
   document.querySelector('.phone').classList.remove('phone-active');
   step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
@@ -2830,6 +2900,7 @@ function reset(){
   if(q("strategy-section"))q("strategy-section").style.display="none";
   if(q("example-card"))q("example-card").style.display="none";
   showFooter(false);setBtn0("Check this print",false);
+  try{renderScanHistory();}catch(_){ }
   if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
   if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
   if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec  -  enter your email and we'll show the full results";
@@ -3112,6 +3183,7 @@ q("btn-back").addEventListener("click",function(){
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
+try{renderScanHistory();}catch(_){ }
 
 function toggleFaq(btn){
   var item=btn.closest('.faq-item');

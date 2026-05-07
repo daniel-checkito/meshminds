@@ -21,29 +21,34 @@ CREATE TABLE IF NOT EXISTS scans (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- Index for fast per-user queries
 CREATE INDEX IF NOT EXISTS scans_user_id_idx ON scans(user_id, created_at DESC);
 
 -- ── Row Level Security ───────────────────────────────────────────────────────
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE scans ENABLE ROW LEVEL SECURITY;
 
--- profiles: users can only see and update their own row
-CREATE POLICY "profiles_select_own" ON profiles
-  FOR SELECT USING (auth.uid() = id);
+-- profiles policies
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='profiles_select_own' AND tablename='profiles') THEN
+    CREATE POLICY "profiles_select_own" ON profiles FOR SELECT USING (auth.uid() = id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='profiles_update_own' AND tablename='profiles') THEN
+    CREATE POLICY "profiles_update_own" ON profiles FOR UPDATE USING (auth.uid() = id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='profiles_insert_own' AND tablename='profiles') THEN
+    CREATE POLICY "profiles_insert_own" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+  END IF;
+END $$;
 
-CREATE POLICY "profiles_update_own" ON profiles
-  FOR UPDATE USING (auth.uid() = id);
-
-CREATE POLICY "profiles_insert_own" ON profiles
-  FOR INSERT WITH CHECK (auth.uid() = id);
-
--- scans: users can only see and insert their own rows
-CREATE POLICY "scans_select_own" ON scans
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "scans_insert_own" ON scans
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
+-- scans policies
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='scans_select_own' AND tablename='scans') THEN
+    CREATE POLICY "scans_select_own" ON scans FOR SELECT USING (auth.uid() = user_id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='scans_insert_own' AND tablename='scans') THEN
+    CREATE POLICY "scans_insert_own" ON scans FOR INSERT WITH CHECK (auth.uid() = user_id);
+  END IF;
+END $$;
 
 -- ── Auto-create profile on sign-up ───────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.handle_new_user()
@@ -61,27 +66,25 @@ END;
 $$;
 
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
-
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- ── Add new columns to profiles ────────────────────────────────────────────
+-- ── Extra columns ────────────────────────────────────────────────────────────
 ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS display_name TEXT,
   ADD COLUMN IF NOT EXISTS avatar_url TEXT,
   ADD COLUMN IF NOT EXISTS default_public BOOLEAN NOT NULL DEFAULT FALSE;
 
--- ── Add new columns to scans ──────────────────────────────────────────────
 ALTER TABLE scans
   ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS image_url TEXT,
   ADD COLUMN IF NOT EXISTS profit_est TEXT,
   ADD COLUMN IF NOT EXISTS full_data JSONB;
 
--- Public scans policy (anyone can read public scans)
+-- Public scans policy
 DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'scans_select_public' AND tablename = 'scans') THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname='scans_select_public' AND tablename='scans') THEN
     CREATE POLICY "scans_select_public" ON scans FOR SELECT USING (is_public = true);
   END IF;
 END $$;

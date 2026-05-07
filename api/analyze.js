@@ -165,29 +165,45 @@ module.exports = async (req, res) => {
     } catch (_) { return ''; }
   }
 
-  // Etsy keyword cache — survives within a hot lambda instance, ~24h TTL.
+  // Keyword cache — survives within a hot lambda instance, ~24h TTL.
   // Hit rate is meaningful for popular categories without growing memory.
-  if (!global.__ETSY_CACHE__) global.__ETSY_CACHE__ = new Map();
-  const etsyCache = global.__ETSY_CACHE__;
-  const ETSY_TTL_MS = 24 * 60 * 60 * 1000;
-  async function fetchEtsy(keywords) {
-    if (!keywords) return '';
-    const key = keywords.toLowerCase().trim();
+  if (!global.__SCRAPE_CACHE__) global.__SCRAPE_CACHE__ = new Map();
+  const scrapeCache = global.__SCRAPE_CACHE__;
+  const SCRAPE_TTL_MS = 24 * 60 * 60 * 1000;
+  async function cachedScrape(cacheKey, url, waitMs, abortMs) {
     const now = Date.now();
-    const hit = etsyCache.get(key);
-    if (hit && now - hit.at < ETSY_TTL_MS) return hit.md;
-    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(keywords)}&explicit=1&sort_on=most_relevant`;
-    const data = await firecrawlScrape(etsySearchUrl, 500, 10000);
+    const hit = scrapeCache.get(cacheKey);
+    if (hit && now - hit.at < SCRAPE_TTL_MS) return hit.md;
+    const data = await firecrawlScrape(url, waitMs, abortMs);
     const md = data?.data?.markdown || '';
     if (md) {
-      etsyCache.set(key, { md, at: now });
-      // Keep cache bounded
-      if (etsyCache.size > 200) {
-        const firstKey = etsyCache.keys().next().value;
-        etsyCache.delete(firstKey);
+      scrapeCache.set(cacheKey, { md, at: now });
+      if (scrapeCache.size > 400) {
+        const firstKey = scrapeCache.keys().next().value;
+        scrapeCache.delete(firstKey);
       }
     }
     return md;
+  }
+  async function fetchEtsy(kw) {
+    if (!kw) return '';
+    return cachedScrape('etsy:' + kw.toLowerCase().trim(),
+      `https://www.etsy.com/search?q=${encodeURIComponent(kw)}&explicit=1&sort_on=most_relevant`,
+      500, 10000);
+  }
+  // eBay sold listings — real completed-sale prices, gold for spec/technical items
+  async function fetchEbay(kw) {
+    if (!kw) return '';
+    return cachedScrape('ebay:' + kw.toLowerCase().trim(),
+      `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(kw)}&LH_Sold=1&LH_Complete=1&_sop=13`,
+      500, 9000);
+  }
+  // Amazon Handmade — cross-platform demand check on similar gift items
+  async function fetchAmazon(kw) {
+    if (!kw) return '';
+    return cachedScrape('amzn:' + kw.toLowerCase().trim(),
+      `https://www.amazon.com/s?k=${encodeURIComponent(kw)}&i=handmade`,
+      500, 9000);
   }
 
   async function firecrawlScrape(targetUrl, waitMs, abortMs) {
@@ -226,8 +242,8 @@ module.exports = async (req, res) => {
     return result;
   }
 
-  // Parse competitor listings from Etsy search + DuckDuckGo results
-  function parseCompetitorRaw(etsyMd, ddgMd) {
+  // Parse competitor listings from Etsy + eBay + Amazon Handmade markdown
+  function parseCompetitorRaw(etsyMd, extraMd) {
     const seen = new Set();
     const items = [];
 
@@ -258,26 +274,28 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Extract results from DuckDuckGo — Etsy, Amazon Handmade, and craft marketplaces
-    if (ddgMd) {
-      const ddgLinkRe = /\[([^\]]{5,120})\]\((https?:\/\/(?:www\.etsy\.com\/listing|www\.amazon\.com\/[^)]*handmade|amazon\.co\.uk\/[^)]*handmade|notonthehighstreet\.com|folksy\.com)[^)]*)\)/gi;
+    // Extract results from eBay sold + Amazon Handmade markdown
+    if (extraMd) {
+      const linkRe = /\[([^\]]{5,140})\]\((https?:\/\/(?:www\.)?(?:ebay\.com\/itm|ebay\.co\.uk\/itm|amazon\.com\/(?:[^)]*?\/dp\/|dp\/|gp\/product\/)|amazon\.co\.uk\/(?:[^)]*?\/dp\/|dp\/))[^)\s]+)\)/gi;
       let d;
-      while ((d = ddgLinkRe.exec(ddgMd)) !== null && items.length < 6) {
+      while ((d = linkRe.exec(extraMd)) !== null && items.length < 6) {
         const rawUrl = d[2].split('?')[0];
-        const key = rawUrl.replace(/https?:\/\/(www\.)?/, '').substring(0, 50);
+        const key = rawUrl.replace(/https?:\/\/(www\.)?/, '').substring(0, 60);
         if (seen.has(key)) continue;
         seen.add(key);
-        const after = ddgMd.slice(d.index + d[0].length, d.index + d[0].length + 300);
-        const priceMatch = after.match(/\$\s*(\d+(?:\.\d{2})?)/);
-        const reviewMatch = after.match(/\((\d[\d,]+)\)/);
+        const after = extraMd.slice(d.index + d[0].length, d.index + d[0].length + 400);
+        const priceMatch = after.match(/(?:US\s*)?\$\s*(\d+(?:[.,]\d{2})?)/);
+        const reviewMatch = after.match(/(\d[\d,]+)\s*(?:ratings?|reviews?)/i);
+        const soldMatch = after.match(/(\d[\d,]+)\s*sold/i);
         const domain = rawUrl.match(/https?:\/\/(?:www\.)?([^/]+)/)?.[1] || 'unknown';
+        const isEbay = domain.includes('ebay');
         items.push({
           url: rawUrl,
           title: d[1].replace(/\s+/g, ' ').trim(),
-          price: priceMatch ? `$${priceMatch[1]}` : null,
+          price: priceMatch ? `$${priceMatch[1].replace(',', '.')}` : null,
           reviews: reviewMatch ? parseInt(reviewMatch[1].replace(/,/g, ''), 10) : null,
-          sold: null,
-          source: domain,
+          sold: soldMatch ? parseInt(soldMatch[1].replace(/,/g, ''), 10) : null,
+          source: isEbay ? 'ebay-sold' : 'amazon-handmade',
         });
       }
     }
@@ -300,15 +318,17 @@ module.exports = async (req, res) => {
 - Target buyer: ${ideaBuyer || 'not specified'}
 - Unique selling point: ${ideaUsp || 'not specified'}`;
     if (ideaKeywords) {
-      const etsyMd = await fetchEtsy(ideaKeywords);
+      const [etsyMd, ebayMd, amazonMd] = await Promise.all([
+        fetchEtsy(ideaKeywords), fetchEbay(ideaKeywords), fetchAmazon(ideaKeywords),
+      ]);
       if (etsyMd) etsyRealData = parseEtsyData(etsyMd, ideaKeywords);
-      competitorRaw = parseCompetitorRaw(etsyMd, '');
+      competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
     }
   } else if (scrapeUrl && urlKeywords) {
-    // Product page + Etsy search in parallel
-    const [fcData, etsyMd] = await Promise.all([
+    // Product page + 3 demand sources in parallel
+    const [fcData, etsyMd, ebayMd, amazonMd] = await Promise.all([
       firecrawlScrape(scrapeUrl, 1000, 16000),
-      fetchEtsy(urlKeywords),
+      fetchEtsy(urlKeywords), fetchEbay(urlKeywords), fetchAmazon(urlKeywords),
     ]);
     if (fcData) {
       const extracted = extractProductContext(fcData);
@@ -317,7 +337,7 @@ module.exports = async (req, res) => {
       sourceUrl = extracted.sourceUrl;
     }
     if (etsyMd) etsyRealData = parseEtsyData(etsyMd, urlKeywords);
-    competitorRaw = parseCompetitorRaw(etsyMd, '');
+    competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
   } else if (scrapeUrl) {
     // No URL keywords — scrape product first, derive keywords, then search
     const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
@@ -336,9 +356,11 @@ module.exports = async (req, res) => {
       .slice(0, 4)
       .join(' ');
     if (postScrapeKeywords) {
-      const etsyMd = await fetchEtsy(postScrapeKeywords);
+      const [etsyMd, ebayMd, amazonMd] = await Promise.all([
+        fetchEtsy(postScrapeKeywords), fetchEbay(postScrapeKeywords), fetchAmazon(postScrapeKeywords),
+      ]);
       if (etsyMd) etsyRealData = parseEtsyData(etsyMd, postScrapeKeywords);
-      competitorRaw = parseCompetitorRaw(etsyMd, '');
+      competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
     }
   }
 
@@ -351,7 +373,7 @@ module.exports = async (req, res) => {
   // ── 2. Build the Claude prompt (ported from n8n "Message a model" node) ──
   // Build competitor context string for the prompt
   const competitorContext = competitorRaw.length > 0
-    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy search — these are REAL results):\n' +
+    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy + eBay sold listings + Amazon Handmade — these are REAL results. eBay-sold prices are completed-sale data, not asking prices):\n' +
       competitorRaw.map((c, i) =>
         `${i + 1}. URL: ${c.url}\n   Title: "${c.title}"` +
         (c.price ? `\n   Price: ${c.price}` : '') +
@@ -582,7 +604,15 @@ IMPORTANT RULES:
         model: 'claude-sonnet-4-6',
         max_tokens: 3072,
         system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
-        messages: [{ role: 'user', content: dynamicPart || prompt }],
+        messages: [{
+          role: 'user',
+          content: imageUrl && /^https?:\/\//i.test(imageUrl)
+            ? [
+                { type: 'image', source: { type: 'url', url: imageUrl } },
+                { type: 'text', text: 'Above is the product image. Use it to judge design quality, photo-friendliness, and "shelfie-worthiness" — these directly affect score, especially the décor positioning bonus. Then analyse the product data below.\n\n' + (dynamicPart || prompt) },
+              ]
+            : (dynamicPart || prompt),
+        }],
       }),
       signal: clAbort.signal,
     });
@@ -620,6 +650,28 @@ IMPORTANT RULES:
     } catch {}
   }
 
+  // Persist every successful scan (anonymous + logged-in) for the dataset.
+  let savedScanId = null;
+  try {
+    const { adminQuery } = require('./_supabase');
+    const profitNum = parsed?.revenue?.netProfit;
+    const row = {
+      user_id: _quotaUser?.id || null,
+      url: String(rawBodyUrl || sourceUrl || '').slice(0, 500),
+      title: parsed?.product?.title ? String(parsed.product.title).slice(0, 200) : null,
+      score: parsed?.score != null ? Number(parsed.score) : null,
+      verdict: parsed?.verdict ? String(parsed.verdict).slice(0, 200) : null,
+      image_url: parsed?.product?.image || null,
+      profit_est: profitNum ? `~€${Math.round(profitNum)}/mo` : null,
+      is_public: false,
+      full_data: parsed,
+      ip_hash: _quotaUser?.id ? null : _quotaIpHash,
+    };
+    const result = await adminQuery({ method: 'POST', table: 'scans', body: row });
+    savedScanId = result?.[0]?.id || null;
+  } catch { /* swallow — saving the dataset must never break the response */ }
+
+  if (savedScanId) parsed.scanId = savedScanId;
   return res.status(200).json(parsed);
 };
 

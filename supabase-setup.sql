@@ -83,7 +83,12 @@ ALTER TABLE scans
   ADD COLUMN IF NOT EXISTS full_data JSONB,
   ADD COLUMN IF NOT EXISTS feedback_rating SMALLINT,    -- -1 / 0 / 1
   ADD COLUMN IF NOT EXISTS feedback_comment TEXT,
-  ADD COLUMN IF NOT EXISTS feedback_at TIMESTAMPTZ;
+  ADD COLUMN IF NOT EXISTS feedback_at TIMESTAMPTZ,
+  ADD COLUMN IF NOT EXISTS ip_hash TEXT;                -- tags anonymous scans
+
+-- Allow anonymous scans (user_id NULL) — service role inserts these from analyze.js
+ALTER TABLE scans ALTER COLUMN user_id DROP NOT NULL;
+CREATE INDEX IF NOT EXISTS scans_ip_hash_idx ON scans(ip_hash, created_at DESC) WHERE user_id IS NULL;
 
 -- ── usage_log (per-day rate limiting) ───────────────────────────────────────
 CREATE TABLE IF NOT EXISTS usage_log (

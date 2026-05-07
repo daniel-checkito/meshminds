@@ -2824,11 +2824,13 @@ function runAnalysis(){
   if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);}
   var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 90000);
   activeAnalysisTimeout=fetchTimeout;
-  /* Two-stage flow: stage 1 (prepOnly) does the scrape + market searches in
-     its own 60s lambda. Stage 2 sends the prep payload and runs only the AI
-     call in a fresh 60s lambda. Each stage gets its own budget so neither
-     hits the ceiling. If prep fails (network blip), we silently fall back
-     to a single full call so the user still gets a result. */
+  /* Three-stage flow:
+       1) prepOnly  - scrape + market search (own 60s lambda, ~10-20s)
+       2) quick     - AI call returning just step-5 fields (own lambda, ~6-12s)
+       3) full      - AI call returning revenue/legal/strategy/certs in
+                      background while user reads step 5 (own lambda, ~12-20s)
+     Each call is small enough to stay well under 60s, and the user sees
+     step 5 the moment quick returns - no need to wait for full. */
   function postAnalyze(extra){
     return fetch("/api/analyze",{
       method:"POST",
@@ -2837,16 +2839,81 @@ function runAnalysis(){
       body:JSON.stringify(Object.assign({},payload,extra))
     });
   }
+  /* Helper: fire stage 3 (full) in the background and merge its output into
+     the displayed analysis when it returns. Non-blocking - the user is
+     already on step 5 by then. */
+  window._fullPending=true;
+  function fireFullStage(prep,quickResult){
+    var body={stage:'full',quickResult:quickResult};
+    if(prep)body.prep=prep;
+    fetch("/api/analyze",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(Object.assign({},payload,body))
+    }).then(function(r){return r.ok?r.json():null;}).then(function(full){
+      window._fullPending=false;
+      if(!full)return;
+      try{
+        /* Merge full fields into the existing analysis without blowing away
+           anything the quick stage already populated. */
+        if(full.revenue){
+          var r=full.revenue;
+          var spNum=parseFloat((r.sellPrice||"22").replace(/[^0-9.]/g,""))||22;
+          baseRevData={units:Math.abs(r.unitsPerMonth||0),printCost:r.printCost||0,basePrice:spNum};
+          if(q("rv2"))q("rv2").textContent=r.printCost!==undefined?"€"+r.printCost:"-";
+          var slMin=Math.max(3,Math.round(spNum*0.25)),slMax=Math.max(120,Math.round(spNum*4));
+          if(q("price-slider")){q("price-slider").min=slMin;q("price-slider").max=slMax;q("price-slider").value=Math.round(spNum);}
+          if(q("ps-min"))q("ps-min").textContent="€"+slMin;
+          if(q("ps-max"))q("ps-max").textContent="€"+slMax;
+          recalcRevenue(Math.round(spNum));
+        }
+        if(full.copyright){
+          if(typeof populateCopyright==='function')populateCopyright(full.copyright);
+        }
+        if(full.manufacturing){
+          var mfg=full.manufacturing;
+          var isOpt=mfg.is3DPrintingOptimal!==false;
+          var mVerdict=(mfg.verdict||"").toLowerCase();
+          var mColor=isOpt?"#15803d":mVerdict.indexOf("limits")>=0?"#b45309":"#b91c1c";
+          var mBg=isOpt?"#dcfce7":mVerdict.indexOf("limits")>=0?"#fef9c3":"#fee2e2";
+          var badge=q("mfg-verdict-badge");
+          if(badge){badge.textContent=(mfg.verdict||"").toUpperCase();badge.style.background=mBg;badge.style.color=mColor;}
+          if(q("mfg-reason"))q("mfg-reason").innerHTML=mfg.reason||"";
+          if(q("mfg-advantage"))q("mfg-advantage").textContent=mfg.printingAdvantage||"";
+          if(q("mfg-section"))q("mfg-section").style.display="";
+        }
+        if(full.strategy){
+          var strat=full.strategy;
+          if(q("best-platform"))q("best-platform").textContent=strat.bestPlatform||"";
+          if(q("platform-advice"))q("platform-advice").innerHTML=strat.platformAdvice||"";
+          var tipsList=q("tips-list");
+          if(tipsList&&Array.isArray(strat.topTips)&&strat.topTips.length>0){
+            tipsList.innerHTML=strat.topTips.map(function(tip){
+              return '<div style="display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--ink2);line-height:1.45"><span style="color:var(--acc);font-weight:800;flex-shrink:0;margin-top:1px">→</span><span>'+tip+'</span></div>';
+            }).join("");
+          }
+          if(q("strategy-section"))q("strategy-section").style.display="";
+        }
+        lastAiCerts=(Array.isArray(full.certificates)&&full.certificates.length>0)?full.certificates:null;
+        if(typeof populateLegalCerts==='function')populateLegalCerts();
+        var di=q('deep-loading');if(di)di.remove();
+        if(q("gate-headline"))q("gate-headline").textContent="Done.";
+      }catch(e){}
+    }).catch(function(){window._fullPending=false;});
+  }
   postAnalyze({prepOnly:true})
    .then(function(prepResp){
      if(!prepResp.ok)return null;
      return prepResp.json();
    })
    .then(function(prepData){
-     var nextBody={};
-     if(prepData&&prepData.ok&&prepData.prep)nextBody.prep=prepData.prep;
-     /* Stage 2: full analyze. If prep succeeded we send it along; if not, the
-        server-side path falls back to running everything end-to-end. */
+     var nextBody={stage:'quick'};
+     window._activePrep=null;
+     if(prepData&&prepData.ok&&prepData.prep){
+       nextBody.prep=prepData.prep;
+       window._activePrep=prepData.prep;
+     }
+     /* Stage 2: quick AI call. Returns just the step-5 fields fast. */
      return postAnalyze(nextBody);
    })
    .then(function(resp){
@@ -2872,6 +2939,14 @@ function runAnalysis(){
     }
     populate(data);
     analysisComplete=true;
+    /* Stage 3: fire the full analysis in the background. By the time the user
+       advances past step 5, the deep-dive sections (revenue, legal, strategy,
+       certificates) will already be populated. */
+    if(data&&data.stage==='quick'){
+      try{fireFullStage(window._activePrep||null,data);}catch(_){window._fullPending=false;}
+    } else {
+      window._fullPending=false;
+    }
     if(q("gate-headline"))q("gate-headline").textContent="Report ready.";
     if(q("gate-subline"))q("gate-subline").textContent="Enter your email to unlock the full analysis.";
     if(q("gate-pct"))q("gate-pct").style.color="#15803d";
@@ -3019,7 +3094,10 @@ window.cancelAnalysis=cancelAnalysis;
 
 function reset(){
   var lc=q("lowconf-actions");if(lc)lc.remove();
+  var dl=q("deep-loading");if(dl)dl.remove();
   window._analyzeRetried=false;
+  window._fullPending=false;
+  window._activePrep=null;
   document.querySelector('.phone').classList.remove('phone-active');
   step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
   ideaStep=1;inputMode='url';if(window.setMode)window.setMode('url');
@@ -3310,7 +3388,21 @@ q("btn2").addEventListener("click",function(){
   if(busy)return;
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
-  if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
+  if(step===5){
+    step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);
+    if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);
+    /* If the deep-dive stage 3 call is still in flight when the user advances,
+       show a small inline spinner so they know more data is loading. */
+    if(window._fullPending && !q('deep-loading')){
+      var dl=document.createElement('div');
+      dl.id='deep-loading';
+      dl.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;margin:14px auto;padding:9px 14px;background:#fff;border:1px solid var(--line);border-radius:9px;font-size:11.5px;color:var(--ink2);max-width:300px';
+      dl.innerHTML='<div style="width:12px;height:12px;border:2px solid var(--line2);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite"></div>Loading the deep-dive analysis…';
+      var hostPanel=document.querySelector('.scroll .track > .panel:nth-of-type(7)') || q('offer-panel');
+      if(hostPanel)hostPanel.insertBefore(dl,hostPanel.firstChild);
+    }
+    return;
+  }
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
   if(step===7){step=8;dots(8);slide(8);setBtn2("See pro upgrade →","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
   if(step===8){step=9;dots(9);slide(9);setBtn2("Check another print","dark",false);showBack(true);return;}

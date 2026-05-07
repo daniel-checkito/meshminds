@@ -868,7 +868,13 @@ IMPORTANT RULES:
 - Extract product.likes/saves/downloads/prints/author from the scraped data when present; set to null if not visible.
 - Never include a literal double-quote character inside any JSON string value - rephrase or use single quotes.
 - competitors: use ONLY URLs from the LIVE COMPETITOR LISTINGS section. If no competitor data was provided, return [].
-- Return ONLY the JSON object. No other text.`;
+- Return ONLY the JSON object. No other text.
+
+THREE-STAGE OUTPUT MODE
+You may be asked to return only a slice of the schema. Honour the requested stage exactly:
+- stage="quick": return ONLY { score, verdict, product, market, competitors }. Omit revenue, manufacturing, copyright, strategy, certificates.
+- stage="full":  return ONLY { revenue, manufacturing, copyright, strategy, certificates }. The quick-stage values for score, verdict and market are appended to the user message; stay consistent with them (do not contradict the score or the verdict).
+- stage missing: return the complete object (legacy/back-compat path).`;
 
   // ── 3. Call Claude ───────────────────────────────────────────────────────
   // Split prompt into cacheable static part + dynamic product context
@@ -885,8 +891,31 @@ IMPORTANT RULES:
      Sonnet so 'most accurate AI analysis' is a tangible upgrade benefit. */
   const isProTier = !!_quotaIsPro;
   const primaryModel = isProTier ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
-  const primaryTimeoutMs = isProTier ? 37000 : 28000;
-  const clTimeout = setTimeout(() => clAbort.abort(), primaryTimeoutMs);
+  /* Three-stage output. quick is small (just step-5 fields, ~600-800 tokens
+     out, very fast). full is the deep dive (revenue, manufacturing, copyright,
+     strategy, certificates, ~1200-1500 tokens out). When stage is unset we
+     return everything (back-compat). Each stage gets its own tighter timeout
+     because the work is smaller. */
+  const stage = body.stage === 'quick' || body.stage === 'full' ? body.stage : null;
+  const isQuick = stage === 'quick';
+  const isFull = stage === 'full';
+  const baseTimeoutMs = isProTier ? 37000 : 28000;
+  const stageTimeoutMs = isQuick ? Math.min(baseTimeoutMs, 18000) : (isFull ? Math.min(baseTimeoutMs, 25000) : baseTimeoutMs);
+  const stageMaxTokens = isQuick ? 900 : (isFull ? 1500 : 2048);
+  const clTimeout = setTimeout(() => clAbort.abort(), stageTimeoutMs);
+  /* Append stage instruction + (for full) the quick-stage anchors so the
+     full call stays consistent with what we already showed the user. */
+  let stageInstruction = '';
+  if (stage) {
+    stageInstruction = `\n\nSTAGE: ${stage}`;
+    if (isFull && body.quickResult && typeof body.quickResult === 'object') {
+      const qr = body.quickResult;
+      const sc = qr.score != null ? qr.score : 'unknown';
+      const vd = qr.verdict || 'unknown';
+      const mk = qr.market && typeof qr.market === 'object' ? qr.market : {};
+      stageInstruction += `\nQUICK-STAGE RESULT (already shown to the user - stay consistent):\nscore=${sc}\nverdict=${vd}\nmarket.searchVolume=${mk.searchVolume || 'n/a'}\nmarket.etsyListings=${mk.etsyListings || 'n/a'}\nmarket.etsyAvgPrice=${mk.etsyAvgPrice || 'n/a'}\nmarket.topSellerSales=${mk.topSellerSales || 'n/a'}`;
+    }
+  }
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -898,16 +927,16 @@ IMPORTANT RULES:
       },
       body: JSON.stringify({
         model: primaryModel,
-        max_tokens: 2048,
+        max_tokens: stageMaxTokens,
         system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
         messages: [{
           role: 'user',
           content: imageUrl && /^https?:\/\//i.test(imageUrl)
             ? [
                 { type: 'image', source: { type: 'url', url: imageUrl } },
-                { type: 'text', text: 'Above is the product image. Use it to judge design quality, photo-friendliness, and "shelfie-worthiness" - these directly affect score, especially the décor positioning bonus. Then analyse the product data below.\n\n' + (dynamicPart || prompt) },
+                { type: 'text', text: 'Above is the product image. Use it to judge design quality, photo-friendliness, and "shelfie-worthiness" - these directly affect score, especially the décor positioning bonus. Then analyse the product data below.\n\n' + (dynamicPart || prompt) + stageInstruction },
               ]
-            : (dynamicPart || prompt),
+            : ((dynamicPart || prompt) + stageInstruction),
         }],
       }),
       signal: clAbort.signal,
@@ -1004,12 +1033,45 @@ IMPORTANT RULES:
     }
   }
 
-  // Log usage for daily-quota enforcement (skipped for pro users - uncapped)
-  if (!_quotaIsPro) {
+  // Log usage for daily-quota enforcement (skipped for pro users - uncapped).
+  // Three-stage flow: log on the QUICK stage so a user only counts once even
+  // if the FULL stage retries. Full stage skips logUsage entirely.
+  if (!_quotaIsPro && !isFull) {
     try {
       const { logUsage } = require('./_supabase');
       logUsage({ userId: _quotaUser?.id || null, ipHash: _quotaIpHash, kind: 'scan' });
     } catch {}
+  }
+
+  /* Three-stage flow: only the FULL call persists (it merges body.quickResult
+     into parsed first, so the saved row has the complete object). QUICK returns
+     fast with no persist. Default (no stage) persists as before. */
+  if (isFull && body.quickResult && typeof body.quickResult === 'object') {
+    parsed = Object.assign({}, body.quickResult, parsed);
+  }
+  if (isQuick) {
+    /* Quick stage early exit: no persistence, but still attach businesses +
+       lowConfidence flag + AI tier so step 5 renders correctly. */
+    if (inspirationBusinesses.length) parsed.businessInspiration = inspirationBusinesses;
+    try {
+      const sv = Number(parsed?.market?.searchVolume) || 0;
+      const el = Number(parsed?.market?.etsyListings) || 0;
+      const compsLen = Array.isArray(parsed?.competitors) ? parsed.competitors.length : 0;
+      const titleOk = parsed?.product?.title && String(parsed.product.title).trim().length > 2;
+      const noScrape = !productContext || productContext.length < 60;
+      if ((sv < 80 && el < 60 && compsLen === 0) || noScrape || !titleOk) {
+        parsed.lowConfidence = true;
+        parsed.lowConfidenceReason = noScrape
+          ? "Couldn't read enough from the source URL - the page may block scraping or doesn't contain product data."
+          : !titleOk
+          ? "Couldn't extract a clear product title - the URL may not point at a single model page."
+          : "Couldn't find live market data for this niche - it might be too new, too niche, or the keywords were ambiguous.";
+      }
+    } catch {}
+    parsed.aiTier = isProTier ? 'pro' : 'free';
+    parsed.aiModel = primaryModel;
+    parsed.stage = 'quick';
+    return res.status(200).json(parsed);
   }
 
   // Persist every successful scan (anonymous + logged-in) for the dataset.

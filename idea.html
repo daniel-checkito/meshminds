@@ -2738,6 +2738,7 @@ function runAnalysis(){
     populate(data);
     analysisComplete=true;
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
+    (function(){try{var tok=localStorage.getItem('sb_access_token');if(!tok)return;var title=(data.product&&data.product.title)?data.product.title:(lastIsURL?lastURL:'Idea').slice(0,200);fetch('/api/account/save-scan',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({url:lastIsURL?lastURL:'',title:title,score:data.score||null,verdict:data.verdict||'',imageUrl:(data.product&&data.product.image)||null,profitEst:(data.revenue&&data.revenue.netProfit)?'~€'+Math.round(data.revenue.netProfit)+'/mo':null,fullData:data})}).catch(function(){});}catch(e){}})();
     if(waitingForAnalysis){
       waitingForAnalysis=false;
       completeLoadingAnim(function(){

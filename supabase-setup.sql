@@ -89,6 +89,7 @@ ALTER TABLE scans
 
 -- Allow anonymous scans (user_id NULL) — service role inserts these from analyze.js
 ALTER TABLE scans ALTER COLUMN user_id DROP NOT NULL;
+ALTER TABLE scans ALTER COLUMN url DROP NOT NULL;  -- idea-mode scans + legacy imports may have no URL
 CREATE INDEX IF NOT EXISTS scans_ip_hash_idx ON scans(ip_hash, created_at DESC) WHERE user_id IS NULL;
 
 -- ── email_leads (idea-page captures and save-results form) ─────────────────

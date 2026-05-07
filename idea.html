@@ -888,7 +888,15 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
        describe-your-idea form so the click flows naturally. */
     function loadExample(){
       try{
-        var mode=(typeof inputMode!=='undefined')?inputMode:'url';
+        /* The main script is wrapped in an IIFE, so `inputMode` isn't visible
+           here — read the mode from the DOM instead (whichever mode-btn is
+           active). Falling back to inputMode used to silently always pick URL
+           mode, which then ran the URL example while the idea form was the
+           one actually open, surfacing a misleading "describe your idea"
+           validation error. */
+        var ideaBtnEl=document.getElementById('mode-idea');
+        var isIdea=ideaBtnEl&&ideaBtnEl.classList.contains('mode-btn-active');
+        var mode=isIdea?'idea':'url';
         if(mode==='idea'){
           var name=document.getElementById('idea-name');
           if(name){

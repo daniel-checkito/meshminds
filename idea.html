@@ -869,10 +869,48 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <button class="try-eg-btn" id="try-eg-hint" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()" style="margin-top:8px">
+    <button class="try-eg-btn" id="try-eg-hint" onclick="loadExample()" style="margin-top:8px">
       <span style="color:var(--ink3)">Not sure where to start?</span>
       <span style="color:var(--acc);font-weight:700">Try an example →</span>
     </button>
+    <script>
+    /* Pre-fill an example for whichever input mode the user is in. URL mode
+       drops in the laptop-stand link. Idea mode pre-fills both steps of the
+       describe-your-idea form so the click flows naturally. */
+    function loadExample(){
+      try{
+        var mode=(typeof inputMode!=='undefined')?inputMode:'url';
+        if(mode==='idea'){
+          var name=document.getElementById('idea-name');
+          if(name){
+            name.value="Wall-mounted key holder shaped like a tiny climbing wall, with hidden hooks and a small shelf for sunglasses and pocket change. Wood-look PLA finish, magnetic backing.";
+            name.focus();
+          }
+          /* Pre-select reasonable chips on step 2 so clicking Next works
+             even if the user doesn't customize anything. */
+          function pickChip(group,value){
+            var chips=document.querySelectorAll('.chip[data-group="'+group+'"]');
+            chips.forEach(function(c){if(c.dataset.v===value){
+              if(c.dataset.multi==='1'){c.classList.add('on');}
+              else{chips.forEach(function(o){o.classList.remove('on');});c.classList.add('on');}
+            }});
+          }
+          pickChip('type','functional');
+          pickChip('channel','etsy');
+          /* Click the main button to advance to step 2; user can then click
+             again to run the analysis. */
+          var btn=document.getElementById('btn');
+          if(btn)btn.click();
+        } else {
+          var ui=document.getElementById('ui');
+          if(ui)ui.value='https://makerworld.com/en/models/77709';
+          var btn=document.getElementById('btn');
+          if(btn)btn.click();
+        }
+      }catch(e){}
+    }
+    window.loadExample=loadExample;
+    </script>
     <div id="find-models-line" style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
       <a href="https://makerworld.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">MakerWorld</a>
       <a href="https://www.printables.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Printables</a>

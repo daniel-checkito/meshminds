@@ -2,20 +2,15 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/analyze.js": {
-      "maxDuration": 60
-    },
-    "api/save-results.js": {
-      "maxDuration": 10
-    },
-    "api/pro-auth.js": {
-      "maxDuration": 15
-    },
-    "api/pro-verify.js": {
-      "maxDuration": 10
-    },
-    "api/pro-login.js": {
-      "maxDuration": 15
-    }
+    "api/analyze.js": { "maxDuration": 60 },
+    "api/save-results.js": { "maxDuration": 10 },
+    "api/pro-auth.js": { "maxDuration": 15 },
+    "api/pro-verify.js": { "maxDuration": 10 },
+    "api/pro-login.js": { "maxDuration": 15 },
+    "api/account/me.js": { "maxDuration": 10 },
+    "api/account/update-profile.js": { "maxDuration": 10 },
+    "api/account/ideas.js": { "maxDuration": 15 },
+    "api/account/save-scan.js": { "maxDuration": 15 },
+    "api/account/change-password.js": { "maxDuration": 10 }
   }
 }

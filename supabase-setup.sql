@@ -65,3 +65,20 @@ DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- ── Add new columns to profiles ────────────────────────────────────────────
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS display_name TEXT,
+  ADD COLUMN IF NOT EXISTS avatar_url TEXT,
+  ADD COLUMN IF NOT EXISTS default_public BOOLEAN NOT NULL DEFAULT FALSE;
+
+-- ── Add new columns to scans ──────────────────────────────────────────────
+ALTER TABLE scans
+  ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS image_url TEXT,
+  ADD COLUMN IF NOT EXISTS profit_est TEXT,
+  ADD COLUMN IF NOT EXISTS full_data JSONB;
+
+-- Public scans policy (anyone can read public scans)
+CREATE POLICY IF NOT EXISTS "scans_select_public" ON scans
+  FOR SELECT USING (is_public = true);

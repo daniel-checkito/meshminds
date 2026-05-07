@@ -3040,9 +3040,9 @@ q("btn-email").addEventListener("click",function(){
   /* Capture email + consent (fire-and-forget - do not block UX) */
   var consentEl=q("consent-check");
   var consent=consentEl?consentEl.checked:false;
-  fetch("/api/email",{
+  fetch("/api/save-results",{
     method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
-    body:JSON.stringify({email:email,consent:consent,timestamp:new Date().toISOString()})
+    body:JSON.stringify({email:email,consent:consent,source:"idea-page",timestamp:new Date().toISOString()})
   }).catch(function(){});
   localStorage.setItem('mm_gate','1');
   if(analysisComplete){

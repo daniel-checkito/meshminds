@@ -19,9 +19,10 @@ module.exports = async (req, res) => {
 
     const scansCountResult = await adminQuery({
       table: 'scans',
-      filters: `user_id=eq.${user.id}&select=count`,
+      filters: `user_id=eq.${user.id}`,
+      select: 'count',
     });
-    const scansCount = Array.isArray(scansCountResult) ? scansCountResult.length : 0;
+    const scansCount = scansCountResult?.[0]?.count ?? 0;
 
     return res.status(200).json({
       id: user.id,

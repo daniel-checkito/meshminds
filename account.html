@@ -272,12 +272,13 @@
   const supabaseConfigured = !!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && !window.SUPABASE_URL.startsWith('__'));
   const DEMO_PROFILE = {
     email: 'preview@meshminds.com',
-    display_name: 'Daniel (Preview)',
-    avatar_url: '',
-    default_public: false,
-    plan: 'pro',
-    pro_since: '2025-08-14',
-    scan_count: 47,
+    displayName: 'Daniel (Preview)',
+    avatarUrl: '',
+    defaultPublic: false,
+    isPro: true,
+    premiumUntil: '2027-08-14T00:00:00Z',
+    freeScansUsed: 47,
+    scansCount: 47,
   };
   const DEMO_IDEAS = [
     { id: 'd1', title: 'Personalised Mountain Name Sign', url: 'https://makerworld.com/en/models/12345', score: 92, verdict: 'Strong opportunity', is_public: true, created_at: '2026-05-06T14:30:00Z', image_url: '', profit_est: '€12–18 / unit' },

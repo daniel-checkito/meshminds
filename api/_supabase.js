@@ -1,19 +1,22 @@
 // Shared Supabase REST helpers - no npm packages, pure fetch
 
+const env = process.env;
+
 function supabaseUrl() {
-  const u = process.env.SUPABASE_URL;
+  const u = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || env.PUBLIC_SUPABASE_URL || env.VITE_SUPABASE_URL || '';
   if (!u) throw new Error('SUPABASE_URL not set');
   return u.replace(/\/$/, '');
 }
 
 function serviceKey() {
-  const k = process.env.SUPABASE_SERVICE_KEY;
-  if (!k) throw new Error('SUPABASE_SERVICE_KEY not set');
+  // Vercel integration uses SUPABASE_SERVICE_ROLE_KEY; accept both names
+  const k = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY || '';
+  if (!k) throw new Error('SUPABASE_SERVICE_ROLE_KEY not set');
   return k;
 }
 
 function anonKey() {
-  const k = process.env.SUPABASE_ANON_KEY;
+  const k = env.SUPABASE_ANON_KEY || env.NEXT_PUBLIC_SUPABASE_ANON_KEY || env.PUBLIC_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_PUBLISHABLE_KEY || '';
   if (!k) throw new Error('SUPABASE_ANON_KEY not set');
   return k;
 }

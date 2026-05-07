@@ -14,8 +14,9 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Password must be at least 8 characters' });
   }
 
-  const sk = process.env.SUPABASE_SERVICE_KEY;
-  const supabaseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const _env = process.env;
+  const sk = _env.SUPABASE_SERVICE_ROLE_KEY || _env.SUPABASE_SERVICE_KEY || '';
+  const supabaseUrl = (_env.SUPABASE_URL || _env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\/$/, '');
 
   try {
     const res2 = await fetch(`${supabaseUrl}/auth/v1/admin/users/${user.id}`, {

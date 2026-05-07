@@ -23,8 +23,9 @@ const FILE = path.join(__dirname, '..', 'data', 'winners.json');
 const FORCE = process.argv.includes('--force');
 const DEBUG = process.argv.includes('--debug');
 const TIMEOUT_MS = 15000;
-const CONCURRENCY = 2;          // gentler on Etsy/eBay than 4
-const REQUEST_GAP_MS = 600;      // small jitter so we don't burst
+const CONCURRENCY = 1;            // sequential — Etsy starts 429-ing above this
+const REQUEST_GAP_MS = 2500;      // wider gap to stay under per-host rate limits
+const RETRY_429_DELAY_MS = 30000; // back off 30s on 429 then retry once
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36';
 /* Both Etsy and eBay block real browser UAs at the CDN edge for anything
@@ -115,10 +116,13 @@ function pickPlatformCdn(html, isEtsy, isEbay) {
   return ranked[0] || matches[0];
 }
 
-async function fetchHtml(url) {
+async function fetchHtml(url, allowBackoff) {
   /* Try each UA in the fallback list until one returns 200. We stop early
-     on success so most URLs only need a single request. */
+     on success so most URLs only need a single request. If we hit a 429
+     (rate limit), pause for RETRY_429_DELAY_MS and retry the whole UA loop
+     once — Etsy/eBay throttle per-host so a single long pause clears it. */
   let lastStatus = null;
+  let saw429 = false;
   for (const ua of UA_FALLBACKS) {
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), TIMEOUT_MS);
@@ -130,9 +134,15 @@ async function fetchHtml(url) {
       });
       lastStatus = r.status;
       if (r.ok) return { html: await r.text(), status: r.status, ua };
+      if (r.status === 429) saw429 = true;
     } catch (e) {
       lastStatus = 'err:' + (e.code || e.name || 'unknown');
     } finally { clearTimeout(t); }
+  }
+  if (saw429 && allowBackoff) {
+    process.stdout.write('(429, backing off ' + (RETRY_429_DELAY_MS / 1000) + 's) ');
+    await sleep(RETRY_429_DELAY_MS);
+    return fetchHtml(url, false);
   }
   return { html: null, status: lastStatus, ua: null };
 }
@@ -140,7 +150,7 @@ async function fetchHtml(url) {
 let dumpedDebug = false;
 async function pickImageFor(winner) {
   if (!winner.url) return { img: null, reason: 'no-url' };
-  const { html, status } = await fetchHtml(winner.url);
+  const { html, status } = await fetchHtml(winner.url, true);
   if (!html) return { img: null, reason: 'fetch:' + status };
   const isEtsy = /etsy\.com/.test(winner.url);
   const isEbay = /ebay\./.test(winner.url);
@@ -180,6 +190,22 @@ async function main() {
   const todo = json.winners
     .map((w, i) => ({ w, i }))
     .filter(({ w }) => w.url && (FORCE || !w.image));
+  /* Interleave by host so we don't hit the same domain (Etsy/eBay) 50 times
+     in a row — that's what triggered the 429 cascade in the previous run. */
+  const byHost = {};
+  todo.forEach(item => {
+    const h = (() => { try { return new URL(item.w.url).host; } catch { return 'x'; } })();
+    (byHost[h] = byHost[h] || []).push(item);
+  });
+  const interleaved = [];
+  let added = true;
+  while (added) {
+    added = false;
+    for (const h of Object.keys(byHost)) {
+      if (byHost[h].length) { interleaved.push(byHost[h].shift()); added = true; }
+    }
+  }
+  todo.length = 0; todo.push.apply(todo, interleaved);
   console.log(`Found ${todo.length} winner(s) needing images${FORCE ? ' (--force)' : ''}.\n`);
   let updated = 0, failed = 0;
   const reasons = {};

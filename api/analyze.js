@@ -482,7 +482,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
       imageUrl = direct.imageUrl;
       sourceUrl = direct.sourceUrl;
     } else {
-      const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
+      const fcData = await firecrawlScrape(scrapeUrl, 800, 11000);
       if (fcData) {
         const extracted = extractProductContext(fcData);
         productContext = extracted.productContext;
@@ -501,7 +501,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
       imageUrl = direct.imageUrl;
       sourceUrl = direct.sourceUrl;
     } else {
-      const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
+      const fcData = await firecrawlScrape(scrapeUrl, 800, 11000);
       if (fcData) {
         const extracted = extractProductContext(fcData);
         productContext = extracted.productContext;
@@ -834,7 +834,7 @@ IMPORTANT RULES:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 3072,
+        max_tokens: 2048,
         system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
         messages: [{
           role: 'user',
@@ -938,6 +938,25 @@ IMPORTANT RULES:
   // Attach the same matched businesses that were given to the AI so the UI
   // can render the inspiration panel beside the analysis.
   if (inspirationBusinesses.length) parsed.businessInspiration = inspirationBusinesses;
+
+  // Low-confidence detection: when the scrape and live searches all came up
+  // empty, the AI is hallucinating from very little signal. Mark the scan so
+  // the UI can show a friendly fallback instead of fake-precise numbers.
+  try {
+    const sv = Number(parsed?.market?.searchVolume) || 0;
+    const el = Number(parsed?.market?.etsyListings) || 0;
+    const compsLen = Array.isArray(parsed?.competitors) ? parsed.competitors.length : 0;
+    const titleOk = parsed?.product?.title && String(parsed.product.title).trim().length > 2;
+    const noScrape = !productContext || productContext.length < 60;
+    if ((sv < 80 && el < 60 && compsLen === 0) || noScrape || !titleOk) {
+      parsed.lowConfidence = true;
+      parsed.lowConfidenceReason = noScrape
+        ? "Couldn't read enough from the source URL - the page may block scraping or doesn't contain product data."
+        : !titleOk
+        ? "Couldn't extract a clear product title - the URL may not point at a single model page."
+        : "Couldn't find live market data for this niche - it might be too new, too niche, or the keywords were ambiguous.";
+    }
+  } catch { /* never block the response on this */ }
 
   // Fire-and-forget: log this scan's market data so the system improves over time.
   // We always log - even when no category matched - so the promotion script can

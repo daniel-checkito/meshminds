@@ -2723,6 +2723,39 @@ function showGateError(msg){
   if(q("btn-email"))q("btn-email").disabled=false;
 }
 
+/* Friendly fallback when the scrape + live searches found nothing. Shown
+   instead of fake-precise numbers. Two CTAs: try a different URL, or pivot
+   to idea-mode where the user can describe what they want to make. */
+function showLowConfidenceFallback(reason){
+  if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+  if(q("loading-overlay"))q("loading-overlay").style.display="none";
+  if(q("gate-content"))q("gate-content").style.display="none";
+  if(q("gate-headline"))q("gate-headline").textContent="No data found";
+  if(q("gate-subline"))q("gate-subline").textContent=reason;
+  if(q("gate-pct")){q("gate-pct").textContent="";q("gate-pct").innerHTML='<span style="font-size:32px">🔍</span>';q("gate-pct").style.color="var(--ink2)";}
+  drawLoadingRing(1,"#94a3b8");
+  var existing=q("lowconf-actions");
+  if(existing)existing.remove();
+  var actions=document.createElement('div');
+  actions.id='lowconf-actions';
+  actions.style.cssText='margin-top:14px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:12px;text-align:left';
+  var alt=lastIsURL?'Describe your idea instead':'Paste a URL instead';
+  actions.innerHTML='<div style="font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:12px">Try one of these:</div>'
+    +'<button id="lowconf-retry" style="display:block;width:100%;padding:12px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-family:\'DM Sans\',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;margin-bottom:8px">↻ Try a different '+(lastIsURL?'URL':'idea')+'</button>'
+    +'<button id="lowconf-switch" style="display:block;width:100%;padding:12px;background:#fff;color:var(--ink);border:1.5px solid var(--line2);border-radius:10px;font-family:\'DM Sans\',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">'+(lastIsURL?'💡 ':'🔗 ')+alt+'</button>';
+  var panel=q("email-panel");
+  if(panel)panel.appendChild(actions);
+  var rb=q("lowconf-retry");
+  if(rb)rb.addEventListener('click',function(){actions.remove();reset();});
+  var sb=q("lowconf-switch");
+  if(sb)sb.addEventListener('click',function(){
+    actions.remove();
+    var nextMode=lastIsURL?'idea':'url';
+    reset();
+    if(window.setMode)window.setMode(nextMode);
+  });
+}
+
 function runAnalysis(){
   var sellFrom=q("sell-from")?q("sell-from").value:"";
   var sellTo=qSellTo.length>0?qSellTo.join(","):"WORLDWIDE";
@@ -2778,6 +2811,16 @@ function runAnalysis(){
     }
     return resp.json();
   }).then(function(data){
+    /* Low-confidence: scrape returned nothing useful and the AI had to guess.
+       Don't show fake-precise numbers - drop into the friendly fallback. */
+    if(data&&data.lowConfidence){
+      if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+      waitingForAnalysis=false;
+      analysisComplete=false;
+      if(window.MM&&MM.track)MM.track('analyze_lowconf',{label:isIdeaMode?'idea':'url'});
+      showLowConfidenceFallback(data.lowConfidenceReason||"We couldn't find enough data on this product.");
+      return;
+    }
     populate(data);
     analysisComplete=true;
     if(q("gate-headline"))q("gate-headline").textContent="Report ready.";
@@ -2818,7 +2861,18 @@ function runAnalysis(){
     waitingForAnalysis=false;
     if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
     loadingProgress=0;
-    showGateError(msg);
+    var isAbort=(err&&err.name==="AbortError")||/abort|timed out|network/i.test(errMsg);
+    var isScrapeFail=/scrape_failed|Could not scrape|HTTP 502|reach that URL/i.test(msg);
+    /* Hard-fail cases (timeout / scrape failure) get the same friendly two-button
+       fallback as low-confidence: try again, or switch input mode. Soft errors
+       (rate limit, network) still use the inline gate error. */
+    if(isAbort||isScrapeFail){
+      showLowConfidenceFallback(isAbort
+        ? "Analysis is taking longer than expected. The source URL might be slow to scrape, or the AI is busy."
+        : "We couldn't read enough from that URL. The page may block scraping or doesn't contain product data.");
+    } else {
+      showGateError(msg);
+    }
     if(window.MM&&MM.track)MM.track('analyze_error',{label:msg.slice(0,80)});
   });
 
@@ -2902,6 +2956,7 @@ function cancelAnalysis(){
 window.cancelAnalysis=cancelAnalysis;
 
 function reset(){
+  var lc=q("lowconf-actions");if(lc)lc.remove();
   document.querySelector('.phone').classList.remove('phone-active');
   step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
   ideaStep=1;inputMode='url';if(window.setMode)window.setMode('url');

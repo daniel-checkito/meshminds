@@ -465,6 +465,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 /* How to Sell It panel */
 .sell-section-hd{font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;font-family:"DM Mono",sans-serif;margin:20px 0 10px;display:flex;align-items:center;gap:10px}
 .sell-section-hd::after{content:'';flex:1;height:1px;background:var(--line)}
+.comp-section-hd{font-family:"Bebas Neue",sans-serif;font-size:24px;letter-spacing:.02em;color:var(--ink);margin:0 0 10px;line-height:1.1;display:flex;align-items:center;gap:10px}
+.comp-section-hd::after{content:'';flex:1;height:1px;background:var(--line)}
 .price-ctx{font-size:11.5px;color:var(--ink2);line-height:1.45;margin-top:8px;padding:9px 11px;background:#f7f7f7;border-radius:8px;font-family:"DM Mono",sans-serif}
 .sell-person-card{background:linear-gradient(135deg,#f5f3ff,#ede9fe);border:1.5px solid #c4b5fd;border-radius:13px;padding:14px 14px 13px;margin-bottom:16px}
 .sell-person-eyebrow{font-family:"DM Mono",sans-serif;font-size:9.5px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:.13em;margin-bottom:4px}
@@ -940,7 +942,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <a href="https://www.thingiverse.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Thingiverse</a>
     </div>
     <div class="dots" id="dots" style="display:none">
-      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div><div class="dot" id="d10"></div>
     </div>
   </div>
 
@@ -1369,19 +1371,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="erank-insight" id="ins"><div class="ins-dot"></div><span id="ins-text"></span></div>
         </div>
 
-        <!-- Competitor listings -->
-        <div id="competitors-section" style="display:none">
-          <div class="sell-section-hd">Top competitors selling this</div>
-          <div id="competitors-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px"></div>
-        </div>
-
-        <!-- Business inspiration -->
-        <div id="business-inspiration-section" style="display:none">
-          <div class="sell-section-hd">Sellers proving this works</div>
-          <div style="font-size:11.5px;color:var(--ink3);line-height:1.45;margin:-4px 0 10px">Real businesses winning in this space - different scales, different angles. Tap to visit.</div>
-          <div id="business-inspiration-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px"></div>
-        </div>
-
         <!-- Platform ranking -->
         <div class="sell-section-hd">Where to sell</div>
         <div class="platform-cards">
@@ -1464,6 +1453,24 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </div>
 
 
+      </div>
+
+      <!-- COMPETITORS + INSPIRATION (own step) -->
+      <div class="panel">
+        <div class="res-sec-hd"><span class="res-sec-ico">🏆</span><span class="res-sec-lbl">Who's already winning</span></div>
+
+        <!-- Competitor listings -->
+        <div id="competitors-section" style="display:none;margin-top:8px">
+          <div class="comp-section-hd">Top competitors selling this</div>
+          <div id="competitors-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px"></div>
+        </div>
+
+        <!-- Business inspiration -->
+        <div id="business-inspiration-section" style="display:none;margin-top:18px">
+          <div class="comp-section-hd">Sellers proving this works</div>
+          <div style="font-size:13px;color:var(--ink3);line-height:1.5;margin:0 0 12px">Real businesses winning in this space. Tap to visit.</div>
+          <div id="business-inspiration-list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:4px"></div>
+        </div>
       </div>
 
       <!-- LEGAL & COPYRIGHT CHECK -->
@@ -2032,7 +2039,7 @@ function completeLoadingAnim(callback){
 
 function openLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.add("open");}
 function closeLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.remove("open");}
-function dots(s){for(var i=0;i<10;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function dots(s){for(var i=0;i<11;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
 function verdict(state,msg,note){
@@ -2605,6 +2612,29 @@ function buildBusinessInspiration(list){
   var host=q("business-inspiration-list");
   if(!sec||!host)return;
   if(!Array.isArray(list)||list.length===0){sec.style.display="none";return;}
+  /* Filter to businesses whose category tags overlap the product's category.
+     The AI sometimes returns inspirational brands that are tangentially
+     relevant; this trims the list to ones the user can actually learn from
+     for their specific niche. If the filter would empty the list, we fall
+     back to showing whatever the AI returned. */
+  var QCAT_TO_BIZ={
+    functional:['home_organization','tools_workshop_jigs','tech_accessories','desk_office','automotive_bike','lighting_lamps'],
+    decor:['decor','lighting_lamps','planters_garden','personalized_gifts'],
+    art:['decor','miniatures_terrain','cosplay_props','personalized_gifts'],
+    gaming:['dnd_gaming','miniatures_terrain','toys_fidgets'],
+    wearable:['cosplay_props','jewelry','fashion','personalized_gifts'],
+    pet:['pet_accessories'],
+    other:[]
+  };
+  var allowed=QCAT_TO_BIZ[qCat]||[];
+  if(allowed.length){
+    var filtered=list.filter(function(b){
+      if(!b||!Array.isArray(b.categories))return false;
+      for(var i=0;i<b.categories.length;i++)if(allowed.indexOf(b.categories[i])!==-1)return true;
+      return false;
+    });
+    if(filtered.length)list=filtered;
+  }
   var THEME_LABEL={premium_design:"Premium design",viral_dtc:"Viral DTC",platform_software:"Platform play",service_bureau:"Service bureau",niche_functional:"Niche functional",sustainability_design:"Sustainability"};
   sec.style.display="";
   host.innerHTML=list.map(function(b){
@@ -3092,10 +3122,11 @@ function runAnalysis(){
         setBtn2("How to sell it","",false);revealScore();populateLegalCerts();
       });
     } else if(step===5)setBtn2("How to sell it","",false);
-    else if(step===6)setBtn2("Check legal status","",false);
-    else if(step===7)setBtn2("See your next step","",false);
-    else if(step===8)setBtn2("See pro upgrade","",false);
-    else if(step===9)setBtn2("Check another print","dark",false);
+    else if(step===6)setBtn2("See top competitors","",false);
+    else if(step===7)setBtn2("Check legal status","",false);
+    else if(step===8)setBtn2("See your next step","",false);
+    else if(step===9)setBtn2("See pro upgrade","",false);
+    else if(step===10)setBtn2("Check another print","dark",false);
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
@@ -3520,7 +3551,7 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){
-    step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);
+    step=6;dots(6);slide(6);setBtn2("See top competitors","",false);showBack(true);
     if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);
     /* If the deep-dive stage 3 call is still in flight when the user advances,
        show a small inline spinner so they know more data is loading. */
@@ -3529,14 +3560,15 @@ q("btn2").addEventListener("click",function(){
       dl.id='deep-loading';
       dl.style.cssText='display:flex;align-items:center;justify-content:center;gap:8px;margin:14px auto;padding:9px 14px;background:#fff;border:1px solid var(--line);border-radius:9px;font-size:11.5px;color:var(--ink2);max-width:300px';
       dl.innerHTML='<div style="width:12px;height:12px;border:2px solid var(--line2);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite"></div>Loading the deep-dive analysis…';
-      var hostPanel=document.querySelector('.scroll .track > .panel:nth-of-type(7)') || q('offer-panel');
+      var hostPanel=document.querySelector('.scroll .track > .panel:nth-of-type(8)') || q('offer-panel');
       if(hostPanel)hostPanel.insertBefore(dl,hostPanel.firstChild);
     }
     return;
   }
-  if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("See pro upgrade","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
-  if(step===8){step=9;dots(9);slide(9);setBtn2("Check another print","dark",false);showBack(true);return;}
+  if(step===6){step=7;dots(7);slide(7);setBtn2("Check legal status","",false);showBack(true);return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("See your next step","",false);showBack(true);return;}
+  if(step===8){step=9;dots(9);slide(9);setBtn2("See pro upgrade","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
+  if(step===9){step=10;dots(10);slide(10);setBtn2("Check another print","dark",false);showBack(true);return;}
   else{ window.location.href='/idea'; }
 });
 
@@ -3545,9 +3577,10 @@ q("btn-back").addEventListener("click",function(){
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
-  if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
-  if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===9){step=8;dots(8);slide(8);setBtn2("See pro upgrade","",false);showBack(true);return;}
+  if(step===7){step=6;dots(6);slide(6);setBtn2("See top competitors","",false);showBack(true);return;}
+  if(step===8){step=7;dots(7);slide(7);setBtn2("Check legal status","",false);showBack(true);return;}
+  if(step===9){step=8;dots(8);slide(8);setBtn2("See your next step","",false);showBack(true);return;}
+  if(step===10){step=9;dots(9);slide(9);setBtn2("See pro upgrade","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

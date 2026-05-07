@@ -217,6 +217,12 @@ module.exports = async (req, res) => {
     const isPrintables = /(^|\.)printables\.com$/.test(host);
     const isCults = /(^|\.)cults3d\.com$/.test(host);
     if (!isMakerWorld && !isPrintables && !isCults) return null;
+    // Normalize MakerWorld locale paths (/de/, /fr/, /es/, /it/, /jp/, /zh-Hans/...
+    // /en/) -> /en/. The localized pages return the same data but sometimes
+    // load slower and confuse the keyword extractor. Always prefer English.
+    if (isMakerWorld) {
+      targetUrl = targetUrl.replace(/^(https?:\/\/[^/]+)\/[a-z]{2}(?:-[A-Za-z]+)?(\/models?\/)/i, '$1/en$2');
+    }
 
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), 6000);
@@ -822,7 +828,11 @@ IMPORTANT RULES:
   // Hobby plan caps the lambda at 60s. Anthropic call is the long pole, so
   // give it most of that budget but leave 8s of headroom for parsing,
   // database writes and response.
-  const clTimeout = setTimeout(() => clAbort.abort(), 45000);
+  // Lambda total budget is 60s on Hobby. Reserve ~5s for scrape + ~18s for
+  // Haiku fallback if Sonnet aborts, leaving ~37s for the Sonnet call. Most
+  // Sonnet 4.6 responses come back in 18-28s, so this still succeeds for the
+  // common case while leaving the fallback enough time to actually run.
+  const clTimeout = setTimeout(() => clAbort.abort(), 37000);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -865,7 +875,7 @@ IMPORTANT RULES:
     if (isAbort) {
       try {
         const haikuAbort = new AbortController();
-        const haikuTimeout = setTimeout(() => haikuAbort.abort(), 12000);
+        const haikuTimeout = setTimeout(() => haikuAbort.abort(), 18000);
         const haikuResp = await fetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           headers: {

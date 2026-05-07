@@ -1874,35 +1874,79 @@ function drawLoadingRing(p,color){
   });
 }
 
+/* Real-stage progress: each completed network call jumps the bar to its
+   milestone, and within each stage the bar creeps gently toward the next
+   one. No more fake 'Running copyright check' that happens before the AI
+   has even started. */
+var loadingStageTarget=0.40; // start by aiming at end-of-prep
+var loadingStageSubline="Reading the product page…";
+var loadingStageStepId="ls0";
+/* Pulled out of the prep blob's productContext: a one-line confidence card
+   shown above the loading ring so users know we successfully read their
+   product before the AI even starts. Massive perceived-speed win. */
+function showFoundProduct(prep){
+  if(!prep)return;
+  var ctx=prep.productContext||'';
+  var titleMatch=ctx.match(/TITLE:\s*([^\n]+)/);
+  var title=titleMatch?titleMatch[1].trim():null;
+  if(!title&&!prep.imageUrl)return;
+  if(q('found-product-card'))return; // already shown
+  var card=document.createElement('div');
+  card.id='found-product-card';
+  card.style.cssText='display:flex;align-items:center;gap:10px;background:#f0fdf4;border:1px solid #86efac;border-radius:10px;padding:8px 12px;margin:0 auto 12px;max-width:340px;text-align:left;animation:foundFade .35s ease';
+  card.innerHTML='<style>@keyframes foundFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}</style>'+
+    (prep.imageUrl?'<img src="'+esc(prep.imageUrl)+'" style="width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#fff" loading="lazy" alt="">':'<span style="font-size:18px;flex-shrink:0">✓</span>')+
+    '<div style="min-width:0;flex:1"><div style="font-size:9.5px;font-weight:700;color:#15803d;font-family:\'DM Mono\',monospace;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1px">Found it</div>'+
+    '<div style="font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(title||'Your product')+'</div></div>';
+  var wrap=q('gate-ring-wrap');
+  if(wrap)wrap.parentNode.insertBefore(card,wrap.nextSibling);
+}
+function setLoadingStage(stage){
+  /* Snap the bar forward + update label text + advance the step list. */
+  var map={
+    start:    {target:0.40, text:"Reading the product page…",            step:"ls0"},
+    prepDone: {target:0.55, text:"Found it. Looking at the live market…", step:"ls1"},
+    quick:    {target:0.85, text:"Scoring your idea…",                    step:"ls2"},
+    quickDone:{target:0.95, text:"Loading the deep dive…",                step:"ls3"},
+    done:     {target:1.00, text:"Report ready.",                         step:"ls3"}
+  };
+  var cfg=map[stage];if(!cfg)return;
+  loadingStageTarget=cfg.target;
+  loadingStageSubline=cfg.text;
+  loadingStageStepId=cfg.step;
+  if(q("gate-subline"))q("gate-subline").textContent=cfg.text;
+  /* Update step-list active/done classes */
+  var order=["ls0","ls1","ls2","ls3"];
+  var idx=order.indexOf(cfg.step);
+  for(var i=0;i<order.length;i++){
+    var el=q(order[i]);if(!el)continue;
+    el.classList.remove("active","done");
+    if(i<idx)el.classList.add("done");
+    else if(i===idx)el.classList.add("active");
+  }
+  /* Snap the loading bar to within ~80% of the new target so the jump is
+     visible but not jarring; the regular tick will smoothly fill the rest. */
+  if(loadingProgress < cfg.target * 0.8) loadingProgress = cfg.target * 0.8;
+}
 function startLoadingAnim(){
   if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
   loadingProgress=0;
-  var t0=null;
-  var phases=[
-    {at:0,    text:"Scraping product page…",         step:"ls0"},
-    {at:0.22, text:"Scanning Etsy live listings…",   step:"ls1"},
-    {at:0.50, text:"Calculating profit model…",      step:"ls2"},
-    {at:0.72, text:"Running copyright check…",       step:"ls3"}
-  ];
-  var activePhase=-1;
+  loadingStageTarget=0.40;
+  loadingStageSubline="Reading the product page…";
+  loadingStageStepId="ls0";
+  var t0=null,lastT=null;
   ["ls0","ls1","ls2","ls3"].forEach(function(id){var el=q(id);if(el)el.classList.remove("active","done");});
+  var first=q("ls0");if(first)first.classList.add("active");
   function tick(ts){
-    if(!t0)t0=ts;
-    var elapsed=ts-t0;
-    var p=0.88*(1-Math.exp(-elapsed/8500));
-    loadingProgress=p;
-    drawLoadingRing(p,"#f59e0b");
-    for(var i=phases.length-1;i>=0;i--){
-      if(p>=phases[i].at){
-        if(activePhase!==i){
-          activePhase=i;
-          if(q("gate-subline"))q("gate-subline").textContent=phases[i].text;
-          for(var j=0;j<i;j++){var el=q(phases[j].step);if(el){el.classList.remove("active");el.classList.add("done");}}
-          var cur=q(phases[i].step);if(cur){cur.classList.remove("done");cur.classList.add("active");}
-        }
-        break;
-      }
-    }
+    if(!t0){t0=ts;lastT=ts;}
+    var dt=Math.min(ts-lastT,250);lastT=ts;
+    /* Asymptote toward the current stage target. Decay rate keeps each stage
+       feeling alive but never jumps past its milestone unless setLoadingStage
+       advances it. */
+    var gap=Math.max(0,loadingStageTarget-loadingProgress);
+    var step=gap*(1-Math.exp(-dt/2400));
+    loadingProgress=Math.min(loadingStageTarget,loadingProgress+step);
+    drawLoadingRing(loadingProgress,"#f59e0b");
     loadingRaf=requestAnimationFrame(tick);
   }
   loadingRaf=requestAnimationFrame(tick);
@@ -2898,6 +2942,7 @@ function runAnalysis(){
         if(typeof populateLegalCerts==='function')populateLegalCerts();
         var di=q('deep-loading');if(di)di.remove();
         if(q("gate-headline"))q("gate-headline").textContent="Done.";
+        try{setLoadingStage('done');}catch(_){}
       }catch(e){}
     }).catch(function(){window._fullPending=false;});
   }
@@ -2912,7 +2957,11 @@ function runAnalysis(){
      if(prepData&&prepData.ok&&prepData.prep){
        nextBody.prep=prepData.prep;
        window._activePrep=prepData.prep;
+       /* Show the user we found their product before the AI even starts.
+          Big perceived-speed win on slow scans. */
+       try{showFoundProduct(prepData.prep);}catch(_){}
      }
+     try{setLoadingStage('quick');}catch(_){}
      /* Stage 2: quick AI call. Returns just the step-5 fields fast. */
      return postAnalyze(nextBody);
    })
@@ -2939,6 +2988,7 @@ function runAnalysis(){
     }
     populate(data);
     analysisComplete=true;
+    try{setLoadingStage('quickDone');}catch(_){}
     /* Stage 3: fire the full analysis in the background. By the time the user
        advances past step 5, the deep-dive sections (revenue, legal, strategy,
        certificates) will already be populated. */
@@ -2946,6 +2996,7 @@ function runAnalysis(){
       try{fireFullStage(window._activePrep||null,data);}catch(_){window._fullPending=false;}
     } else {
       window._fullPending=false;
+      try{setLoadingStage('done');}catch(_){}
     }
     if(q("gate-headline"))q("gate-headline").textContent="Report ready.";
     if(q("gate-subline"))q("gate-subline").textContent="Enter your email to unlock the full analysis.";
@@ -3095,6 +3146,7 @@ window.cancelAnalysis=cancelAnalysis;
 function reset(){
   var lc=q("lowconf-actions");if(lc)lc.remove();
   var dl=q("deep-loading");if(dl)dl.remove();
+  var fp=q("found-product-card");if(fp)fp.remove();
   window._analyzeRetried=false;
   window._fullPending=false;
   window._activePrep=null;

@@ -4,6 +4,7 @@
 // transition.
 
 const { adminQuery, hashIp } = require('./_supabase');
+const { isLikelyFakeEmail } = require('./_email-validator');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,8 +15,21 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { email, url, score, verdict, consent, timestamp, source } = req.body || {};
-  if (!email || !/.+@.+\..+/.test(String(email))) {
-    return res.status(400).json({ error: 'Valid email required' });
+  if (!email) return res.status(400).json({ error: 'Email required' });
+
+  const fakeCheck = isLikelyFakeEmail(email);
+  if (fakeCheck.fake) {
+    let userMsg = 'Please enter a valid email address.';
+    if (fakeCheck.reason === 'typo_domain') {
+      userMsg = `That email looks like a typo. Did you mean ${email.split('@')[0]}@${fakeCheck.didYouMean}?`;
+    } else if (fakeCheck.reason === 'disposable') {
+      userMsg = 'Disposable email addresses are not accepted. Please use a real email.';
+    } else if (fakeCheck.reason === 'unknown_tld') {
+      userMsg = `That email's domain extension (.${fakeCheck.tld}) doesn't look right. Please double-check.`;
+    } else if (fakeCheck.reason === 'test_pattern' || fakeCheck.reason === 'test_domain' || fakeCheck.reason === 'matches_domain') {
+      userMsg = 'Please use a real email address.';
+    }
+    return res.status(400).json({ error: userMsg, code: fakeCheck.reason });
   }
 
   const clientIp = (req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || '').split(',')[0].trim();

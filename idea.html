@@ -3157,9 +3157,14 @@ q("btn-email").addEventListener("click",function(){
   var consentEl=q("consent-check");
   var consent=consentEl?consentEl.checked:false;
   if(window.MM&&MM.track)MM.track('email_submit',{label:'idea-page',meta:{consent:consent}});
+  var leadCtx={email:email,consent:consent,source:lastIsURL?"idea-page-url":"idea-page-idea",url:lastURL||null,timestamp:new Date().toISOString()};
+  if(analysisComplete){
+    if(typeof lastScore==='number')leadCtx.score=lastScore;
+    var vt=q("verdict-text");if(vt&&vt.textContent)leadCtx.verdict=vt.textContent.slice(0,200);
+  }
   fetch("/api/save-results",{
     method:"POST",headers:{"Content-Type":"application/json"},keepalive:true,
-    body:JSON.stringify({email:email,consent:consent,source:"idea-page",timestamp:new Date().toISOString()})
+    body:JSON.stringify(leadCtx)
   }).catch(function(){});
   localStorage.setItem('mm_gate','1');
   if(analysisComplete){

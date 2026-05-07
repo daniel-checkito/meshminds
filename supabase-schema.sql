@@ -88,7 +88,9 @@ alter table public.usage_log            enable row level security;
 -- No policies on email_leads / market_observations / usage_log — service role only.
 
 -- Allow signed-in users to read their own scans (used by /api/account/ideas).
-create policy if not exists "scans owner select" on public.scans
+-- Postgres doesn't support `create policy if not exists`, so drop-then-create.
+drop policy if exists "scans owner select" on public.scans;
+create policy "scans owner select" on public.scans
   for select using (auth.uid() = user_id);
 
 -- ────────────────────────────────────────────────────────────────────────────

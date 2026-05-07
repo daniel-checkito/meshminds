@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>My Account – MeshMinds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--acc:#f56a00;--ink:#0d0d0d;--ink2:#4b4b4b;--ink3:#8c8c8c;--surf:#f9f9f9;--surf2:#f0f0f0;--line:#e8e8e8;--line2:#d0d0d0;--good:#15803d;--warn:#d97706;--bad:#dc2626}
+    body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh}
+    .page{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column}
+
+    /* Loading */
+    #loading-screen{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:100}
+    .spin{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Header */
+    .hdr{padding:14px 16px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;position:sticky;top:0;background:#fff;z-index:10}
+    .avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:15px;font-weight:700;color:#fff;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .hdr-info{flex:1;min-width:0}
+    .hdr-name{font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .hdr-email{font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pro-badge{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;background:var(--acc);color:#fff;border-radius:4px;padding:2px 6px;flex-shrink:0}
+    .logout-btn{background:none;border:1px solid var(--line2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink3);padding:5px 10px;cursor:pointer;flex-shrink:0}
+    .logout-btn:hover{color:var(--bad);border-color:var(--bad)}
+
+    /* Tabs */
+    .tabs{display:flex;border-bottom:1px solid var(--line);background:#fff;position:sticky;top:69px;z-index:9}
+    .tab{flex:1;padding:11px 0;font-size:12.5px;font-weight:600;color:var(--ink3);text-align:center;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .15s}
+    .tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+
+    /* Sections */
+    .section{display:none;flex-direction:column;flex:1}
+    .section.active{display:flex}
+    .sec-inner{padding:16px;flex:1}
+
+    /* Ideas tab */
+    .ideas-count{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px}
+    .idea-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:10px}
+    .idea-card-top{display:flex;align-items:flex-start;gap:11px;padding:11px 12px}
+    .idea-thumb{width:54px;height:54px;border-radius:8px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--surf2);display:flex;align-items:center;justify-content:center;font-size:20px}
+    .idea-body{flex:1;min-width:0}
+    .idea-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .idea-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:3px}
+    .score-pill{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;border-radius:5px;padding:2px 7px}
+    .score-g{background:#dcfce7;color:var(--good)}
+    .score-y{background:#fef9c3;color:var(--warn)}
+    .score-r{background:#fee2e2;color:var(--bad)}
+    .verdict-txt{font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .idea-profit{font-size:11px;color:var(--ink3)}
+    .idea-profit b{color:var(--ink2)}
+    .idea-card-foot{border-top:1px solid var(--line);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .idea-date{font-size:10px;color:var(--ink3)}
+    .idea-actions{display:flex;align-items:center;gap:8px}
+
+    /* Toggle switch */
+    .toggle-wrap{display:flex;align-items:center;gap:6px}
+    .toggle-lbl{font-size:10.5px;color:var(--ink3)}
+    .toggle{position:relative;display:inline-block;width:36px;height:20px;flex-shrink:0}
+    .toggle input{opacity:0;width:0;height:0}
+    .toggle-slider{position:absolute;inset:0;background:var(--line2);border-radius:20px;cursor:pointer;transition:background .2s}
+    .toggle-slider::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;left:3px;top:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+    .toggle input:checked+.toggle-slider{background:var(--good)}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(16px)}
+
+    .del-btn{background:none;border:none;font-size:16px;cursor:pointer;padding:2px 4px;opacity:.4;transition:opacity .15s;line-height:1}
+    .del-btn:hover{opacity:1}
+
+    /* Empty state */
+    .empty{text-align:center;padding:48px 20px}
+    .empty-ico{font-size:36px;margin-bottom:10px}
+    .empty-title{font-size:15px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+    .empty-sub{font-size:13px;color:var(--ink3);line-height:1.5;margin-bottom:16px}
+    .btn-scan{display:inline-block;padding:12px 24px;background:var(--acc);color:#fff;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none}
+
+    /* Settings tab */
+    .settings-group{margin-bottom:24px}
+    .settings-group-title{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+    .field{margin-bottom:14px}
+    .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:5px}
+    .field input{width:100%;padding:11px 13px;border:1.5px solid var(--line2);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s}
+    .field input:focus{border-color:var(--acc)}
+    .field input::placeholder{color:var(--ink3)}
+    .field-hint{font-size:11px;color:var(--ink3);margin-top:4px}
+    .avatar-preview{width:56px;height:56px;border-radius:50%;margin-bottom:10px;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:18px;font-weight:700;color:#fff;overflow:hidden}
+    .avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none}
+
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
+    .toggle-row-label{font-size:13px;color:var(--ink);font-weight:600}
+    .toggle-row-sub{font-size:11.5px;color:var(--ink3);margin-top:1px}
+
+    .btn-save{padding:11px 20px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:opacity .15s}
+    .btn-save:hover{opacity:.9}
+    .btn-save:disabled{opacity:.5;cursor:not-allowed}
+    .save-ok{font-size:12px;color:var(--good);font-weight:600;margin-left:10px;display:none}
+    .save-ok.show{display:inline}
+
+    .error-box{background:#fee2e2;border:1px solid #fca5a5;border-radius:9px;padding:10px 13px;font-size:12.5px;color:var(--bad);margin-bottom:14px;display:none}
+    .error-box.show{display:block}
+
+    /* Billing tab */
+    .plan-card{border:1.5px solid var(--line2);border-radius:13px;padding:16px;margin-bottom:16px}
+    .plan-card.pro{border-color:#86efac;background:linear-gradient(135deg,#f0fdf4,#dcfce7)}
+    .plan-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .plan-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+    .plan-name{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--ink);line-height:1}
+    .plan-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+    .plan-badge.pro{background:var(--acc);color:#fff}
+    .plan-badge.free{background:var(--surf2);color:var(--ink3)}
+    .plan-detail{font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:14px}
+    .btn-portal{display:block;width:100%;padding:13px;background:#0d0d0d;color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-align:center;text-decoration:none;cursor:pointer}
+    .btn-upgrade{display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-align:center;text-decoration:none}
+    .billing-note{font-size:11.5px;color:var(--ink3);text-align:center;margin-top:8px;line-height:1.5}
+
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#0d0d0d;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+
+<div id="loading-screen"><div class="spin"></div></div>
+
+<div class="page" id="app" style="display:none">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="avatar" id="hdrAvatar" style="background:#f56a00">
+      <img id="hdrAvatarImg" src="" alt="" onerror="this.style.display='none'">
+      <span id="hdrAvatarInitials"></span>
+    </div>
+    <div class="hdr-info">
+      <div class="hdr-name" id="hdrName">Loading…</div>
+      <div class="hdr-email" id="hdrEmail"></div>
+    </div>
+    <div class="pro-badge" id="proBadge" style="display:none">Pro</div>
+    <button class="logout-btn" onclick="handleLogout()">Log out</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('ideas')">My Ideas</div>
+    <div class="tab" onclick="switchTab('settings')">Settings</div>
+    <div class="tab" onclick="switchTab('billing')">Billing</div>
+  </div>
+
+  <!-- Tab: Ideas -->
+  <div class="section active" id="tab-ideas">
+    <div class="sec-inner">
+      <div class="ideas-count" id="ideasCount">Loading…</div>
+      <div id="ideasList"></div>
+    </div>
+  </div>
+
+  <!-- Tab: Settings -->
+  <div class="section" id="tab-settings">
+    <div class="sec-inner">
+
+      <div class="settings-group">
+        <div class="settings-group-title">Profile</div>
+
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div class="avatar-preview" id="avatarPreview" style="background:#f56a00">
+            <img id="avatarPreviewImg" src="" alt="" onerror="this.style.display='none'">
+            <span id="avatarPreviewInitials"></span>
+          </div>
+          <div style="flex:1;font-size:12px;color:var(--ink3);line-height:1.5">Your avatar is shown on your public profile. Paste any image URL below.</div>
+        </div>
+
+        <div class="field">
+          <label for="setAvatarUrl">Avatar URL</label>
+          <input type="url" id="setAvatarUrl" placeholder="https://example.com/photo.jpg">
+          <div class="field-hint">Paste a direct link to any JPG, PNG or WebP image</div>
+        </div>
+
+        <div class="field">
+          <label for="setDisplayName">Display name</label>
+          <input type="text" id="setDisplayName" placeholder="Your name" maxlength="60">
+        </div>
+
+        <button class="btn-save" onclick="saveProfile()">Save profile</button>
+        <span class="save-ok" id="profileSaveOk">✓ Saved</span>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Default visibility</div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-row-label">Make new ideas public</div>
+            <div class="toggle-row-sub">Public ideas appear on your profile page</div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="setDefaultPublic" onchange="saveDefaultPublic()">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Change password</div>
+        <div class="error-box" id="pwErrorBox"></div>
+        <div class="field">
+          <label for="newPassword">New password</label>
+          <input type="password" id="newPassword" placeholder="At least 8 characters" autocomplete="new-password">
+        </div>
+        <div class="field">
+          <label for="confirmPassword">Confirm new password</label>
+          <input type="password" id="confirmPassword" placeholder="Repeat new password" autocomplete="new-password">
+        </div>
+        <button class="btn-save" onclick="changePassword()">Update password</button>
+        <span class="save-ok" id="pwSaveOk">✓ Password updated</span>
+      </div>
+
+      <div class="settings-group">
+        <div class="settings-group-title">Danger zone</div>
+        <div style="font-size:13px;color:var(--ink3);line-height:1.5">To delete your account and all your data, email <a href="mailto:info.meshminds@gmail.com" style="color:var(--bad);font-weight:600">info.meshminds@gmail.com</a> from your registered address.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Tab: Billing -->
+  <div class="section" id="tab-billing">
+    <div class="sec-inner">
+      <div id="billingFree" style="display:none">
+        <div class="plan-card">
+          <div class="plan-label">Current plan</div>
+          <div class="plan-row">
+            <div class="plan-name">Free</div>
+            <span class="plan-badge free">Free</span>
+          </div>
+          <div class="plan-detail">You're on the free plan. Upgrade to Pro to get unlimited scans, auto-save all ideas to your dashboard, and access the full catalogue of 847+ validated products.</div>
+          <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="btn-upgrade" target="_blank" rel="noopener">Upgrade to Pro — $12/mo →</a>
+        </div>
+        <div class="billing-note">Early adopter price locked in for life · Cancel anytime</div>
+      </div>
+
+      <div id="billingPro" style="display:none">
+        <div class="plan-card pro">
+          <div class="plan-label">Current plan</div>
+          <div class="plan-row">
+            <div class="plan-name">Pro</div>
+            <span class="plan-badge pro">Active</span>
+          </div>
+          <div class="plan-detail" id="billingProDetail">Your Pro membership is active. You have unlimited scans and all your ideas are saved automatically.</div>
+          <a href="https://billing.stripe.com/p/login/test_placeholder" class="btn-portal" target="_blank" rel="noopener">Manage subscription →</a>
+        </div>
+        <div class="billing-note">Manage payments · Download invoices · Cancel anytime</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  window.SUPABASE_URL = '__SUPABASE_URL__';
+  window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
+</script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  let currentUser = null;
+  let accessToken = null;
+  let userProfile = null;
+  let ideas = [];
+
+  // ── Auth guard ────────────────────────────────────────────────────────────
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = '/login?returnTo=/account';
+  } else {
+    currentUser = session.user;
+    accessToken = session.access_token;
+    localStorage.setItem('sb_access_token', accessToken);
+    await init();
+  }
+
+  async function init() {
+    try {
+      await Promise.all([loadProfile(), loadIdeas()]);
+    } finally {
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('app').style.display = 'flex';
+    }
+  }
+
+  async function apiFetch(path, opts = {}) {
+    const res = await fetch(path, {
+      ...opts,
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}`, ...(opts.headers || {}) },
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  }
+
+  // ── Profile ───────────────────────────────────────────────────────────────
+  async function loadProfile() {
+    try {
+      userProfile = await apiFetch('/api/account/me');
+      renderHeader();
+      renderSettings();
+      renderBilling();
+    } catch (e) {
+      console.error('Profile load error:', e);
+    }
+  }
+
+  function initials(name, email) {
+    const src = name || email || '?';
+    return src.split(/[\s@]+/).slice(0, 2).map(p => p[0]).join('').toUpperCase().slice(0, 2);
+  }
+
+  function avatarColor(email) {
+    const colors = ['#f56a00','#7c3aed','#0369a1','#15803d','#be185d','#b45309'];
+    let hash = 0;
+    for (const c of (email || '')) hash = (hash * 31 + c.charCodeAt(0)) | 0;
+    return colors[Math.abs(hash) % colors.length];
+  }
+
+  function renderHeader() {
+    const p = userProfile;
+    const inits = initials(p.displayName, p.email);
+    const color = avatarColor(p.email);
+
+    document.getElementById('hdrName').textContent = p.displayName || p.email.split('@')[0];
+    document.getElementById('hdrEmail').textContent = p.email;
+    document.getElementById('hdrAvatarInitials').textContent = inits;
+    document.getElementById('hdrAvatar').style.background = color;
+    if (p.avatarUrl) {
+      const img = document.getElementById('hdrAvatarImg');
+      img.src = p.avatarUrl;
+      img.style.display = '';
+      document.getElementById('hdrAvatarInitials').style.display = 'none';
+    }
+    if (p.isPro) document.getElementById('proBadge').style.display = '';
+  }
+
+  function renderSettings() {
+    const p = userProfile;
+    document.getElementById('setDisplayName').value = p.displayName || '';
+    document.getElementById('setAvatarUrl').value = p.avatarUrl || '';
+    document.getElementById('setDefaultPublic').checked = p.defaultPublic || false;
+
+    // Avatar preview
+    const inits = initials(p.displayName, p.email);
+    const color = avatarColor(p.email);
+    document.getElementById('avatarPreview').style.background = color;
+    document.getElementById('avatarPreviewInitials').textContent = inits;
+    if (p.avatarUrl) {
+      const img = document.getElementById('avatarPreviewImg');
+      img.src = p.avatarUrl;
+      img.style.display = '';
+      document.getElementById('avatarPreviewInitials').style.display = 'none';
+    }
+  }
+
+  function renderBilling() {
+    const p = userProfile;
+    if (p.isPro) {
+      document.getElementById('billingFree').style.display = 'none';
+      document.getElementById('billingPro').style.display = '';
+      if (p.premiumUntil) {
+        const d = new Date(p.premiumUntil);
+        document.getElementById('billingProDetail').textContent =
+          `Pro membership active · renews ${d.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}.`;
+      }
+    } else {
+      document.getElementById('billingFree').style.display = '';
+      document.getElementById('billingPro').style.display = 'none';
+    }
+  }
+
+  // Live avatar URL preview
+  document.getElementById('setAvatarUrl').addEventListener('input', function() {
+    const url = this.value.trim();
+    const img = document.getElementById('avatarPreviewImg');
+    const inits = document.getElementById('avatarPreviewInitials');
+    if (url) {
+      img.src = url;
+      img.style.display = '';
+      inits.style.display = 'none';
+      img.onerror = () => { img.style.display = 'none'; inits.style.display = ''; };
+    } else {
+      img.style.display = 'none';
+      inits.style.display = '';
+    }
+  });
+
+  window.saveProfile = async function() {
+    const displayName = document.getElementById('setDisplayName').value.trim();
+    const avatarUrl = document.getElementById('setAvatarUrl').value.trim();
+    try {
+      await apiFetch('/api/account/update-profile', {
+        method: 'POST',
+        body: JSON.stringify({ displayName, avatarUrl }),
+      });
+      userProfile.displayName = displayName;
+      userProfile.avatarUrl = avatarUrl;
+      renderHeader();
+      showSaveOk('profileSaveOk');
+    } catch (e) {
+      showToast('Failed to save: ' + e.message);
+    }
+  };
+
+  window.saveDefaultPublic = async function() {
+    const val = document.getElementById('setDefaultPublic').checked;
+    try {
+      await apiFetch('/api/account/update-profile', {
+        method: 'POST',
+        body: JSON.stringify({ defaultPublic: val }),
+      });
+      showToast(val ? 'New ideas will be public by default' : 'New ideas will be private by default');
+    } catch (e) {
+      document.getElementById('setDefaultPublic').checked = !val;
+      showToast('Failed to save setting');
+    }
+  };
+
+  window.changePassword = async function() {
+    const errBox = document.getElementById('pwErrorBox');
+    errBox.classList.remove('show');
+    const pw = document.getElementById('newPassword').value;
+    const conf = document.getElementById('confirmPassword').value;
+    if (pw.length < 8) { errBox.textContent = 'Password must be at least 8 characters.'; errBox.classList.add('show'); return; }
+    if (pw !== conf) { errBox.textContent = 'Passwords do not match.'; errBox.classList.add('show'); return; }
+    try {
+      await apiFetch('/api/account/change-password', { method: 'POST', body: JSON.stringify({ newPassword: pw }) });
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+      showSaveOk('pwSaveOk');
+    } catch (e) {
+      errBox.textContent = e.message || 'Failed to update password.';
+      errBox.classList.add('show');
+    }
+  };
+
+  // ── Ideas ─────────────────────────────────────────────────────────────────
+  async function loadIdeas() {
+    try {
+      const data = await apiFetch('/api/account/ideas');
+      ideas = data.ideas || [];
+      renderIdeas();
+    } catch (e) {
+      console.error('Ideas load error:', e);
+    }
+  }
+
+  function scoreClass(s) {
+    if (s >= 70) return 'score-g';
+    if (s >= 50) return 'score-y';
+    return 'score-r';
+  }
+
+  function fmtDate(iso) {
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function renderIdeas() {
+    const list = document.getElementById('ideasList');
+    const count = document.getElementById('ideasCount');
+    count.textContent = `${ideas.length} saved idea${ideas.length !== 1 ? 's' : ''}`;
+
+    if (!ideas.length) {
+      list.innerHTML = `<div class="empty">
+        <div class="empty-ico">🔍</div>
+        <div class="empty-title">No ideas saved yet</div>
+        <div class="empty-sub">Check a 3D print and your scored ideas will appear here automatically.</div>
+        <a href="/" class="btn-scan">Check an idea →</a>
+      </div>`;
+      return;
+    }
+
+    list.innerHTML = ideas.map(idea => {
+      const sc = scoreClass(idea.score);
+      const thumb = idea.image_url
+        ? `<div class="idea-thumb" style="background-image:url(${idea.image_url})"></div>`
+        : `<div class="idea-thumb">🖼</div>`;
+      return `<div class="idea-card" id="idea-${idea.id}">
+        <div class="idea-card-top">
+          ${thumb}
+          <div class="idea-body">
+            <div class="idea-name">${esc(idea.title || idea.url)}</div>
+            <div class="idea-meta">
+              ${idea.score != null ? `<span class="score-pill ${sc}">${idea.score}</span>` : ''}
+              <span class="verdict-txt">${esc(idea.verdict || '')}</span>
+            </div>
+            ${idea.profit_est ? `<div class="idea-profit">Est. profit <b>${esc(idea.profit_est)}</b></div>` : ''}
+          </div>
+        </div>
+        <div class="idea-card-foot">
+          <span class="idea-date">${fmtDate(idea.created_at)}</span>
+          <div class="idea-actions">
+            <div class="toggle-wrap">
+              <span class="toggle-lbl">${idea.is_public ? 'Public' : 'Private'}</span>
+              <label class="toggle">
+                <input type="checkbox" ${idea.is_public ? 'checked' : ''} onchange="togglePublic('${idea.id}', this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button class="del-btn" onclick="deleteIdea('${idea.id}')" title="Delete">🗑</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.togglePublic = async function(id, checkbox) {
+    const isPublic = checkbox.checked;
+    const lbl = checkbox.closest('.toggle-wrap').querySelector('.toggle-lbl');
+    lbl.textContent = isPublic ? 'Public' : 'Private';
+    const idea = ideas.find(i => i.id === id);
+    if (idea) idea.is_public = isPublic;
+    try {
+      await apiFetch('/api/account/ideas', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'toggle', id, isPublic }),
+      });
+    } catch (e) {
+      checkbox.checked = !isPublic;
+      lbl.textContent = !isPublic ? 'Public' : 'Private';
+      if (idea) idea.is_public = !isPublic;
+      showToast('Failed to update visibility');
+    }
+  };
+
+  window.deleteIdea = async function(id) {
+    if (!confirm('Delete this scored idea? This cannot be undone.')) return;
+    try {
+      await apiFetch('/api/account/ideas', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'delete', id }),
+      });
+      ideas = ideas.filter(i => i.id !== id);
+      const el = document.getElementById(`idea-${id}`);
+      if (el) el.remove();
+      document.getElementById('ideasCount').textContent = `${ideas.length} saved idea${ideas.length !== 1 ? 's' : ''}`;
+      if (!ideas.length) renderIdeas();
+      showToast('Idea deleted');
+    } catch (e) {
+      showToast('Failed to delete: ' + e.message);
+    }
+  };
+
+  // ── Navigation ────────────────────────────────────────────────────────────
+  window.switchTab = function(tab) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      const names = ['ideas', 'settings', 'billing'];
+      t.classList.toggle('active', names[i] === tab);
+    });
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  };
+
+  window.handleLogout = async function() {
+    await supabase.auth.signOut();
+    localStorage.removeItem('sb_access_token');
+    window.location.href = '/';
+  };
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function showSaveOk(id) {
+    const el = document.getElementById(id);
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>

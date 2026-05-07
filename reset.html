@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Reset Password – MeshMinds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --acc:#f56a00;
+      --ink:#0d0d0d;
+      --ink2:#4b4b4b;
+      --ink3:#8c8c8c;
+      --surf:#f9f9f9;
+      --surf2:#f0f0f0;
+      --line:#e8e8e8;
+      --line2:#d0d0d0;
+      --good:#15803d;
+      --bad:#dc2626;
+    }
+    body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .page{max-width:430px;width:100%;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;padding:0 0 40px}
+
+    .hdr{padding:20px 20px 0;display:flex;align-items:center;gap:10px}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;color:var(--ink);line-height:1;text-decoration:none}
+    .logo span{color:var(--acc)}
+
+    .hero{padding:40px 24px 0;text-align:center}
+    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.03em;color:var(--ink);line-height:1;margin-bottom:8px}
+    .hero-sub{font-size:14px;color:var(--ink3);line-height:1.5}
+
+    .form-wrap{padding:28px 24px 0}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px;letter-spacing:.02em}
+    .field input{width:100%;padding:13px 14px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s}
+    .field input:focus{border-color:var(--acc)}
+    .field input::placeholder{color:var(--ink3)}
+
+    .btn-primary{width:100%;padding:15px;background:var(--acc);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:4px}
+    .btn-primary:hover{opacity:.9}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+
+    .error-box{background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--bad);margin-bottom:16px;display:none}
+    .error-box.show{display:block}
+
+    .success-box{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:20px 18px;text-align:center;display:none}
+    .success-box.show{display:block}
+    .success-box .success-icon{font-size:32px;margin-bottom:12px}
+    .success-box .success-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.03em;color:var(--good);margin-bottom:6px}
+    .success-box .success-msg{font-size:13.5px;color:var(--ink2);line-height:1.6}
+
+    .bottom-links{padding:20px 24px 0;text-align:center}
+    .bottom-links p{font-size:13px;color:var(--ink3)}
+    .bottom-links a{color:var(--acc);font-weight:600;text-decoration:none}
+    .bottom-links a:hover{text-decoration:underline}
+
+    .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <a href="/" class="logo">Mesh<span>Minds</span></a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-title">Reset your password</div>
+    <div class="hero-sub">Enter your email and we'll send you a reset link</div>
+  </div>
+
+  <div class="form-wrap">
+    <div class="error-box" id="errorBox"></div>
+    <div class="success-box" id="successBox">
+      <div class="success-icon">&#x2709;&#xfe0f;</div>
+      <div class="success-title">Check your email</div>
+      <div class="success-msg">We sent a password reset link to <strong id="confirmedEmail"></strong>. Click the link in the email to set a new password.</div>
+    </div>
+
+    <div id="formFields">
+      <div class="field">
+        <label for="email">Email address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <button class="btn-primary" id="resetBtn" onclick="handleReset()">Send reset link</button>
+    </div>
+  </div>
+
+  <div class="bottom-links">
+    <p>Remembered it? <a href="/login">Back to login</a></p>
+  </div>
+
+</div>
+
+<script>
+  // Replace these with your actual Supabase project values
+  // Found in: Supabase Dashboard → Project Settings → API
+  window.SUPABASE_URL = '__SUPABASE_URL__';
+  window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
+</script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.classList.add('show');
+  }
+
+  function hideError() {
+    document.getElementById('errorBox').classList.remove('show');
+  }
+
+  function setLoading(loading) {
+    const btn = document.getElementById('resetBtn');
+    if (loading) {
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>Sending…';
+    } else {
+      btn.disabled = false;
+      btn.innerHTML = 'Send reset link';
+    }
+  }
+
+  window.handleReset = async function() {
+    hideError();
+    const email = document.getElementById('email').value.trim();
+
+    if (!email) { showError('Please enter your email address.'); return; }
+
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reset-confirm',
+    });
+    setLoading(false);
+
+    if (error) {
+      showError(error.message || 'Could not send reset email. Please try again.');
+      return;
+    }
+
+    document.getElementById('formFields').style.display = 'none';
+    document.getElementById('confirmedEmail').textContent = email;
+    document.getElementById('successBox').classList.add('show');
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') window.handleReset();
+  });
+</script>
+</body>
+</html>

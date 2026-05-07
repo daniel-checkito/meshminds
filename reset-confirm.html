@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Set New Password – MeshMinds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--acc:#f56a00;--ink:#0d0d0d;--ink2:#4b4b4b;--ink3:#8c8c8c;--surf:#f9f9f9;--line:#e8e8e8;--line2:#d0d0d0;--good:#15803d;--bad:#dc2626}
+    body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh}
+    .page{max-width:430px;width:100%;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;padding:0 0 40px}
+    .hdr{padding:20px 20px 0;display:flex;align-items:center}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;color:var(--ink);line-height:1;text-decoration:none}
+    .logo span{color:var(--acc)}
+    .hero{padding:40px 24px 0;text-align:center}
+    .hero-ico{font-size:42px;margin-bottom:12px}
+    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.03em;color:var(--ink);line-height:1;margin-bottom:8px}
+    .hero-sub{font-size:14px;color:var(--ink3);line-height:1.5}
+    .form-wrap{padding:28px 24px 0}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:6px}
+    .field input{width:100%;padding:13px 14px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);background:#fff;outline:none;transition:border-color .15s}
+    .field input:focus{border-color:var(--acc)}
+    .field input::placeholder{color:var(--ink3)}
+    .hint{font-size:11.5px;color:var(--ink3);margin-top:5px}
+    .btn-primary{width:100%;padding:15px;background:var(--acc);color:#fff;border:none;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s;margin-top:4px}
+    .btn-primary:hover{opacity:.9}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+    .error-box{background:#fee2e2;border:1px solid #fca5a5;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--bad);margin-bottom:16px;display:none}
+    .error-box.show{display:block}
+    .invalid-state{padding:40px 24px;text-align:center;display:none}
+    .invalid-state.show{display:block}
+    .invalid-ico{font-size:42px;margin-bottom:12px}
+    .invalid-title{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--bad);margin-bottom:8px}
+    .invalid-sub{font-size:14px;color:var(--ink3);line-height:1.5;margin-bottom:20px}
+    .btn-secondary{display:inline-block;padding:12px 24px;border:2px solid var(--acc);color:var(--acc);border-radius:12px;font-weight:700;font-size:14px;text-decoration:none}
+    .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="hdr"><a href="/" class="logo">Mesh<span>Minds</span></a></div>
+
+  <div class="invalid-state" id="invalidState">
+    <div class="invalid-ico">⚠️</div>
+    <div class="invalid-title">Link expired</div>
+    <div class="invalid-sub">This password reset link is invalid or has expired. Reset links are valid for 1 hour.</div>
+    <a href="/reset" class="btn-secondary">Request a new link</a>
+  </div>
+
+  <div id="mainForm">
+    <div class="hero">
+      <div class="hero-ico">🔐</div>
+      <div class="hero-title">New password</div>
+      <div class="hero-sub">Choose a strong password for your account.</div>
+    </div>
+
+    <div class="form-wrap">
+      <div class="error-box" id="errorBox"></div>
+
+      <div class="field">
+        <label for="password">New password</label>
+        <input type="password" id="password" placeholder="At least 8 characters" autocomplete="new-password">
+        <div class="hint">Minimum 8 characters</div>
+      </div>
+
+      <div class="field">
+        <label for="confirm">Confirm new password</label>
+        <input type="password" id="confirm" placeholder="Repeat your new password" autocomplete="new-password">
+      </div>
+
+      <button class="btn-primary" id="saveBtn" onclick="handleSave()">Set new password</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.SUPABASE_URL = '__SUPABASE_URL__';
+  window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
+</script>
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  // Supabase redirects here with tokens in the URL fragment.
+  // The client library picks them up automatically when we call getSession().
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    document.getElementById('mainForm').style.display = 'none';
+    document.getElementById('invalidState').classList.add('show');
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    box.textContent = msg;
+    box.classList.add('show');
+  }
+
+  function setLoading(loading) {
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = loading;
+    btn.innerHTML = loading ? '<span class="spinner"></span>Saving…' : 'Set new password';
+  }
+
+  window.handleSave = async function() {
+    document.getElementById('errorBox').classList.remove('show');
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm').value;
+
+    if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+    if (password !== confirm) { showError('Passwords do not match.'); return; }
+
+    setLoading(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setLoading(false);
+
+    if (error) { showError(error.message || 'Failed to update password. Please try again.'); return; }
+
+    // Sign in fresh and redirect
+    localStorage.setItem('sb_access_token', session.access_token);
+    window.location.href = '/account';
+  };
+</script>
+</body>
+</html>

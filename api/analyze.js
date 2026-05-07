@@ -165,6 +165,31 @@ module.exports = async (req, res) => {
     } catch (_) { return ''; }
   }
 
+  // Etsy keyword cache — survives within a hot lambda instance, ~24h TTL.
+  // Hit rate is meaningful for popular categories without growing memory.
+  if (!global.__ETSY_CACHE__) global.__ETSY_CACHE__ = new Map();
+  const etsyCache = global.__ETSY_CACHE__;
+  const ETSY_TTL_MS = 24 * 60 * 60 * 1000;
+  async function fetchEtsy(keywords) {
+    if (!keywords) return '';
+    const key = keywords.toLowerCase().trim();
+    const now = Date.now();
+    const hit = etsyCache.get(key);
+    if (hit && now - hit.at < ETSY_TTL_MS) return hit.md;
+    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(keywords)}&explicit=1&sort_on=most_relevant`;
+    const data = await firecrawlScrape(etsySearchUrl, 500, 10000);
+    const md = data?.data?.markdown || '';
+    if (md) {
+      etsyCache.set(key, { md, at: now });
+      // Keep cache bounded
+      if (etsyCache.size > 200) {
+        const firstKey = etsyCache.keys().next().value;
+        etsyCache.delete(firstKey);
+      }
+    }
+    return md;
+  }
+
   async function firecrawlScrape(targetUrl, waitMs, abortMs) {
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), abortMs);
@@ -275,25 +300,15 @@ module.exports = async (req, res) => {
 - Target buyer: ${ideaBuyer || 'not specified'}
 - Unique selling point: ${ideaUsp || 'not specified'}`;
     if (ideaKeywords) {
-      const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(ideaKeywords)}&explicit=1&sort_on=most_relevant`;
-      const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(ideaKeywords + ' buy handmade')}&kl=us-en`;
-      const [etsyData, ddgData] = await Promise.all([
-        firecrawlScrape(etsySearchUrl, 500, 12000),
-        firecrawlScrape(ddgUrl, 500, 10000),
-      ]);
-      const etsyMd = etsyData?.data?.markdown || '';
-      const ddgMd = ddgData?.data?.markdown || '';
+      const etsyMd = await fetchEtsy(ideaKeywords);
       if (etsyMd) etsyRealData = parseEtsyData(etsyMd, ideaKeywords);
-      competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
+      competitorRaw = parseCompetitorRaw(etsyMd, '');
     }
   } else if (scrapeUrl && urlKeywords) {
-    // Run all 3 scrapes in parallel: product page + Etsy search + DuckDuckGo competitor search
-    const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(urlKeywords)}&explicit=1&sort_on=most_relevant`;
-    const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(urlKeywords + ' buy handmade')}&kl=us-en`;
-    const [fcData, etsyData, ddgData] = await Promise.all([
-      firecrawlScrape(scrapeUrl, 1000, 18000),
-      firecrawlScrape(etsySearchUrl, 500, 12000),
-      firecrawlScrape(ddgUrl, 500, 10000),
+    // Product page + Etsy search in parallel
+    const [fcData, etsyMd] = await Promise.all([
+      firecrawlScrape(scrapeUrl, 1000, 16000),
+      fetchEtsy(urlKeywords),
     ]);
     if (fcData) {
       const extracted = extractProductContext(fcData);
@@ -301,13 +316,11 @@ module.exports = async (req, res) => {
       imageUrl = extracted.imageUrl;
       sourceUrl = extracted.sourceUrl;
     }
-    const etsyMd = etsyData?.data?.markdown || '';
-    const ddgMd = ddgData?.data?.markdown || '';
     if (etsyMd) etsyRealData = parseEtsyData(etsyMd, urlKeywords);
-    competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
+    competitorRaw = parseCompetitorRaw(etsyMd, '');
   } else if (scrapeUrl) {
     // No URL keywords — scrape product first, derive keywords, then search
-    const fcData = await firecrawlScrape(scrapeUrl, 1000, 18000);
+    const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
     if (fcData) {
       const extracted = extractProductContext(fcData);
       productContext = extracted.productContext;
@@ -323,16 +336,9 @@ module.exports = async (req, res) => {
       .slice(0, 4)
       .join(' ');
     if (postScrapeKeywords) {
-      const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(postScrapeKeywords)}&explicit=1&sort_on=most_relevant`;
-      const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(postScrapeKeywords + ' buy handmade')}&kl=us-en`;
-      const [etsyData, ddgData] = await Promise.all([
-        firecrawlScrape(etsySearchUrl, 500, 10000),
-        firecrawlScrape(ddgUrl, 500, 10000),
-      ]);
-      const etsyMd = etsyData?.data?.markdown || '';
-      const ddgMd = ddgData?.data?.markdown || '';
+      const etsyMd = await fetchEtsy(postScrapeKeywords);
       if (etsyMd) etsyRealData = parseEtsyData(etsyMd, postScrapeKeywords);
-      competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
+      competitorRaw = parseCompetitorRaw(etsyMd, '');
     }
   }
 
@@ -345,7 +351,7 @@ module.exports = async (req, res) => {
   // ── 2. Build the Claude prompt (ported from n8n "Message a model" node) ──
   // Build competitor context string for the prompt
   const competitorContext = competitorRaw.length > 0
-    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy search + DuckDuckGo — these are REAL results):\n' +
+    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy search — these are REAL results):\n' +
       competitorRaw.map((c, i) =>
         `${i + 1}. URL: ${c.url}\n   Title: "${c.title}"` +
         (c.price ? `\n   Price: ${c.price}` : '') +
@@ -574,7 +580,7 @@ IMPORTANT RULES:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
+        max_tokens: 3072,
         system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: dynamicPart || prompt }],
       }),

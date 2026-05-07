@@ -1,5 +1,20 @@
 User-agent: *
 Allow: /
+Disallow: /dashboard
 Disallow: /dashboard.html
+Disallow: /account
+Disallow: /account.html
+Disallow: /login
+Disallow: /login.html
+Disallow: /register
+Disallow: /register.html
+Disallow: /reset
+Disallow: /reset.html
+Disallow: /reset-confirm
+Disallow: /reset-confirm.html
+Disallow: /newsletter-admin
+Disallow: /newsletter-admin.html
+Disallow: /api/
+Disallow: /pro/
 
 Sitemap: https://meshminds.vercel.app/sitemap.xml

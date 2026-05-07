@@ -3274,6 +3274,7 @@ q("btn-email").addEventListener("click",function(){
     body:JSON.stringify(leadCtx)
   }).catch(function(){});
   localStorage.setItem('mm_gate','1');
+  try{localStorage.setItem('mm_gate_email',email);}catch(_){ }
   if(analysisComplete){
     /* Analysis already done - stop the loading animation and skip straight to results */
     if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}

@@ -80,5 +80,8 @@ ALTER TABLE scans
   ADD COLUMN IF NOT EXISTS full_data JSONB;
 
 -- Public scans policy (anyone can read public scans)
-CREATE POLICY IF NOT EXISTS "scans_select_public" ON scans
-  FOR SELECT USING (is_public = true);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'scans_select_public' AND tablename = 'scans') THEN
+    CREATE POLICY "scans_select_public" ON scans FOR SELECT USING (is_public = true);
+  END IF;
+END $$;

@@ -138,6 +138,48 @@
     .pg-foot-logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.04em;color:var(--ink3)}
     .pg-foot-logo span{color:var(--acc)}
     .pg-foot-link{font-size:12px;font-weight:600;color:var(--acc);text-decoration:none}
+
+    /* Verified badge */
+    .verified-badge{display:inline-flex;align-items:center;gap:3px;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:#dbeafe;color:#1d4ed8;border-radius:4px;padding:2px 6px;margin-left:6px;flex-shrink:0}
+    .verified-badge::before{content:'✓';font-size:9px}
+
+    /* Product detail modal */
+    .pm-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+    .pm-img{width:72px;height:72px;border-radius:10px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--surf2)}
+    .pm-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);line-height:1.1;margin-bottom:4px}
+    .pm-cat{font-size:11px;color:var(--ink3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+    .pm-score-row{display:flex;align-items:center;gap:8px}
+    .pm-score{font-family:'Bebas Neue',sans-serif;font-size:36px;line-height:1}
+    .pm-score.g{color:var(--good)}
+    .pm-score.y{color:var(--warn)}
+    .pm-verdict{font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 9px}
+    .pm-verdict.g{background:#dcfce7;color:var(--good)}
+    .pm-verdict.y{background:#fef9c3;color:var(--warn)}
+    .pm-section{margin-bottom:16px}
+    .pm-section-hd{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+    .pm-stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .pm-stat{flex:1;min-width:80px;background:var(--surf);border-radius:9px;padding:9px 11px}
+    .pm-stat-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px}
+    .pm-stat-val.g{color:var(--good)}
+    .pm-stat-lbl{font-size:10px;color:var(--ink3)}
+    .pm-why{font-size:13px;color:var(--ink2);line-height:1.55;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;padding:12px 13px;margin-bottom:14px}
+    .pm-comp-card{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:8px}
+    .pm-comp-name{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:3px}
+    .pm-comp-url{font-size:10.5px;color:var(--acc);font-family:'DM Mono',monospace;word-break:break-all;margin-bottom:5px;display:block}
+    .pm-comp-meta{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+    .pm-comp-tag{font-size:10px;font-weight:600;border-radius:4px;padding:2px 7px}
+    .pm-comp-why{font-size:11.5px;color:var(--ink2);line-height:1.45}
+    .pm-cta{display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-align:center;text-decoration:none;margin-top:14px;cursor:pointer}
+
+    /* Keyword chips */
+    .kw-chip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line2);border-radius:20px;padding:5px 11px;font-size:11.5px;font-weight:600;color:var(--ink2);cursor:pointer;transition:all .15s}
+    .kw-chip:hover,.kw-chip.active{border-color:var(--acc);color:var(--acc);background:#fff7ed}
+    .kw-chip-gem{border-color:#c4b5fd;color:#7c3aed}
+    .kw-chip-gem:hover,.kw-chip-gem.active{background:#f5f3ff;border-color:#7c3aed}
+    .kw-vol{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ink3);background:var(--surf2);border-radius:4px;padding:1px 5px}
+    .kw-result-card{border-radius:11px;padding:13px 14px;border:1.5px solid}
+    .kw-bar-wrap{background:var(--surf2);border-radius:4px;height:6px;overflow:hidden;margin-top:5px}
+    .kw-bar{height:100%;border-radius:4px;transition:width .6s ease}
   </style>
 </head>
 <body>
@@ -147,9 +189,74 @@
   <div class="hdr">
     <div class="logo">Mesh<span>Minds</span></div>
     <div class="hdr-badge">Pro</div>
-    <div class="hdr-right">My Dashboard</div>
+    <div class="hdr-right" id="hdrUserName">My Dashboard</div>
+    <a href="/account" class="hdr-avatar" id="hdrAvatar" title="My account">?</a>
   </div>
 
+
+  <!-- Recently scored by the community -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">🌍 Community feed</div>
+      <div class="sec-hd-title">Checked right now</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:5px">
+      <span style="width:6px;height:6px;border-radius:50%;background:#15803d;flex-shrink:0;animation:livepulse 2s ease-in-out infinite;display:inline-block"></span>
+      <span style="font-size:10px;color:var(--good);font-family:'DM Mono',monospace;font-weight:700">Live</span>
+    </div>
+  </div>
+  <style>@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}</style>
+
+  <div class="trend-scroll-wrap" style="margin-bottom:4px">
+    <div class="trend-strip">
+      <div class="trend-card" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
+          <div class="trend-hot-badge">2 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Personalised Name Sign</div>
+          <div class="trend-meta"><span class="trend-score g">94</span><span class="trend-cat">🇩🇪 DE</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+          <div class="trend-hot-badge">5 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Cable Management Box</div>
+          <div class="trend-meta"><span class="trend-score g">88</span><span class="trend-cat">🇺🇸 US</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
+          <div class="trend-new-badge">12 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Articulated Dragon</div>
+          <div class="trend-meta"><span class="trend-score g">79</span><span class="trend-cat">🇬🇧 UK</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Dice Tower')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+          <div class="trend-new-badge">18 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Dice Tower</div>
+          <div class="trend-meta"><span class="trend-score y">68</span><span class="trend-cat">🇺🇸 US</span></div>
+        </div>
+      </div>
+      <div class="trend-card" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
+          <div class="trend-new-badge">24 min ago</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Adjustable Phone Stand</div>
+          <div class="trend-meta"><span class="trend-score g">85</span><span class="trend-cat">🇳🇱 NL</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="height:1px;background:var(--line);margin:16px 16px 0"></div>
 
   <!-- ── MY RECENT SCANS ── -->
   <div class="sec-hd">
@@ -157,75 +264,27 @@
       <div class="sec-hd-label">Your account</div>
       <div class="sec-hd-title">Recently scored</div>
     </div>
-    <div class="sec-hd-count">4 ideas</div>
+    <div class="sec-hd-count" id="recentCount"></div>
   </div>
 
-  <div class="recent-list">
-
-    <div class="idea-card">
-      <div class="idea-card-top">
-        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
-        <div class="idea-meta">
-          <div class="idea-name">Custom Name Sign</div>
-          <div class="idea-tags"><span class="tag tag-green">Sellable</span><span class="tag tag-gray">Decor</span></div>
-          <div class="idea-profit">Est. profit <b>~$140/mo</b></div>
-        </div>
-        <div class="score-badge score-green">94</div>
+  <div class="recent-list" id="recentList">
+    <!-- Skeleton loaders while fetching -->
+    <div class="skeleton-card">
+      <div class="skel skel-thumb"></div>
+      <div class="skel-lines">
+        <div class="skel skel-line w80"></div>
+        <div class="skel skel-line w50"></div>
       </div>
-      <div class="idea-card-foot">
-        <span class="idea-date">6 May 2026</span>
-        <a href="#" class="view-link">Full report →</a>
-      </div>
+      <div class="skel skel-circle"></div>
     </div>
-
-    <div class="idea-card">
-      <div class="idea-card-top">
-        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
-        <div class="idea-meta">
-          <div class="idea-name">Geometric Planter</div>
-          <div class="idea-tags"><span class="tag tag-green">Sellable</span><span class="tag tag-gray">Home</span></div>
-          <div class="idea-profit">Est. profit <b>~$95/mo</b></div>
-        </div>
-        <div class="score-badge score-green">87</div>
+    <div class="skeleton-card">
+      <div class="skel skel-thumb"></div>
+      <div class="skel-lines">
+        <div class="skel skel-line w80"></div>
+        <div class="skel skel-line w50"></div>
       </div>
-      <div class="idea-card-foot">
-        <span class="idea-date">4 May 2026</span>
-        <a href="#" class="view-link">Full report →</a>
-      </div>
+      <div class="skel skel-circle"></div>
     </div>
-
-    <div class="idea-card">
-      <div class="idea-card-top">
-        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
-        <div class="idea-meta">
-          <div class="idea-name">Laptop Stand</div>
-          <div class="idea-tags"><span class="tag tag-yellow">Marginal</span><span class="tag tag-gray">Functional</span></div>
-          <div class="idea-profit">Est. profit <b>~$52/mo</b></div>
-        </div>
-        <div class="score-badge score-yellow">61</div>
-      </div>
-      <div class="idea-card-foot">
-        <span class="idea-date">2 May 2026</span>
-        <a href="#" class="view-link">Full report →</a>
-      </div>
-    </div>
-
-    <div class="idea-card">
-      <div class="idea-card-top">
-        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
-        <div class="idea-meta">
-          <div class="idea-name">DnD Dice Tower</div>
-          <div class="idea-tags"><span class="tag tag-red">Skip it</span><span class="tag tag-gray">Gaming</span></div>
-          <div class="idea-profit">Est. profit <b>~$12/mo</b></div>
-        </div>
-        <div class="score-badge score-red">41</div>
-      </div>
-      <div class="idea-card-foot">
-        <span class="idea-date">1 May 2026</span>
-        <a href="#" class="view-link">Full report →</a>
-      </div>
-    </div>
-
   </div>
 
 
@@ -332,57 +391,57 @@
 
   <div class="rank-list">
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
       <div class="rank-num top">1</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
       <div class="rank-info">
         <div class="rank-name">Personalised Name Sign</div>
         <div class="rank-sub">Decor · ~$140/mo</div>
       </div>
-      <div class="rank-score g">94<span class="rank-fire">🔥</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">94<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Succulent Planter Set')" style="cursor:pointer">
       <div class="rank-num top">2</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
       <div class="rank-info">
         <div class="rank-name">Succulent Planter Set</div>
         <div class="rank-sub">Home · ~$110/mo</div>
       </div>
-      <div class="rank-score g">91<span class="rank-fire">🔥</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">91<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
       <div class="rank-num top">3</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
       <div class="rank-info">
         <div class="rank-name">Cable Management Box</div>
         <div class="rank-sub">Functional · ~$95/mo</div>
       </div>
-      <div class="rank-score g">88<span class="rank-fire">🔥</span></div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">88<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
       <div class="rank-num">4</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
       <div class="rank-info">
         <div class="rank-name">Adjustable Phone Stand</div>
         <div class="rank-sub">Functional · ~$78/mo</div>
       </div>
-      <div class="rank-score g">85</div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">85</div><span class="verified-badge">Verified</span></div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Modular Desk Organiser')" style="cursor:pointer">
       <div class="rank-num">5</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
       <div class="rank-info">
         <div class="rank-name">Modular Desk Organiser</div>
         <div class="rank-sub">Office · ~$84/mo</div>
       </div>
-      <div class="rank-score g">82</div>
+      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">82</div><span class="verified-badge">Verified</span></div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
       <div class="rank-num">6</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
       <div class="rank-info">
@@ -392,7 +451,7 @@
       <div class="rank-score g">79</div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" style="cursor:pointer">
       <div class="rank-num">7</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
       <div class="rank-info">
@@ -402,7 +461,7 @@
       <div class="rank-score g">77</div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Hex Wall Organiser')" style="cursor:pointer">
       <div class="rank-num">8</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
       <div class="rank-info">
@@ -412,7 +471,7 @@
       <div class="rank-score g">75</div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Watch Stand')" style="cursor:pointer">
       <div class="rank-num">9</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
       <div class="rank-info">
@@ -422,7 +481,7 @@
       <div class="rank-score g">73</div>
     </div>
 
-    <div class="rank-row">
+    <div class="rank-row" onclick="openProdModal('Controller Stand')" style="cursor:pointer">
       <div class="rank-num">10</div>
       <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
       <div class="rank-info">
@@ -455,7 +514,7 @@
 
   <div class="niche-grid">
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
         <div class="niche-score-dot g">94</div>
       </div>
@@ -465,7 +524,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Succulent Planter Set')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
         <div class="niche-score-dot g">91</div>
       </div>
@@ -475,7 +534,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Hex Wall Organiser')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
         <div class="niche-score-dot g">88</div>
       </div>
@@ -485,7 +544,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Geometric Tealight')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
         <div class="niche-score-dot g">82</div>
       </div>
@@ -518,7 +577,7 @@
 
   <div class="niche-grid">
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
         <div class="niche-score-dot g">79</div>
       </div>
@@ -528,7 +587,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Controller Stand')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
         <div class="niche-score-dot g">71</div>
       </div>
@@ -538,7 +597,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Dice Tower')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
         <div class="niche-score-dot y">68</div>
       </div>
@@ -548,7 +607,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Miniature Base Set')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
         <div class="niche-score-dot y">65</div>
       </div>
@@ -581,7 +640,7 @@
 
   <div class="niche-grid">
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
         <div class="niche-score-dot g">88</div>
       </div>
@@ -591,7 +650,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Modular Desk Organiser')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
         <div class="niche-score-dot g">82</div>
       </div>
@@ -601,7 +660,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
         <div class="niche-score-dot g">85</div>
       </div>
@@ -611,7 +670,7 @@
       </div>
     </div>
 
-    <div class="niche-card">
+    <div class="niche-card" onclick="openProdModal('Watch Stand')" style="cursor:pointer">
       <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
         <div class="niche-score-dot g">73</div>
       </div>
@@ -624,6 +683,53 @@
   </div>
 
 
+  <div style="height:1px;background:var(--line);margin:20px 16px 0"></div>
+
+  <!-- Keywords section -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Search intelligence</div>
+      <div class="sec-hd-title">Keyword Explorer</div>
+    </div>
+  </div>
+
+  <!-- Popular keywords -->
+  <div style="padding:0 16px 14px">
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">🔥 High volume <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px" id="kwPopular">
+      <div class="kw-chip" onclick="setKw(this)">custom name sign<span class="kw-vol">16.6k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">cable management box<span class="kw-vol">7.8k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">phone stand<span class="kw-vol">11.3k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">desk organizer<span class="kw-vol">8.4k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">personalised gift<span class="kw-vol">22.1k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">planter pot<span class="kw-vol">9.2k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">watch stand<span class="kw-vol">4.2k</span></div>
+      <div class="kw-chip" onclick="setKw(this)">controller stand<span class="kw-vol">6.8k</span></div>
+    </div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">💎 Underrated gems <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px" id="kwUnderrated">
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">cable clip organizer<span class="kw-vol">2.1k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">bedside phone stand<span class="kw-vol">1.8k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">wall key holder<span class="kw-vol">3.2k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">earring display stand<span class="kw-vol">2.9k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">ring holder dish<span class="kw-vol">1.6k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">miniature shelf bracket<span class="kw-vol">1.1k</span></div>
+      <div class="kw-chip kw-chip-gem" onclick="setKw(this)">laptop riser stand<span class="kw-vol">2.4k</span></div>
+    </div>
+
+    <!-- Keyword checker -->
+    <div style="background:var(--surf);border:1.5px solid var(--line2);border-radius:13px;padding:14px 15px">
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px">Check any keyword</div>
+      <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.4">See monthly search volume, competition level and a sellability score for any keyword.</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <input type="text" id="kwInput" placeholder="e.g. magnetic phone mount" style="flex:1;padding:10px 12px;border:1.5px solid var(--line2);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)'" onkeydown="if(event.key==='Enter')checkKeyword()">
+        <button onclick="checkKeyword()" style="padding:10px 16px;background:var(--acc);color:#fff;border:none;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;white-space:nowrap" id="kwBtn">Check →</button>
+      </div>
+      <div id="kwResult" style="display:none"></div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div style="height:24px"></div>
   <div class="pg-foot">
@@ -632,5 +738,423 @@
   </div>
 
 </div>
+
+<!-- Product detail modal -->
+<div id="prod-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;padding:0" onclick="closeProdModal(event)">
+  <div id="prod-modal" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-radius:18px 18px 0 0;max-height:88vh;overflow-y:auto;padding:0 0 32px">
+    <div style="width:36px;height:4px;background:var(--line2);border-radius:2px;margin:12px auto 0"></div>
+    <div id="prod-modal-content" style="padding:16px 16px 0"></div>
+  </div>
+</div>
+
+<script>
+var PRODUCT_DATA = {
+  "Personalised Name Sign": {
+    score: 94, cat: "Decor", verdict: "Top seller",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp",
+    verified: true,
+    monthlySearches: "16,600", competition: "Low–Medium", avgPrice: "$18–$28",
+    estProfit: "~$140/mo", printTime: "3h",
+    why: "Personalisation is the #1 conversion driver on Etsy. Buyers are willing to pay 40% more for a product with their name or a loved one's name. Gift buyers have low price sensitivity — they care about the story, not the cost. These rank organically because the listing title includes a natural keyword ('custom name sign') that matches high-intent searches.",
+    competitors: [
+      {name:"Custom Neon Name Sign", url:"https://www.etsy.com/listing/123456/custom-neon-name-sign", platform:"Etsy", price:"$24.99", sales:"80–120/mo", why:"First photo shows the sign lit up in a bedroom — lifestyle context converts. Title front-loads the keyword 'custom name sign' before any adjectives."},
+      {name:"Personalised Wooden Name Plaque", url:"https://www.etsy.com/listing/234567/personalised-name-plaque", platform:"Etsy", price:"$19.99", sales:"60–90/mo", why:"Offers 12 colour variants in one listing, boosting ranking signals. Ships with a note card targeting the gift market."},
+      {name:"3D Printed Name Decoration", url:"https://www.etsy.com/listing/345678/3d-printed-name-decoration", platform:"Etsy", price:"$16.99", sales:"40–70/mo", why:"Low price point captures impulse buyers. Bundles with matching heart decoration in photos to increase average order value."}
+    ]
+  },
+  "Succulent Planter Set": {
+    score: 91, cat: "Home", verdict: "Top seller",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",
+    verified: true,
+    monthlySearches: "9,200", competition: "Medium", avgPrice: "$14–$22",
+    estProfit: "~$110/mo", printTime: "2.5h",
+    why: "Plants and plant accessories dominate the Etsy home category. A 3D-printed planter with a geometric design photographs beautifully and stands out against mass-produced plastic pots. The gift angle is strong — it's visual, affordable, and ships well. Waterproofing with resin spray adds a £1 material cost but lets you charge $5 more.",
+    competitors: [
+      {name:"Geometric Succulent Planter", url:"https://www.etsy.com/listing/456789/geometric-planter", platform:"Etsy", price:"$16.99", sales:"50–80/mo", why:"Set-of-3 listing creates perceived value and triples AOV. Photos show plants already potted — removes the imagination barrier for buyers."},
+      {name:"Hexagon Wall Planter Set", url:"https://www.etsy.com/listing/567890/hexagon-planter", platform:"Etsy", price:"$21.99", sales:"40–65/mo", why:"Wall-mounted angle targets a different use case and gets into 'wall decor' search results. Set format commands premium price."}
+    ]
+  },
+  "Cable Management Box": {
+    score: 88, cat: "Functional", verdict: "Strong performer",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",
+    verified: true,
+    monthlySearches: "7,800", competition: "Medium", avgPrice: "$18–$30",
+    estProfit: "~$95/mo", printTime: "5h",
+    why: "Cable chaos is a universal problem and buyers actively search for solutions. This is an evergreen product — sells year-round with spikes at tax season (home office setup) and Christmas (tech gifts). The functional niche has buyers who care about fit and finish, so printing in PETG rather than PLA can justify a $5-8 premium.",
+    competitors: [
+      {name:"Cable Management Box with Lid", url:"https://www.etsy.com/listing/678901/cable-box", platform:"Etsy", price:"$24.99", sales:"60–100/mo", why:"The word 'with lid' is a high-intent modifier — buyers searching this know exactly what they want. Colour variants match popular desk setups (white, black, grey)."},
+      {name:"Desktop Cable Organiser", url:"https://www.etsy.com/listing/789012/cable-organiser", platform:"Etsy", price:"$19.99", sales:"40–70/mo", why:"Lifestyle photo shows a clean desk with laptop, plant and coffee — aspirational setup that sells the outcome, not the product."}
+    ]
+  },
+  "Adjustable Phone Stand": {
+    score: 85, cat: "Functional", verdict: "Strong performer",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp",
+    verified: true,
+    monthlySearches: "11,300", competition: "High", avgPrice: "$12–$20",
+    estProfit: "~$78/mo", printTime: "2h",
+    why: "High search volume but high competition means you need a differentiation hook. The winners add phone model-specific angles (e.g. 'for iPhone 15 with MagSafe') or target a use case ('bedside phone stand', 'kitchen recipe stand'). Without a niche angle this competes on price, which is a losing game against $8 Amazon stands.",
+    competitors: [
+      {name:"Adjustable Phone Stand - Multiple Angles", url:"https://www.etsy.com/listing/890123/phone-stand", platform:"Etsy", price:"$14.99", sales:"50–80/mo", why:"Demonstrates multiple angles in one photo, answering the buyer's first question. Offers 6 colour options."},
+      {name:"Bedside Phone Stand Wooden Look", url:"https://www.etsy.com/listing/901234/bedside-phone-stand", platform:"Etsy", price:"$17.99", sales:"35–60/mo", why:"'Wooden look' PLA filament makes this look premium. Bedside angle gets into home decor searches with lower competition."}
+    ]
+  },
+  "Modular Desk Organiser": {
+    score: 82, cat: "Office", verdict: "Strong performer",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",
+    verified: true,
+    monthlySearches: "8,400", competition: "Medium", avgPrice: "$16–$26",
+    estProfit: "~$84/mo", printTime: "4h",
+    why: "Modular means the buyer can customise their setup — this justifies a higher price and generates repeat purchases ('I'll take two more compartments'). The home office market grew 60% post-2020 and has stayed elevated. Photographing with notebooks, pens and plants in a styled setup is essential.",
+    competitors: [
+      {name:"Modular Desk Organizer System", url:"https://www.etsy.com/listing/012345/modular-organizer", platform:"Etsy", price:"$22.99", sales:"40–70/mo", why:"Lists all compatible pieces in the description, encouraging larger orders. Bundle pricing shown explicitly."}
+    ]
+  },
+  "Articulated Dragon": {
+    score: 79, cat: "Toy / Art", verdict: "Good seller",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp",
+    verified: false,
+    monthlySearches: "22,100", competition: "High", avgPrice: "$18–$35",
+    estProfit: "~$62/mo", printTime: "8h",
+    why: "Articulated prints are a showcase of what FDM can do that no other process can — this is the USP. The challenge is high competition and long print times limiting margins. Adding personalisation (custom colour combinations, engraved names on the base) or targeting limited editions ('October only — glow-in-the-dark') creates urgency and differentiation.",
+    competitors: [
+      {name:"Articulated Dragon Fidget Toy", url:"https://www.etsy.com/listing/123890/articulated-dragon", platform:"Etsy", price:"$24.99", sales:"40–70/mo", why:"'Fidget toy' in the title captures a different search intent — stress relief buyers have higher price tolerance. Gift wrapping option adds $4."},
+      {name:"Fantasy Dragon Poseable Figure", url:"https://www.etsy.com/listing/234901/poseable-dragon", platform:"Etsy", price:"$32.99", sales:"25–45/mo", why:"Premium positioning with 'poseable figure' framing. Detailed close-up photos show articulation quality — essential for this product."}
+    ]
+  },
+  "Controller Stand": {
+    score: 71, cat: "Gaming", verdict: "Good seller",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp",
+    verified: false,
+    monthlySearches: "6,800", competition: "Medium–High", avgPrice: "$14–$22",
+    estProfit: "~$38/mo", printTime: "3h",
+    why: "Gamers are a loyal, high-spend audience but they buy for specific setups. 'PS5 controller stand' and 'Xbox Series controller stand' are much better keywords than 'controller stand' — the specific search has buyers who are ready to buy. Dual-controller stands command a 40% price premium over single.",
+    competitors: [
+      {name:"PS5 Controller Stand Dual", url:"https://www.etsy.com/listing/345012/ps5-stand", platform:"Etsy", price:"$19.99", sales:"30–55/mo", why:"Targets the most popular console specifically. Dual version shown in first photo maximises perceived value."}
+    ]
+  },
+  "Geometric Tealight": {
+    score: 82, cat: "Decor", verdict: "Strong performer",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",
+    verified: false,
+    monthlySearches: "5,400", competition: "Low–Medium", avgPrice: "$10–$18",
+    estProfit: "~$55/mo", printTime: "2h",
+    why: "Tealight holders have strong seasonal spikes (Halloween, Christmas, Valentine's) but sell year-round as home decor. The geometric style photographs beautifully when lit — the translucent glow effect is a natural video hook for social media. Sets of 3 or 5 roughly triple the order value with minimal extra print time.",
+    competitors: []
+  },
+  "Watch Stand": {
+    score: 73, cat: "Tech", verdict: "Good seller",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",
+    verified: false,
+    monthlySearches: "4,200", competition: "Medium", avgPrice: "$12–$20",
+    estProfit: "~$44/mo", printTime: "1.5h",
+    why: "Short print time makes the margin excellent even at modest prices. Apple Watch stand is the highest-volume keyword in this category. Combined Apple Watch + AirPods stand commands a $6-8 premium and captures buyers kitting out a new desk setup.",
+    competitors: []
+  },
+  "Hex Wall Organiser": {
+    score: 88, cat: "Home", verdict: "Strong performer",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",
+    verified: false,
+    monthlySearches: "5,900", competition: "Low", avgPrice: "$14–$24",
+    estProfit: "~$75/mo", printTime: "3h",
+    why: "Wall organisers are underserved by mass manufacturers because mounting hardware complicates production. 3D printing with threaded inserts or integrated wall hooks is a real advantage here. The hexagon shape photographs well in flat-lay product shots.",
+    competitors: []
+  },
+  "Dice Tower": {
+    score: 68, cat: "Gaming", verdict: "Marginal",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",
+    verified: false,
+    monthlySearches: "3,100", competition: "High", avgPrice: "$18–$35",
+    estProfit: "~$28/mo", printTime: "7h",
+    why: "The DnD accessories market is passionate but oversaturated with dice towers specifically. Long print times hurt margin. Best angle is a themed tower (dragon, dungeon stone, skulls) with a personalisation option (engrave campaign name). Painted/finished versions sell for 2-3x but require post-processing skill.",
+    competitors: []
+  },
+  "Miniature Base Set": {
+    score: 65, cat: "Gaming", verdict: "Marginal",
+    img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",
+    verified: false,
+    monthlySearches: "2,800", competition: "High", avgPrice: "$12–$22",
+    estProfit: "~$22/mo", printTime: "4h",
+    why: "Miniature bases require resin printing for acceptable detail — FDM layer lines are visible at this scale. Resin adds cost and complexity. The buyers in this niche are knowledgeable and quality-conscious. If you have a resin printer, the opportunity is real. With FDM, skip this.",
+    competitors: []
+  }
+};
+
+function openProdModal(name) {
+  var d = PRODUCT_DATA[name];
+  if (!d) return;
+  var sc = d.score >= 70 ? 'g' : d.score >= 50 ? 'y' : 'r';
+  var compsHtml = d.competitors.length ? d.competitors.map(function(c){
+    return '<div class="pm-comp-card">' +
+      '<div class="pm-comp-name">' + esc(c.name) + '</div>' +
+      '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" class="pm-comp-url">' + esc(c.url.replace(/https?:\/\/(www\.)?/,'').slice(0,50)) + '</a>' +
+      '<div class="pm-comp-meta">' +
+        '<span class="pm-comp-tag" style="background:#f0fdf4;color:#15803d">' + esc(c.platform) + '</span>' +
+        '<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">' + esc(c.price) + '</span>' +
+        '<span class="pm-comp-tag" style="background:#eff6ff;color:#1d4ed8">' + esc(c.sales) + '</span>' +
+      '</div>' +
+      '<div class="pm-comp-why">' + esc(c.why) + '</div>' +
+    '</div>';
+  }).join('') : '<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
+
+  document.getElementById('prod-modal-content').innerHTML =
+    (d.verified ? '<div style="margin-bottom:10px"><span class="verified-badge" style="font-size:9px;padding:3px 9px">Daniel Verified</span></div>' : '') +
+    '<div class="pm-header">' +
+      '<div class="pm-img" style="background-image:url(' + esc(d.img) + ')"></div>' +
+      '<div>' +
+        '<div class="pm-cat">' + esc(d.cat) + '</div>' +
+        '<div class="pm-title">' + esc(name) + '</div>' +
+        '<div class="pm-score-row">' +
+          '<div class="pm-score ' + sc + '">' + d.score + '</div>' +
+          '<span class="pm-verdict ' + sc + '">' + esc(d.verdict) + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="pm-section">' +
+      '<div class="pm-section-hd">Market data</div>' +
+      '<div class="pm-stat-row">' +
+        '<div class="pm-stat"><div class="pm-stat-val">' + esc(d.monthlySearches) + '</div><div class="pm-stat-lbl">Monthly searches</div></div>' +
+        '<div class="pm-stat"><div class="pm-stat-val">' + esc(d.competition) + '</div><div class="pm-stat-lbl">Competition</div></div>' +
+        '<div class="pm-stat"><div class="pm-stat-val">' + esc(d.avgPrice) + '</div><div class="pm-stat-lbl">Avg. price</div></div>' +
+        '<div class="pm-stat"><div class="pm-stat-val g">' + esc(d.estProfit) + '</div><div class="pm-stat-lbl">Est. profit</div></div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="pm-section">' +
+      '<div class="pm-section-hd">Why it sells</div>' +
+      '<div class="pm-why">' + esc(d.why) + '</div>' +
+    '</div>' +
+    (d.competitors.length ? '<div class="pm-section"><div class="pm-section-hd">Top competitors</div>' + compsHtml + '</div>' : '') +
+    '<a href="/" class="pm-cta">Score this product yourself →</a>';
+
+  document.getElementById('prod-overlay').style.display = '';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProdModal(e) {
+  if (!e || e.target === document.getElementById('prod-overlay')) {
+    document.getElementById('prod-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+window.openProdModal = openProdModal;
+window.closeProdModal = closeProdModal;
+</script>
+
+<script>
+// Keyword data for instant results (common searches)
+var KW_DATA = {
+  "custom name sign": {vol:"16,600",comp:"Medium",score:88,verdict:"Strong opportunity",color:"#15803d",tip:"Personalisation commands premium pricing. Target gift buyers with 'custom name sign for bedroom' as a long-tail keyword."},
+  "cable management box": {vol:"7,800",comp:"Medium",score:82,verdict:"Good opportunity",color:"#15803d",tip:"Pair with 'with lid' or 'desktop' to get into higher-intent searches. PETG material justifies premium price."},
+  "phone stand": {vol:"11,300",comp:"High",score:58,verdict:"Overcrowded — niche down",color:"#d97706",tip:"Too generic. Try 'bedside phone stand', 'kitchen recipe stand' or target a specific phone model."},
+  "desk organizer": {vol:"8,400",comp:"Medium",score:76,verdict:"Good opportunity",color:"#15803d",tip:"Add 'modular' or 'personalized' to the keyword to differentiate from mass-market products."},
+  "personalised gift": {vol:"22,100",comp:"Very High",score:52,verdict:"Too broad — be specific",color:"#d97706",tip:"Too generic to rank. Use it as a secondary tag. Lead with the product: 'personalised name keychain' or 'personalised plant pot'."},
+  "planter pot": {vol:"9,200",comp:"Medium",score:79,verdict:"Good opportunity",color:"#15803d",tip:"Geometric and succulent-specific angles photograph well and stand out from ceramic imports."},
+  "watch stand": {vol:"4,200",comp:"Low",score:84,verdict:"Strong opportunity",color:"#15803d",tip:"Short print time + low competition = excellent margin. Target Apple Watch specifically for highest volume."},
+  "controller stand": {vol:"6,800",comp:"Medium",score:71,verdict:"Good seller",color:"#15803d",tip:"Target specific consoles: 'PS5 controller stand' and 'Xbox Series controller stand' have much better conversion rates."},
+  "cable clip organizer": {vol:"2,100",comp:"Low",score:86,verdict:"Hidden gem",color:"#7c3aed",tip:"Low competition, underserved on Etsy. Desk setup enthusiasts are the target buyer — photograph with a styled desk."},
+  "bedside phone stand": {vol:"1,800",comp:"Low",score:83,verdict:"Hidden gem",color:"#7c3aed",tip:"Bedroom context = gift opportunity. Price at $16-22 and photograph on a nightstand with a book and lamp."},
+  "wall key holder": {vol:"3,200",comp:"Low",score:87,verdict:"Hidden gem",color:"#7c3aed",tip:"Practical + personalisation potential. Custom initials or family name versions command 40% premium."},
+  "earring display stand": {vol:"2,900",comp:"Low",score:85,verdict:"Hidden gem",color:"#7c3aed",tip:"Jewellery storage is a growing category. Pairs well with ring dishes for bundle listings."},
+  "ring holder dish": {vol:"1,600",comp:"Low",score:82,verdict:"Hidden gem",color:"#7c3aed",tip:"Gift market opportunity is strong here. Valentine's Day and birthday searches spike. Personalised versions 2x the price."},
+  "miniature shelf bracket": {vol:"1,100",comp:"Very Low",score:79,verdict:"Niche opportunity",color:"#7c3aed",tip:"Serves a specific need with almost no competition. Floating shelf hardware is a repeat-purchase category."},
+  "laptop riser stand": {vol:"2,400",comp:"Low",score:81,verdict:"Hidden gem",color:"#7c3aed",tip:"More specific than 'laptop stand'. Home office buyers know what they want. Pairs with monitor stand for bundle."}
+};
+
+function setKw(el) {
+  document.getElementById('kwInput').value = el.textContent.replace(/[\d.,k]+$/, '').trim();
+  checkKeyword();
+}
+
+function checkKeyword() {
+  var kw = (document.getElementById('kwInput').value || '').trim().toLowerCase();
+  if (!kw) return;
+  var btn = document.getElementById('kwBtn');
+  btn.textContent = '…';
+  btn.disabled = true;
+  var res = document.getElementById('kwResult');
+  var d = KW_DATA[kw];
+  if (d) {
+    setTimeout(function() {
+      btn.textContent = 'Check →';
+      btn.disabled = false;
+      var barColor = d.score >= 70 ? '#15803d' : d.score >= 50 ? '#d97706' : '#dc2626';
+      res.style.display = '';
+      res.innerHTML = '<div class="kw-result-card" style="border-color:' + d.color + '20;background:' + d.color + '08">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+          '<div><div style="font-family:\'DM Mono\',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-bottom:2px">Keyword</div>' +
+          '<div style="font-size:14px;font-weight:700;color:var(--ink)">' + esc(kw) + '</div></div>' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:40px;color:' + barColor + ';line-height:1">' + d.score + '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:10px;margin-bottom:10px">' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:14px;font-weight:700;color:var(--ink)">' + d.vol + '</div><div style="font-size:10px;color:var(--ink3)">Monthly searches</div></div>' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:14px;font-weight:700;color:var(--ink)">' + d.comp + '</div><div style="font-size:10px;color:var(--ink3)">Competition</div></div>' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:13px;font-weight:700;color:' + barColor + '">' + d.verdict + '</div><div style="font-size:10px;color:var(--ink3)">Verdict</div></div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--ink2);line-height:1.5;background:rgba(255,255,255,.6);border-radius:8px;padding:9px 11px">' + esc(d.tip) + '</div>' +
+      '</div>';
+    }, 600);
+  } else {
+    // Call real API
+    fetch('/api/keyword', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({keyword: kw})
+    }).then(function(r){return r.json();}).then(function(d){
+      btn.textContent = 'Check →';
+      btn.disabled = false;
+      if (d.error) { res.style.display=''; res.innerHTML='<div style="padding:10px;color:var(--bad);font-size:13px">'+esc(d.error)+'</div>'; return; }
+      var barColor = d.score >= 70 ? '#15803d' : d.score >= 50 ? '#d97706' : '#dc2626';
+      res.style.display = '';
+      res.innerHTML = '<div class="kw-result-card" style="border-color:'+barColor+'20;background:'+barColor+'08">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">' +
+          '<div><div style="font-family:\'DM Mono\',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-bottom:2px">Keyword</div>' +
+          '<div style="font-size:14px;font-weight:700;color:var(--ink)">'+esc(d.keyword)+'</div></div>' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:40px;color:'+barColor+';line-height:1">'+d.score+'</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:10px;margin-bottom:10px">' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:14px;font-weight:700;color:var(--ink)">'+(d.monthlySearches||'').toLocaleString()+'</div><div style="font-size:10px;color:var(--ink3)">Monthly searches</div></div>' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:13px;font-weight:700;color:var(--ink)">'+esc(d.competition)+'</div><div style="font-size:10px;color:var(--ink3)">Competition</div></div>' +
+          '<div style="flex:1;background:rgba(255,255,255,.7);border-radius:8px;padding:8px 10px"><div style="font-family:\'DM Mono\',monospace;font-size:13px;font-weight:700;color:'+barColor+'">'+esc(d.verdict)+'</div><div style="font-size:10px;color:var(--ink3)">Verdict</div></div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--ink2);line-height:1.5;background:rgba(255,255,255,.6);border-radius:8px;padding:9px 11px;margin-bottom:8px">'+esc(d.topTip)+'</div>' +
+        (d.relatedKeywords&&d.relatedKeywords.length?'<div style="font-size:11px;color:var(--ink3);margin-bottom:4px">Related: </div><div style="display:flex;flex-wrap:wrap;gap:5px">'+d.relatedKeywords.map(function(k){return '<span onclick="document.getElementById(\'kwInput\').value=\''+esc(k)+'\';checkKeyword()" style="display:inline-block;padding:3px 9px;background:var(--surf);border:1px solid var(--line);border-radius:5px;font-size:11px;cursor:pointer;color:var(--acc)">'+esc(k)+'</span>';}).join('')+'</div>':'') +
+      '</div>';
+    }).catch(function(){
+      btn.textContent = 'Check →';
+      btn.disabled = false;
+      res.style.display='';
+      res.innerHTML='<div style="padding:10px;color:var(--bad);font-size:13px">Failed to check keyword. Please try again.</div>';
+    });
+    return; // early return — result shown in .then()
+  }
+}
+window.setKw = setKw;
+window.checkKeyword = checkKeyword;
+</script>
+
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+
+  // ── Auth gate ──────────────────────────────────────────────────────────────
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    window.location.href = '/login?returnTo=/members';
+  }
+
+  const token = session.access_token;
+  localStorage.setItem('sb_access_token', token);
+
+  // ── Load profile for header ────────────────────────────────────────────────
+  try {
+    const res = await fetch('/api/account/me', {
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    if (res.ok) {
+      const p = await res.json();
+      const name = p.displayName || p.email.split('@')[0];
+      document.getElementById('hdrUserName').textContent = name;
+      const avatarEl = document.getElementById('hdrAvatar');
+      if (p.avatarUrl) {
+        avatarEl.innerHTML = `<img src="${p.avatarUrl.replace(/"/g,'&quot;')}" alt="" onerror="this.style.display='none'">`;
+      } else {
+        avatarEl.textContent = (name || '?').split(/\s+/).map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      }
+    }
+  } catch (_) {}
+
+  // ── Load recent scans dynamically ─────────────────────────────────────────
+  function scoreClass(s) {
+    if (s == null) return '';
+    if (s >= 75) return 'score-green';
+    if (s >= 50) return 'score-yellow';
+    return 'score-red';
+  }
+
+  function tagClass(s) {
+    if (s == null) return '';
+    if (s >= 75) return 'tag-green';
+    if (s >= 50) return 'tag-yellow';
+    return 'tag-red';
+  }
+
+  function verdictLabel(score, verdict) {
+    if (verdict) return verdict;
+    if (score == null) return 'Analysed';
+    if (score >= 75) return 'Sellable';
+    if (score >= 50) return 'Marginal';
+    return 'Skip it';
+  }
+
+  function formatDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function escHtml(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  try {
+    const res = await fetch('/api/account/ideas', {
+      headers: { 'Authorization': 'Bearer ' + token },
+    });
+    const list = document.getElementById('recentList');
+
+    if (!res.ok) throw new Error();
+    const { ideas } = await res.json();
+
+    document.getElementById('recentCount').textContent =
+      ideas.length === 1 ? '1 idea' : `${ideas.length} ideas`;
+
+    if (ideas.length === 0) {
+      list.innerHTML = `
+        <div style="padding:28px 16px;text-align:center;color:var(--ink3)">
+          <div style="font-size:28px;margin-bottom:10px">&#x1f4a1;</div>
+          <div style="font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:6px">No scans yet</div>
+          <div style="font-size:13px;line-height:1.5;margin-bottom:14px">Score your first print idea to see results here.</div>
+          <a href="/" style="font-size:13px;font-weight:700;color:var(--acc);text-decoration:none">Check an idea &rarr;</a>
+        </div>`;
+      return;
+    }
+
+    const recent = ideas.slice(0, 8);
+    list.innerHTML = recent.map(idea => {
+      const score = idea.score;
+      const sc = scoreClass(score);
+      const tc = tagClass(score);
+      const label = verdictLabel(score, idea.verdict);
+      const title = idea.title || (() => { try { return new URL(idea.url.startsWith('http') ? idea.url : 'https://' + idea.url).hostname; } catch { return idea.url; } })();
+      const thumbStyle = idea.image_url ? `background-image:url(${escHtml(idea.image_url)})` : '';
+      const thumbFallback = idea.image_url ? '' : '&#x1f4a1;';
+      const scoreDisplay = score != null ? score : '–';
+      return `
+        <div class="idea-card">
+          <div class="idea-card-top">
+            <div class="idea-thumb" style="${thumbStyle}">${thumbFallback}</div>
+            <div class="idea-meta">
+              <div class="idea-name">${escHtml(title)}</div>
+              <div class="idea-tags">
+                <span class="tag ${tc}">${escHtml(label)}</span>
+              </div>
+              ${idea.profit_est ? `<div class="idea-profit">Est. profit <b>${escHtml(idea.profit_est)}</b></div>` : ''}
+            </div>
+            <div class="score-badge ${sc}">${scoreDisplay}</div>
+          </div>
+          <div class="idea-card-foot">
+            <span class="idea-date">${formatDate(idea.created_at)}</span>
+            <a href="/account" class="view-link">Manage &rarr;</a>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (_) {
+    document.getElementById('recentList').innerHTML =
+      `<div style="padding:16px;font-size:13px;color:var(--ink3)">Could not load your ideas. <a href="/members" style="color:var(--acc)">Retry</a></div>`;
+  }
+</script>
 </body>
 </html>

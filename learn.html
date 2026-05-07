@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>Learn to Sell 3D Prints – MeshMinds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --acc:#f56a00;
+      --ink:#0d0d0d;
+      --ink2:#4b4b4b;
+      --ink3:#8c8c8c;
+      --surf:#f9f9f9;
+      --surf2:#f0f0f0;
+      --line:#e8e8e8;
+      --line2:#d0d0d0;
+      --good:#15803d;
+      --bad:#dc2626;
+    }
+    body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh;display:flex;align-items:flex-start;justify-content:center}
+    .page{max-width:430px;width:100%;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column;padding-bottom:48px}
+
+    .hdr{padding:16px 18px 0;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-bottom:14px}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;color:var(--ink);line-height:1;text-decoration:none}
+    .logo span{color:var(--acc)}
+    .hdr-back{font-size:13px;color:var(--ink3);text-decoration:none;display:flex;align-items:center;gap:4px;margin-right:auto}
+    .hdr-back svg{width:14px;height:14px}
+
+    .hero{padding:24px 18px 0}
+    .hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.03em;color:var(--ink);line-height:1;margin-bottom:8px}
+    .hero-sub{font-size:13.5px;color:var(--ink3);line-height:1.55}
+
+    /* Progress bar */
+    .progress-wrap{margin:20px 18px 0;background:var(--surf2);border-radius:8px;padding:14px 16px;border:1px solid var(--line)}
+    .progress-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .progress-label-text{font-size:13px;font-weight:600;color:var(--ink2)}
+    .progress-count{font-family:'DM Mono',monospace;font-size:12px;color:var(--acc);font-weight:500}
+    .progress-bar-bg{height:7px;background:var(--line);border-radius:4px;overflow:hidden}
+    .progress-bar-fill{height:100%;background:var(--acc);border-radius:4px;transition:width .4s ease}
+
+    /* Lessons list */
+    .lessons{padding:16px 18px 0;display:flex;flex-direction:column;gap:10px}
+
+    .lesson{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;transition:border-color .15s}
+    .lesson.done{border-color:#86efac}
+    .lesson.open{border-color:var(--acc)}
+
+    .lesson-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;background:#fff;-webkit-tap-highlight-color:transparent;user-select:none}
+    .lesson-num{width:32px;height:32px;border-radius:50%;background:var(--surf2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;font-weight:700;color:var(--ink3);flex-shrink:0;transition:all .2s}
+    .lesson.done .lesson-num{background:#dcfce7;color:var(--good)}
+    .lesson.open .lesson-num{background:var(--acc);color:#fff}
+    .lesson-title-wrap{flex:1;min-width:0}
+    .lesson-title{font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.3}
+    .lesson-subtitle{font-size:12px;color:var(--ink3);margin-top:2px}
+    .lesson-check{width:20px;height:20px;flex-shrink:0;color:#86efac;display:none}
+    .lesson.done .lesson-check{display:block}
+    .lesson-chevron{width:18px;height:18px;flex-shrink:0;color:var(--ink3);transition:transform .2s}
+    .lesson.open .lesson-chevron{transform:rotate(180deg)}
+
+    .lesson-body{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
+    .lesson.open .lesson-body{display:block}
+
+    .lesson-section{margin-top:14px}
+    .lesson-section-title{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px}
+    .lesson-text{font-size:13.5px;color:var(--ink2);line-height:1.65}
+    .lesson-text p{margin-bottom:10px}
+    .lesson-text p:last-child{margin-bottom:0}
+    .lesson-text strong{color:var(--ink);font-weight:700}
+
+    .callout{background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1px solid #fed7aa;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--ink2);line-height:1.55;margin-top:12px}
+    .callout strong{color:var(--acc)}
+
+    .rule-list{list-style:none;margin-top:8px;display:flex;flex-direction:column;gap:7px}
+    .rule-list li{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;color:var(--ink2);line-height:1.5}
+    .rule-list li::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:6px}
+    .rule-list.green li::before{background:#22c55e}
+    .rule-list.red li::before{background:#ef4444}
+    .rule-list.orange li::before{background:var(--acc)}
+
+    .stat-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .stat-card{background:var(--surf);border:1px solid var(--line);border-radius:10px;padding:10px 13px;flex:1;min-width:80px}
+    .stat-val{font-family:'DM Mono',monospace;font-size:16px;font-weight:700;color:var(--acc)}
+    .stat-lbl{font-size:11px;color:var(--ink3);margin-top:2px;line-height:1.3}
+
+    .done-btn{width:100%;padding:12px;background:var(--acc);color:#fff;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:16px;transition:opacity .15s}
+    .done-btn:hover{opacity:.9}
+    .lesson.done .done-btn{background:#dcfce7;color:var(--good)}
+
+    .cta-wrap{margin:24px 18px 0;background:linear-gradient(135deg,#fff7ed,#ffedd5);border:1.5px solid #fed7aa;border-radius:14px;padding:18px 16px;text-align:center}
+    .cta-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.03em;color:var(--ink);margin-bottom:6px}
+    .cta-sub{font-size:13px;color:var(--ink2);line-height:1.5;margin-bottom:14px}
+    .cta-btn{display:inline-block;padding:13px 24px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;text-decoration:none;cursor:pointer}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <a href="/" class="hdr-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5"/><path d="m12 5-7 7 7 7"/></svg> Back</a>
+    <a href="/" class="logo">Mesh<span>Minds</span></a>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Free course · 7 lessons</div>
+    <div class="hero-title">Why some 3D prints sell — and most don't</div>
+    <div class="hero-sub">Everything we've learned from scoring thousands of 3D printable products, packed into 7 short lessons.</div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span class="progress-label-text">Your progress</span>
+      <span class="progress-count" id="prog-count">0 / 7 complete</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="prog-bar" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="lessons" id="lessons-list">
+
+    <!-- Lesson 1 -->
+    <div class="lesson" id="l1">
+      <div class="lesson-header" onclick="toggleLesson('l1')">
+        <div class="lesson-num">1</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">The Sellability Formula</div>
+          <div class="lesson-subtitle">Why scoring beats guessing</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The big idea</div>
+          <div class="lesson-text">
+            <p>Most sellers pick products based on what they <strong>enjoy printing</strong>. That's backwards. The market doesn't care what you enjoy — it buys what it needs or desires. The gap between a great print and a selling print is almost always demand, not quality.</p>
+            <p>MeshMinds scores every product on five axes: <strong>market demand, competition, profit margin, legal risk,</strong> and <strong>manufacturing fit</strong>. A product that scores well on all five is a winner. Most products fail on one or two.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">The formula</div>
+          <div class="lesson-text">
+            <p><strong>Sellability = Demand × Differentiation ÷ Competition</strong></p>
+            <p>High demand alone isn't enough — if 80,000 sellers already offer the same thing (generic keychains, flexi dragons), the market is saturated. The real money is in niches where demand is clear and competition is still fragmented.</p>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Rule #1:</strong> Before printing a single gram, check how many Etsy listings exist for that product. Under 5,000? Worth exploring. Over 50,000 with no obvious differentiation angle? Walk away.
+        </div>
+        <button class="done-btn" onclick="markDone('l1',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 2 -->
+    <div class="lesson" id="l2">
+      <div class="lesson-header" onclick="toggleLesson('l2')">
+        <div class="lesson-num">2</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Reading Demand Signals</div>
+          <div class="lesson-subtitle">Finding products buyers actually want</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">Where demand comes from</div>
+          <div class="lesson-text">
+            <p>On Etsy, demand = search volume. The number of people typing a keyword per month is the closest thing to a demand forecast you'll get. MeshMinds estimates this for every product it scores.</p>
+            <p>But search volume alone isn't demand — it's <strong>attention</strong>. Real demand shows up as <strong>sales velocity</strong>: how many units are the top 5 listings moving per month? Check the "X sales" badge under Etsy listings. If the top 5 sellers combined are doing fewer than 100 sales/month across a niche, the market is shallow.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">Green vs red demand signals</div>
+          <ul class="rule-list green">
+            <li>Keyword has 2,000–20,000 monthly searches on Etsy</li>
+            <li>Top listings have 500+ reviews (proves real transactions)</li>
+            <li>Gift or occasion-driven (birthday, wedding, pet) — evergreen cycle</li>
+            <li>Product solves a specific, named problem ("cable tidy for standing desk")</li>
+            <li>Passionate niche: DnD players, keyboard enthusiasts, plant parents</li>
+          </ul>
+          <ul class="rule-list red" style="margin-top:10px">
+            <li>Keyword broad and generic ("phone stand", "keychain")</li>
+            <li>Trend-driven with no sustained search history</li>
+            <li>No Etsy listings have more than 50 reviews — market hasn't proven out</li>
+            <li>Product is cool but solves no clear problem or emotional need</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>Shortcut:</strong> Search your keyword on Etsy, sort by "Most relevant", and count how many of the top 20 listings have over 100 reviews. If fewer than 5 do, the product is unproven.
+        </div>
+        <button class="done-btn" onclick="markDone('l2',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 3 -->
+    <div class="lesson" id="l3">
+      <div class="lesson-header" onclick="toggleLesson('l3')">
+        <div class="lesson-num">3</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Beating the Competition</div>
+          <div class="lesson-subtitle">When to enter a crowded niche — and when not to</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The listing count trap</div>
+          <div class="lesson-text">
+            <p>New sellers see 40,000 Etsy listings for "desk organiser" and think the niche is dead. Sometimes they're right. But listing count alone is a bad signal — what matters is whether those listings are <strong>visually differentiated</strong>.</p>
+            <p>If you search a category and the first 20 results look nearly identical (same shape, same colours, same photos), that category is saturated. But if you see 20 different aesthetic takes — minimalist, maximalist, character-themed, wooden-look — that's a creative niche with room for one more distinctive entry.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">How to enter a competitive niche</div>
+          <ul class="rule-list orange">
+            <li><strong>Specialise the keyword:</strong> "desk organiser" → "mushroom desk organiser cottagecore" (800 listings, not 40,000)</li>
+            <li><strong>Add personalisation:</strong> Any product with a name slot is automatically differentiated from generic versions</li>
+            <li><strong>Reposition as décor:</strong> A "cable tray" becomes a "minimal cable management piece" at twice the price</li>
+            <li><strong>Target a sub-audience:</strong> "cat lover desk set" appeals to a buyer who won't even look at a generic organiser</li>
+          </ul>
+        </div>
+        <div class="stat-row">
+          <div class="stat-card"><div class="stat-val">3×</div><div class="stat-lbl">Premium buyers pay for personalised vs generic</div></div>
+          <div class="stat-card"><div class="stat-val">40%</div><div class="stat-lbl">Less competition in long-tail keyword niches</div></div>
+          <div class="stat-card"><div class="stat-val">5k</div><div class="stat-lbl">Listings or fewer = manageable competition</div></div>
+        </div>
+        <button class="done-btn" onclick="markDone('l3',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 4 -->
+    <div class="lesson" id="l4">
+      <div class="lesson-header" onclick="toggleLesson('l4')">
+        <div class="lesson-num">4</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Pricing for Profit</div>
+          <div class="lesson-subtitle">The true cost of a print and how to price above it</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The real cost formula</div>
+          <div class="lesson-text">
+            <p>Most sellers only count filament. That's the fastest route to working below minimum wage.</p>
+            <p><strong>True cost per unit = filament + electricity + failure rate (6–8%) + packaging + Etsy fees (~10%) + your time.</strong></p>
+            <p>At €0.025/g PLA, a 50g print costs €1.25 in filament. Add packaging (€0.40), failure overhead (€0.11), Etsy fee on a €15 listing (€1.50 + €0.20), and even at minimum wage (€12/hr) for 20 minutes of handling — that's €4 per unit before profit. On a €15 sale, you're making ~€9. That's fine — but only if your print time is under 2 hours. A 6-hour print at €0.025/g costs €3.50 in filament, but the opportunity cost of tying up a printer for 6 hours at 2–3 units/day caps your volume badly.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">Price anchoring tactics</div>
+          <ul class="rule-list orange">
+            <li>Always have a bundle (2-pack, 3-pack) — it raises AOV and reduces per-unit shipping cost</li>
+            <li>Offer personalisation as a premium add-on (+€5–8 per item) — it costs you 2 minutes to change a name in the slicer</li>
+            <li>Run a permanent 20% "sale" — Etsy notifies watchers, and buyers feel they're getting a deal</li>
+            <li>Anchor high: list at €29.99, then discount to €22. The original price becomes the perceived value.</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>Gross margin target:</strong> Aim for at least 60% gross margin (filament + packaging only). Below 50% and you have no room for promotions, returns, or price pressure from competitors.
+        </div>
+        <button class="done-btn" onclick="markDone('l4',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 5 -->
+    <div class="lesson" id="l5">
+      <div class="lesson-header" onclick="toggleLesson('l5')">
+        <div class="lesson-num">5</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Photography That Converts</div>
+          <div class="lesson-subtitle">Why your listing photos are your #1 sales tool</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The thumbnail test</div>
+          <div class="lesson-text">
+            <p>On Etsy, buyers see your thumbnail at roughly 200×200px against 19 competitors. You have about <strong>0.3 seconds</strong> to make them click. The entire sale lives or dies in that moment.</p>
+            <p>The #1 mistake: photographing your print against a plain white background. It looks like a prototype, not a product. The best-selling listings show the item <strong>in context</strong> — on a real desk, in a real room, held by real hands. This is called lifestyle photography and it's the single biggest lever for conversion.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">7-shot listing formula</div>
+          <ul class="rule-list green">
+            <li><strong>Shot 1 (hero):</strong> Lifestyle — item in use, styled environment, natural light</li>
+            <li><strong>Shot 2:</strong> Close-up showing surface texture and print quality</li>
+            <li><strong>Shot 3:</strong> Scale reference — item next to a hand, coin, or known object</li>
+            <li><strong>Shot 4:</strong> Flat lay with complementary props</li>
+            <li><strong>Shot 5:</strong> All colour/finish variants together</li>
+            <li><strong>Shot 6:</strong> Packaging photo — builds trust</li>
+            <li><strong>Shot 7:</strong> Infographic — dimensions, materials, care instructions</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>No DSLR needed:</strong> A modern smartphone + a window with indirect daylight + a €15 piece of white foam board as a reflector will beat 90% of 3D print listings on Etsy today. The bar is shockingly low.
+        </div>
+        <button class="done-btn" onclick="markDone('l5',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 6 -->
+    <div class="lesson" id="l6">
+      <div class="lesson-header" onclick="toggleLesson('l6')">
+        <div class="lesson-num">6</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Legal Landmines</div>
+          <div class="lesson-subtitle">IP, licences and what Etsy actually enforces</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The two legal risks</div>
+          <div class="lesson-text">
+            <p><strong>1. Intellectual property (IP):</strong> Disney, Nintendo, Marvel, Pokémon, Harry Potter, and hundreds of other brands actively scan Etsy and file DMCA takedowns. An infringing listing gets pulled within days, and repeat violations lead to permanent shop suspension. The risk is real and well-documented — don't trade short-term sales for a banned account.</p>
+            <p><strong>2. Licence compliance:</strong> Selling prints from a file you downloaded requires a <em>commercial licence</em> from the designer. Most files on MakerWorld, Printables, and Cults3D are licensed for personal use only. Check the licence tab on every file page before printing to sell. When in doubt, message the designer — many grant commercial licences for free or a small fee.</p>
+          </div>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">Safe vs risky categories</div>
+          <ul class="rule-list green">
+            <li>Original designs you created yourself — full commercial freedom</li>
+            <li>Files with explicit "commercial use allowed" or CC-BY licence</li>
+            <li>Generic functional items (stands, holders, organizers) — no IP angle</li>
+            <li>Character-adjacent but original designs (a cat planter that isn't Garfield)</li>
+          </ul>
+          <ul class="rule-list red" style="margin-top:10px">
+            <li>Any file depicting Disney, Nintendo, Marvel, DC, or major game characters</li>
+            <li>Logos, brand names, or slogans printed onto items</li>
+            <li>Files marked "personal use only" or "non-commercial"</li>
+            <li>Fan art of living celebrities without their permission</li>
+          </ul>
+        </div>
+        <div class="callout">
+          <strong>Practical rule:</strong> If a child would recognise it as a character from a movie or game — don't sell it on Etsy. You can often sell the same design on your own website or at craft fairs with lower enforcement risk, but Etsy will pull the listing.
+        </div>
+        <button class="done-btn" onclick="markDone('l6',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+    <!-- Lesson 7 -->
+    <div class="lesson" id="l7">
+      <div class="lesson-header" onclick="toggleLesson('l7')">
+        <div class="lesson-num">7</div>
+        <div class="lesson-title-wrap">
+          <div class="lesson-title">Finding Your Next Winner</div>
+          <div class="lesson-subtitle">A repeatable system for product discovery</div>
+        </div>
+        <svg class="lesson-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg class="lesson-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+      <div class="lesson-body">
+        <div class="lesson-section">
+          <div class="lesson-section-title">The product discovery loop</div>
+          <div class="lesson-text">
+            <p>Successful 3D print sellers don't stumble onto winning products — they run a repeatable discovery process every week. Here's the one that works:</p>
+          </div>
+          <ul class="rule-list orange">
+            <li><strong>Browse MakerWorld "Popular this week":</strong> High download count = real interest. Cross-reference with Etsy to see if prints are being sold</li>
+            <li><strong>Mine Etsy search autocomplete:</strong> Type a category ("planter", "cable", "stand") and read the autocomplete suggestions — each suggestion is a real search term with real volume</li>
+            <li><strong>Reddit product communities:</strong> r/malelivingspace, r/battlestations, r/homelab, r/houseplants — people share what they wish they could buy. That's unsatisfied demand</li>
+            <li><strong>Pinterest trends:</strong> Interior design trends arrive on Pinterest 6–12 months before they peak on Etsy. Cottagecore planters, office cable management, bathroom aesthetics — all peaked on Pinterest first</li>
+            <li><strong>Score everything with MeshMinds:</strong> Paste any model URL or describe your idea to get an objective score before investing print time</li>
+          </ul>
+        </div>
+        <div class="lesson-section">
+          <div class="lesson-section-title">The 5-product test rule</div>
+          <div class="lesson-text">
+            <p>Never build a full shop around one product until you've validated it. The pro approach: <strong>list 5 different products simultaneously</strong>, invest equal effort in each (good photos, optimised titles), and observe which gets views and favourites within the first 2 weeks. Double down on the winner, pause the rest. The market tells you what it wants — listen to it before scaling.</p>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>Your unfair advantage:</strong> You have MeshMinds. Use it to score every idea before you print it. Most sellers skip this step and waste weeks printing products that had no chance. You don't have to.
+        </div>
+        <button class="done-btn" onclick="markDone('l7',this)">Mark as complete ✓</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-wrap">
+    <div class="cta-title">Ready to score your first idea?</div>
+    <div class="cta-sub">Paste a model link or describe your idea. Get a full market score in 30 seconds.</div>
+    <a href="/" class="cta-btn">Check my idea →</a>
+  </div>
+
+</div>
+
+<script>
+  var STORAGE_KEY = 'mm_learn_done';
+
+  function getDone() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch { return []; }
+  }
+
+  function saveDone(arr) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch {}
+  }
+
+  function updateProgress() {
+    var done = getDone();
+    var count = done.length;
+    document.getElementById('prog-count').textContent = count + ' / 7 complete';
+    document.getElementById('prog-bar').style.width = Math.round(count / 7 * 100) + '%';
+  }
+
+  function toggleLesson(id) {
+    var el = document.getElementById(id);
+    var isOpen = el.classList.contains('open');
+    document.querySelectorAll('.lesson.open').forEach(function(l) { l.classList.remove('open'); });
+    if (!isOpen) el.classList.add('open');
+  }
+
+  window.markDone = function(id, btn) {
+    var done = getDone();
+    if (!done.includes(id)) { done.push(id); saveDone(done); }
+    var el = document.getElementById(id);
+    el.classList.add('done');
+    btn.textContent = '✓ Completed';
+    updateProgress();
+    // Open next lesson
+    var num = parseInt(id.replace('l',''),10);
+    if (num < 7) {
+      var next = document.getElementById('l' + (num + 1));
+      if (next && !next.classList.contains('open')) {
+        el.classList.remove('open');
+        next.classList.add('open');
+        next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  // Restore state on load
+  var done = getDone();
+  done.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('done');
+    var btn = el.querySelector('.done-btn');
+    if (btn) btn.textContent = '✓ Completed';
+  });
+  updateProgress();
+
+  // Open first incomplete lesson automatically
+  var allIds = ['l1','l2','l3','l4','l5','l6','l7'];
+  var firstIncomplete = allIds.find(function(id) { return !done.includes(id); });
+  if (firstIncomplete) document.getElementById(firstIncomplete).classList.add('open');
+</script>
+</body>
+</html>

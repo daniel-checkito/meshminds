@@ -45,16 +45,31 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Automated requests are not allowed.' });
   }
 
-  /* Validate URL is from a supported platform */
-  const rawBodyUrl = (req.body || {}).url || '';
-  if (rawBodyUrl && !isAllowedUrl(rawBodyUrl)) {
+  const body = req.body || {};
+  const isIdeaMode = body.mode === 'idea';
+
+  /* Validate URL is from a supported platform (URL mode only) */
+  const rawBodyUrl = body.url || '';
+  if (!isIdeaMode && rawBodyUrl && !isAllowedUrl(rawBodyUrl)) {
     return res.status(400).json({ error: 'URL must be from a supported 3D model platform (MakerWorld, Printables, Cults3D, etc.)' });
   }
 
-  const body = req.body || {};
+  /* Validate idea mode */
+  if (isIdeaMode) {
+    const ideaText = (body.ideaText || '').trim();
+    if (ideaText.length < 15) {
+      return res.status(400).json({ error: 'idea_too_short: Please describe your idea in more detail (at least 15 characters) so we can give you an accurate score.' });
+    }
+  }
+
   const {
     url = '',
     description = '',
+    mode = 'url',
+    ideaText = '',
+    ideaType = '',
+    ideaBuyer = '',
+    ideaUsp = '',
     category,
     marketplace,
     priceRange,
@@ -215,7 +230,29 @@ module.exports = async (req, res) => {
 
   let competitorRaw = [];
 
-  if (scrapeUrl && urlKeywords) {
+  // ── Idea mode: skip product scrape, use user description as context ──
+  if (isIdeaMode) {
+    const ideaKeywords = ideaText.replace(/[^a-zA-Z0-9\s]/g, ' ').split(/\s+/)
+      .filter(w => w.length > 2 && !/^(the|and|for|with|that|this|from|into|your|model|print|3d|stl|want|make|sell|idea)$/i.test(w))
+      .slice(0, 5).join(' ');
+    productContext = `PRODUCT IDEA DESCRIPTION (not a real listing yet):
+"${ideaText.trim()}"
+- Product type: ${ideaType || 'not specified'}
+- Target buyer: ${ideaBuyer || 'not specified'}
+- Unique selling point: ${ideaUsp || 'not specified'}`;
+    if (ideaKeywords) {
+      const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(ideaKeywords)}&explicit=1&sort_on=most_relevant`;
+      const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(ideaKeywords + ' buy handmade')}&kl=us-en`;
+      const [etsyData, ddgData] = await Promise.all([
+        firecrawlScrape(etsySearchUrl, 500, 12000),
+        firecrawlScrape(ddgUrl, 500, 10000),
+      ]);
+      const etsyMd = etsyData?.data?.markdown || '';
+      const ddgMd = ddgData?.data?.markdown || '';
+      if (etsyMd) etsyRealData = parseEtsyData(etsyMd, ideaKeywords);
+      competitorRaw = parseCompetitorRaw(etsyMd, ddgMd);
+    }
+  } else if (scrapeUrl && urlKeywords) {
     // Run all 3 scrapes in parallel: product page + Etsy search + DuckDuckGo competitor search
     const etsySearchUrl = `https://www.etsy.com/search?q=${encodeURIComponent(urlKeywords)}&explicit=1&sort_on=most_relevant`;
     const ddgUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(urlKeywords + ' buy handmade')}&kl=us-en`;

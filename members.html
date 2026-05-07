@@ -397,7 +397,18 @@
     <div id="cat-count-pill" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.13em;color:var(--ink3);text-transform:uppercase"></div>
   </div>
 
-  <div id="cat-filter-chips" style="display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px;margin-bottom:8px;-webkit-overflow-scrolling:touch"></div>
+  <div style="display:flex;gap:8px;padding:0 16px 8px;align-items:center">
+    <input id="cat-search" type="search" placeholder="Search winners by name or tag…" style="flex:1;min-width:0;padding:9px 11px;border:1.5px solid var(--line2);border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:#fff;outline:none">
+    <select id="cat-sort" style="flex-shrink:0;padding:9px 26px 9px 10px;border:1.5px solid var(--line2);border-radius:9px;font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--ink2);background:#fff;cursor:pointer;letter-spacing:.04em">
+      <option value="revenue">Top revenue</option>
+      <option value="score">Top score</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+      <option value="name">Name (A→Z)</option>
+    </select>
+  </div>
+
+  <div id="cat-filter-chips" style="display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px;margin-bottom:8px;-webkit-overflow-scrolling:touch;position:sticky;top:0;background:#fff;z-index:5;border-bottom:1px solid var(--line)"></div>
 
   <div id="cat-grid" class="niche-grid" style="padding:0 16px 12px"></div>
 
@@ -455,7 +466,7 @@
     };
     var DEFAULT_IMG='https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp';
 
-    var winners=[], activeCat='all', winnersById={};
+    var winners=[], activeCat='all', activeSort='revenue', activeSearch='', winnersById={};
 
     function loadWinners(){
       return fetch('/data/winners.json',{cache:'force-cache'})
@@ -533,6 +544,9 @@
       });
     }
 
+    function scoreOf(w){
+      return Math.min(98,Math.max(20,Math.round(50+Math.log10(Math.max(50,w.monthly_revenue_eur||100))*15)));
+    }
     function render(){
       buildFilterChips();
       var grid=document.getElementById('cat-grid');
@@ -540,7 +554,25 @@
       var pill=document.getElementById('cat-count-pill');
       if(!grid)return;
       var list=activeCat==='all'?winners.slice():winners.filter(function(w){return w.category_id===activeCat;});
-      list.sort(function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);});
+      /* Search across name + tags + ip_holder so a query like "apple" or
+         "personalised" surfaces every relevant winner. */
+      var q=activeSearch.trim().toLowerCase();
+      if(q){
+        list=list.filter(function(w){
+          var hay=(w.name||'').toLowerCase()+' '+
+                  (Array.isArray(w.tags)?w.tags.join(' ').toLowerCase():'')+' '+
+                  (w.ip_holder||'').toLowerCase();
+          return hay.indexOf(q)!==-1;
+        });
+      }
+      var sortFns={
+        revenue:    function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);},
+        score:      function(a,b){return scoreOf(b)-scoreOf(a);},
+        'price-asc':function(a,b){return (a.price_eur||0)-(b.price_eur||0);},
+        'price-desc':function(a,b){return (b.price_eur||0)-(a.price_eur||0);},
+        name:       function(a,b){return (a.name||'').localeCompare(b.name||'');}
+      };
+      list.sort(sortFns[activeSort]||sortFns.revenue);
       if(pill)pill.textContent=list.length+' product'+(list.length===1?'':'s');
       if(!list.length){grid.innerHTML='';empty.style.display='';return;}
       empty.style.display='none';
@@ -564,8 +596,15 @@
       }).join('');
     }
 
-    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadWinners);
-    else loadWinners();
+    function wireControls(){
+      var s=document.getElementById('cat-search');
+      if(s)s.addEventListener('input',function(){activeSearch=s.value;render();});
+      var so=document.getElementById('cat-sort');
+      if(so)so.addEventListener('change',function(){activeSort=so.value;render();});
+    }
+    function init(){wireControls();loadWinners();}
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
+    else init();
   })();
   </script>
 

@@ -921,6 +921,13 @@ IMPORTANT RULES:
 
   if (savedScanId) parsed.scanId = savedScanId;
 
+  // Attach 2-3 real businesses doing well in this category so the UI can
+  // show concrete inspiration alongside the AI analysis.
+  try {
+    const insp = pickBusinessesForCategory(matchedMarket?.id || null);
+    if (insp.length) parsed.businessInspiration = insp;
+  } catch { /* non-fatal */ }
+
   // Fire-and-forget: log this scan's market data so the system improves over time.
   // We always log — even when no category matched — so the promotion script can
   // surface candidate new categories from the uncategorized pool.
@@ -973,6 +980,47 @@ function pickWinnersForCategory(categoryId, scanHasIpRisk) {
     if (cautionary) return [...recommended.slice(0, 2), cautionary];
   }
   return recommended;
+}
+
+// Lazy-load business inspiration list once per lambda warm instance
+let _businesses = null;
+function loadBusinesses() {
+  if (_businesses) return _businesses;
+  try {
+    const path = require('path');
+    const fs = require('fs');
+    const file = path.join(__dirname, '..', 'data', 'businesses.json');
+    _businesses = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch { _businesses = { businesses: [] }; }
+  return _businesses;
+}
+
+// Pick up to 3 businesses to surface as inspiration. Prefer category match,
+// fall back to theme variety, always include at most one per theme so the
+// user sees a mix (e.g. premium + viral + functional) rather than three
+// near-identical brands.
+function pickBusinessesForCategory(categoryId) {
+  const data = loadBusinesses();
+  const all = data.businesses || [];
+  if (!all.length) return [];
+  const direct = categoryId ? all.filter(b => Array.isArray(b.categories) && b.categories.includes(categoryId)) : [];
+  const picked = [];
+  const seenThemes = new Set();
+  for (const b of direct) {
+    if (picked.length >= 3) break;
+    if (seenThemes.has(b.theme)) continue;
+    picked.push(b);
+    seenThemes.add(b.theme);
+  }
+  // If we still have fewer than 3, fill with same-category entries even if
+  // the theme repeats (we'd rather show 3 lighting brands than 1 lighting
+  // brand + 2 unrelated service bureaus).
+  for (const b of direct) {
+    if (picked.length >= 3) break;
+    if (picked.includes(b)) continue;
+    picked.push(b);
+  }
+  return picked;
 }
 
 // Lazy-load IP flags once per lambda warm instance

@@ -7,12 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-  <script>
-    // Replace these with your actual Supabase project values
-    // Found in: Supabase Dashboard → Project Settings → API
-    window.SUPABASE_URL = '__SUPABASE_URL__';
-    window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
-  </script>
+  <script src="/api/public-config"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -1041,7 +1036,7 @@ window.checkKeyword = checkKeyword;
   const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
   // ── Auth gate (demo mode if Supabase not configured) ──────────────────────
-  const supabaseConfigured = window.SUPABASE_URL && !window.SUPABASE_URL.startsWith('__');
+  const supabaseConfigured = !!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && !window.SUPABASE_URL.startsWith('__'));
   let token = 'demo-token';
   if (supabaseConfigured) {
     const { data: { session } } = await supabase.auth.getSession();

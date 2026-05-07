@@ -97,12 +97,7 @@
 
 </div>
 
-<script>
-  // Replace these with your actual Supabase project values
-  // Found in: Supabase Dashboard → Project Settings → API
-  window.SUPABASE_URL = '__SUPABASE_URL__';
-  window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
-</script>
+<script src="/api/public-config"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);

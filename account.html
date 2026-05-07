@@ -258,10 +258,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
-  window.SUPABASE_URL = '__SUPABASE_URL__';
-  window.SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
-</script>
+<script src="/api/public-config"></script>
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
@@ -272,7 +269,7 @@
   let ideas = [];
 
   // ── Demo mode: if Supabase not configured, show a preview account ────────
-  const supabaseConfigured = window.SUPABASE_URL && !window.SUPABASE_URL.startsWith('__');
+  const supabaseConfigured = !!(window.SUPABASE_URL && window.SUPABASE_ANON_KEY && !window.SUPABASE_URL.startsWith('__'));
   const DEMO_PROFILE = {
     email: 'preview@meshminds.com',
     display_name: 'Daniel (Preview)',

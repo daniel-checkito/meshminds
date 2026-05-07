@@ -206,6 +206,136 @@ module.exports = async (req, res) => {
       500, 9000);
   }
 
+  /* ── Direct HTML fetch + parse for known platforms (skips Firecrawl) ──
+   * Returns { productContext, imageUrl, sourceUrl } in the same shape as
+   * extractProductContext, or null on any failure so caller can fall back. */
+  async function directFetchProduct(targetUrl) {
+    let host = '';
+    try { host = new URL(targetUrl).hostname.replace(/^www\./, ''); } catch { return null; }
+    const isMakerWorld = /(^|\.)makerworld\.com$/.test(host);
+    const isPrintables = /(^|\.)printables\.com$/.test(host);
+    const isCults = /(^|\.)cults3d\.com$/.test(host);
+    if (!isMakerWorld && !isPrintables && !isCults) return null;
+
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), 6000);
+    let html = '';
+    try {
+      const r = await fetch(targetUrl, {
+        method: 'GET',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+        },
+        signal: ac.signal,
+        redirect: 'follow',
+      });
+      if (!r.ok) return null;
+      html = await r.text();
+    } catch { return null; } finally { clearTimeout(t); }
+    if (!html || html.length < 500) return null;
+
+    try {
+      const meta = (prop) => {
+        // og:* / twitter:* / name=description meta tags (any attribute order)
+        const re1 = new RegExp(`<meta[^>]+(?:property|name)=["']${prop}["'][^>]*content=["']([^"']+)["']`, 'i');
+        const re2 = new RegExp(`<meta[^>]+content=["']([^"']+)["'][^>]*(?:property|name)=["']${prop}["']`, 'i');
+        const m = html.match(re1) || html.match(re2);
+        return m ? decodeEntities(m[1].trim()) : '';
+      };
+      const decodeEntities = (s) => s
+        .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
+        .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(parseInt(n, 10)));
+      const stripTags = (s) => s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+      const title = meta('og:title') || meta('twitter:title') || (html.match(/<title[^>]*>([^<]+)<\/title>/i)?.[1] || '').trim();
+      const description = meta('og:description') || meta('twitter:description') || meta('description') || '';
+      const imageUrl = meta('og:image') || meta('twitter:image') || '';
+      const sourceURL = meta('og:url') || targetUrl;
+
+      // Strip scripts/styles for body-text scanning
+      const bodyText = stripTags(
+        html.replace(/<script[\s\S]*?<\/script>/gi, ' ')
+            .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+            .replace(/<noscript[\s\S]*?<\/noscript>/gi, ' ')
+      );
+      const bodyTextDecoded = decodeEntities(bodyText);
+
+      // ── Stat extraction (works across all 3 platforms with platform-specific tweaks) ──
+      const stats = {};
+
+      // Author / designer
+      let author = '';
+      if (isMakerWorld) {
+        const m = html.match(/"(?:userName|nickName|nick_name|name)"\s*:\s*"([^"]{2,60})"/);
+        if (m) author = decodeEntities(m[1]);
+      }
+      if (!author) {
+        const m = html.match(/<meta[^>]+(?:name|property)=["'](?:author|article:author|og:article:author)["'][^>]*content=["']([^"']+)["']/i);
+        if (m) author = decodeEntities(m[1]);
+      }
+      if (!author && isCults) {
+        const m = html.match(/by\s+<[^>]*>\s*([^<\s][^<]{1,40})</i);
+        if (m) author = m[1].trim();
+      }
+
+      // Numeric counters — match labels like "Downloads", "Likes", "Makes", "Collections"
+      const num = (re) => {
+        const m = bodyTextDecoded.match(re);
+        if (!m) return null;
+        return m[1].replace(/\s+/g, '');
+      };
+      const fmtNum = (s) => s; // keep "8.4k" as-is; integers stay integers
+
+      let downloads = num(/([\d.,]+\s*[kKmM]?)\s*(?:Downloads?|Downloaded by|downloads)/) || null;
+      let likes = num(/([\d.,]+\s*[kKmM]?)\s*(?:Likes?|Liked by)/) || null;
+      let makes = num(/([\d.,]+\s*[kKmM]?)\s*Makes?/) || null;
+      let collections = num(/([\d.,]+\s*[kKmM]?)\s*(?:Collections?|Collected)/) || null;
+
+      // License — broad scan covers CC, MakerWorld Standard/Commercial, Personal Use, Print-for-Sale
+      let license = '';
+      const licMatch = bodyTextDecoded.match(/(Creative Commons[^.\n]{0,80}|CC0[^.\n]{0,40}|CC BY[^.\n]{0,40}|Standard MakerWorld License[^.\n]{0,40}|Commercial(?: Use)? License[^.\n]{0,40}|Personal Use(?: Only)?[^.\n]{0,40}|Non-?Commercial[^.\n]{0,40}|Print[- ]for[- ]Sale[^.\n]{0,40})/i);
+      if (licMatch) license = licMatch[0].trim().replace(/\s+/g, ' ');
+
+      // Cults3D price (or "Free")
+      let price = '';
+      if (isCults) {
+        const m = bodyTextDecoded.match(/(Free|US\$\s?[\d.,]+|€\s?[\d.,]+|£\s?[\d.,]+|\$\s?[\d.,]+)/);
+        if (m) price = m[1];
+      }
+
+      // Build context block — same shape as extractProductContext output
+      let productContext = `URL: ${sourceURL}\nTITLE: ${title}\nDESCRIPTION: ${description}\n`;
+      if (author) productContext += `AUTHOR: ${author}\n`;
+      if (downloads) productContext += `DOWNLOADS: ${downloads}\n`;
+      if (likes) productContext += `LIKES: ${likes}\n`;
+      if (makes) productContext += `MAKES: ${makes}\n`;
+      if (collections) productContext += `COLLECTIONS: ${collections}\n`;
+      if (price) productContext += `PRICE: ${price}\n`;
+      if (license) productContext += `LICENSE: ${license}\n`;
+
+      // Add a short slice of body text for Claude's context (cleaned, capped)
+      const cleanedBody = bodyTextDecoded
+        .replace(/\b(Follow|Boost|Post|Sign in|Sign up|Log in|Cookie|cookies|Subscribe|Newsletter)\b[^.\n]{0,40}/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      productContext += `\nPAGE CONTENT (cleaned):\n${cleanedBody.substring(0, 2500)}`;
+
+      if (!title && !description) return null; // nothing useful parsed
+      return { productContext, imageUrl, sourceUrl: sourceURL };
+    } catch { return null; }
+  }
+
+  /* Race direct fetch against a 6s timeout — guarantees we never block longer than that */
+  async function directFetchProductRaced(targetUrl) {
+    return Promise.race([
+      directFetchProduct(targetUrl),
+      new Promise((resolve) => setTimeout(() => resolve(null), 6000)),
+    ]).catch(() => null);
+  }
+
   async function firecrawlScrape(targetUrl, waitMs, abortMs) {
     const ac = new AbortController();
     const t = setTimeout(() => ac.abort(), abortMs);
@@ -325,27 +455,43 @@ module.exports = async (req, res) => {
       competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
     }
   } else if (scrapeUrl && urlKeywords) {
-    // Product page + 3 demand sources in parallel
-    const [fcData, etsyMd, ebayMd, amazonMd] = await Promise.all([
-      firecrawlScrape(scrapeUrl, 1000, 16000),
+    // Product page + 3 demand sources in parallel.
+    // Try direct HTML fetch+parse first (MakerWorld/Printables/Cults3D) — saves ~3-6s and ~$0.005.
+    const [direct, etsyMd, ebayMd, amazonMd] = await Promise.all([
+      directFetchProductRaced(scrapeUrl),
       fetchEtsy(urlKeywords), fetchEbay(urlKeywords), fetchAmazon(urlKeywords),
     ]);
-    if (fcData) {
-      const extracted = extractProductContext(fcData);
-      productContext = extracted.productContext;
-      imageUrl = extracted.imageUrl;
-      sourceUrl = extracted.sourceUrl;
+    if (direct) {
+      productContext = direct.productContext;
+      imageUrl = direct.imageUrl;
+      sourceUrl = direct.sourceUrl;
+    } else {
+      const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
+      if (fcData) {
+        const extracted = extractProductContext(fcData);
+        productContext = extracted.productContext;
+        imageUrl = extracted.imageUrl;
+        sourceUrl = extracted.sourceUrl;
+      }
     }
     if (etsyMd) etsyRealData = parseEtsyData(etsyMd, urlKeywords);
     competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
   } else if (scrapeUrl) {
-    // No URL keywords — scrape product first, derive keywords, then search
-    const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
-    if (fcData) {
-      const extracted = extractProductContext(fcData);
-      productContext = extracted.productContext;
-      imageUrl = extracted.imageUrl;
-      sourceUrl = extracted.sourceUrl;
+    // No URL keywords — scrape product first, derive keywords, then search.
+    // Try direct fetch first for known platforms; fall back to Firecrawl.
+    const direct = await directFetchProductRaced(scrapeUrl);
+    if (direct) {
+      productContext = direct.productContext;
+      imageUrl = direct.imageUrl;
+      sourceUrl = direct.sourceUrl;
+    } else {
+      const fcData = await firecrawlScrape(scrapeUrl, 1000, 16000);
+      if (fcData) {
+        const extracted = extractProductContext(fcData);
+        productContext = extracted.productContext;
+        imageUrl = extracted.imageUrl;
+        sourceUrl = extracted.sourceUrl;
+      }
     }
     const titleMatch = productContext.match(/TITLE:\s*(.+)/);
     const rawTitle = (titleMatch?.[1] || description || '').trim();

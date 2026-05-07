@@ -1,1 +1,5 @@
 .mcp.json
+legacy-emails*.csv
+legacy-emails*.sql
+legacy-scans*.csv
+legacy-scans*.sql

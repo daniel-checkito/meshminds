@@ -42,6 +42,15 @@ const TYPO_DOMAINS = {
 const TEST_LOCAL = /^(test|demo|fake|invalid|asdf+|qwerty|admin|noreply|fart|abc|xyz|123|aaa+|user|guest|sample|temp|tmp)\d*$/i;
 const TEST_DOMAIN = /^(test|example|fake|invalid|nowhere|asdf|temp|sample)\./i;
 
+// Catches obvious keyboard mashing in the local part: "asdf", "sdfg", "qwer",
+// "zxcv" and longer runs ("asdfsdf" matches "sdf" twice; "qwertyu" matches via
+// the trigram repeat). Real first-name/last-name locals don't hit these.
+const KEYBOARD_RUN = /(?:qwer|wert|erty|rtyu|tyui|yuio|uiop|asdf|sdfg|dfgh|fghj|ghjk|hjkl|zxcv|xcvb|cvbn|vbnm)/i;
+// Local of length ≥5 with no vowels (incl. y) is almost certainly mashing.
+function hasNoVowels(s) {
+  return s.length >= 5 && !/[aeiouy]/i.test(s);
+}
+
 function isLikelyFakeEmail(email) {
   if (!email || typeof email !== 'string') return { fake: true, reason: 'missing' };
   const e = email.trim().toLowerCase();
@@ -60,6 +69,8 @@ function isLikelyFakeEmail(email) {
   if (local === domainBody && local.length <= 6) return { fake: true, reason: 'matches_domain' };
   if (TEST_LOCAL.test(local)) return { fake: true, reason: 'test_pattern' };
   if (TEST_DOMAIN.test(domain)) return { fake: true, reason: 'test_domain' };
+  if (KEYBOARD_RUN.test(local)) return { fake: true, reason: 'keyboard_mash' };
+  if (hasNoVowels(local)) return { fake: true, reason: 'no_vowels' };
   return { fake: false };
 }
 

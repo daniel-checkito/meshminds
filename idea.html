@@ -794,9 +794,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div id="idea-step-1">
           <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Step 1 of 4 · Your idea<span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
           <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;margin-bottom:7px">What's your idea?</div>
-          <input id="idea-name" type="text" placeholder="e.g. Wall-mounted key holder with hooks" style="width:100%;padding:12px 13px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fafafa;outline:none;margin-bottom:10px;transition:border-color .2s" onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)'">
-          <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;margin-bottom:7px">What makes it unique? <span style="font-weight:500;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif;color:var(--ink3)">(optional)</span></div>
-          <input id="idea-desc" type="text" placeholder="e.g. Hidden coin tray, wood-look PLA, compact design" style="width:100%;padding:12px 13px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fafafa;outline:none;margin-bottom:10px;transition:border-color .2s" onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)'">
+          <textarea id="idea-name" rows="3" placeholder="e.g. Wall-mounted key holder with hooks, a hidden coin tray and wood-look PLA — keep it short, anything that makes it different is gold." style="width:100%;padding:12px 13px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fafafa;outline:none;margin-bottom:10px;transition:border-color .2s;resize:vertical;min-height:74px" onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
         </div>
         <!-- Step 2 -->
         <div id="idea-step-2" style="display:none">
@@ -1113,6 +1111,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
           <div class="gate-form">
             <div class="gate-form-lbl">Unlock your free report</div>
+            <div id="gate-progress-hint" style="display:flex;align-items:center;gap:7px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:7px 10px;margin-bottom:10px;font-size:11.5px;color:#1d4ed8;line-height:1.4"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1d4ed8;animation:gpulse 1.2s infinite ease-in-out;flex-shrink:0"></span>Already scanning — your report will be ready by the time you hit submit.</div>
+            <style>@keyframes gpulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}</style>
             <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
             <input type="text" id="hp-field" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
             <label class="gate-consent">
@@ -2548,9 +2548,7 @@ function revealScore(){
 
 function analyze(){
   if(inputMode==='idea'){
-    var ideaName=(q("idea-name")?q("idea-name").value.trim():"");
-    var ideaDesc=(q("idea-desc")?q("idea-desc").value.trim():"");
-    var ideaText=[ideaName,ideaDesc].filter(Boolean).join(". ");
+    var ideaText=(q("idea-name")?q("idea-name").value.trim().replace(/\s+/g,' '):"");
     var errEl=q("idea-error");
     if(!ideaText||ideaText.length<10){
       if(errEl){errEl.textContent="Please describe your idea above before scoring.";errEl.style.display="";}
@@ -2651,6 +2649,42 @@ function adaptQuizForMode(){
   }
 }
 
+// Client-side mirror of api/_email-validator.js. Keep in sync with the server.
+var DISPOSABLE_EMAIL_DOMAINS={'mailinator.com':1,'tempmail.com':1,'10minutemail.com':1,'guerrillamail.com':1,'throwaway.email':1,'sharklasers.com':1,'temp-mail.org':1,'yopmail.com':1,'trashmail.com':1,'dispostable.com':1,'maildrop.cc':1,'mintemail.com':1,'minutemail.com':1,'tempinbox.com':1,'getnada.com':1,'fakeinbox.com':1,'spamgourmet.com':1,'tempr.email':1};
+var EMAIL_TEST_LOCAL=/^(test|demo|fake|invalid|asdf+|qwerty|admin|noreply|fart|abc|xyz|123|aaa+|user|guest|sample|temp|tmp)\d*$/i;
+var EMAIL_TEST_DOMAIN=/^(test|example|fake|invalid|nowhere|asdf|temp|sample)\./i;
+var EMAIL_KEYBOARD_RUN=/(?:qwer|wert|erty|rtyu|tyui|yuio|uiop|asdf|sdfg|dfgh|fghj|ghjk|hjkl|zxcv|xcvb|cvbn|vbnm)/i;
+function clientFakeEmailReason(email){
+  if(!email||typeof email!=='string')return 'invalid_format';
+  var e=email.trim().toLowerCase();
+  var m=e.match(/^([a-z0-9._%+\-]+)@([a-z0-9\-]+(?:\.[a-z0-9\-]+)*)\.([a-z]{2,})$/);
+  if(!m)return 'invalid_format';
+  var local=m[1],domainBody=m[2],tld=m[3],domain=domainBody+'.'+tld;
+  if(DISPOSABLE_EMAIL_DOMAINS[domain])return 'disposable';
+  if(local.length<3)return 'local_too_short';
+  if(domainBody.length<2)return 'domain_too_short';
+  if(/(.)\1{3,}/.test(local))return 'repeated_chars';
+  if(local===domainBody&&local.length<=6)return 'matches_domain';
+  if(EMAIL_TEST_LOCAL.test(local))return 'test_pattern';
+  if(EMAIL_TEST_DOMAIN.test(domain))return 'test_domain';
+  if(EMAIL_KEYBOARD_RUN.test(local))return 'keyboard_mash';
+  if(local.length>=5&&!/[aeiouy]/i.test(local))return 'no_vowels';
+  return null;
+}
+function showGateInlineError(msg){
+  var inp=q("email-inp");if(!inp)return;
+  var existing=q("email-inp-err");
+  if(!existing){
+    existing=document.createElement('div');
+    existing.id='email-inp-err';
+    existing.style.cssText='font-size:11.5px;color:#b91c1c;margin-top:-6px;margin-bottom:8px;line-height:1.4';
+    inp.parentNode.insertBefore(existing,inp.nextSibling);
+  }
+  existing.textContent=msg;
+  existing.style.display='';
+  setTimeout(function(){if(existing)existing.style.display='none';},5000);
+}
+
 function showGateError(msg){
   var errEl=q("gate-error");
   if(!errEl){
@@ -2721,6 +2755,8 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
+    var hint=q("gate-progress-hint");
+    if(hint){hint.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#15803d;flex-shrink:0"></span>Report ready — enter your email to view it.';hint.style.background='#f0fdf4';hint.style.border='1px solid #86efac';hint.style.color='#15803d';}
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
     if(data&&data.scanId){window.lastScanId=data.scanId;if(typeof showFeedbackWidget==='function'){try{showFeedbackWidget();}catch(e){}}}
     if(window.MM&&MM.track)MM.track('analyze_success',{label:isIdeaMode?'idea':'url',value:data&&typeof data.score==='number'?data.score:null,scan_id:data&&data.scanId||null});
@@ -2987,9 +3023,8 @@ q("btn").addEventListener("click",function(){
   if(inputMode==='idea'){
     if(ideaStep===1){
       var n=q("idea-name")?q("idea-name").value.trim():"";
-      var d=q("idea-desc")?q("idea-desc").value.trim():"";
-      if(!n||n.length<5){
-        var e=q("idea-error");if(e){e.textContent="Please give your idea a short name (at least 5 characters).";e.style.display="";}
+      if(!n||n.length<10){
+        var e=q("idea-error");if(e){e.textContent="Describe your idea in a sentence (at least 10 characters) so we can score it well.";e.style.display="";}
         return;
       }
       if(q("idea-error"))q("idea-error").style.display="none";
@@ -3018,10 +3053,16 @@ q("btn-email").addEventListener("click",function(){
   /* Honeypot: bots fill the hidden field, humans don't */
   if(q("hp-field")&&q("hp-field").value){return;}
   var email=q("email-inp").value.trim();
-  if(!email||!email.includes("@")){
+  var fakeReason=clientFakeEmailReason(email);
+  if(fakeReason){
     q("email-inp").style.borderColor="var(--bad)";
     q("email-inp").focus();
-    setTimeout(function(){q("email-inp").style.borderColor="";},1500);
+    setTimeout(function(){q("email-inp").style.borderColor="";},1800);
+    var msg=fakeReason==='invalid_format'?"That doesn't look like a real email address.":
+            fakeReason==='disposable'?"Disposable email providers aren't accepted — please use a real address.":
+            fakeReason==='unknown_tld'?"That domain extension doesn't look right — please double-check.":
+            "Please enter a real email address.";
+    showGateInlineError(msg);
     return;
   }
   /* Capture email + consent (fire-and-forget - do not block UX) */

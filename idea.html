@@ -416,10 +416,15 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .score-bar-fill{height:100%;border-radius:4px;background:#15803d;width:0%;transition:width 0.9s ease 0.2s}
 .score-bar-val{font-family:"DM Mono",monospace;font-size:11px;font-weight:700;width:22px;text-align:right;flex-shrink:0}
 /* Insight note */
-.res-note{background:#fefce8;border:1px solid #fde68a;border-radius:11px;padding:12px 13px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start}
 .res-note-ico{font-size:16px;flex-shrink:0;margin-top:1px}
-.res-note-txt{font-size:12.5px;color:#92400e;line-height:1.5}
-.res-note-txt b{color:#78350f}
+.res-note-txt{font-size:12.5px;line-height:1.5}
+.res-note-txt b{font-weight:700}
+.verdict-note{margin-top:12px;padding-top:12px;border-top:1px solid rgba(0,0,0,.08);display:flex;gap:10px;align-items:flex-start}
+.verdict-card .res-note-txt{color:#166534}
+.verdict-card.warn .res-note-txt{color:#92400e}
+.verdict-card.warn .res-note-txt b{color:#78350f}
+.verdict-card.bad .res-note-txt{color:#991b1b}
+.verdict-card.bad .res-note-txt b{color:#7f1d1d}
 /* Signal cards */
 .signals-hd{font-family:"DM Mono",monospace;font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;margin:16px 0 9px;display:flex;align-items:center;gap:8px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .signals-hd::after{content:'';flex:1;height:1px;background:var(--line)}
@@ -1136,7 +1141,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="q-sec-title">Where do you want to sell?</div>
           <div class="chips g2" id="q-market">
             <button class="chip chip-card" data-v="etsy">
-              <span class="chip-badge">BEST</span>
               <span class="chip-ico">🛒</span>
               <span class="chip-name">Etsy</span>
               <span class="chip-desc">Recommended to start</span>
@@ -1289,12 +1293,11 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <span class="score-bar-val" id="val-legal">-</span>
             </div>
           </div>
-        </div>
-
-        <!-- Product insight note -->
-        <div class="res-note" id="res-note" style="display:none">
-          <span class="res-note-ico">💡</span>
-          <span class="res-note-txt" id="res-note-txt"></span>
+          <!-- Product insight note (merged into verdict box) -->
+          <div class="verdict-note" id="res-note" style="display:none">
+            <span class="res-note-ico">💡</span>
+            <span class="res-note-txt" id="res-note-txt"></span>
+          </div>
         </div>
 
         <!-- Why it's worth it -->

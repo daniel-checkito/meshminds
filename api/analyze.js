@@ -819,7 +819,10 @@ IMPORTANT RULES:
 
   let claudeJson;
   const clAbort = new AbortController();
-  const clTimeout = setTimeout(() => clAbort.abort(), 65000);
+  // Hobby plan caps the lambda at 60s. Anthropic call is the long pole, so
+  // give it most of that budget but leave 8s of headroom for parsing,
+  // database writes and response.
+  const clTimeout = setTimeout(() => clAbort.abort(), 45000);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

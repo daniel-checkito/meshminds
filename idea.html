@@ -786,7 +786,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     <div id="submit-block">
       <div id="hero-text" style="padding:8px 0 6px">
         <div class="hero-eyebrow">Make money 3D printing</div>
-        <h1 class="hero-h1">Will this 3D print<br><em>actually</em> sell on Etsy?</h1>
+        <h1 class="hero-h1">Will this 3D print<br><em>actually</em> sell?</h1>
         <p class="hero-sub">Decide if your 3D print idea is worth selling - in 30 seconds, before you waste a roll of filament. Built on $250K of real Etsy data.</p>
         <ul class="hero-bullets">
           <li><span class="hb-tick">✓</span> Real Etsy demand &amp; live search volume</li>
@@ -2760,7 +2760,7 @@ function runAnalysis(){
   var fetchAbort=new AbortController();
   activeAnalysisAbort=fetchAbort;
   if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);}
-  var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 135000);
+  var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 90000);
   activeAnalysisTimeout=fetchTimeout;
   fetch("/api/analyze",{
     method:"POST",

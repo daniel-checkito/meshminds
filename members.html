@@ -923,7 +923,8 @@ function openProdModal(name) {
       '<div class="pm-why">' + esc(d.why) + '</div>' +
     '</div>' +
     (d.competitors.length ? '<div class="pm-section"><div class="pm-section-hd">Top competitors</div>' + compsHtml + '</div>' : '') +
-    '<a href="/" class="pm-cta">Score this product yourself →</a>';
+    '<button class="pm-cta" id="save-list-btn" onclick="saveToList(' + JSON.stringify(name) + ')" style="background:var(--acc);color:#fff;border:none;cursor:pointer;width:100%;text-align:center">Save to my list</button>' +
+    '<div id="save-list-msg" style="display:none;text-align:center;font-size:13px;color:var(--good);font-weight:600;margin-top:8px">✓ Saved to your account</div>';
 
   document.getElementById('prod-overlay').style.display = '';
   document.body.style.overflow = 'hidden';
@@ -936,12 +937,44 @@ function closeProdModal(e) {
   }
 }
 
+function saveToList(name) {
+  var d = PRODUCT_DATA[name];
+  if (!d) return;
+  var tok = localStorage.getItem('sb_access_token');
+  var btn = document.getElementById('save-list-btn');
+  var msg = document.getElementById('save-list-msg');
+  if (!tok) {
+    window.location.href = '/login?returnTo=/members';
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+  fetch('/api/account/save-scan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+    body: JSON.stringify({
+      url: '',
+      title: name,
+      score: d.score,
+      verdict: d.verdict,
+      imageUrl: d.img || null,
+      profitEst: d.estProfit || null,
+      fullData: d
+    })
+  }).then(function() {
+    if (btn) btn.style.display = 'none';
+    if (msg) msg.style.display = '';
+  }).catch(function() {
+    if (btn) { btn.disabled = false; btn.textContent = 'Save to my list'; }
+  });
+}
+
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 window.openProdModal = openProdModal;
 window.closeProdModal = closeProdModal;
+window.saveToList = saveToList;
 </script>
 
 <script>

@@ -722,7 +722,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .comp-why{font-size:11.5px;color:var(--ink2);line-height:1.45;padding-top:8px;border-top:1px solid var(--line)}
 @media (min-width:640px){
   body{background:#f0f0f0;padding:28px 16px;min-height:100vh}
-  .phone{max-width:560px;border-radius:24px;box-shadow:0 8px 48px rgba(0,0,0,.10);margin:0 auto}
+  .phone{max-width:560px;border-radius:24px 24px 0 0;box-shadow:0 8px 48px rgba(0,0,0,.10);margin:0 auto}
+  .lp{max-width:560px;margin:0 auto;background:#fff;border-radius:0 0 24px 24px;box-shadow:0 8px 48px rgba(0,0,0,.10);padding:0 4px}
+  .lp-legal-bar{max-width:560px;margin:14px auto 0;background:transparent;border-top:none}
 }
 
 /* ── Landing preview cards ── */
@@ -761,13 +763,17 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="inp-inner">
           <input class="url-inp" id="ui" type="url" inputmode="url" placeholder="Paste any model link (MakerWorld, Printables…)">
         </div>
-        <div class="plat-tags">
+        <div class="try-eg" style="margin-top:8px">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">Try an example →</button></div>
+        <div style="font-size:10.5px;color:var(--ink3);margin-top:8px;padding:0 2px;font-family:'DM Mono',monospace;letter-spacing:.04em;text-transform:uppercase">Find models on</div>
+        <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap">
+          <a href="https://makerworld.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink2);background:var(--surf2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;text-decoration:none;font-weight:600;line-height:1">MakerWorld <span style="opacity:.6;font-size:10px">↗</span></a>
+          <a href="https://www.printables.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink2);background:var(--surf2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;text-decoration:none;font-weight:600;line-height:1">Printables <span style="opacity:.6;font-size:10px">↗</span></a>
+          <a href="https://cults3d.com" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--ink2);background:var(--surf2);border:1px solid var(--line);border-radius:7px;padding:6px 10px;text-decoration:none;font-weight:600;line-height:1">Cults3D <span style="opacity:.6;font-size:10px">↗</span></a>
+        </div>
+        <div class="plat-tags" style="margin-top:10px">
           <span class="plat-tag">✓ Start free</span>
           <span class="plat-tag">⚡ 30 seconds</span>
           <span class="plat-tag">↑ Upgrade anytime</span>
-        </div>
-        <div style="font-size:11px;color:var(--ink3);margin-top:6px;padding:0 2px">
-          Find models on <a href="https://makerworld.com" target="_blank" rel="noopener" style="color:var(--acc);text-decoration:none;font-weight:600">MakerWorld</a> or <a href="https://www.printables.com" target="_blank" rel="noopener" style="color:var(--acc);text-decoration:none;font-weight:600">Printables</a>
         </div>
       </div>
       <!-- Idea mode form (hidden by default) -->
@@ -846,7 +852,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <div class="try-eg" id="try-eg-hint">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">Try an example →</button></div>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
     </div>
@@ -928,11 +933,11 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 1: Questions Q1 -->
       <div class="panel">
-        <div class="q-step-eyebrow">Step 1 of 2</div>
-        <div class="q-step-title">Tell us about<br>the print</div>
-        <div class="q-step-sub">3 quick questions to personalise the results.</div>
+        <div class="q-step-eyebrow" id="q1-eyebrow">Step 1 of 2</div>
+        <div class="q-step-title" id="q1-title">Tell us about<br>the print</div>
+        <div class="q-step-sub" id="q1-sub">3 quick questions to personalise the results.</div>
 
-        <div class="q-block">
+        <div class="q-block" id="q-cat-block">
           <div class="q-sec-title">What category is it?</div>
           <div class="chips g2" id="q-cat">
             <button class="chip chip-card" data-v="decor">
@@ -2720,7 +2725,34 @@ function analyze(){
     },30);
     return;
   }
+  adaptQuizForMode();
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);showBack(true);busy=false;
+}
+
+// Adapt the quiz step content to whether the user came from URL paste or idea mode.
+// Idea mode already collected category + audience + USP + channels in the form,
+// so we hide the duplicate category question and retitle the step.
+function adaptQuizForMode(){
+  var isIdea=(inputMode==='idea');
+  var catBlock=q("q-cat-block");
+  var title=q("q1-title"); var sub=q("q1-sub"); var eb=q("q1-eyebrow");
+  if(isIdea){
+    if(catBlock)catBlock.style.display="none";
+    if(eb)eb.textContent="Step 1 of 2";
+    if(title)title.innerHTML="A few more<br>details";
+    if(sub)sub.textContent="2 quick questions to personalise the results.";
+    // Map the idea-type chip → qCat so analyze.js gets a category value
+    var ideaTypeOn=q("idea-type-chips")?q("idea-type-chips").querySelector(".chip.on"):null;
+    if(ideaTypeOn){
+      var map={functional:"functional",decorative:"decor",gift:"art",gaming:"gaming",fashion:"wearable",pet:"other"};
+      qCat=map[ideaTypeOn.dataset.v]||"other";
+    }
+  } else {
+    if(catBlock)catBlock.style.display="";
+    if(eb)eb.textContent="Step 1 of 2";
+    if(title)title.innerHTML="Tell us about<br>the print";
+    if(sub)sub.textContent="3 quick questions to personalise the results.";
+  }
 }
 
 function showGateError(msg){

@@ -105,10 +105,10 @@
     div.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;background:#131313;color:#f0ede8;border:1px solid rgba(255,255,255,.13);border-radius:14px;padding:18px;box-shadow:0 8px 32px rgba(0,0,0,.4);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;display:flex;flex-direction:column;gap:12px;max-width:560px;margin:0 auto';
     div.innerHTML =
       '<div style="font-family:Bebas Neue,sans-serif;font-size:22px;line-height:1;letter-spacing:.02em">Cookies &amp; Tracking</div>' +
-      '<div style="font-size:13px;line-height:1.5;color:rgba(240,237,232,.78)">We use technically necessary storage to keep you logged in and enforce daily scan limits — always on (§ 25 (2) TTDSG). With your consent, we also use anonymous analytics (page views, button clicks) and an IP-based geo lookup to improve the product. Withdraw any time in our <a href="/idea#privacy" style="color:#FF5C00;text-decoration:underline">privacy policy</a>.</div>' +
+      '<div style="font-size:13px;line-height:1.5;color:rgba(240,237,232,.78)">We use technically necessary storage to keep you logged in and enforce daily scan limits - always on (§ 25 (2) TTDSG). With your consent, we also use anonymous analytics (page views, button clicks) and an IP-based geo lookup to improve the product. Withdraw any time in our <a href="/idea#privacy" style="color:#FF5C00;text-decoration:underline">privacy policy</a>.</div>' +
       '<div style="display:flex;flex-direction:column;gap:8px">' +
         '<button onclick="MM.setConsent(\'accepted\')" style="background:#FF5C00;color:#fff;border:none;border-radius:8px;padding:13px 18px;font-size:14px;font-weight:700;cursor:pointer;min-height:44px">Accept analytics</button>' +
-        '<button onclick="MM.setConsent(\'declined\')" style="background:transparent;color:#f0ede8;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;min-height:44px">Decline — only essentials</button>' +
+        '<button onclick="MM.setConsent(\'declined\')" style="background:transparent;color:#f0ede8;border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:13px 18px;font-size:14px;font-weight:600;cursor:pointer;min-height:44px">Decline - only essentials</button>' +
       '</div>';
     document.body.appendChild(div);
   }

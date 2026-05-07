@@ -34,10 +34,10 @@ module.exports = async (req, res) => {
         });
         if (!rows?.length) return res.status(403).json({ error: 'Not found' });
 
-        // Pro-locked scans are guaranteed private — they can never be flipped public,
+        // Pro-locked scans are guaranteed private - they can never be flipped public,
         // even if the user is no longer Pro. This backstops the marketing promise.
         if (rows[0].pro_locked && Boolean(isPublic)) {
-          return res.status(200).json({ ok: false, locked: true, message: 'Scans saved while you were Pro stay private — that was the deal.' });
+          return res.status(200).json({ ok: false, locked: true, message: 'Scans saved while you were Pro stay private - that was the deal.' });
         }
 
         await adminQuery({

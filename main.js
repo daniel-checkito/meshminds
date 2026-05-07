@@ -284,7 +284,7 @@ function showCommercialResult(){
     sell: "YOU HAVE THE DRIVE.<br>HERE'S THE SYSTEM.",
   };
   const diags = {
-    what: "Most home sellers fail in year one because they pick the wrong products, underprice everything, and print without a commercial license. None of these are hard to fix — but you need to tackle them in the right order.",
+    what: "Most home sellers fail in year one because they pick the wrong products, underprice everything, and print without a commercial license. None of these are hard to fix - but you need to tackle them in the right order.",
     sell: "Consistent sales start with the right products, priced correctly, with the legal right to sell them. Get the foundation right and the marketing part gets a lot easier.",
   };
 
@@ -318,7 +318,7 @@ function showCommercialResult(){
     <div class="res-offer-card" onclick="openDiscountPopup('MESHMINDS','https://cubee3d.com/?ref=meshminds','cubee3d_quiz')" style="cursor:pointer;border-color:rgba(255,92,0,.45);margin-bottom:10px">
       <div class="res-offer-body">
         <div class="res-offer-badge">MOST POPULAR · FIXES #1 &amp; #2</div>
-        <div class="res-offer-name">Cubee3D — Commercial STL License</div>
+        <div class="res-offer-name">Cubee3D - Commercial STL License</div>
         <div style="font-size:12px;color:var(--t3);margin:5px 0 10px;letter-spacing:.3px">1,000+ proven designs &middot; unlimited prints &middot; no IP risk</div>
         <div class="res-offer-desc">Browse proven niches, pick what fits your market, and print and sell legally. The fastest way to fix the what-to-sell problem.</div>
         <div class="res-offer-cta">Get the commercial license → <span style="font-size:11px;opacity:.55">(tap to reveal discount code)</span></div>

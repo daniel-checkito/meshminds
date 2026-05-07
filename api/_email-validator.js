@@ -2,7 +2,7 @@
 // that show up when a free tool has no double-opt-in.
 //
 // Returns { fake: boolean, reason?: string, didYouMean?: string }.
-// Be conservative — when unsure, accept. False rejections are worse than
+// Be conservative - when unsure, accept. False rejections are worse than
 // false acceptances (we lose a real lead).
 
 const VALID_TLDS = new Set([

@@ -51,7 +51,7 @@ module.exports = async (req, res) => {
       },
     });
   } catch (e) {
-    // Log but don't fail the user — they expect a quick success
+    // Log but don't fail the user - they expect a quick success
     console.error('email_leads insert failed:', e.message);
   }
 

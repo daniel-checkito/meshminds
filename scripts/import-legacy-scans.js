@@ -95,7 +95,7 @@ function toIso(s) {
 const rows = dataRows.map((cols) => {
   const obj = {};
   headers.forEach((h, idx) => { obj[h] = (cols[idx] ?? '').trim(); });
-  // Strip placeholders from every field — they were unfilled n8n templates
+  // Strip placeholders from every field - they were unfilled n8n templates
   for (const k of Object.keys(obj)) if (isPlaceholder(obj[k]) && k !== 'timestamp') obj[k] = '';
   const created_at = toIso(obj.timestamp) || new Date().toISOString();
   const score = toIntScore(obj.score);

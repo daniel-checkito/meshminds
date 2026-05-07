@@ -58,7 +58,7 @@ function median(arr) {
 }
 
 (async () => {
-  console.log(`\n=== Market data refresh — last ${WINDOW_DAYS} days ===\n`);
+  console.log(`\n=== Market data refresh - last ${WINDOW_DAYS} days ===\n`);
 
   // Pull all observations in window (paginate by 1000)
   const allObs = [];
@@ -116,7 +116,7 @@ function median(arr) {
   }
   if (!lowUse) console.log('  (none)\n'); else console.log('');
 
-  // 3. Uncategorized scans — top product titles by frequency
+  // 3. Uncategorized scans - top product titles by frequency
   console.log('## Uncategorized scans (candidates for new categories)\n');
   const uncat = byCat.get('__uncat__') || [];
   if (uncat.length) {

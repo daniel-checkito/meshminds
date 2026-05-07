@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meshminds — Admin Dashboard</title>
+<title>Meshminds - Admin Dashboard</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap');
@@ -165,8 +165,8 @@ tr:hover td{background:var(--s2)}
     el.classList.remove('hidden');
     el.innerHTML = '<h2>Access denied</h2><p>' + msg + '</p>' + (withLogin ? '<p style="margin-top:14px"><a href="/login?returnTo=/dashboard">Sign in →</a></p>' : '');
   }
-  function fmtN(n){if(n==null)return'—';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return String(n);}
-  function fmtPct(n,d){if(!d)return'—';return Math.round(n/d*100)+'%';}
+  function fmtN(n){if(n==null)return'-';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return String(n);}
+  function fmtPct(n,d){if(!d)return'-';return Math.round(n/d*100)+'%';}
   function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
   function fmtDate(s){var d=new Date(s);return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'});}
   function fmtRel(s){var ms=Date.now()-new Date(s).getTime();var m=Math.floor(ms/60000);if(m<60)return m+'m';var h=Math.floor(m/60);if(h<24)return h+'h';return Math.floor(h/24)+'d';}
@@ -247,7 +247,7 @@ tr:hover td{background:var(--s2)}
       '<td style="text-align:right;font-family:var(--fm)">'+fmtN(r.pro_clicks)+'</td></tr>',
       'no daily data yet', 5);
     setRows('#emails-tbl tbody', d.recent_emails, e =>
-      '<tr><td>'+escH(e.email)+'</td><td>'+(e.consent?'✓':'—')+'</td><td class="muted" style="font-family:var(--fm)">'+fmtRel(e.created_at)+'</td></tr>',
+      '<tr><td>'+escH(e.email)+'</td><td>'+(e.consent?'✓':'-')+'</td><td class="muted" style="font-family:var(--fm)">'+fmtRel(e.created_at)+'</td></tr>',
       'no emails yet', 3);
     setRows('#scans-tbl tbody', d.top_scans, s =>
       '<tr><td>'+escH(s.title)+'<div class="muted" style="font-size:11px;font-family:var(--fm)">'+escH(s.verdict||'')+'</div></td>' +

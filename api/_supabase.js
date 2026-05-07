@@ -39,7 +39,7 @@ async function logUsage({ userId, ipHash, kind = 'scan' }) {
       table: 'usage_log',
       body: { user_id: userId || null, ip_hash: ipHash || null, kind },
     });
-  } catch { /* swallow — logging should never break the request */ }
+  } catch { /* swallow - logging should never break the request */ }
 }
 
 function supabaseUrl() {

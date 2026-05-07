@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Member Login — MeshMinds</title>
+<title>Pro Member Login - MeshMinds</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
@@ -50,7 +50,7 @@ body{min-height:100vh;background:#fff;font-family:"Manrope",sans-serif;display:f
     <button class="submit-btn" id="submit-btn" onclick="doLogin()">Restore access →</button>
     <div class="err-msg" id="err-msg"></div>
     <div class="divider">or</div>
-    <a href="https://buy.stripe.com/PLACEHOLDER" class="new-member-btn" id="new-member-link">New member — $9/month →</a>
+    <a href="https://buy.stripe.com/PLACEHOLDER" class="new-member-btn" id="new-member-link">New member - $9/month →</a>
   </div>
   <div class="back-link">
     <a href="/idea">← Back to PrintChecker</a>
@@ -90,7 +90,7 @@ function doLogin() {
       location.href = '/pro/dashboard';
     })
     .catch(function(){
-      setErr('Network error — please try again.');
+      setErr('Network error - please try again.');
       btn.disabled = false;
       btn.textContent = 'Restore access →';
     });

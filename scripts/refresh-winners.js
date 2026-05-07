@@ -11,7 +11,7 @@
  *     (matched by title similarity)
  *   - Prints a markdown report you can use to add new entries by hand
  *
- * Does NOT auto-write — winner entries need editorial review (price/revenue
+ * Does NOT auto-write - winner entries need editorial review (price/revenue
  * estimates, IP-risk classification, why-it-sells narrative). You decide.
  *
  * Usage:
@@ -42,7 +42,7 @@ const winners = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'w
 const knownTitles = new Set(winners.winners.map(w => w.name.toLowerCase()));
 
 function similar(a, b) {
-  // crude title similarity — share at least 3 significant tokens (>3 chars)
+  // crude title similarity - share at least 3 significant tokens (>3 chars)
   const tokens = s => new Set(s.toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length > 3));
   const A = tokens(a), B = tokens(b);
   let shared = 0;
@@ -110,5 +110,5 @@ async function rest(q) {
     console.log('');
   }
 
-  console.log('Add the ones you like to data/winners.json — fill in price_eur, monthly_revenue_eur, why_it_sells, differentiator, ip_risk fields manually for each.');
+  console.log('Add the ones you like to data/winners.json - fill in price_eur, monthly_revenue_eur, why_it_sells, differentiator, ip_risk fields manually for each.');
 })().catch(e => { console.error(e); process.exit(1); });

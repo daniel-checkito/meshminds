@@ -39,14 +39,14 @@ module.exports = async (req, res) => {
 
   const prompt = `You are an expert in Etsy SEO and 3D printing product market research. Analyse this Etsy/handmade marketplace keyword: "${kw}"
 
-Return ONLY valid JSON — no markdown, no explanation, no code fences.
+Return ONLY valid JSON - no markdown, no explanation, no code fences.
 
 {
   "keyword": "<the keyword as searched>",
   "monthlySearches": "<estimated monthly Etsy search volume, e.g. '2,400' or '8,100–12,000'>",
   "etsyListings": "<estimated number of competing Etsy listings, e.g. '4,200' or '40,000+'>",
   "competition": "<one of: Very Low | Low | Medium | High | Very High>",
-  "score": <integer 0–100, sellability score for this keyword — high search + low competition = high score>,
+  "score": <integer 0–100, sellability score for this keyword - high search + low competition = high score>,
   "verdict": "<one short sentence verdict>",
   "trend": "<one of: Rising | Stable | Seasonal | Declining>",
   "avgPrice": "<estimated average sell price on Etsy for products with this keyword, e.g. '$18–32'>",
@@ -54,7 +54,7 @@ Return ONLY valid JSON — no markdown, no explanation, no code fences.
   "relatedKeywords": ["<3–5 related long-tail keyword suggestions that have lower competition>"]
 }
 
-Use your knowledge of Etsy search trends, 3D printing niches, and handmade marketplace dynamics. Be specific and realistic — do not inflate search volumes. If it's a generic commodity keyword (phone holder, cable clip, keychain) reflect the very high competition accurately.`;
+Use your knowledge of Etsy search trends, 3D printing niches, and handmade marketplace dynamics. Be specific and realistic - do not inflate search volumes. If it's a generic commodity keyword (phone holder, cable clip, keychain) reflect the very high competition accurately.`;
 
   const ac = new AbortController();
   const timeout = setTimeout(() => ac.abort(), 25000);

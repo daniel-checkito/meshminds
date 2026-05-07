@@ -166,7 +166,7 @@ module.exports = async (req, res) => {
     } catch (_) { return ''; }
   }
 
-  // Keyword cache — survives within a hot lambda instance, ~24h TTL.
+  // Keyword cache - survives within a hot lambda instance, ~24h TTL.
   // Hit rate is meaningful for popular categories without growing memory.
   if (!global.__SCRAPE_CACHE__) global.__SCRAPE_CACHE__ = new Map();
   const scrapeCache = global.__SCRAPE_CACHE__;
@@ -192,14 +192,14 @@ module.exports = async (req, res) => {
       `https://www.etsy.com/search?q=${encodeURIComponent(kw)}&explicit=1&sort_on=most_relevant`,
       500, 10000);
   }
-  // eBay sold listings — real completed-sale prices, gold for spec/technical items
+  // eBay sold listings - real completed-sale prices, gold for spec/technical items
   async function fetchEbay(kw) {
     if (!kw) return '';
     return cachedScrape('ebay:' + kw.toLowerCase().trim(),
       `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(kw)}&LH_Sold=1&LH_Complete=1&_sop=13`,
       500, 9000);
   }
-  // Amazon Handmade — cross-platform demand check on similar gift items
+  // Amazon Handmade - cross-platform demand check on similar gift items
   async function fetchAmazon(kw) {
     if (!kw) return '';
     return cachedScrape('amzn:' + kw.toLowerCase().trim(),
@@ -282,7 +282,7 @@ module.exports = async (req, res) => {
         if (m) author = m[1].trim();
       }
 
-      // Numeric counters — match labels like "Downloads", "Likes", "Makes", "Collections"
+      // Numeric counters - match labels like "Downloads", "Likes", "Makes", "Collections"
       const num = (re) => {
         const m = bodyTextDecoded.match(re);
         if (!m) return null;
@@ -295,7 +295,7 @@ module.exports = async (req, res) => {
       let makes = num(/([\d.,]+\s*[kKmM]?)\s*Makes?/) || null;
       let collections = num(/([\d.,]+\s*[kKmM]?)\s*(?:Collections?|Collected)/) || null;
 
-      // License — broad scan covers CC, MakerWorld Standard/Commercial, Personal Use, Print-for-Sale
+      // License - broad scan covers CC, MakerWorld Standard/Commercial, Personal Use, Print-for-Sale
       let license = '';
       const licMatch = bodyTextDecoded.match(/(Creative Commons[^.\n]{0,80}|CC0[^.\n]{0,40}|CC BY[^.\n]{0,40}|Standard MakerWorld License[^.\n]{0,40}|Commercial(?: Use)? License[^.\n]{0,40}|Personal Use(?: Only)?[^.\n]{0,40}|Non-?Commercial[^.\n]{0,40}|Print[- ]for[- ]Sale[^.\n]{0,40})/i);
       if (licMatch) license = licMatch[0].trim().replace(/\s+/g, ' ');
@@ -307,7 +307,7 @@ module.exports = async (req, res) => {
         if (m) price = m[1];
       }
 
-      // Build context block — same shape as extractProductContext output
+      // Build context block - same shape as extractProductContext output
       let productContext = `URL: ${sourceURL}\nTITLE: ${title}\nDESCRIPTION: ${description}\n`;
       if (author) productContext += `AUTHOR: ${author}\n`;
       if (downloads) productContext += `DOWNLOADS: ${downloads}\n`;
@@ -329,7 +329,7 @@ module.exports = async (req, res) => {
     } catch { return null; }
   }
 
-  /* Race direct fetch against a 6s timeout — guarantees we never block longer than that */
+  /* Race direct fetch against a 6s timeout - guarantees we never block longer than that */
   async function directFetchProductRaced(targetUrl) {
     return Promise.race([
       directFetchProduct(targetUrl),
@@ -357,7 +357,7 @@ module.exports = async (req, res) => {
     if (countMatch) {
       const n = parseInt(countMatch[1].replace(/,/g, ''), 10);
       if (n > 0) {
-        result = `REAL ETSY SEARCH DATA (live scrape for "${query}"): ${n.toLocaleString()} total listings found. Use this as the primary anchor for market.etsyListings — do not estimate lower than this number.`;
+        result = `REAL ETSY SEARCH DATA (live scrape for "${query}"): ${n.toLocaleString()} total listings found. Use this as the primary anchor for market.etsyListings - do not estimate lower than this number.`;
       }
     }
     // Extract price signals from top listings (Etsy shows USD $ by default)
@@ -461,7 +461,7 @@ module.exports = async (req, res) => {
 - Product type: ${ideaType || 'not specified'}
 - Target buyer: ${ideaBuyer || 'not specified'}
 - Unique selling point: ${ideaUsp || 'not specified'}
-- Preferred sales channels (seller-stated): ${ideaChannels || 'not specified — pick the best channel for this product'}
+- Preferred sales channels (seller-stated): ${ideaChannels || 'not specified - pick the best channel for this product'}
 ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platformAdvice to these specific channels. If "not-sure" is among them, recommend the single best fit and briefly justify; if multiple specific channels are picked, prioritise them in order of fit and explain why.' : ''}`;
     if (ideaKeywords) {
       const [etsyMd, ebayMd, amazonMd] = await Promise.all([
@@ -472,7 +472,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
     }
   } else if (scrapeUrl && urlKeywords) {
     // Product page + 3 demand sources in parallel.
-    // Try direct HTML fetch+parse first (MakerWorld/Printables/Cults3D) — saves ~3-6s and ~$0.005.
+    // Try direct HTML fetch+parse first (MakerWorld/Printables/Cults3D) - saves ~3-6s and ~$0.005.
     const [direct, etsyMd, ebayMd, amazonMd] = await Promise.all([
       directFetchProductRaced(scrapeUrl),
       fetchEtsy(urlKeywords), fetchEbay(urlKeywords), fetchAmazon(urlKeywords),
@@ -493,7 +493,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
     if (etsyMd) etsyRealData = parseEtsyData(etsyMd, urlKeywords);
     competitorRaw = parseCompetitorRaw(etsyMd, ebayMd + '\n\n' + amazonMd);
   } else if (scrapeUrl) {
-    // No URL keywords — scrape product first, derive keywords, then search.
+    // No URL keywords - scrape product first, derive keywords, then search.
     // Try direct fetch first for known platforms; fall back to Firecrawl.
     const direct = await directFetchProductRaced(scrapeUrl);
     if (direct) {
@@ -535,7 +535,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   // ── 2. Build the Claude prompt (ported from n8n "Message a model" node) ──
   // Build competitor context string for the prompt
   const competitorContext = competitorRaw.length > 0
-    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy + eBay sold listings + Amazon Handmade — these are REAL results. eBay-sold prices are completed-sale data, not asking prices):\n' +
+    ? 'LIVE COMPETITOR LISTINGS (scraped from Etsy + eBay sold listings + Amazon Handmade - these are REAL results. eBay-sold prices are completed-sale data, not asking prices):\n' +
       competitorRaw.map((c, i) =>
         `${i + 1}. URL: ${c.url}\n   Title: "${c.title}"` +
         (c.price ? `\n   Price: ${c.price}` : '') +
@@ -562,7 +562,7 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   // (cached 10 min in-memory, defensive timeout, falls back to baseline silently)
   const recentObs = matchedMarket ? await getRecentObservations(matchedMarket.id) : null;
 
-  // Deterministic IP-flag detection — scan title/description against known
+  // Deterministic IP-flag detection - scan title/description against known
   // trademark holders BEFORE calling the AI, so we can both inform the prompt
   // AND force-elevate copyright risk after the AI returns.
   const ipMatches = detectIpFlags([
@@ -574,24 +574,24 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   // Pick 2-3 real Etsy winners matching the category for strategy.realWorldExample
   const winners = matchedMarket ? pickWinnersForCategory(matchedMarket.id, ipMatches.length > 0) : [];
   const winnersBlock = winners.length
-    ? `REAL WINNERS in this category (verified Etsy listings with monthly revenue — use these for strategy.realWorldExample. If you cite one, use the EXACT name and approximate revenue. Do NOT invent your own example):
-${winners.map(w => `- ${w.name} — €${w.monthly_revenue_eur}/mo @ €${w.price_eur}. Why: ${w.why_it_sells} Differentiator: ${w.differentiator}${w.ip_risk && w.ip_risk !== 'none' ? ` ⚠️ ${w.ip_risk} IP risk (${w.ip_holder}).` : ''}`).join('\n')}
+    ? `REAL WINNERS in this category (verified Etsy listings with monthly revenue - use these for strategy.realWorldExample. If you cite one, use the EXACT name and approximate revenue. Do NOT invent your own example):
+${winners.map(w => `- ${w.name} - €${w.monthly_revenue_eur}/mo @ €${w.price_eur}. Why: ${w.why_it_sells} Differentiator: ${w.differentiator}${w.ip_risk && w.ip_risk !== 'none' ? ` ⚠️ ${w.ip_risk} IP risk (${w.ip_holder}).` : ''}`).join('\n')}
 `
     : '';
 
-  // Pick up to 3 real businesses (not single listings — whole brands) succeeding
+  // Pick up to 3 real businesses (not single listings - whole brands) succeeding
   // in this category. Used by the AI as concrete reference points it can name
-  // in topTips and platformAdvice ("position like X — here's the moat to copy").
+  // in topTips and platformAdvice ("position like X - here's the moat to copy").
   const inspirationBusinesses = pickBusinessesForCategory(matchedMarket?.id || null);
   const businessesBlock = inspirationBusinesses.length
-    ? `REAL BUSINESSES winning in this category (whole brands, not single Etsy listings — use these as reference points the seller can study or learn from. If you cite one, use the EXACT name. Do NOT invent businesses or guess at financials beyond what's listed here):
-${inspirationBusinesses.map(b => `- ${b.name}${b.url ? ' (' + b.url + ')' : ''}${b.location ? ' — ' + b.location : ''}${b.scale ? '. Scale: ' + b.scale : ''}${b.price_range ? '. Price: ' + b.price_range : ''}. Theme: ${b.theme}. ${b.summary} Differentiator: ${b.differentiator}`).join('\n')}
-You may reference one or two of these by name in strategy.platformAdvice or strategy.topTips when the lesson is directly applicable to this product. Be specific about WHAT to copy (the moat / angle) — never copy financial claims that aren't listed above.
+    ? `REAL BUSINESSES winning in this category (whole brands, not single Etsy listings - use these as reference points the seller can study or learn from. If you cite one, use the EXACT name. Do NOT invent businesses or guess at financials beyond what's listed here):
+${inspirationBusinesses.map(b => `- ${b.name}${b.url ? ' (' + b.url + ')' : ''}${b.location ? ' - ' + b.location : ''}${b.scale ? '. Scale: ' + b.scale : ''}${b.price_range ? '. Price: ' + b.price_range : ''}. Theme: ${b.theme}. ${b.summary} Differentiator: ${b.differentiator}`).join('\n')}
+You may reference one or two of these by name in strategy.platformAdvice or strategy.topTips when the lesson is directly applicable to this product. Be specific about WHAT to copy (the moat / angle) - never copy financial claims that aren't listed above.
 `
     : '';
 
   const ipBlock = ipMatches.length
-    ? `IP FLAGS DETECTED in title/description — these are real trademarks, not guesses:
+    ? `IP FLAGS DETECTED in title/description - these are real trademarks, not guesses:
 ${ipMatches.map(m => `- "${m.keyword}" (${m.ip_holder}, ${m.risk_level} risk): ${m.notes}`).join('\n')}
 For high-risk matches you MUST set copyright.copyrightRisk and copyright.etsyBanRisk to "high" and name the IP holder explicitly in copyright.copyrightDesc and copyright.etsyBanReason.
 `
@@ -606,22 +606,22 @@ For high-risk matches you MUST set copyright.copyrightRisk and copyright.etsyBan
 - Price ceiling: €${matchedMarket.price_ceiling}
 - Top-converting keywords: ${matchedMarket.top_keywords.join(', ')}
 - Category notes: ${matchedMarket.notes}
-${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${recentObs.count} real scans of this category in the last 90 days — weight these heavily, they reflect the live market):
+${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${recentObs.count} real scans of this category in the last 90 days - weight these heavily, they reflect the live market):
 - Median Etsy listings: ${recentObs.medianListings ?? 'n/a'}
 - Median average price: ${recentObs.medianPrice != null ? '€' + recentObs.medianPrice : 'n/a'}
 - Median monthly search volume: ${recentObs.medianSearch ?? 'n/a'}
 ` : ''}`
     : '';
 
-  const prompt = `You are an expert Etsy seller, 3D printing business analyst, and product compliance specialist. Your job is to evaluate whether a 3D printed model is worth selling — and whether 3D printing is even the right manufacturing method.
-Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
+  const prompt = `You are an expert Etsy seller, 3D printing business analyst, and product compliance specialist. Your job is to evaluate whether a 3D printed model is worth selling - and whether 3D printing is even the right manufacturing method.
+Analyse the product data below and return ONLY a valid JSON object - no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
 ${ipBlock}${marketBlock}${winnersBlock}${businessesBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
-SELLER INPUTS (from questionnaire — use ALL of these to personalise every section of the analysis):
+SELLER INPUTS (from questionnaire - use ALL of these to personalise every section of the analysis):
 - Category: ${category || 'not specified'}
 - Target marketplace: ${marketplace || 'Etsy'}
 - Price range: ${priceRange || 'not specified'}
@@ -637,22 +637,22 @@ SELLER INPUTS (from questionnaire — use ALL of these to personalise every sect
 - Selling from (country): ${sellFrom || 'not specified'}
 - Selling to (markets): ${sellTo || 'WORLDWIDE'}
 - Legal / IP flags noted by seller: ${legalFlagsStr}
-WHAT MAKES A 3D PRINT WORTH SELLING — use this to calibrate score, verdict, and strategy:
-GREEN FLAGS (boosts score): high personalisation or customisation potential (names, sizes, colours); complex geometry that injection-moulding cannot do cheaply; strong gifting angle (personalised items for weddings, babies, pets); passionate niche community (DnD players, mechanical keyboard enthusiasts, specific game fandoms); replacement parts for discontinued products; items where the maker or craft story adds perceived value; clear functional problem being solved; Etsy top sellers in this niche earning more than €1k/month; low filament cost relative to sell price (more than 70% gross margin); designer or sculptural aesthetic that repositions a utility item as a lifestyle or décor object (bathroom accessories, planters, desk organisers) — 'shelfie-worthy' design commands a 2–3× premium over generic equivalents; strong visual appeal for social media and influencer photography; boutique retail or gift shop potential — independent home stores and interior boutiques offer high margins and no Etsy fees.
-RED FLAGS (lowers score): commodity item available cheaper on Amazon or AliExpress (phone holders, cable clips below €5); character or logo from Disney, Nintendo, Marvel, Harry Potter, Pokémon, or any other major IP (Etsy enforcement is aggressive and well-documented); item where plastic appearance is a disadvantage (premium jewellery, food contact); truly commodity design where the top Etsy listings are visually interchangeable — high listing count alone is NOT a red flag if the design is clearly differentiated or has a strong aesthetic identity; print time over 12h at sell price under €20 (bad hourly return); bulky or heavy item with high shipping cost relative to sell price; product that exceeds the seller's stated printer build volume without an elegant split strategy.
-MARKET KNOWLEDGE — treat as ground truth for calibrating estimates:
+WHAT MAKES A 3D PRINT WORTH SELLING - use this to calibrate score, verdict, and strategy:
+GREEN FLAGS (boosts score): high personalisation or customisation potential (names, sizes, colours); complex geometry that injection-moulding cannot do cheaply; strong gifting angle (personalised items for weddings, babies, pets); passionate niche community (DnD players, mechanical keyboard enthusiasts, specific game fandoms); replacement parts for discontinued products; items where the maker or craft story adds perceived value; clear functional problem being solved; Etsy top sellers in this niche earning more than €1k/month; low filament cost relative to sell price (more than 70% gross margin); designer or sculptural aesthetic that repositions a utility item as a lifestyle or décor object (bathroom accessories, planters, desk organisers) - 'shelfie-worthy' design commands a 2–3× premium over generic equivalents; strong visual appeal for social media and influencer photography; boutique retail or gift shop potential - independent home stores and interior boutiques offer high margins and no Etsy fees.
+RED FLAGS (lowers score): commodity item available cheaper on Amazon or AliExpress (phone holders, cable clips below €5); character or logo from Disney, Nintendo, Marvel, Harry Potter, Pokémon, or any other major IP (Etsy enforcement is aggressive and well-documented); item where plastic appearance is a disadvantage (premium jewellery, food contact); truly commodity design where the top Etsy listings are visually interchangeable - high listing count alone is NOT a red flag if the design is clearly differentiated or has a strong aesthetic identity; print time over 12h at sell price under €20 (bad hourly return); bulky or heavy item with high shipping cost relative to sell price; product that exceeds the seller's stated printer build volume without an elegant split strategy.
+MARKET KNOWLEDGE - treat as ground truth for calibrating estimates:
 - Filament cost: approx. €0.02–0.03/g PLA. Use €0.025/g as the default when estimating print cost unless seller provided different values. Factor 30–50g average for small desk and functional items; scale up for larger prints.
 - Print failure rate: assume 5–8% on complex geometries. Add ~6% to raw print cost as failure overhead.
-- Platform that converts best: Etsy strongly outperforms eBay for gift, décor, and novelty items — estimated 3:1 ratio or higher. eBay is only relevant for technical parts, replacement components, or items buyers search by specification.
+- Platform that converts best: Etsy strongly outperforms eBay for gift, décor, and novelty items - estimated 3:1 ratio or higher. eBay is only relevant for technical parts, replacement components, or items buyers search by specification.
 - Etsy audience: 55% of Etsy traffic is USA-based. 58% female. Over 50% under 35. Products must appeal to a US gift-buyer mindset to maximise reach.
-- Price ceiling by category (market-verified): functional desk items (monitor stands, organisers) — buyers resist above €35–40. Novelty and gift items — ceiling is higher, €20–55 depending on personalisation. Dice and DnD accessories — strong buyer willingness up to €30. Planters — generic designs struggle on Etsy; designer or character-themed planters command €15–30 and perform well in boutique retail and via influencer gifting. Bathroom accessories (toothbrush holders, soap dispensers, cotton jar lids) — purely functional designs top out at €20–25; designer or sculptural pieces positioned as décor reach €30–50 in boutique stores or own shop. Lamps — €60–150 possible but require brand trust and an own website.
-- Products that flop: generic phone holders and cable clips below €10 (Amazon undercuts at €2–6). Generic articulated dragons and flexi animals (10,000+ identical Etsy listings). Any item where drop-shipped versions exist at lower price. These are strong red flags — penalise score accordingly.
-- COMPETITION CALIBRATION — real Etsy listing counts for known saturated categories. ALWAYS use these as hard anchors when estimating etsyListings — do not guess lower than these ranges: Fidget toys, fidget cubes, fidget spinners, fidget rings, sensory toys: 60,000–120,000 listings (extreme competition — score must reflect this). Articulated/flexi animals (dragons, fish, cats, dogs, octopus, sharks): 30,000–80,000 listings. Generic keychains with no character angle: 100,000+ listings. Generic cable clips, cord management: 20,000–40,000 listings. Generic phone stands/holders: 40,000–70,000 listings. Generic bookmarks: 50,000+ listings. Generic planters: 40,000–60,000 listings. Laptop stands/risers (generic): 10,000–15,000 listings. Dice towers and DnD accessories: 5,000–12,000 listings. Monitor stands/risers with unique angle: 3,000–8,000 listings. Miniatures (tabletop, busts): 8,000–20,000 listings. Custom name signs: 200,000+ listings but high personalisation differentiates effectively. AirPods/Apple Watch holders without IP: 8,000–15,000 listings. Bathroom accessories (toothbrush holders, dispensers): 25,000–50,000 listings. When the product clearly falls into a known-saturated category above, set etsyListings to the upper half of the range or higher — underestimating competition is the most common calibration error.
-- Top-performing product patterns (market-verified): (1) Dice and DnD accessories — evergreen, passionate buyers, strong search volume. (2) Tech accessory holders (Echo Dot, AirPods, Apple Watch chargers) with pop-culture or character angle — high revenue but significant IP risk. (3) Personalised name items — evergreen, highest conversion rate, justifies €6–14 premium per order. (4) Planters with a twist (animal, food-themed, character-adjacent without licensed IP) — low competition relative to view counts. (5) Monitor stands and risers — very low competition vs. strong search volume, strong B2B angle for offices.
+- Price ceiling by category (market-verified): functional desk items (monitor stands, organisers) - buyers resist above €35–40. Novelty and gift items - ceiling is higher, €20–55 depending on personalisation. Dice and DnD accessories - strong buyer willingness up to €30. Planters - generic designs struggle on Etsy; designer or character-themed planters command €15–30 and perform well in boutique retail and via influencer gifting. Bathroom accessories (toothbrush holders, soap dispensers, cotton jar lids) - purely functional designs top out at €20–25; designer or sculptural pieces positioned as décor reach €30–50 in boutique stores or own shop. Lamps - €60–150 possible but require brand trust and an own website.
+- Products that flop: generic phone holders and cable clips below €10 (Amazon undercuts at €2–6). Generic articulated dragons and flexi animals (10,000+ identical Etsy listings). Any item where drop-shipped versions exist at lower price. These are strong red flags - penalise score accordingly.
+- COMPETITION CALIBRATION - real Etsy listing counts for known saturated categories. ALWAYS use these as hard anchors when estimating etsyListings - do not guess lower than these ranges: Fidget toys, fidget cubes, fidget spinners, fidget rings, sensory toys: 60,000–120,000 listings (extreme competition - score must reflect this). Articulated/flexi animals (dragons, fish, cats, dogs, octopus, sharks): 30,000–80,000 listings. Generic keychains with no character angle: 100,000+ listings. Generic cable clips, cord management: 20,000–40,000 listings. Generic phone stands/holders: 40,000–70,000 listings. Generic bookmarks: 50,000+ listings. Generic planters: 40,000–60,000 listings. Laptop stands/risers (generic): 10,000–15,000 listings. Dice towers and DnD accessories: 5,000–12,000 listings. Monitor stands/risers with unique angle: 3,000–8,000 listings. Miniatures (tabletop, busts): 8,000–20,000 listings. Custom name signs: 200,000+ listings but high personalisation differentiates effectively. AirPods/Apple Watch holders without IP: 8,000–15,000 listings. Bathroom accessories (toothbrush holders, dispensers): 25,000–50,000 listings. When the product clearly falls into a known-saturated category above, set etsyListings to the upper half of the range or higher - underestimating competition is the most common calibration error.
+- Top-performing product patterns (market-verified): (1) Dice and DnD accessories - evergreen, passionate buyers, strong search volume. (2) Tech accessory holders (Echo Dot, AirPods, Apple Watch chargers) with pop-culture or character angle - high revenue but significant IP risk. (3) Personalised name items - evergreen, highest conversion rate, justifies €6–14 premium per order. (4) Planters with a twist (animal, food-themed, character-adjacent without licensed IP) - low competition relative to view counts. (5) Monitor stands and risers - very low competition vs. strong search volume, strong B2B angle for offices.
 - Revenue benchmarks: top performers earn €500–€5,000/month. Mid-tier: €150–€500/month. Beginners with a proven product: €50–€200/month in first 6 months.
-- Etsy SEO reality: keyword-dense titles, all 13 tags used, and long-tail descriptions matter as much as product quality. Review accumulation is a compounding moat — a new seller needs a strategy to get first reviews fast.
+- Etsy SEO reality: keyword-dense titles, all 13 tags used, and long-tail descriptions matter as much as product quality. Review accumulation is a compounding moat - a new seller needs a strategy to get first reviews fast.
 - Sales and discounts strategy: 25–30% off flash sales for 1–2 day windows create FOMO. Etsy notifies customers when a sale ends. Many top stores run a permanent 20% off to boost perceived value.
-- B2B and retail angle: one B2B client (restaurant, office, event planner, interior designer, boutique home store) can equal weeks of B2C sales. Flag this when relevant — especially for monitor risers, table signs, menu holders, display stands, cable management, geometric décor, designer planters, and bathroom accessories. For visually striking décor items, also flag influencer gifting as a high-ROI launch tactic: 2–3 samples sent to home décor or bathroom micro-influencers (10k–100k followers) typically costs under €30 and can drive hundreds of Etsy visits.
+- B2B and retail angle: one B2B client (restaurant, office, event planner, interior designer, boutique home store) can equal weeks of B2C sales. Flag this when relevant - especially for monitor risers, table signs, menu holders, display stands, cable management, geometric décor, designer planters, and bathroom accessories. For visually striking décor items, also flag influencer gifting as a high-ROI launch tactic: 2–3 samples sent to home décor or bathroom micro-influencers (10k–100k followers) typically costs under €30 and can drive hundreds of Etsy visits.
 - Etsy policy (March 2026): reselling prints is permitted when the seller has an appropriate commercial/print-for-sale license from the designer. Check the license shown in the scraped data. If the file is explicitly licensed for commercial use or selling prints: low Etsy ban risk. If the license is unclear or not visible: set etsyBanRisk to "medium" and tell the seller to check the model page license tab and consider messaging the designer directly to request a commercial license. If the file is marked personal use only / non-commercial: set etsyBanRisk to "high". Do NOT auto-flag as high simply because the URL is on MakerWorld, Printables, or another external repository.
 SCORING CALIBRATION based on seller inputs:
 - Seller goal = "testing": use conservative revenue projections (50% of median). goal = "side-hustle": median projections. goal = "business" or "scaling": optimistic projections (120–150% of median).
@@ -661,23 +661,23 @@ SCORING CALIBRATION based on seller inputs:
 - Experience = "new": reduce estimated sales velocity by 40%, add beginner strategy tips. Experience = "pro": full projected sales velocity.
 - Weekly time = "<5h": apply a feasibility score penalty if the product requires more than 2h print time plus fulfilment per unit.
 - Single-printer constraint: if print time per unit exceeds 4h and only 1 printer is available, flag the production bottleneck in strategy.topTips and cap monthly unit output accordingly (e.g. a 6h print on 1 printer = max ~2–3 units/day accounting for bed changes and failure rate).
-- Décor positioning bonus: if the product has a strong designer or sculptural aesthetic that positions it as a lifestyle object rather than a generic utility item, add 8–10 points to the base score. Buyers pay significant premiums for 'shelfie-worthy' pieces regardless of material cost — this is a real market signal, not a soft factor.
-SCORING CALIBRATION FOR "GENERIC BUT FIXABLE" PRODUCTS (this is the most common scoring mistake — read carefully):
+- Décor positioning bonus: if the product has a strong designer or sculptural aesthetic that positions it as a lifestyle object rather than a generic utility item, add 8–10 points to the base score. Buyers pay significant premiums for 'shelfie-worthy' pieces regardless of material cost - this is a real market signal, not a soft factor.
+SCORING CALIBRATION FOR "GENERIC BUT FIXABLE" PRODUCTS (this is the most common scoring mistake - read carefully):
 - Many products look generic at first glance but become winners with the right niche angle. Do NOT score these in the 40–55 "marginal" band by default. Score them 55–70 ("Good for the right audience") IF you can name a specific, plausible repositioning angle in topTips. Score them lower only if no angle is realistically available.
 - MODULAR / SYSTEM PRODUCTS (Gridfinity cases, IKEA Skadis holders, pegboard accessories, drawer organisers, modular wall systems): the platform itself is proven and has buyers. The scoring question is "is the SPECIFIC variant differentiated?" A generic Gridfinity case scores 50. The same case repositioned for handymen, photographers, fishing tackle, watchmakers, dental tools, tattoo supplies, electronics repair, or another defined audience scores 65–75. Always suggest 2–3 specific audiences to specialise for in topTips.
 - HOST-PLATFORM ACCESSORIES (IKEA Skadis, Echo Dot, AirPods, GoPro, DJI, Apple Watch, Bambu/Prusa printer mods): the host platform brings buyers; the question is whether your add-on is more interesting than what IKEA/Apple/the manufacturer already sell themselves. Recommend a unique, hard-to-copy attachment angle. Mention that bestsellers exist on Etsy as proof of demand.
 - DECORATIVE-ONLY PRODUCTS (wall letters, signs, sculptures, ornamental pieces): pure décor without a USE CASE underperforms. Always recommend converting them into something functional or giftable: fridge magnets (add magnet slot), adhesive-mountable wall pieces (recess for command strips), door signs, custom name gift sets, nursery personalised décor, wedding signage. Score 60–70 if a strong gift / personalisation angle exists, 40–50 if it's purely "looks nice on a shelf".
 - NICHE / SPECIALIST CRAFT TOOLS (mending loom, darning loom, weaving tools, knitting accessories, leatherworking jigs, bookbinding presses): targeted niche audiences are GOOD, not bad. The scoring question is "does 3D printing offer a real advantage over what crafters already use (wood, metal, traditional makers on Etsy)?" If the design has a unique feature impossible in wood/metal (adjustable mechanism, integrated measurement, unusual geometry), score 60–70. If it's just a plastic version of an existing wooden tool with no advantage, score 35–50 and explicitly say the fix is to add a unique feature 3D printing enables.
 - TOOTHBRUSH HOLDERS, BATHROOM ACCESSORIES, KITCHEN ORGANISERS: surprisingly low competition vs. search volume in many sub-niches. A generic version scores 50; a version targeted at a specific popular electric toothbrush model (Oral-B iO, Philips Sonicare DiamondClean, etc.) with eco/recycled-PETG marketing and useful extras (drip tray, replaceable insert, hygienic snap-clean design) scores 65–75. Always suggest these specific angles.
-- WALL ORGANISERS / INTERIOR DÉCOR SYSTEMS: print time over 8h is a concern but not a killer if the product is strong on Pinterest/Instagram. These products sell on aesthetic — recommend Pinterest and interior-design influencer marketing in topTips. Score 60–70 if visually striking.
-TOPTIPS QUALITY BAR — write like a friend who has actually sold this kind of product, not like a generic SEO blog:
+- WALL ORGANISERS / INTERIOR DÉCOR SYSTEMS: print time over 8h is a concern but not a killer if the product is strong on Pinterest/Instagram. These products sell on aesthetic - recommend Pinterest and interior-design influencer marketing in topTips. Score 60–70 if visually striking.
+TOPTIPS QUALITY BAR - write like a friend who has actually sold this kind of product, not like a generic SEO blog:
 - Be opinionated. State directly what the product is missing and what specific change would unlock it.
-- Always name a specific niche, persona, or use case — never "find your audience" or "differentiate yourself".
+- Always name a specific niche, persona, or use case - never "find your audience" or "differentiate yourself".
 - Compare to what's already on Etsy. Reference real-feeling buyer behaviour ("buyers searching 'Oral-B iO holder' bypass the generic toothbrush listings entirely").
 - For marginal scores (40–60): one tip MUST name 2–3 concrete repositioning angles the seller could pick from. Another tip MUST identify the single biggest weakness (genericness, no use case, no 3D-printing advantage, license risk) and the exact fix.
 - Avoid vague phrases: "make it unique", "stand out", "find a niche", "improve quality", "use better photos". Replace each with a concrete instruction.
-COMPLIANCE CONTEXT — apply when generating copyright.legalDesc and the certificates array:
-- EU (DE, FR, NL, etc.): GPSR (Dec 2024) always applies — EU Responsible Person + Declaration of Conformity required. CE for toys (EN 71), electronics (LVD+EMC), PPE. REACH for skin-contact/electrical. RoHS for electronics. Etsy requires GPSR statement for EU sellers.
+COMPLIANCE CONTEXT - apply when generating copyright.legalDesc and the certificates array:
+- EU (DE, FR, NL, etc.): GPSR (Dec 2024) always applies - EU Responsible Person + Declaration of Conformity required. CE for toys (EN 71), electronics (LVD+EMC), PPE. REACH for skin-contact/electrical. RoHS for electronics. Etsy requires GPSR statement for EU sellers.
 - GB: UKCA replaces CE. UK Toys Regs 2011. REACH UK. Technical files 10 years.
 - US: CPSC/CPSIA for children's products (third-party lab + Children's Product Certificate). ASTM F963-23. FCC Part 15. California Prop 65.
 - CA: CCPSA. Health Canada toys regs. Bilingual labelling.
@@ -686,13 +686,13 @@ COMPLIANCE CONTEXT — apply when generating copyright.legalDesc and the certifi
 - WORLDWIDE: apply strictest standard across all target markets.
 - Use sellFrom and sellTo to determine which compliance frameworks apply. Flag international shipping cost impact when relevant to the seller's specific country and target markets.
 PLATFORM STRATEGY:
-- Etsy: best for handmade gifts, décor, novelty (~60% US buyers). CRITICAL (March 2026): seller must have personally designed or substantially hand-finished the item — reselling downloaded STL prints is prohibited and risks suspension. Fees: ~10% + €0.20/listing.
+- Etsy: best for handmade gifts, décor, novelty (~60% US buyers). CRITICAL (March 2026): seller must have personally designed or substantially hand-finished the item - reselling downloaded STL prints is prohibited and risks suspension. Fees: ~10% + €0.20/listing.
 - eBay: better for parts/components buyers search by spec. No handmade requirement. Sellers shipping domestically or regionally can undercut international competitors on shipping time and cost.
 - STL marketplaces (MakerWorld, Printables, Cults3D): passive income, no fulfilment.
 - Local marketplaces (Kleinanzeigen, Facebook Marketplace, Craigslist, etc.): best for heavy/bulky where shipping kills margin. Zero CAC.
 - B2B cold outreach: identify local businesses relevant to the product (offices, restaurants, event planners, interior designers, boutique home stores, bathroom accessory shops) and reach out with a product photo and price list. One B2B client = weeks of B2C revenue. For décor-forward products, also flag influencer gifting (2–3 samples to micro-influencers in home décor or bathroom aesthetics niches, 10k–100k followers) as a high-ROI launch tactic.
 - Own shop: best long-term margins but needs traffic; viable only after proven product + audience.
-MANUFACTURING METHOD ANALYSIS — assess whether FDM/SLA is the right method:
+MANUFACTURING METHOD ANALYSIS - assess whether FDM/SLA is the right method:
 1. 3D printing excels for: high customisation/personalisation, complex geometry, low volumes (<200/month), zero tooling cost.
 2. Wrong method when: flat/2D design (laser cutting faster), food-safe smooth surface required (FDM layer lines fail EU Reg 10/2011 + FDA 21 CFR 177), high simple-geometry volumes (injection mould cost-effective above ~500/month), commodity available cheaper off-shelf.
 3. Buyer perception: handcrafted/unique → 3D printing fits. Mass-manufactured look expected → disappoints.
@@ -700,7 +700,7 @@ MANUFACTURING METHOD ANALYSIS — assess whether FDM/SLA is the right method:
 Your analysis must follow this EXACT JSON schema. Every field is required.
 {
   "score": <integer 0–100, overall seller potential>,
-  "verdict": <string — pick exactly: 80-100 → "Start selling this right now", 60-79 → "Good for the right audience", 40-59 → "Promising — one fix away", 0-39 → "Don't sell — [2-3 word specific reason]">,
+  "verdict": <string - pick exactly: 80-100 → "Start selling this right now", 60-79 → "Good for the right audience", 40-59 → "Promising - one fix away", 0-39 → "Don't sell - [2-3 word specific reason]">,
   "product": {
     "title": <string>,
     "description": <string, 1–2 sentences>,
@@ -714,7 +714,7 @@ Your analysis must follow this EXACT JSON schema. Every field is required.
     "downloads": <string formatted like "8.4k" or null>,
     "prints": <string formatted like "2.1k" or null>,
     "tags": [<string>, ...up to 4 tags],
-    "note": <string, one punchy sentence with <b> tags about COMMERCIAL buyer demand — cite Etsy search volume, proven seller revenue, or buyer category trends ONLY. Never cite maker-platform saves/likes/downloads/prints as buyer signals — those reflect printer community engagement, not purchasing intent>
+    "note": <string, one punchy sentence with <b> tags about COMMERCIAL buyer demand - cite Etsy search volume, proven seller revenue, or buyer category trends ONLY. Never cite maker-platform saves/likes/downloads/prints as buyer signals - those reflect printer community engagement, not purchasing intent>
   },
   "market": {
     "searchVolume": <integer, estimated monthly searches>,
@@ -723,64 +723,64 @@ Your analysis must follow this EXACT JSON schema. Every field is required.
     "etsyAvgPrice": <string e.g. "€18">,
     "topSellerSales": <integer>,
     "printTime": <string>,
-    "unitsPerDay": <string — calculate based on the seller's stated printer setup and print time; if printer type is not specified, estimate for a typical single FDM printer e.g. "≈3 units/day">,
+    "unitsPerDay": <string - calculate based on the seller's stated printer setup and print time; if printer type is not specified, estimate for a typical single FDM printer e.g. "≈3 units/day">,
     "insight": <string, 2–3 sentence HTML with <b>: demand vs competition ratio, seasonality, buyer perception of 3D-printed items in this category, and any production constraints based on the seller's setup>
   },
   "revenue": {
-    "unitsPerMonth": <integer — must be consistent with the seller's printer output ceiling given print time, failure rate, and seller goal>,
+    "unitsPerMonth": <integer - must be consistent with the seller's printer output ceiling given print time, failure rate, and seller goal>,
     "grossRevenue": <integer>,
-    "printCost": <integer — calculated at €0.025/g PLA plus 6% failure rate overhead unless seller provided different values>,
-    "etsyFees": <integer — 6.5% transaction + 3.5% payment processing + €0.20 listing amortised>,
+    "printCost": <integer - calculated at €0.025/g PLA plus 6% failure rate overhead unless seller provided different values>,
+    "etsyFees": <integer - 6.5% transaction + 3.5% payment processing + €0.20 listing amortised>,
     "netProfit": <integer>,
     "sellPrice": <string e.g. "€22.40">
   },
   "manufacturing": {
     "is3DPrintingOptimal": <boolean>,
-    "verdict": <string — EXACTLY one of: "Ideal method" | "Works, but has limits" | "Wrong method — consider alternatives">,
-    "reason": <string, ONE sentence, plain text — state the single most important fit or misfit reason for this product>,
+    "verdict": <string - EXACTLY one of: "Ideal method" | "Works, but has limits" | "Wrong method - consider alternatives">,
+    "reason": <string, ONE sentence, plain text - state the single most important fit or misfit reason for this product>,
     "alternatives": [<string>, ...up to 2 better methods if is3DPrintingOptimal is false. Empty array [] if 3D printing is optimal.],
     "breakEvenUnits": <integer, monthly volume at which injection-mold tooling cost is recovered within 18 months; 0 if not applicable>,
-    "printingAdvantage": <string, the single most compelling advantage of 3D printing for THIS specific product — be concrete e.g. "Personalisation — buyers pay 2–3× premium for custom name inserts" or "Geometry — hollow organic lattice impossible to injection-mold economically" or "Zero tooling — test market viability at €0 upfront">
+    "printingAdvantage": <string, the single most compelling advantage of 3D printing for THIS specific product - be concrete e.g. "Personalisation - buyers pay 2–3× premium for custom name inserts" or "Geometry - hollow organic lattice impossible to injection-mold economically" or "Zero tooling - test market viability at €0 upfront">
   },
   "copyright": {
     "etsyBanRisk": <"low" | "medium" | "high">,
-    "etsyBanReason": <string, 1 sentence — base this on the actual license found in the scraped data. If the file has a commercial/print-for-sale license: state that and set risk low. If license is unclear or not visible: warn the seller to verify and mention they can message the creator to request a commercial license. If license is explicitly personal-use-only: set high and cite March 2026 Etsy policy. Never flag as high solely because the URL is an external repo.>,
+    "etsyBanReason": <string, 1 sentence - base this on the actual license found in the scraped data. If the file has a commercial/print-for-sale license: state that and set risk low. If license is unclear or not visible: warn the seller to verify and mention they can message the creator to request a commercial license. If license is explicitly personal-use-only: set high and cite March 2026 Etsy policy. Never flag as high solely because the URL is an external repo.>,
     "legalRisk": <"low" | "medium" | "high">,
-    "legalDesc": <string, 1–2 sentences — name the SPECIFIC regulation relevant to the seller's country (sellFrom) and target markets (sellTo). State the action required if risk is medium or high.>,
+    "legalDesc": <string, 1–2 sentences - name the SPECIFIC regulation relevant to the seller's country (sellFrom) and target markets (sellTo). State the action required if risk is medium or high.>,
     "copyrightRisk": <"low" | "medium" | "high">,
-    "copyrightDesc": <string, 1 sentence — name the IP holder if identifiable>,
+    "copyrightDesc": <string, 1 sentence - name the IP holder if identifiable>,
     "insight": <string, 1–2 sentence HTML with <b>>
   },
   "strategy": {
     "bestPlatform": <string, single best channel for this seller e.g. "Etsy (USA gift buyers)" | "eBay (spec search)" | "Local marketplace (bulky, shipping kills margin)" | "B2B cold outreach (offices, restaurants)">,
     "platformAdvice": <string, 2–3 sentence HTML with <b>: platform priority + trade-offs; flag March 2026 Etsy reselling policy if Etsy + STL repo source; B2B angle if relevant; flag shipping cost impact based on seller's country and target markets if relevant>,
     "realWorldExample": {
-      "name": <string or null — a REAL, VERIFIABLE business doing something genuinely similar. Only include if confident. null if no strong match — do NOT invent.>,
-      "url": <string or null — their actual public website URL>,
-      "whatTheyDo": <string or null — one sentence: what they make, approximate price point, and why it is relevant to this seller>
+      "name": <string or null - a REAL, VERIFIABLE business doing something genuinely similar. Only include if confident. null if no strong match - do NOT invent.>,
+      "url": <string or null - their actual public website URL>,
+      "whatTheyDo": <string or null - one sentence: what they make, approximate price point, and why it is relevant to this seller>
     },
     "topTips": [<string>, <string>, <string>]
   },
   "certificates": [
     {
-      "flag": <string, which seller flag triggered this — "kids" | "electronics" | "food" | "wearable" | "battery" | "magnetic" | "gpsr">,
+      "flag": <string, which seller flag triggered this - "kids" | "electronics" | "food" | "wearable" | "battery" | "magnetic" | "gpsr">,
       "name": <string, official cert or standard name e.g. "CE EN 71-1" or "ASTM F963-23" or "GPSR Declaration of Conformity">,
       "region": <string, with flag emoji e.g. "🇪🇺 EU" or "🇺🇸 USA" or "🇬🇧 UK">,
       "required": <"required" | "recommended" | "check-with-lawyer">,
       "desc": <string, one plain-English sentence describing what this cert covers and why it applies to this seller>,
       "cost": <string, realistic cost range e.g. "€500–€2,000" or "self-declaration possible">,
       "difficulty": <"low" | "medium" | "high">,
-      "note": <string, one practical tip — supplier data sheet, self-declaration eligibility, lead time, or a common pitfall>
+      "note": <string, one practical tip - supplier data sheet, self-declaration eligibility, lead time, or a common pitfall>
     }
   ],
   "competitors": [
     {
-      "url": <string — exact URL from the LIVE COMPETITOR LISTINGS above; use only URLs provided, do not invent>,
-      "name": <string — listing title, max 60 chars, truncate with ... if needed>,
-      "platform": <string — "Etsy" | "Amazon Handmade" | "Not on the High Street" | "Folksy" | other marketplace name>,
-      "estPrice": <string — price from the scraped data if available, else estimate e.g. "$18–$28">,
-      "estMonthlySales": <string — estimate based on reviews/sold count: if reviews > 1000 say "100–200/mo", reviews 500–1000 say "50–100/mo", reviews 100–500 say "20–60/mo", reviews < 100 say "5–20/mo". If no review data, estimate from category averages>,
-      "whyItWorks": <string — 1–2 concrete sentences: what specifically makes this listing win — title SEO, first photo style, personalisation hook, price positioning, review velocity, niche angle. Be specific, not generic>
+      "url": <string - exact URL from the LIVE COMPETITOR LISTINGS above; use only URLs provided, do not invent>,
+      "name": <string - listing title, max 60 chars, truncate with ... if needed>,
+      "platform": <string - "Etsy" | "Amazon Handmade" | "Not on the High Street" | "Folksy" | other marketplace name>,
+      "estPrice": <string - price from the scraped data if available, else estimate e.g. "$18–$28">,
+      "estMonthlySales": <string - estimate based on reviews/sold count: if reviews > 1000 say "100–200/mo", reviews 500–1000 say "50–100/mo", reviews 100–500 say "20–60/mo", reviews < 100 say "5–20/mo". If no review data, estimate from category averages>,
+      "whyItWorks": <string - 1–2 concrete sentences: what specifically makes this listing win - title SEO, first photo style, personalisation hook, price positioning, review velocity, niche angle. Be specific, not generic>
     }
   ]
 }
@@ -792,13 +792,13 @@ IMPORTANT RULES:
 - revenue.printCost must reflect €0.025/g PLA + 6% failure overhead unless seller overrides
 - market.insight must be valid HTML (only <b> tags)
 - strategy.topTips: exactly 3 items, each <b>action</b> + one concrete sentence tailored to this product and the seller's stated setup, markets, and experience level
-- When score is 40–59, strategy.topTips MUST name the exact gap holding the score back — never use vague phrases; specify the fix (e.g. 'the design is strong but bathroom décor sells on lifestyle photography — invest in a styled shoot before launching' or 'multi-colour ready is a genuine selling point — lead with that in your listing title')
+- When score is 40–59, strategy.topTips MUST name the exact gap holding the score back - never use vague phrases; specify the fix (e.g. 'the design is strong but bathroom décor sells on lifestyle photography - invest in a styled shoot before launching' or 'multi-colour ready is a genuine selling point - lead with that in your listing title')
 - Before finalising the score, ask: "is this product generic, or is it generic-but-fixable?" If a clear repositioning angle exists (specific audience, host platform, gift use case, unique 3D-printing advantage), score 60–70 and put the angles in topTips. Reserve scores below 50 for products where no realistic angle exists OR where a hard blocker applies (saturated commodity with no differentiation possible, IP infringement, wrong manufacturing method).
-- License-based "Don't sell" verdicts (score < 40): only use when the file is explicitly personal-use-only AND no equivalent commercial-licensed file exists. If the format has commercial demand on Etsy, recommend buying a commercial license, finding a similar commercial-licensed file, or designing a derivative — do NOT just dead-end the seller. Score 35–50 with a clear path forward instead of a flat "don't sell".
-- strategy.realWorldExample.name must be null if you are not certain the business exists — do NOT invent names
+- License-based "Don't sell" verdicts (score < 40): only use when the file is explicitly personal-use-only AND no equivalent commercial-licensed file exists. If the format has commercial demand on Etsy, recommend buying a commercial license, finding a similar commercial-licensed file, or designing a derivative - do NOT just dead-end the seller. Score 35–50 with a clear path forward instead of a flat "don't sell".
+- strategy.realWorldExample.name must be null if you are not certain the business exists - do NOT invent names
 - strategy.platformAdvice: if the source is an external STL repo, note the license status found in scraped data. If license is unclear, advise checking the model page and contacting the creator for a commercial license. Only flag as a hard blocker if the file is explicitly personal-use-only.
 - certificates: include GPSR if sellFrom is an EU country. Add category certs for any legalFlags set.
-- Adjust revenue.unitsPerMonth for seller experience level and printer output ceiling — never project more units than the stated printer setup can realistically print given the stated print time
+- Adjust revenue.unitsPerMonth for seller experience level and printer output ceiling - never project more units than the stated printer setup can realistically print given the stated print time
 - Extract product.likes/saves/downloads/prints/author from scraped data; set to null if not found
 - On MakerWorld (makerworld.bambulab.com): look for "Downloaded by X", "Liked by X", "Collected X times", "X Makes"
 - On Printables (printables.com): look for "Downloads", "Likes", "Makes", "Collections"
@@ -807,7 +807,7 @@ IMPORTANT RULES:
 - On MyMiniFactory (myminifactory.com): look for "Downloads", "Likes", "Makes" and whether free or paid
 - On CGTrader (cgtrader.com): look for product type, price, star rating, and review count
 - On Thangs (thangs.com): look for "Downloads", "Views", "Likes"
-- Never include a literal double-quote character inside any JSON string value — rephrase or use single quotes
+- Never include a literal double-quote character inside any JSON string value - rephrase or use single quotes
 - competitors: use ONLY URLs from the LIVE COMPETITOR LISTINGS section. If no competitor data was provided, return an empty array []. Never invent URLs or listing IDs.
 - Return ONLY the JSON object. No other text.`;
 
@@ -838,7 +838,7 @@ IMPORTANT RULES:
           content: imageUrl && /^https?:\/\//i.test(imageUrl)
             ? [
                 { type: 'image', source: { type: 'url', url: imageUrl } },
-                { type: 'text', text: 'Above is the product image. Use it to judge design quality, photo-friendliness, and "shelfie-worthiness" — these directly affect score, especially the décor positioning bonus. Then analyse the product data below.\n\n' + (dynamicPart || prompt) },
+                { type: 'text', text: 'Above is the product image. Use it to judge design quality, photo-friendliness, and "shelfie-worthiness" - these directly affect score, especially the décor positioning bonus. Then analyse the product data below.\n\n' + (dynamicPart || prompt) },
               ]
             : (dynamicPart || prompt),
         }],
@@ -884,7 +884,7 @@ IMPORTANT RULES:
     });
   }
 
-  // Deterministic IP override — if any high-risk trademark was matched, force
+  // Deterministic IP override - if any high-risk trademark was matched, force
   // the copyright fields and cap the score. The AI is good but not infallible
   // on IP enforcement; the rules engine is the safety net.
   const highIp = ipMatches.find(m => m.risk_level === 'high');
@@ -896,11 +896,11 @@ IMPORTANT RULES:
     parsed.copyright.etsyBanReason = `Listings using ${highIp.keyword} content are routinely removed under ${highIp.ip_holder} IP enforcement. Selling without an explicit licence from the rights holder is high risk.`;
     if (typeof parsed.score === 'number' && parsed.score > 30) {
       parsed.score = 30;
-      parsed.verdict = `Don't sell — ${highIp.ip_holder} IP risk`;
+      parsed.verdict = `Don't sell - ${highIp.ip_holder} IP risk`;
     }
   }
 
-  // Log usage for daily-quota enforcement (skipped for pro users — uncapped)
+  // Log usage for daily-quota enforcement (skipped for pro users - uncapped)
   if (!_quotaIsPro) {
     try {
       const { logUsage } = require('./_supabase');
@@ -928,7 +928,7 @@ IMPORTANT RULES:
     };
     const result = await adminQuery({ method: 'POST', table: 'scans', body: row });
     savedScanId = result?.[0]?.id || null;
-  } catch { /* swallow — saving the dataset must never break the response */ }
+  } catch { /* swallow - saving the dataset must never break the response */ }
 
   if (savedScanId) parsed.scanId = savedScanId;
 
@@ -937,7 +937,7 @@ IMPORTANT RULES:
   if (inspirationBusinesses.length) parsed.businessInspiration = inspirationBusinesses;
 
   // Fire-and-forget: log this scan's market data so the system improves over time.
-  // We always log — even when no category matched — so the promotion script can
+  // We always log - even when no category matched - so the promotion script can
   // surface candidate new categories from the uncategorized pool.
   try {
     const { adminQuery } = require('./_supabase');
@@ -951,7 +951,7 @@ IMPORTANT RULES:
       match_confidence: matchConfidence,
       product_title: parsed?.product?.title ? String(parsed.product.title).slice(0, 200) : null,
     };
-    // Don't await — this should never delay the response
+    // Don't await - this should never delay the response
     adminQuery({ method: 'POST', table: 'market_observations', body: obsRow }).catch(() => {});
   } catch {}
 
@@ -976,7 +976,7 @@ function loadWinners() {
 // Pick up to 3 winners for the matched category. Prefers is_recommended=true.
 // If the scan itself already triggered IP flags, also include cautionary
 // (is_recommended=false) winners so the AI can frame them as "this format
-// works but at high risk — consider an original-character version".
+// works but at high risk - consider an original-character version".
 function pickWinnersForCategory(categoryId, scanHasIpRisk) {
   const data = loadWinners();
   if (!data.winners?.length || !categoryId) return [];
@@ -1147,7 +1147,7 @@ function matchMarketCategoryWithConfidence({ sellerCategory, productContext, ide
     if (score > bestScore) { bestScore = score; best = cat; }
   }
   if (bestScore < 2) return null;
-  // Confidence scales with keyword overlap — 2 hits = 0.5, 4+ = 0.8
+  // Confidence scales with keyword overlap - 2 hits = 0.5, 4+ = 0.8
   const confidence = Math.min(0.85, 0.4 + bestScore * 0.1);
   return { category: best, confidence };
 }

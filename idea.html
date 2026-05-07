@@ -2644,7 +2644,7 @@ function buildRoadmap(){
     var defaultTab=qMarketplace||'etsy';
     tabs.innerHTML=tabDefs.map(function(t){
       var on=t.id===defaultTab;
-      return '<button class="rm-tab'+(on?' rm-tab-on':'')+'" onclick="setRoadmapTab(\''+t.id+'\',this)" style="font-family:\'DM Mono\',monospace;font-size:11px;padding:9px 14px;border-radius:20px;border:1.5px solid '+(on?'var(--acc)':'var(--line)')+';background:'+(on?'rgba(255,92,0,.08)':'#fff')+';color:'+(on?'var(--acc)':'var(--ink3)')+';cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent;transition:all .15s">'+t.label+'</button>';
+      return '<button class="rm-tab'+(on?' rm-tab-on':'')+'" onclick="setRoadmapTab(\''+t.id+'\',this)" style="font-family:\'DM Mono\',monospace;font-size:11px;padding:9px 14px;border-radius:20px;border:1.5px solid var(--line);background:#fff;color:var(--ink3);cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent;transition:all .15s">'+t.label+'</button>';
     }).join('');
   }
   roadmapPlatform=qMarketplace||'etsy';

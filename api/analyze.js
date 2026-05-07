@@ -533,11 +533,32 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
       '\nFor each competitor above, include it in the "competitors" array with your analysis of why it works and estimated monthly sales.'
     : '';
 
+  // ── Category match against /data/market-data.json ─────────────────────────
+  // Picks the single best category and injects its real numbers into the prompt
+  // so the AI cites ground-truth Etsy averages instead of guessing.
+  const matchedMarket = matchMarketCategory({
+    sellerCategory: category,
+    productContext,
+    ideaText,
+    title: (productContext.match(/TITLE:\s*(.+)/) || [])[1],
+  });
+  const marketBlock = matchedMarket
+    ? `MATCHED CATEGORY DATA (real Etsy ground truth — use these numbers as anchors for market.searchVolume, market.etsyListings, market.etsyAvgPrice, and revenue.sellPrice ceiling):
+- Category: ${matchedMarket.name}
+- Etsy average price: €${matchedMarket.etsy_avg_price}
+- Monthly search volume: ${matchedMarket.search_volume_monthly}
+- Competition level: ${matchedMarket.competition_level}
+- Price ceiling: €${matchedMarket.price_ceiling}
+- Top-converting keywords: ${matchedMarket.top_keywords.join(', ')}
+- Category notes: ${matchedMarket.notes}
+`
+    : '';
+
   const prompt = `You are an expert Etsy seller, 3D printing business analyst, and product compliance specialist. Your job is to evaluate whether a 3D printed model is worth selling — and whether 3D printing is even the right manufacturing method.
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
-${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
+${marketBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -826,6 +847,77 @@ IMPORTANT RULES:
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
+
+// Lazy-load market data once per lambda warm instance
+let _marketData = null;
+function loadMarketData() {
+  if (_marketData) return _marketData;
+  try {
+    const path = require('path');
+    const fs = require('fs');
+    const file = path.join(__dirname, '..', 'data', 'market-data.json');
+    _marketData = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch { _marketData = { categories: [] }; }
+  return _marketData;
+}
+
+// Pick the single most relevant category from /data/market-data.json.
+// Priority: explicit seller-stated category → keyword match in title/idea → null.
+function matchMarketCategory({ sellerCategory, productContext, ideaText, title }) {
+  const md = loadMarketData();
+  if (!md.categories?.length) return null;
+  const cats = md.categories;
+
+  const sellerSlug = (sellerCategory || '').toLowerCase().trim();
+  if (sellerSlug) {
+    // Common synonyms map seller chips to category ids
+    const synonyms = {
+      decor: 'decor', decorative: 'decor', art: 'decor',
+      gaming: 'dnd_gaming', dnd: 'dnd_gaming', games: 'dnd_gaming',
+      desk: 'desk_office', office: 'desk_office',
+      gift: 'personalized_gifts', personalized: 'personalized_gifts', personalised: 'personalized_gifts',
+      tech: 'tech_accessories', electronics: 'tech_accessories',
+      lighting: 'lighting_lamps', lamp: 'lighting_lamps', lamps: 'lighting_lamps',
+      wedding: 'wedding_events', event: 'wedding_events',
+      miniatures: 'miniatures_terrain', miniature: 'miniatures_terrain', terrain: 'miniatures_terrain',
+      jewelry: 'jewelry_wearables', jewellery: 'jewelry_wearables', wearable: 'jewelry_wearables',
+      planter: 'planters_garden', planters: 'planters_garden', garden: 'planters_garden',
+      toy: 'toys_fidgets', toys: 'toys_fidgets', fidget: 'toys_fidgets',
+      replacement: 'replacement_parts', parts: 'replacement_parts',
+      pet: 'pet_accessories', dog: 'pet_accessories', cat: 'pet_accessories',
+      kids: 'kids_nursery', baby: 'kids_nursery', nursery: 'kids_nursery',
+      home: 'home_organization', organization: 'home_organization', organizer: 'home_organization',
+      cable: 'cable_management',
+      storage: 'storage_bins', bin: 'storage_bins', gridfinity: 'storage_bins',
+      fashion: 'fashion_accessories',
+      tool: 'tools_workshop_jigs', tools: 'tools_workshop_jigs', jig: 'tools_workshop_jigs',
+      cosplay: 'cosplay_props', prop: 'cosplay_props', costume: 'cosplay_props',
+      keychain: 'keychains', keychains: 'keychains',
+      candle: 'candle_wax_accessories', wax: 'candle_wax_accessories', mold: 'candle_wax_accessories',
+      automotive: 'automotive_bike', car: 'automotive_bike', bike: 'automotive_bike', bicycle: 'automotive_bike',
+      music: 'musical_instruments_accessories', musical: 'musical_instruments_accessories', guitar: 'musical_instruments_accessories',
+      functional: 'home_organization', // a sensible default for the seller's "functional" chip
+    };
+    const targetId = synonyms[sellerSlug];
+    if (targetId) {
+      const hit = cats.find(c => c.id === targetId);
+      if (hit) return hit;
+    }
+  }
+
+  // Fallback: score each category by keyword overlap against the product text
+  const haystack = ((productContext || '') + ' ' + (ideaText || '') + ' ' + (title || '')).toLowerCase();
+  if (!haystack.trim()) return null;
+  let best = null, bestScore = 0;
+  for (const cat of cats) {
+    let score = 0;
+    for (const kw of cat.top_keywords) {
+      if (haystack.includes(kw.toLowerCase())) score += kw.split(' ').length; // longer phrases score higher
+    }
+    if (score > bestScore) { bestScore = score; best = cat; }
+  }
+  return bestScore >= 2 ? best : null; // require at least one decent keyword hit to avoid bad matches
+}
 
 function extractProductContext(fcData) {
   const metadata = fcData.data?.metadata || {};

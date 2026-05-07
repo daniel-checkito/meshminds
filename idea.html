@@ -170,6 +170,17 @@ body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .eg-stat-val.g{color:#15803d}
 .eg-stat-val.r{color:#b91c1c}
 
+/* Preview-modal competitor + winner cards */
+.pm-comp-card{background:#fff;border:1px solid var(--line);border-radius:11px;padding:11px 13px 12px;margin-bottom:8px}
+.pm-comp-card+.pm-comp-card{margin-top:0}
+.pm-comp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.pm-comp-name{font-size:13px;font-weight:700;color:var(--ink);line-height:1.3;flex:1;min-width:0}
+.pm-comp-url{display:block;font-size:10.5px;color:var(--acc);font-family:"DM Mono",monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;margin-bottom:7px}
+.pm-comp-url:hover{text-decoration:underline}
+.pm-comp-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px}
+.pm-comp-tag{font-size:10px;font-weight:700;font-family:"DM Mono",monospace;letter-spacing:.04em;padding:2px 7px;border-radius:5px;line-height:1.3;white-space:nowrap}
+.pm-comp-why{font-size:11.5px;color:var(--ink2);line-height:1.45;padding-top:7px;border-top:1px solid var(--line)}
+
 
 /* Social proof */
 .proof-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 10px;background:#f7f7f7;border-radius:10px;margin-bottom:8px}
@@ -3501,21 +3512,76 @@ window.submitFeedback=submitFeedback;
     });
     host.innerHTML=html;
   }
+  /* Map a preview-product 'cat' label to relevant category_ids in winners.json */
+  var CAT_TO_CATEGORY_IDS={
+    'Decor':['decor','lighting_lamps','personalized_gifts'],
+    'Home':['decor','home_organization','planters_garden','lighting_lamps'],
+    'Functional':['home_organization','tools_workshop_jigs','tech_accessories','desk_office'],
+    'Toy / Art':['toys_fidgets','dnd_gaming','miniatures_terrain','cosplay_props'],
+    'Kitchen':['decor','home_organization'],
+    'Gaming':['dnd_gaming','toys_fidgets','miniatures_terrain']
+  };
+  function renderRelatedWinners(catLabel,excludeCompetitors){
+    var winners=window._winnersCache||[];
+    if(!winners.length)return '<div style="font-size:12px;color:var(--ink3);padding:8px 0">Couldn\'t load winners list.</div>';
+    var ids=CAT_TO_CATEGORY_IDS[catLabel]||[];
+    var seen={};
+    (excludeCompetitors||[]).forEach(function(c){if(c&&c.name)seen[c.name.toLowerCase()]=1;});
+    var picks=winners
+      .filter(function(w){return w.is_recommended!==false && ids.indexOf(w.category_id)!==-1 && !seen[String(w.name||'').toLowerCase()];})
+      .sort(function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);})
+      .slice(0,3);
+    if(!picks.length)return '<div style="font-size:12px;color:var(--ink3);padding:8px 0">No related winners on file yet for this niche.</div>';
+    return picks.map(function(w){
+      return '<div class="pm-comp-card">'+
+        '<div class="pm-comp-top">'+
+          '<div class="pm-comp-name">'+escH(w.name)+'</div>'+
+          '<span class="pm-comp-tag" style="background:#dbeafe;color:#1d4ed8;flex-shrink:0">'+escH((w.source||'etsy').toUpperCase())+'</span>'+
+        '</div>'+
+        '<div class="pm-comp-meta">'+
+          '<span class="pm-comp-tag" style="background:#dcfce7;color:#15803d">~€'+escH(String(w.monthly_revenue_eur))+'/mo</span>'+
+          '<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">€'+escH(String(w.price_eur))+'</span>'+
+          (w.ip_risk&&w.ip_risk!=='none'?'<span class="pm-comp-tag" style="background:#fef3c7;color:#92400e">⚠ '+escH(w.ip_risk)+' IP</span>':'')+
+        '</div>'+
+        '<div class="pm-comp-why">'+escH(w.why_it_sells||'')+'</div>'+
+      '</div>';
+    }).join('');
+  }
+
   function openPreviewModal(name){
     var d=PREVIEW_PRODUCTS[name];if(!d)return;
     var c=colorFor(d.score);
-    var compsHtml=d.competitors.length?d.competitors.map(function(x){
+    function compCard(x){
+      var dom='';try{dom=new URL(x.url).hostname.replace(/^www\./,'');}catch(_){}
+      var shortUrl=x.url.replace(/https?:\/\/(www\.)?/,'').slice(0,52);
       return '<div class="pm-comp-card">'+
-        '<div class="pm-comp-name">'+escH(x.name)+'</div>'+
-        '<a href="'+escH(x.url)+'" target="_blank" rel="noopener" class="pm-comp-url">'+escH(x.url.replace(/https?:\/\/(www\.)?/,'').slice(0,50))+'</a>'+
-        '<div class="pm-comp-meta">'+
-          '<span class="pm-comp-tag" style="background:#f0fdf4;color:#15803d">'+escH(x.platform)+'</span>'+
-          '<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">'+escH(x.price)+'</span>'+
-          '<span class="pm-comp-tag" style="background:#eff6ff;color:#1d4ed8">'+escH(x.sales)+'</span>'+
+        '<div class="pm-comp-top">'+
+          '<div class="pm-comp-name">'+escH(x.name)+'</div>'+
+          '<span class="pm-comp-tag" style="background:#f0fdf4;color:#15803d;flex-shrink:0">'+escH(x.platform)+'</span>'+
         '</div>'+
-        '<div class="pm-comp-why">'+escH(x.why)+'</div>'+
+        (x.url?'<a href="'+escH(x.url)+'" target="_blank" rel="noopener" class="pm-comp-url">'+escH(shortUrl)+'</a>':'')+
+        '<div class="pm-comp-meta">'+
+          (x.price?'<span class="pm-comp-tag" style="background:var(--surf2);color:var(--ink2)">'+escH(x.price)+'</span>':'')+
+          (x.sales?'<span class="pm-comp-tag" style="background:#eff6ff;color:#1d4ed8">'+escH(x.sales)+'</span>':'')+
+        '</div>'+
+        (x.why?'<div class="pm-comp-why">'+escH(x.why)+'</div>':'')+
       '</div>';
-    }).join(''):'<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
+    }
+    var compsHtml=d.competitors.length?d.competitors.map(compCard).join(''):'<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
+
+    /* Enrich the modal with 3 real winners from data/winners.json that match
+       this product's broad category. Loaded once and cached. Renders inside
+       a separate 'Other winners in this niche' section. */
+    var winnersHtml='';
+    if(window._winnersCache){winnersHtml=renderRelatedWinners(d.cat,d.competitors);}
+    else if(!window._winnersCachePending){
+      window._winnersCachePending=true;
+      fetch('/data/winners.json',{cache:'force-cache'}).then(function(r){return r.json();}).then(function(j){
+        window._winnersCache=j&&j.winners?j.winners:[];
+        var slot=document.getElementById('lp-related-winners');
+        if(slot)slot.innerHTML=renderRelatedWinners(d.cat,d.competitors);
+      }).catch(function(){window._winnersCache=[];});
+    }
     var verdictBg=c==='g'?'#dcfce7':c==='y'?'#fef9c3':'#fee2e2';
     var verdictFg=c==='g'?'#15803d':c==='y'?'#92400e':'#991b1b';
     document.getElementById('lp-modal-content').innerHTML=
@@ -3545,6 +3611,7 @@ window.submitFeedback=submitFeedback;
         '<div style="font-size:13px;color:var(--ink2);line-height:1.55;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;padding:12px 13px">'+escH(d.why)+'</div>'+
       '</div>'+
       (d.competitors.length?'<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Top competitors</div>'+compsHtml+'</div>':'')+
+      '<div style="margin-bottom:16px"><div style="font-family:\'DM Mono\',monospace;font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--line)">Other winners in this niche</div><div id="lp-related-winners">'+(winnersHtml||'<div style="font-size:12px;color:var(--ink3);padding:8px 0">Loading similar success stories…</div>')+'</div></div>'+
       '<button onclick="closePreviewModal()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer;margin-top:14px">Scan your own product →</button>';
     document.getElementById('lp-overlay').style.display='';
     document.body.style.overflow='hidden';

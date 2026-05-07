@@ -818,14 +818,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <button class="chip" data-v="pet-owner" data-group="buyer">🐶 Pet owner</button>
             <button class="chip" data-v="hobbyist" data-group="buyer">🛠 Hobbyist / DIY</button>
           </div>
-          <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;margin-bottom:7px">What makes it special?</div>
-          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px" id="idea-usp-chips">
-            <button class="chip" data-v="personalised" data-group="usp">✍️ Personalised</button>
-            <button class="chip" data-v="unique-design" data-group="usp">✨ Unique design</button>
-            <button class="chip" data-v="solves-problem" data-group="usp">💡 Solves a problem</button>
-            <button class="chip" data-v="aesthetic" data-group="usp">🖼 Aesthetic</button>
-            <button class="chip" data-v="novelty" data-group="usp">😄 Novelty / Funny</button>
-          </div>
           <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;margin-bottom:7px">Where do you want to sell? <span style="font-weight:500;text-transform:none;letter-spacing:0;font-family:'DM Sans',sans-serif">(pick all that apply)</span></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px" id="idea-channel-chips">
             <button class="chip" data-v="etsy" data-group="channel" data-multi="1">🛍 Etsy</button>
@@ -1081,7 +1073,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <div class="q-block">
+        <div class="q-block" id="q-market-block">
           <div class="q-sec-title">Where do you want to sell?</div>
           <div class="chips g2" id="q-market">
             <button class="chip chip-card" data-v="etsy">
@@ -2641,20 +2633,33 @@ function analyze(){
 function adaptQuizForMode(){
   var isIdea=(inputMode==='idea');
   var catBlock=q("q-cat-block");
+  var marketBlock=q("q-market-block");
   var title=q("q1-title"); var sub=q("q1-sub"); var eb=q("q1-eyebrow");
   if(isIdea){
     if(catBlock)catBlock.style.display="none";
+    if(marketBlock)marketBlock.style.display="none";
     if(eb)eb.textContent="Step 1 of 2";
     if(title)title.innerHTML="A few more<br>details";
     if(sub)sub.textContent="2 quick questions to personalise the results.";
     // Map the idea-type chip → qCat so analyze.js gets a category value
     var ideaTypeOn=q("idea-type-chips")?q("idea-type-chips").querySelector(".chip.on"):null;
     if(ideaTypeOn){
-      var map={functional:"functional",decorative:"decor",gift:"art",gaming:"gaming",fashion:"wearable",pet:"other"};
-      qCat=map[ideaTypeOn.dataset.v]||"other";
+      var catMap={functional:"functional",decorative:"decor",gift:"art",gaming:"gaming",fashion:"wearable",pet:"other"};
+      qCat=catMap[ideaTypeOn.dataset.v]||"other";
+    }
+    // Map the first picked idea-form channel → qMarketplace
+    var channelChips=q("idea-channel-chips")?q("idea-channel-chips").querySelectorAll(".chip.on"):[];
+    if(channelChips&&channelChips.length){
+      var mktMap={etsy:"etsy",amazon:"etsy",ebay:"etsy","stl-repo":"own","own-shop":"own",b2b:"own",local:"local","not-sure":"etsy"};
+      for(var i=0;i<channelChips.length;i++){
+        var v=channelChips[i].dataset.v;
+        if(mktMap[v]){qMarketplace=mktMap[v];break;}
+      }
+      if(!qMarketplace)qMarketplace="etsy";
     }
   } else {
     if(catBlock)catBlock.style.display="";
+    if(marketBlock)marketBlock.style.display="";
     if(eb)eb.textContent="Step 1 of 2";
     if(title)title.innerHTML="Tell us about<br>the print";
     if(sub)sub.textContent="3 quick questions to personalise the results.";

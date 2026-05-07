@@ -22,238 +22,104 @@
       --warn:#d97706;
       --bad:#dc2626;
     }
-    body{
-      font-family:'DM Sans',sans-serif;
-      background:#f4f4f4;
-      color:var(--ink);
-      min-height:100vh;
-    }
-    .page{
-      max-width:430px;
-      margin:0 auto;
-      background:#fff;
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-    }
+    body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh}
+    .page{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column}
 
     /* Header */
-    .hdr{
-      padding:14px 18px 13px;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      gap:10px;
-      position:sticky;
-      top:0;
-      background:#fff;
-      z-index:10;
-    }
-    .logo{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:22px;
-      letter-spacing:.04em;
-      color:var(--ink);
-      line-height:1;
-    }
+    .hdr{padding:14px 18px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:#fff;z-index:10}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;color:var(--ink);line-height:1}
     .logo span{color:var(--acc)}
-    .hdr-badge{
-      font-family:'DM Mono',monospace;
-      font-size:9px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:var(--acc);
-      color:#fff;
-      border-radius:5px;
-      padding:3px 7px;
-    }
-    .hdr-right{
-      margin-left:auto;
-      font-size:12px;
-      color:var(--ink3);
-      font-weight:500;
-    }
-
-    /* Upgrade banner */
-    .upgrade-banner{
-      margin:14px 16px 0;
-      background:linear-gradient(135deg,#fff7ed,#ffedd5);
-      border:1.5px solid #fed7aa;
-      border-radius:12px;
-      padding:12px 14px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .upgrade-banner-ico{font-size:22px;flex-shrink:0}
-    .upgrade-banner-body{flex:1}
-    .upgrade-banner-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
-    .upgrade-banner-sub{font-size:11.5px;color:var(--ink2);line-height:1.4}
-    .upgrade-btn{
-      display:inline-block;
-      margin-top:9px;
-      background:var(--acc);
-      color:#fff;
-      font-size:11.5px;
-      font-weight:700;
-      border-radius:8px;
-      padding:7px 14px;
-      text-decoration:none;
-    }
+    .hdr-badge{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;background:var(--acc);color:#fff;border-radius:5px;padding:3px 7px}
+    .hdr-right{margin-left:auto;font-size:12px;color:var(--ink3);font-weight:500}
 
     /* Section heading */
-    .sec-hd{
-      font-family:'DM Mono',monospace;
-      font-size:9px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--ink3);
-      padding:18px 16px 10px;
-    }
+    .sec-hd{display:flex;align-items:center;justify-content:space-between;padding:20px 16px 10px}
+    .sec-hd-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+    .sec-hd-count{font-family:'DM Mono',monospace;font-size:9px;color:var(--ink3)}
+    .sec-hd-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.03em;color:var(--ink);line-height:1}
 
-    /* Card grid */
-    .cards{
-      padding:0 16px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-
-    /* Idea card */
-    .idea-card{
-      border:1px solid var(--line);
-      border-radius:13px;
-      overflow:hidden;
-      background:#fff;
-    }
-    .idea-card-top{
-      display:flex;
-      gap:12px;
-      padding:12px 13px;
-      align-items:flex-start;
-    }
-    .idea-thumb{
-      width:62px;
-      height:62px;
-      border-radius:9px;
-      object-fit:cover;
-      flex-shrink:0;
-      background:var(--surf2);
-    }
-    .idea-thumb-img{
-      width:62px;
-      height:62px;
-      border-radius:9px;
-      flex-shrink:0;
-      background-size:cover;
-      background-position:center;
-    }
+    /* ── My recent scans ── */
+    .recent-list{display:flex;flex-direction:column;gap:10px;padding:0 16px}
+    .idea-card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}
+    .idea-card-top{display:flex;gap:12px;padding:12px 13px;align-items:flex-start}
+    .idea-thumb{width:60px;height:60px;border-radius:9px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--surf2)}
     .idea-meta{flex:1;min-width:0}
-    .idea-name{
-      font-size:13.5px;
-      font-weight:700;
-      color:var(--ink);
-      margin-bottom:4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .idea-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
-    .tag{
-      font-size:10.5px;
-      font-weight:600;
-      border-radius:5px;
-      padding:2px 7px;
-    }
+    .idea-name{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .idea-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px}
+    .tag{font-size:10px;font-weight:700;border-radius:5px;padding:2px 7px;letter-spacing:.01em}
     .tag-green{background:#dcfce7;color:var(--good)}
     .tag-yellow{background:#fef9c3;color:var(--warn)}
     .tag-red{background:#fee2e2;color:var(--bad)}
     .tag-gray{background:var(--surf2);color:var(--ink3)}
-    .idea-profit{font-size:11.5px;color:var(--ink2)}
-    .idea-profit b{color:var(--ink)}
-
-    /* Score badge */
-    .score-badge{
-      flex-shrink:0;
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-family:'DM Mono',monospace;
-      font-size:14px;
-      font-weight:700;
-    }
+    .tag-blue{background:#dbeafe;color:#1d4ed8}
+    .idea-profit{font-size:11px;color:var(--ink3)}
+    .idea-profit b{color:var(--ink2);font-weight:600}
+    .score-badge{flex-shrink:0;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:13px;font-weight:700}
     .score-green{background:#dcfce7;color:var(--good)}
     .score-yellow{background:#fef9c3;color:var(--warn)}
     .score-red{background:#fee2e2;color:var(--bad)}
+    .idea-card-foot{border-top:1px solid var(--line);padding:7px 13px;display:flex;align-items:center;justify-content:space-between}
+    .idea-date{font-size:10px;color:var(--ink3)}
+    .view-link{font-size:11px;font-weight:600;color:var(--acc);text-decoration:none}
 
-    /* Card footer */
-    .idea-card-foot{
-      border-top:1px solid var(--line);
-      padding:8px 13px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .idea-date{font-size:10.5px;color:var(--ink3)}
-    .view-link{
-      font-size:11.5px;
-      font-weight:600;
-      color:var(--acc);
-      text-decoration:none;
-    }
-    .view-link:hover{text-decoration:underline}
+    /* ── Trending strip ── */
+    .trend-scroll-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 16px 4px;scrollbar-width:none}
+    .trend-scroll-wrap::-webkit-scrollbar{display:none}
+    .trend-strip{display:flex;gap:10px;width:max-content}
+    .trend-card{width:130px;flex-shrink:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+    .trend-img{width:130px;height:90px;background-size:cover;background-position:center;background-color:var(--surf2);position:relative}
+    .trend-hot-badge{position:absolute;top:7px;left:7px;background:#f56a00;color:#fff;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;padding:2px 6px}
+    .trend-new-badge{position:absolute;top:7px;left:7px;background:#1d4ed8;color:#fff;font-family:'DM Mono',monospace;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-radius:4px;padding:2px 6px}
+    .trend-body{padding:8px 9px 9px}
+    .trend-name{font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .trend-meta{display:flex;align-items:center;justify-content:space-between}
+    .trend-score{font-family:'DM Mono',monospace;font-size:10.5px;font-weight:700}
+    .trend-score.g{color:var(--good)}
+    .trend-score.y{color:var(--warn)}
+    .trend-cat{font-size:9.5px;color:var(--ink3)}
 
-    /* Empty slot card */
-    .empty-card{
-      border:1.5px dashed var(--line2);
-      border-radius:13px;
-      padding:20px 16px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-      background:var(--surf);
-      text-align:center;
-    }
-    .empty-card-ico{font-size:26px}
-    .empty-card-title{font-size:13px;font-weight:700;color:var(--ink2)}
-    .empty-card-sub{font-size:11.5px;color:var(--ink3);line-height:1.4;max-width:240px}
-    .empty-card-link{
-      margin-top:4px;
-      display:inline-block;
-      font-size:12px;
-      font-weight:700;
-      color:var(--acc);
-      text-decoration:none;
-    }
-    .empty-card-link:hover{text-decoration:underline}
+    /* ── Top 10 ranked list ── */
+    .rank-list{display:flex;flex-direction:column;padding:0 16px;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:0 16px}
+    .rank-row{display:flex;align-items:center;gap:11px;padding:10px 12px;background:#fff;border-bottom:1px solid var(--line)}
+    .rank-row:last-child{border-bottom:none}
+    .rank-num{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--ink3);width:20px;flex-shrink:0;text-align:center;line-height:1}
+    .rank-num.top{color:var(--acc)}
+    .rank-thumb{width:40px;height:40px;border-radius:7px;flex-shrink:0;background-size:cover;background-position:center;background-color:var(--surf2)}
+    .rank-info{flex:1;min-width:0}
+    .rank-name{font-size:12px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rank-sub{font-size:10px;color:var(--ink3);margin-top:1px}
+    .rank-score{font-family:'DM Mono',monospace;font-size:13px;font-weight:700;flex-shrink:0}
+    .rank-score.g{color:var(--good)}
+    .rank-score.y{color:var(--warn)}
+    .rank-fire{font-size:11px;margin-left:2px}
+
+    /* ── Niche collection grid ── */
+    .niche-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}
+    .niche-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+    .niche-img{width:100%;aspect-ratio:4/3;background-size:cover;background-position:center;background-color:var(--surf2);position:relative}
+    .niche-score-dot{position:absolute;bottom:7px;right:7px;background:rgba(255,255,255,.9);border-radius:6px;padding:2px 7px;font-family:'DM Mono',monospace;font-size:10px;font-weight:700}
+    .niche-score-dot.g{color:var(--good)}
+    .niche-score-dot.y{color:var(--warn)}
+    .niche-body{padding:8px 9px 9px}
+    .niche-name{font-size:11.5px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .niche-profit{font-size:10px;color:var(--ink3)}
+    .niche-profit b{color:var(--good);font-weight:700}
+
+    /* Niche header banner */
+    .niche-banner{margin:0 16px 12px;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px}
+    .niche-banner-ico{font-size:26px;flex-shrink:0}
+    .niche-banner-body{}
+    .niche-banner-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.03em;color:var(--ink);line-height:1;margin-bottom:2px}
+    .niche-banner-sub{font-size:11.5px;color:var(--ink2);line-height:1.4}
+
+    /* Divider */
+    .divider{height:1px;background:var(--line);margin:20px 16px 0}
 
     /* Footer */
-    .pg-foot{
-      margin-top:auto;
-      padding:20px 16px;
-      border-top:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .pg-foot-logo{
-      font-family:'Bebas Neue',sans-serif;
-      font-size:16px;
-      letter-spacing:.04em;
-      color:var(--ink3);
-    }
+    .pg-foot{margin-top:auto;padding:20px 16px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+    .pg-foot-logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.04em;color:var(--ink3)}
     .pg-foot-logo span{color:var(--acc)}
-    .pg-foot-link{
-      font-size:12px;
-      font-weight:600;
-      color:var(--acc);
-      text-decoration:none;
-    }
-    .pg-foot-link:hover{text-decoration:underline}
+    .pg-foot-link{font-size:12px;font-weight:600;color:var(--acc);text-decoration:none}
   </style>
 </head>
 <body>
@@ -266,112 +132,482 @@
     <div class="hdr-right">My Dashboard</div>
   </div>
 
-  <!-- Upgrade banner -->
-  <div class="upgrade-banner">
-    <div class="upgrade-banner-ico">💾</div>
-    <div class="upgrade-banner-body">
-      <div class="upgrade-banner-title">Pro auto-saves every scan</div>
-      <div class="upgrade-banner-sub">Your scored ideas live here. Upgrade to Pro and every future scan is saved automatically — no copy-pasting, no lost results.</div>
-      <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="upgrade-btn" target="_blank" rel="noopener">Upgrade to Pro — $12/mo →</a>
+
+  <!-- ── MY RECENT SCANS ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Your account</div>
+      <div class="sec-hd-title">Recently scored</div>
     </div>
+    <div class="sec-hd-count">4 ideas</div>
   </div>
 
-  <!-- Saved ideas -->
-  <div class="sec-hd">My scored ideas (4)</div>
+  <div class="recent-list">
 
-  <div class="cards">
-
-    <!-- Card 1: Custom Name Sign — score 94 -->
     <div class="idea-card">
       <div class="idea-card-top">
-        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
+        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
         <div class="idea-meta">
           <div class="idea-name">Custom Name Sign</div>
-          <div class="idea-tags">
-            <span class="tag tag-green">Sellable</span>
-            <span class="tag tag-gray">Decor</span>
-          </div>
-          <div class="idea-profit">Est. profit: <b>~$140/mo</b></div>
+          <div class="idea-tags"><span class="tag tag-green">Sellable</span><span class="tag tag-gray">Decor</span></div>
+          <div class="idea-profit">Est. profit <b>~$140/mo</b></div>
         </div>
         <div class="score-badge score-green">94</div>
       </div>
       <div class="idea-card-foot">
-        <span class="idea-date">Scanned 6 May 2026</span>
-        <a href="#" class="view-link">View full report →</a>
+        <span class="idea-date">6 May 2026</span>
+        <a href="#" class="view-link">Full report →</a>
       </div>
     </div>
 
-    <!-- Card 2: Geometric Planter — score 87 -->
     <div class="idea-card">
       <div class="idea-card-top">
-        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
+        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
         <div class="idea-meta">
           <div class="idea-name">Geometric Planter</div>
-          <div class="idea-tags">
-            <span class="tag tag-green">Sellable</span>
-            <span class="tag tag-gray">Home</span>
-          </div>
-          <div class="idea-profit">Est. profit: <b>~$95/mo</b></div>
+          <div class="idea-tags"><span class="tag tag-green">Sellable</span><span class="tag tag-gray">Home</span></div>
+          <div class="idea-profit">Est. profit <b>~$95/mo</b></div>
         </div>
         <div class="score-badge score-green">87</div>
       </div>
       <div class="idea-card-foot">
-        <span class="idea-date">Scanned 4 May 2026</span>
-        <a href="#" class="view-link">View full report →</a>
+        <span class="idea-date">4 May 2026</span>
+        <a href="#" class="view-link">Full report →</a>
       </div>
     </div>
 
-    <!-- Card 3: Phone Stand — score 63 -->
     <div class="idea-card">
       <div class="idea-card-top">
-        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
+        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
         <div class="idea-meta">
-          <div class="idea-name">Phone Stand</div>
-          <div class="idea-tags">
-            <span class="tag tag-yellow">Marginal</span>
-            <span class="tag tag-gray">Functional</span>
-          </div>
-          <div class="idea-profit">Est. profit: <b>~$38/mo</b></div>
+          <div class="idea-name">Laptop Stand</div>
+          <div class="idea-tags"><span class="tag tag-yellow">Marginal</span><span class="tag tag-gray">Functional</span></div>
+          <div class="idea-profit">Est. profit <b>~$52/mo</b></div>
         </div>
-        <div class="score-badge score-yellow">63</div>
+        <div class="score-badge score-yellow">61</div>
       </div>
       <div class="idea-card-foot">
-        <span class="idea-date">Scanned 2 May 2026</span>
-        <a href="#" class="view-link">View full report →</a>
+        <span class="idea-date">2 May 2026</span>
+        <a href="#" class="view-link">Full report →</a>
       </div>
     </div>
 
-    <!-- Card 4: DnD Dice Tower — score 41 -->
     <div class="idea-card">
       <div class="idea-card-top">
-        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
+        <div class="idea-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
         <div class="idea-meta">
           <div class="idea-name">DnD Dice Tower</div>
-          <div class="idea-tags">
-            <span class="tag tag-red">Skip it</span>
-            <span class="tag tag-gray">Gaming</span>
-          </div>
-          <div class="idea-profit">Est. profit: <b>~$12/mo</b></div>
+          <div class="idea-tags"><span class="tag tag-red">Skip it</span><span class="tag tag-gray">Gaming</span></div>
+          <div class="idea-profit">Est. profit <b>~$12/mo</b></div>
         </div>
         <div class="score-badge score-red">41</div>
       </div>
       <div class="idea-card-foot">
-        <span class="idea-date">Scanned 1 May 2026</span>
-        <a href="#" class="view-link">View full report →</a>
+        <span class="idea-date">1 May 2026</span>
+        <a href="#" class="view-link">Full report →</a>
       </div>
-    </div>
-
-    <!-- Empty slot -->
-    <div class="empty-card">
-      <div class="empty-card-ico">🔍</div>
-      <div class="empty-card-title">Check another idea</div>
-      <div class="empty-card-sub">Scan a new 3D print and it'll appear here automatically with Pro.</div>
-      <a href="/" class="empty-card-link">Check another idea →</a>
     </div>
 
   </div>
 
+
+  <div class="divider"></div>
+
+  <!-- ── TRENDING THIS WEEK ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">🔥 Hot right now</div>
+      <div class="sec-hd-title">Trending this week</div>
+    </div>
+  </div>
+
+  <div class="trend-scroll-wrap">
+    <div class="trend-strip">
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
+          <div class="trend-hot-badge">🔥 Hot</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Personalised Name Keychain</div>
+          <div class="trend-meta">
+            <span class="trend-score g">94</span>
+            <span class="trend-cat">Gifts</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
+          <div class="trend-hot-badge">🔥 Hot</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Succulent Planter Set</div>
+          <div class="trend-meta">
+            <span class="trend-score g">91</span>
+            <span class="trend-cat">Home</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+          <div class="trend-new-badge">New</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Cable Management Box</div>
+          <div class="trend-meta">
+            <span class="trend-score g">88</span>
+            <span class="trend-cat">Functional</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
+          <div class="trend-new-badge">New</div>
+        </div>
+        <div class="trend-body">
+          <div class="trend-name">Adjustable Phone Stand</div>
+          <div class="trend-meta">
+            <span class="trend-score g">85</span>
+            <span class="trend-cat">Functional</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
+        <div class="trend-body">
+          <div class="trend-name">Modular Desk Organiser</div>
+          <div class="trend-meta">
+            <span class="trend-score g">82</span>
+            <span class="trend-cat">Office</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="trend-card">
+        <div class="trend-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
+        <div class="trend-body">
+          <div class="trend-name">Articulated Dragon</div>
+          <div class="trend-meta">
+            <span class="trend-score g">79</span>
+            <span class="trend-cat">Toy / Art</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── TOP 10 ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">All-time catalogue</div>
+      <div class="sec-hd-title">Top 10 — Highest rated</div>
+    </div>
+  </div>
+
+  <div class="rank-list">
+
+    <div class="rank-row">
+      <div class="rank-num top">1</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Personalised Name Sign</div>
+        <div class="rank-sub">Decor · ~$140/mo</div>
+      </div>
+      <div class="rank-score g">94<span class="rank-fire">🔥</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num top">2</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Succulent Planter Set</div>
+        <div class="rank-sub">Home · ~$110/mo</div>
+      </div>
+      <div class="rank-score g">91<span class="rank-fire">🔥</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num top">3</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Cable Management Box</div>
+        <div class="rank-sub">Functional · ~$95/mo</div>
+      </div>
+      <div class="rank-score g">88<span class="rank-fire">🔥</span></div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">4</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Adjustable Phone Stand</div>
+        <div class="rank-sub">Functional · ~$78/mo</div>
+      </div>
+      <div class="rank-score g">85</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">5</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Modular Desk Organiser</div>
+        <div class="rank-sub">Office · ~$84/mo</div>
+      </div>
+      <div class="rank-score g">82</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">6</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Articulated Dragon</div>
+        <div class="rank-sub">Toy / Art · ~$62/mo</div>
+      </div>
+      <div class="rank-score g">79</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">7</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Custom Wedding Gift Box</div>
+        <div class="rank-sub">Gifts · ~$58/mo</div>
+      </div>
+      <div class="rank-score g">77</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">8</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Hex Wall Organiser</div>
+        <div class="rank-sub">Home · ~$47/mo</div>
+      </div>
+      <div class="rank-score g">75</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">9</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Watch Display Stand</div>
+        <div class="rank-sub">Tech · ~$44/mo</div>
+      </div>
+      <div class="rank-score g">73</div>
+    </div>
+
+    <div class="rank-row">
+      <div class="rank-num">10</div>
+      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
+      <div class="rank-info">
+        <div class="rank-name">Controller Stand</div>
+        <div class="rank-sub">Gaming · ~$38/mo</div>
+      </div>
+      <div class="rank-score g">71</div>
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── NICHE: HOME & DECOR ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Niche collection</div>
+      <div class="sec-hd-title">Home &amp; Decor</div>
+    </div>
+  </div>
+
+  <div class="niche-banner" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0">
+    <div class="niche-banner-ico">🏡</div>
+    <div class="niche-banner-body">
+      <div class="niche-banner-title">Strong year-round market</div>
+      <div class="niche-banner-sub">Personalised decor and planters have consistent Etsy demand with low IP risk. Best margins in this niche.</div>
+    </div>
+  </div>
+
+  <div class="niche-grid">
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
+        <div class="niche-score-dot g">94</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Custom Name Sign</div>
+        <div class="niche-profit">~<b>$140/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
+        <div class="niche-score-dot g">91</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Succulent Planter</div>
+        <div class="niche-profit">~<b>$110/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+        <div class="niche-score-dot g">88</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Hex Wall Organiser</div>
+        <div class="niche-profit">~<b>$75/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
+        <div class="niche-score-dot g">82</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Geometric Tealight</div>
+        <div class="niche-profit">~<b>$55/mo</b></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── NICHE: GAMING & TABLETOP ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Niche collection</div>
+      <div class="sec-hd-title">Gaming &amp; Tabletop</div>
+    </div>
+  </div>
+
+  <div class="niche-banner" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:1px solid #c4b5fd">
+    <div class="niche-banner-ico">🎲</div>
+    <div class="niche-banner-body">
+      <div class="niche-banner-title">Loyal, high-spend buyers</div>
+      <div class="niche-banner-sub">DnD and tabletop buyers are repeat purchasers. Accessories and terrain sell well above generic items.</div>
+    </div>
+  </div>
+
+  <div class="niche-grid">
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
+        <div class="niche-score-dot g">79</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Articulated Dragon</div>
+        <div class="niche-profit">~<b>$62/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
+        <div class="niche-score-dot g">71</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Controller Stand</div>
+        <div class="niche-profit">~<b>$38/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+        <div class="niche-score-dot y">68</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Dice Tower</div>
+        <div class="niche-profit">~<b>$28/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
+        <div class="niche-score-dot y">65</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Miniature Base Set</div>
+        <div class="niche-profit">~<b>$22/mo</b></div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- ── NICHE: FUNCTIONAL & OFFICE ── -->
+  <div class="sec-hd">
+    <div>
+      <div class="sec-hd-label">Niche collection</div>
+      <div class="sec-hd-title">Functional &amp; Office</div>
+    </div>
+  </div>
+
+  <div class="niche-banner" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe">
+    <div class="niche-banner-ico">🖥️</div>
+    <div class="niche-banner-body">
+      <div class="niche-banner-title">Evergreen demand</div>
+      <div class="niche-banner-sub">Home-office buyers buy year-round. Cable management and desk accessories have strong repeat purchase rates.</div>
+    </div>
+  </div>
+
+  <div class="niche-grid">
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
+        <div class="niche-score-dot g">88</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Cable Box</div>
+        <div class="niche-profit">~<b>$95/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
+        <div class="niche-score-dot g">82</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Desk Organiser</div>
+        <div class="niche-profit">~<b>$84/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
+        <div class="niche-score-dot g">85</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Phone Stand</div>
+        <div class="niche-profit">~<b>$78/mo</b></div>
+      </div>
+    </div>
+
+    <div class="niche-card">
+      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
+        <div class="niche-score-dot g">73</div>
+      </div>
+      <div class="niche-body">
+        <div class="niche-name">Watch Stand</div>
+        <div class="niche-profit">~<b>$44/mo</b></div>
+      </div>
+    </div>
+
+  </div>
+
+
   <!-- Footer -->
+  <div style="height:24px"></div>
   <div class="pg-foot">
     <div class="pg-foot-logo">Mesh<span>Minds</span> Pro</div>
     <a href="/" class="pg-foot-link">Check another idea →</a>

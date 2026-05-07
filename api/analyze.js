@@ -549,6 +549,22 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   // (cached 10 min in-memory, defensive timeout, falls back to baseline silently)
   const recentObs = matchedMarket ? await getRecentObservations(matchedMarket.id) : null;
 
+  // Deterministic IP-flag detection — scan title/description against known
+  // trademark holders BEFORE calling the AI, so we can both inform the prompt
+  // AND force-elevate copyright risk after the AI returns.
+  const ipMatches = detectIpFlags([
+    productContext,
+    ideaText || '',
+    sourceUrl || '',
+    body.url || '',
+  ].join('\n'));
+  const ipBlock = ipMatches.length
+    ? `IP FLAGS DETECTED in title/description — these are real trademarks, not guesses:
+${ipMatches.map(m => `- "${m.keyword}" (${m.ip_holder}, ${m.risk_level} risk): ${m.notes}`).join('\n')}
+For high-risk matches you MUST set copyright.copyrightRisk and copyright.etsyBanRisk to "high" and name the IP holder explicitly in copyright.copyrightDesc and copyright.etsyBanReason.
+`
+    : '';
+
   const marketBlock = matchedMarket
     ? `MATCHED CATEGORY DATA (use these as anchors for market.searchVolume, market.etsyListings, market.etsyAvgPrice, and revenue.sellPrice ceiling):
 - Category: ${matchedMarket.name}
@@ -569,7 +585,7 @@ ${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${rec
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
-${marketBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
+${ipBlock}${marketBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -823,6 +839,22 @@ IMPORTANT RULES:
     return res.status(502).json({ error: 'analysis_failed', message: e.message });
   }
 
+  // Deterministic IP override — if any high-risk trademark was matched, force
+  // the copyright fields and cap the score. The AI is good but not infallible
+  // on IP enforcement; the rules engine is the safety net.
+  const highIp = ipMatches.find(m => m.risk_level === 'high');
+  if (highIp) {
+    parsed.copyright = parsed.copyright || {};
+    parsed.copyright.copyrightRisk = 'high';
+    parsed.copyright.etsyBanRisk = 'high';
+    parsed.copyright.copyrightDesc = `Detected reference to ${highIp.keyword} (${highIp.ip_holder}). ${highIp.notes}`;
+    parsed.copyright.etsyBanReason = `Listings using ${highIp.keyword} content are routinely removed under ${highIp.ip_holder} IP enforcement. Selling without an explicit licence from the rights holder is high risk.`;
+    if (typeof parsed.score === 'number' && parsed.score > 30) {
+      parsed.score = 30;
+      parsed.verdict = `Don't sell — ${highIp.ip_holder} IP risk`;
+    }
+  }
+
   // Log usage for daily-quota enforcement (skipped for pro users — uncapped)
   if (!_quotaIsPro) {
     try {
@@ -878,6 +910,48 @@ IMPORTANT RULES:
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
+
+// Lazy-load IP flags once per lambda warm instance
+let _ipFlags = null;
+function loadIpFlags() {
+  if (_ipFlags) return _ipFlags;
+  try {
+    const path = require('path');
+    const fs = require('fs');
+    const file = path.join(__dirname, '..', 'data', 'ip-flags.json');
+    _ipFlags = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch { _ipFlags = { flags: [] }; }
+  return _ipFlags;
+}
+
+// Detect IP-flag keywords in product text.
+// Word-boundary matching so "ford" doesn't match "afford" and "thor" doesn't
+// match "author". Single-word brand terms like "Apple" or "Ford" are only
+// matched as whole words; multi-word phrases match exactly.
+function detectIpFlags(text) {
+  const data = loadIpFlags();
+  if (!data.flags?.length || !text) return [];
+  const haystack = String(text).toLowerCase();
+  const matches = [];
+  const seen = new Set();
+  for (const flag of data.flags) {
+    const variants = [flag.keyword, ...(flag.aliases || [])];
+    for (const v of variants) {
+      const needle = v.toLowerCase();
+      // Build a regex with word boundaries; allow flexible separators (space, hyphen, period)
+      const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '[\\s\\-\\.]+');
+      const re = new RegExp(`(^|[^a-z0-9])${escaped}([^a-z0-9]|$)`, 'i');
+      if (re.test(haystack)) {
+        if (!seen.has(flag.keyword)) {
+          seen.add(flag.keyword);
+          matches.push(flag);
+        }
+        break;
+      }
+    }
+  }
+  return matches;
+}
 
 // Lazy-load market data once per lambda warm instance
 let _marketData = null;

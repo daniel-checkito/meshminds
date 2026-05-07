@@ -2863,12 +2863,25 @@ function runAnalysis(){
     loadingProgress=0;
     var isAbort=(err&&err.name==="AbortError")||/abort|timed out|network/i.test(errMsg);
     var isScrapeFail=/scrape_failed|Could not scrape|HTTP 502|reach that URL/i.test(msg);
-    /* Hard-fail cases (timeout / scrape failure) get the same friendly two-button
+    /* Auto-retry once on timeout. A fresh fetch = a fresh 60s lambda budget,
+       so most one-off slow scrapes succeed on the second try. Only retry
+       once - we don't want infinite loops on a genuinely broken source. */
+    if(isAbort && !window._analyzeRetried){
+      window._analyzeRetried=true;
+      if(window.MM&&MM.track)MM.track('analyze_retry',{label:isIdeaMode?'idea':'url'});
+      if(q("gate-headline"))q("gate-headline").textContent="Still going…";
+      if(q("gate-subline"))q("gate-subline").textContent="The first try took longer than expected - retrying with a fresh request.";
+      loadingProgress=0;
+      drawLoadingRing(0,"#f59e0b");
+      setTimeout(function(){analyze();},600);
+      return;
+    }
+    /* Hard-fail cases (timeout / scrape failure) get the friendly two-button
        fallback as low-confidence: try again, or switch input mode. Soft errors
        (rate limit, network) still use the inline gate error. */
     if(isAbort||isScrapeFail){
       showLowConfidenceFallback(isAbort
-        ? "Analysis is taking longer than expected. The source URL might be slow to scrape, or the AI is busy."
+        ? "We tried twice but the analysis kept timing out. The source URL might be slow to scrape, or the AI service is busy right now."
         : "We couldn't read enough from that URL. The page may block scraping or doesn't contain product data.");
     } else {
       showGateError(msg);
@@ -2957,6 +2970,7 @@ window.cancelAnalysis=cancelAnalysis;
 
 function reset(){
   var lc=q("lowconf-actions");if(lc)lc.remove();
+  window._analyzeRetried=false;
   document.querySelector('.phone').classList.remove('phone-active');
   step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
   ideaStep=1;inputMode='url';if(window.setMode)window.setMode('url');

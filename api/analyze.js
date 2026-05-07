@@ -856,7 +856,44 @@ IMPORTANT RULES:
 
     claudeJson = await claudeResp.json();
   } catch (e) {
-    return res.status(502).json({ error: 'analysis_failed', message: e.message });
+    clearTimeout(clTimeout);
+    // Sonnet aborted (timeout) or network blip. Fall back to Haiku 4.5 - it's
+    // 3-5x faster and almost always returns within 8-12s, so the user gets a
+    // usable analysis instead of a hard error. Quality is slightly lower but
+    // the structured prompt + matched-category data carry most of the load.
+    const isAbort = e.name === 'AbortError' || /abort/i.test(e.message || '');
+    if (isAbort) {
+      try {
+        const haikuAbort = new AbortController();
+        const haikuTimeout = setTimeout(() => haikuAbort.abort(), 12000);
+        const haikuResp = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.ANTHROPIC_API_KEY,
+            'anthropic-version': '2023-06-01',
+            'anthropic-beta': 'prompt-caching-2024-07-31',
+          },
+          body: JSON.stringify({
+            model: 'claude-haiku-4-5-20251001',
+            max_tokens: 2048,
+            system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
+            messages: [{ role: 'user', content: dynamicPart || prompt }],
+          }),
+          signal: haikuAbort.signal,
+        });
+        clearTimeout(haikuTimeout);
+        if (haikuResp.ok) {
+          claudeJson = await haikuResp.json();
+        } else {
+          return res.status(502).json({ error: 'analysis_failed', message: 'Both Sonnet and Haiku failed' });
+        }
+      } catch (e2) {
+        return res.status(502).json({ error: 'analysis_failed', message: e2.message });
+      }
+    } else {
+      return res.status(502).json({ error: 'analysis_failed', message: e.message });
+    }
   } finally {
     clearTimeout(clTimeout);
   }

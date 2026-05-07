@@ -26,6 +26,10 @@
     }
     body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh}
     .page{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column}
+    @media(min-width:640px){
+      body{background:#f0f0f0;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:24px 16px}
+      .page{border-radius:20px;box-shadow:0 8px 48px rgba(0,0,0,.10);max-width:480px;width:100%;min-height:auto}
+    }
 
     /* Header */
     .hdr{padding:14px 18px 13px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:#fff;z-index:10}

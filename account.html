@@ -13,6 +13,10 @@
     :root{--acc:#f56a00;--ink:#0d0d0d;--ink2:#4b4b4b;--ink3:#8c8c8c;--surf:#f9f9f9;--surf2:#f0f0f0;--line:#e8e8e8;--line2:#d0d0d0;--good:#15803d;--warn:#d97706;--bad:#dc2626}
     body{font-family:'DM Sans',sans-serif;background:#f4f4f4;color:var(--ink);min-height:100vh}
     .page{max-width:430px;margin:0 auto;background:#fff;min-height:100vh;display:flex;flex-direction:column}
+    @media(min-width:640px){
+      body{background:#f0f0f0;display:flex;align-items:flex-start;justify-content:center;min-height:100vh;padding:24px 16px}
+      .page{border-radius:20px;box-shadow:0 8px 48px rgba(0,0,0,.10);max-width:480px;width:100%;min-height:auto}
+    }
 
     /* Loading */
     #loading-screen{position:fixed;inset:0;background:#fff;display:flex;align-items:center;justify-content:center;z-index:100}
@@ -274,7 +278,7 @@
   const DEMO_PROFILE = {
     email: 'preview@meshminds.com',
     displayName: 'Daniel (Preview)',
-    avatarUrl: '',
+    avatarUrl: 'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/daniel.jpg',
     defaultPublic: false,
     isPro: true,
     premiumUntil: '2027-08-14T00:00:00Z',

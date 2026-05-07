@@ -90,6 +90,23 @@ ALTER TABLE scans
 ALTER TABLE scans ALTER COLUMN user_id DROP NOT NULL;
 CREATE INDEX IF NOT EXISTS scans_ip_hash_idx ON scans(ip_hash, created_at DESC) WHERE user_id IS NULL;
 
+-- ── email_leads (idea-page captures and save-results form) ─────────────────
+CREATE TABLE IF NOT EXISTS email_leads (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email TEXT NOT NULL,
+  url TEXT,
+  score INTEGER,
+  verdict TEXT,
+  consent BOOLEAN,
+  source TEXT,
+  ip_hash TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS email_leads_email_idx ON email_leads(email);
+CREATE INDEX IF NOT EXISTS email_leads_created_idx ON email_leads(created_at DESC);
+ALTER TABLE email_leads ENABLE ROW LEVEL SECURITY;
+-- No public policies: only the service role inserts/reads from server.
+
 -- ── usage_log (per-day rate limiting) ───────────────────────────────────────
 CREATE TABLE IF NOT EXISTS usage_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

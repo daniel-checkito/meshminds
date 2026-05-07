@@ -742,8 +742,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .lp-row{display:flex;align-items:center;gap:7px}
 .lp-score{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;border-radius:5px;padding:2px 7px;line-height:1.3}
 .lp-verdict{font-size:11px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (min-width:520px){#landing-preview-grid{grid-template-columns:1fr 1fr}}
-@media (min-width:900px){#landing-preview-grid{grid-template-columns:repeat(4,1fr)}}
+/* landing previews stay single-column on every breakpoint to match the mobile-app feel */
 </style>
 </head>
 <body>
@@ -819,7 +818,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- Landing preview cards -->
       <div id="landing-preview">
         <div class="lp-head">See what you'll get</div>
-        <div class="lp-sub">These are real scored products. Click one to preview the depth of analysis you'll get for your own product.</div>
+        <div class="lp-sub">Real scored products — <b>tap any card to see the full analysis</b>.</div>
         <div id="landing-preview-grid"></div>
       </div>
     </div>
@@ -1531,36 +1530,20 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div id="save-success" style="display:none;text-align:center;padding:10px 0;font-size:13px;font-weight:700;color:#15803d">✓ Check your inbox – results are on their way!</div>
         </div>
 
-        <!-- Pro offer - redesigned around saving + unlimited -->
+        <!-- Pro offer - simplified, big, benefit-led -->
         <div class="pro-wrap" id="skool-card" style="margin-top:0;margin-bottom:16px">
-          <div class="pro-fomo-bar">
-            <span class="pro-fomo-ico">💾</span>
-            <div class="pro-fomo-txt">This result isn't saved to an account. <b>Pro members auto-save every scan</b> — all your scored ideas in one place, forever. You only see this one.</div>
-          </div>
-          <div class="pro-card">
-            <div class="pro-card-head">
-              <span class="pro-badge-pill">Pro</span>
-              <span class="pro-card-name">MeshMinds Pro</span>
-              <div class="pro-price-tag">
-                <span class="pro-price-big">$12</span>
-                <span class="pro-price-per">/mo</span>
-              </div>
+          <div class="pro-card" style="padding:28px 22px;text-align:center">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:.95;letter-spacing:.01em;color:var(--ink);margin-bottom:8px">GO PRO.<br>PRINT TO PROFIT.</div>
+            <div style="font-size:14px;color:var(--ink2);line-height:1.45;margin-bottom:22px;max-width:340px;margin-left:auto;margin-right:auto">Get every profitable 3D-print our community has scored. Stop guessing. Start scaling.</div>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;text-align:left">
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">♾️</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Unlimited scans<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">No daily cap. Score as many as you want.</div></div></div>
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">💾</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Every scan auto-saved<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">Personal dashboard with all your scored ideas, forever.</div></div></div>
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">🔥</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3"><span id="offer-pro-count">847</span>+ profitable prints<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">The full library of products our users actually sold.</div></div></div>
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">📊</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Full competitor data<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">Real Etsy prices, sales counts, winning angles.</div></div></div>
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">⚖️</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Sell legally everywhere<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">EU, UK, US compliance + cert checks on every scan.</div></div></div>
             </div>
-            <div class="pro-headline">Never lose a scored idea again. Pro lifts the daily scan cap, auto-saves every scan to your personal dashboard, and unlocks the full <span id="offer-pro-count">847</span> pre-validated product catalogue — with full competitor data on every result.</div>
-            <div class="pro-features-list">
-              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">♾️</span>Unlimited scans &amp; unlimited idea-mode (free: 25/day anon, 50/day logged-in)</div>
-              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">💾</span>Auto-save every scan + full competitor data export</div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span>All <span id="offer-pro-count2">847</span> pre-scored products — scores, revenue &amp; keywords</div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span>Live Trending Now list — what's hot this week</div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span>Monthly Hot List — Daniel's personal picks</div>
-              <div class="pro-feat"><span class="pro-feat-ico">✓</span>Manufacturing-method &amp; compliance/cert checks on every scan</div>
-            </div>
-            <div class="pro-early-row">
-              <span class="pro-early-dot"></span>
-              <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $12/mo, locked in for life</span>
-            </div>
-            <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Save all my ideas + go unlimited — $12/mo →</a>
-            <div class="pro-tagline">Cancel anytime · no commitment · early-adopter price locked for life</div>
+            <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener" style="font-size:18px;padding:18px 24px;min-height:56px">GO PRO — $12/MO →</a>
+            <div class="pro-tagline" style="margin-top:12px;font-size:12px">Cancel anytime · Early-adopter price locked for life</div>
           </div>
         </div>
 
@@ -3308,6 +3291,7 @@ window.submitFeedback=submitFeedback;
           '<div class="lp-row"><span class="lp-score" style="background:'+badgeBg(c)+';color:'+badgeFg(c)+'">'+d.score+'</span>'+
           '<span class="lp-verdict">'+escH(d.verdict)+'</span></div>'+
         '</div>'+
+        '<div style="font-size:11px;color:var(--ink3);font-weight:600;letter-spacing:.04em;flex-shrink:0;margin-left:4px">Tap →</div>'+
       '</button>';
     });
     host.innerHTML=html;

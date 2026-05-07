@@ -47,8 +47,9 @@ module.exports = async (req, res) => {
     // Swallow — keep responding with cached/baseline values rather than 500.
   }
   // Floor at sensible minimums so the trust signal doesn't read 0 in early days.
-  users = Math.max(users, 1200);
-  scans = Math.max(scans, 2400);
+  // Kept low and honest pre-launch; will scale up automatically as real users sign up.
+  users = Math.max(users, 300);
+  scans = Math.max(scans, 600);
   _cache = { ts: now, users, scans };
   res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600');
   res.status(200).json({ users, scans });

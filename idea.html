@@ -769,6 +769,17 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <script src="/mm-analytics.js" defer></script>
 </head>
 <body>
+<a id="pro-return-link" href="/pro/dashboard" style="display:none;position:fixed;top:12px;right:12px;z-index:200;background:var(--acc);color:#fff;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;border-radius:8px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12)">★ Pro dashboard →</a>
+<script>
+(function(){
+  try{
+    if(localStorage.getItem('mm_pro_token')){
+      var l=document.getElementById('pro-return-link');
+      if(l)l.style.display='inline-block';
+    }
+  }catch(e){}
+})();
+</script>
 <div class="phone">
 
   <div class="hdr">

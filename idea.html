@@ -717,6 +717,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .erank-insight.show{display:flex}
 .comp-card{border:1.5px solid var(--line);border-radius:12px;padding:13px 14px 12px;background:#fff;border-left-width:4px;border-left-color:var(--acc)}
 .comp-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.comp-card-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:5px}
+.comp-card-img{width:64px;height:64px;border-radius:9px;flex-shrink:0;background:var(--surf2) center/cover no-repeat;border:1px solid var(--line)}
+.comp-card-row-body{flex:1;min-width:0}
 .comp-name{font-size:12.5px;font-weight:700;color:var(--ink);line-height:1.35;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .comp-platform{font-size:9px;font-weight:800;font-family:"DM Mono",sans-serif;padding:2px 7px;border-radius:6px;background:#f0fdf4;color:#15803d;letter-spacing:.05em;text-transform:uppercase;flex-shrink:0;margin-top:2px;white-space:nowrap}
 .comp-url{display:block;font-size:10px;color:var(--acc);font-family:"DM Mono",sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none;margin-bottom:8px}
@@ -779,10 +782,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <span class="plat-tag">⚡ 30 seconds</span>
         </div>
       </div>
-      <button class="try-eg-btn" id="try-eg-hint" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">
-        <span style="color:var(--ink3)">Not sure where to start?</span>
-        <span style="color:var(--acc);font-weight:700">Try an example →</span>
-      </button>
       <!-- Idea mode form (hidden by default) -->
       <div id="idea-mode-form" style="display:none">
         <!-- Step 1 -->
@@ -852,13 +851,14 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <div id="find-models-line" style="margin-top:10px;text-align:center;font-size:12px;color:var(--ink3);line-height:1.5">
-      Find models on
-      <a href="https://makerworld.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">MakerWorld</a>
-      ·
-      <a href="https://www.printables.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">Printables</a>
-      ·
-      <a href="https://cults3d.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">Cults3D</a>
+    <button class="try-eg-btn" id="try-eg-hint" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()" style="margin-top:8px">
+      <span style="color:var(--ink3)">Not sure where to start?</span>
+      <span style="color:var(--acc);font-weight:700">Try an example →</span>
+    </button>
+    <div id="find-models-line" style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <a href="https://makerworld.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">MakerWorld</a>
+      <a href="https://www.printables.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Printables</a>
+      <a href="https://www.thingiverse.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Thingiverse</a>
     </div>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
@@ -1368,7 +1368,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
           <div id="price-ctx" class="price-ctx" style="display:none"></div>
           <div id="sweet-spot-hint" class="q-hint" style="margin-top:6px"></div>
-          <canvas id="rev-chart" style="width:100%;display:block;margin-top:10px;border-radius:6px"></canvas>
+          <div id="price-scale" style="position:relative;height:42px;margin-top:14px;border-radius:8px;background:#f5f3ee;border:1px solid var(--line);overflow:hidden">
+            <div id="ps-sweet" style="position:absolute;top:0;bottom:0;background:rgba(21,128,61,0.16);border-left:1.5px dashed rgba(21,128,61,0.45);border-right:1.5px dashed rgba(21,128,61,0.45)"></div>
+            <div id="ps-sweet-lbl" style="position:absolute;top:3px;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.13em;font-weight:700;color:#15803d;white-space:nowrap;transform:translateX(-50%);pointer-events:none">SWEET SPOT</div>
+            <div id="ps-marker" style="position:absolute;top:0;bottom:0;width:2px;background:#15803d;box-shadow:0 0 0 2px rgba(255,255,255,0.9)"></div>
+            <div id="ps-marker-lbl" style="position:absolute;bottom:3px;font-family:'DM Mono',monospace;font-size:10px;font-weight:800;color:var(--ink);background:#fff;padding:1px 6px;border-radius:4px;border:1px solid var(--line);transform:translateX(-50%);white-space:nowrap"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ink3);margin-top:6px"><span id="ps-scale-min">€-</span><span id="ps-scale-max">€-</span></div>
         </div>
 
         <div class="hero" id="hero" style="margin-top:12px">
@@ -1539,21 +1545,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
       <!-- STEP 9: Save & Pro offer -->
       <div class="panel" id="pro-panel">
-
-        <!-- Save results - top of page, most actionable -->
-        <div id="save-results-card" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:13px;padding:15px 15px 14px;margin-bottom:16px">
-          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#15803d;margin-bottom:4px">Save your report</div>
-          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">📩 Email me these results</div>
-          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.4">Get a copy of this analysis in your inbox so you can refer back to it anytime.</div>
-          <div id="save-form-wrap">
-            <input type="email" id="save-email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email" style="margin-bottom:8px">
-            <button class="btn" id="save-btn" onclick="saveResults()" style="background:#15803d">
-              <div class="spin" id="sp-save" style="display:none"></div>
-              <span id="bl-save">Send me the analysis →</span>
-            </button>
-          </div>
-          <div id="save-success" style="display:none;text-align:center;padding:10px 0;font-size:13px;font-weight:700;color:#15803d">✓ Check your inbox – results are on their way!</div>
-        </div>
 
         <!-- Pro offer - simplified, big, benefit-led -->
         <div class="pro-wrap" id="skool-card" style="margin-top:0;margin-bottom:16px">
@@ -1828,7 +1819,7 @@ var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
 })();
 var step=0,busy=false,ideaStep=1,lastURL="",lastIsURL=true,inputMode='url',lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
-var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[],competitors:[{url:"https://www.etsy.com/listing/1234567890/adjustable-laptop-stand-desk-riser",name:"Adjustable Laptop Stand Desk Riser - Ergonomic Monitor Stand",platform:"Etsy",estPrice:"$26.99",estMonthlySales:"40–80/mo",whyItWorks:"Leads with 'ergonomic' in the title targeting the WFH buyer keyword. First photo shows the stand in a styled home office with a MacBook, which converts 2–3x better than plain product shots."},{url:"https://www.etsy.com/listing/9876543210/personalised-wooden-laptop-riser",name:"Personalised Laptop Stand - Custom Name Engraved - Office Gift",platform:"Etsy",estPrice:"$34.99",estMonthlySales:"60–120/mo",whyItWorks:"Custom name engraving justifies a $8 price premium and dominates the gift buyer segment. 'Office gift' in the title captures high-intent holiday shoppers."},{url:"https://www.amazon.com/dp/B0FAKE12345/ref=sr_1_1",name:"3D Printed Laptop Riser - Adjustable Height - Multiple Colors",platform:"Amazon",estPrice:"$19.99",estMonthlySales:"100–200/mo",whyItWorks:"Lower price point and Prime shipping dominate on Amazon. Multiple color variants in one listing boost click-through rate and rank signal."}]};
+var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[],competitors:[{url:"https://www.etsy.com/listing/1234567890/adjustable-laptop-stand-desk-riser",name:"Adjustable Laptop Stand Desk Riser - Ergonomic Monitor Stand",platform:"Etsy",estPrice:"$26.99",estMonthlySales:"40–80/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",whyItWorks:"Leads with 'ergonomic' in the title targeting the WFH buyer keyword. First photo shows the stand in a styled home office with a MacBook, which converts 2–3x better than plain product shots."},{url:"https://www.etsy.com/listing/9876543210/personalised-wooden-laptop-riser",name:"Personalised Laptop Stand - Custom Name Engraved - Office Gift",platform:"Etsy",estPrice:"$34.99",estMonthlySales:"60–120/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",whyItWorks:"Custom name engraving justifies a $8 price premium and dominates the gift buyer segment. 'Office gift' in the title captures high-intent holiday shoppers."},{url:"https://www.amazon.com/dp/B0FAKE12345/ref=sr_1_1",name:"3D Printed Laptop Riser - Adjustable Height - Multiple Colors",platform:"Amazon",estPrice:"$19.99",estMonthlySales:"100–200/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",whyItWorks:"Lower price point and Prime shipping dominate on Amazon. Multiple color variants in one listing boost click-through rate and rank signal."}]};
 function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
 function selectCountry(el){
   document.querySelectorAll('.country-chip').forEach(function(c){c.classList.remove('sel');});
@@ -2041,139 +2032,20 @@ function recalcRevenue(price){
 }
 
 function drawRevenueChart(currentPrice){
-  var canvas=q("rev-chart");
-  if(!canvas||!baseRevData)return;
-  var dpr=window.devicePixelRatio||1;
-  var W=canvas.offsetWidth||300;
-  var H=96;
-  var padL=8,padR=8,padT=16,padB=22;
-  canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);
-  canvas.style.height=H+"px";
-  var ctx=canvas.getContext("2d");
-  ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
-
+  var scale=q("price-scale");
+  if(!scale||!baseRevData)return;
   var slMin=parseInt(q("price-slider")?q("price-slider").min:5)||5;
   var slMax=parseInt(q("price-slider")?q("price-slider").max:120)||120;
-  var basePrice=baseRevData.basePrice,baseUnits=baseRevData.units;
-  var costPerUnit=baseUnits>0?baseRevData.printCost/baseUnits:0;
-
-  var pts=[];
-  for(var p=slMin;p<=slMax;p++){
-    var el=p>=basePrice?1.5:0.8;
-    var U=Math.max(0.1,baseUnits*Math.pow(basePrice/p,el));
-    var gross=p*U;
-    var net=gross-costPerUnit*U-gross*0.12;
-    pts.push(net);
-  }
-  var maxNet=Math.max.apply(null,pts);
-  var minNet=Math.min(0,Math.min.apply(null,pts));
-  var range=maxNet-minNet||1;
-
-  var chartX1=padL,chartX2=W-padR,chartY1=padT,chartY2=H-padB;
-  function xOf(p){return chartX1+(p-slMin)/(slMax-slMin)*(chartX2-chartX1);}
-  function yOf(net){return chartY1+(maxNet-net)/range*(chartY2-chartY1);}
-  var zeroY=yOf(0);
-
-  var sPts=pts.map(function(net,i){return{x:xOf(slMin+i),y:yOf(net)};});
-
-  function smoothPath(){
-    if(sPts.length===0)return;
-    ctx.moveTo(sPts[0].x,sPts[0].y);
-    for(var i=0;i<sPts.length-1;i++){
-      var p0=sPts[Math.max(0,i-1)],p1=sPts[i],p2=sPts[i+1],p3=sPts[Math.min(sPts.length-1,i+2)];
-      var cp1x=p1.x+(p2.x-p0.x)/6,cp1y=p1.y+(p2.y-p0.y)/6;
-      var cp2x=p2.x-(p3.x-p1.x)/6,cp2y=p2.y-(p3.y-p1.y)/6;
-      ctx.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,p2.x,p2.y);
-    }
-  }
-
-  /* Rounded clip region */
-  ctx.save();
-  ctx.beginPath();
-  var r=6;
-  ctx.moveTo(chartX1+r,chartY1);ctx.lineTo(chartX2-r,chartY1);ctx.arcTo(chartX2,chartY1,chartX2,chartY1+r,r);
-  ctx.lineTo(chartX2,chartY2-r);ctx.arcTo(chartX2,chartY2,chartX2-r,chartY2,r);
-  ctx.lineTo(chartX1+r,chartY2);ctx.arcTo(chartX1,chartY2,chartX1,chartY2-r,r);
-  ctx.lineTo(chartX1,chartY1+r);ctx.arcTo(chartX1,chartY1,chartX1+r,chartY1,r);
-  ctx.closePath();
-  ctx.clip();
-
-  /* Background */
-  ctx.fillStyle="#f9f8f6";
-  ctx.fillRect(chartX1,chartY1,chartX2-chartX1,chartY2-chartY1);
-
-  /* Sweet-spot highlight */
+  var basePrice=baseRevData.basePrice;
   var sweetLow=Math.round(basePrice*0.80),sweetHigh=Math.round(basePrice*1.35);
-  var sx1=Math.max(xOf(sweetLow),chartX1),sx2=Math.min(xOf(sweetHigh),chartX2);
-  if(sx2>sx1){
-    ctx.fillStyle="rgba(21,128,61,0.11)";
-    ctx.fillRect(sx1,chartY1,sx2-sx1,chartY2-chartY1);
-  }
-
-  /* Zero baseline */
-  if(minNet<0&&zeroY<chartY2&&zeroY>chartY1){
-    ctx.beginPath();ctx.moveTo(chartX1,zeroY);ctx.lineTo(chartX2,zeroY);
-    ctx.strokeStyle="rgba(0,0,0,0.12)";ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
-  }
-
-  /* Filled area under curve */
-  ctx.beginPath();
-  ctx.moveTo(sPts[0].x,Math.min(zeroY,chartY2));
-  ctx.lineTo(sPts[0].x,sPts[0].y);
-  smoothPath();
-  ctx.lineTo(sPts[sPts.length-1].x,Math.min(zeroY,chartY2));
-  ctx.closePath();
-  var fillGrad=ctx.createLinearGradient(0,chartY1,0,chartY2);
-  fillGrad.addColorStop(0,"rgba(21,128,61,0.25)");
-  fillGrad.addColorStop(0.6,"rgba(21,128,61,0.08)");
-  fillGrad.addColorStop(1,"rgba(21,128,61,0.02)");
-  ctx.fillStyle=fillGrad;ctx.fill();
-
-  /* Curve stroke with gradient */
-  ctx.beginPath();
-  smoothPath();
-  var lineGrad=ctx.createLinearGradient(chartX1,0,chartX2,0);
-  lineGrad.addColorStop(0,"#d97706");
-  lineGrad.addColorStop(0.45,"#15803d");
-  lineGrad.addColorStop(0.75,"#15803d");
-  lineGrad.addColorStop(1,"#b91c1c");
-  ctx.strokeStyle=lineGrad;ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.lineCap="round";ctx.stroke();
-
-  ctx.restore();
-
-  /* Sweet-spot label above chart */
-  if(sx2>sx1&&(sx2-sx1)>40){
-    ctx.font="600 8px 'DM Mono',monospace";
-    ctx.fillStyle="rgba(21,128,61,0.72)";
-    ctx.textAlign="center";
-    ctx.fillText("SWEET SPOT",Math.min(Math.max((sx1+sx2)/2,chartX1+36),chartX2-36),padT-4);
-  }
-
-  /* Current price marker */
-  var ci=Math.round(currentPrice)-slMin;
-  if(ci>=0&&ci<sPts.length){
-    var mx=sPts[ci].x,my=sPts[ci].y;
-    ctx.save();
-    ctx.beginPath();ctx.moveTo(mx,chartY2);ctx.lineTo(mx,chartY1);
-    ctx.strokeStyle="rgba(0,0,0,0.1)";ctx.lineWidth=1;ctx.stroke();
-    var dotColor=pts[ci]>=0?"#15803d":"#dc2626";
-    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
-    ctx.fillStyle=dotColor;ctx.fill();
-    ctx.beginPath();ctx.arc(mx,my,5,0,Math.PI*2);
-    ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.stroke();
-    ctx.restore();
-  }
-
-  /* X-axis labels */
-  ctx.font="10px 'DM Mono',monospace";
-  ctx.fillStyle="#aaa";
-  ctx.textAlign="left";
-  ctx.fillText("€"+slMin,chartX1,H-4);
-  ctx.textAlign="center";
-  ctx.fillText("€"+Math.round(basePrice),xOf(basePrice),H-4);
-  ctx.textAlign="right";
-  ctx.fillText("€"+slMax,chartX2,H-4);
+  function pct(p){return Math.max(0,Math.min(100,(p-slMin)/(slMax-slMin)*100));}
+  var sweet=q("ps-sweet"),sweetLbl=q("ps-sweet-lbl"),marker=q("ps-marker"),markerLbl=q("ps-marker-lbl"),sMin=q("ps-scale-min"),sMax=q("ps-scale-max");
+  if(sweet){sweet.style.left=pct(sweetLow)+"%";sweet.style.right=(100-pct(sweetHigh))+"%";}
+  if(sweetLbl)sweetLbl.style.left=((pct(sweetLow)+pct(sweetHigh))/2)+"%";
+  if(marker)marker.style.left=pct(currentPrice)+"%";
+  if(markerLbl){markerLbl.textContent="€"+Math.round(currentPrice);markerLbl.style.left=pct(currentPrice)+"%";}
+  if(sMin)sMin.textContent="€"+slMin;
+  if(sMax)sMax.textContent="€"+slMax;
 }
 
 function populate(data){
@@ -2528,36 +2400,41 @@ function renderRoadmapSteps(){
   var steps=[];
   if(score<50){
     steps=[
-      {ico:'🔍',title:'Research a stronger niche',desc:'Look for a product with lower competition and higher search demand.'},
-      {ico:'✏️',title:'Add a unique angle',desc:'Personalisation or a seasonal variant can lift a weak score by 20+ points.'},
-      {ico:'🔁',title:'Check another product',desc:'Run 2-3 ideas through the validator to find your best candidate.'}
+      {ico:'🔍',title:'Research a stronger niche',desc:'Aim for ratio of search volume ≥ 2× listings count. Use Etsy auto-suggest, eRank, and "people also viewed" to find under-served angles.'},
+      {ico:'✏️',title:'Add a unique angle',desc:'Personalisation, seasonal variant, or a tighter buyer persona can lift a weak score by 20+ points without changing the underlying design.'},
+      {ico:'📐',title:'Re-design with a buyer in mind',desc:'Pick one specific buyer (e.g. "Boxer-dog owner who works from home") and design the product for them — generic = invisible on Etsy.'},
+      {ico:'🔁',title:'Check 2-3 more ideas',desc:'Most prints score 40-60. Run a few more — your goal is one 70+ scorer per 5-10 attempts.'}
     ];
   } else if(platform==='etsy'||platform===''){
     var isNew=qExp==='new'||qExp==='';
     if(isNew){
       steps=[
-        {ico:'🏪',title:'Open your Etsy store',desc:'Takes 15 min. Pick a name that hints at your niche.'},
-        {ico:'📸',title:'Print, photograph, list',desc:'Natural light, 5+ photos, keyword-rich title. Get it live this week.'},
-        {ico:'📊',title:'Check stats after 14 days',desc:'Low views = fix the title. Views but no sales = lower the price by €3-5.'}
+        {ico:'🏪',title:'Open your Etsy store',desc:'Takes 15 minutes. Pick a brand name that hints at your niche, not your own name. Add a banner, avatar, and "About" section before listing — empty shops convert ~30% worse.'},
+        {ico:'📸',title:'Print, photograph, list',desc:'10 photos: 3 hero shots (white/lifestyle), 3 detail, 2 scale-with-hand, 1 size chart, 1 packaging. Title pattern: [keyword] | [variant] | [buyer]. Get it live this week.'},
+        {ico:'📊',title:'Check stats after 14 days',desc:'< 50 views = fix the title and tags. > 200 views, 0 sales = drop price by €3-5 or replace the cover photo. > 200 views, sales = duplicate the listing as a variant.'},
+        {ico:'🔁',title:'Iterate with what sells',desc:'After your first sale, copy the winning listing as a template for variants (colours, sizes, personalisation). One winner usually spawns 3-5 sub-listings.'}
       ];
     } else {
       steps=[
-        {ico:'➕',title:'List it in your shop',desc:'Copy your best-performing listing as a template for tags and category.'},
-        {ico:'🎁',title:'Bundle it',desc:'Pair with a related product. Bundles lift average order value by ~40%.'},
-        {ico:'🔥',title:'Run a 7-day ad test',desc:'$1-3/day Etsy Ads. Cut keywords above $0.80 CPC after one week.'}
+        {ico:'➕',title:'List it in your shop',desc:'Copy your best-performing listing as a template — same tags, same category, similar title structure. Saves 30 minutes and inherits SEO momentum.'},
+        {ico:'🎁',title:'Bundle it',desc:'Pair with a related product (e.g. matching set, gift wrap, name tag). Bundles lift average order value by ~40% and avoid direct price comparison.'},
+        {ico:'🔥',title:'Run a 7-day ad test',desc:'$1-3/day Etsy Ads with 8-10 long-tail keywords from competitor titles. Cut anything above $0.80 CPC after week one and double-down on the survivors.'},
+        {ico:'⭐',title:'Get 5 reviews fast',desc:'Send a polite follow-up message 4 days after delivery asking for feedback. Reviews compound — listings with 10+ reviews convert ~2× better.'}
       ];
     }
   } else if(platform==='social'){
     steps=[
-      {ico:'📱',title:'Film a 30-second reveal',desc:'Unboxing and reveal videos beat talking-head content for physical products.'},
-      {ico:'🔗',title:'Link in bio',desc:'Use Linktree or a simple page. Have a price and payment link ready to send.'},
-      {ico:'🛍️',title:'Convert DMs to Etsy sales',desc:'5+ DM orders is your signal to open a proper shop listing.'}
+      {ico:'📱',title:'Film a 30-second reveal',desc:'Phone on a tripod, natural light, no voiceover. Show the print finishing → cleanup → final shot. Reveals beat talking-head content 5-10× for physical products.'},
+      {ico:'🔗',title:'Link in bio + DM funnel',desc:'Use Linktree or Stan.store. Pin a comment with the price and DM keyword (e.g. "DM ME for one"). Reply within 1 hour to convert.'},
+      {ico:'🛍️',title:'Convert DMs to a shop',desc:'5+ DM orders = you have demand. Open Etsy, Shopify, or Gumroad and send buyers a real link instead of a Paypal request.'},
+      {ico:'📈',title:'Post 3-5×/week for 30 days',desc:'Algorithm rewards consistency. 12-15 posts is the minimum honest test — 1 viral video can fund a month of inventory.'}
     ];
   } else if(platform==='b2b'){
     steps=[
-      {ico:'🖨️',title:'Print one sample',desc:'A physical sample is your entire pitch. Cost: €5-15 in filament.'},
-      {ico:'📧',title:'Send a short cold pitch',desc:'3 sentences: what it is, what it does for them, and your bulk price. Follow up once.'},
-      {ico:'💰',title:'Offer bulk pricing',desc:'10+ units at 25-30% below retail. One B2B client can beat weeks of Etsy sales.'}
+      {ico:'🖨️',title:'Print one polished sample',desc:'A physical sample is your entire pitch. Spend €5-15 on filament and 30 min on finishing — sand seams, hide ironed top.'},
+      {ico:'📧',title:'Send a short cold pitch',desc:'3 sentences: what it is, what it does for them, your bulk price + lead time. One follow-up after 5 working days, then drop it.'},
+      {ico:'💰',title:'Offer bulk pricing',desc:'10+ units at 25-30% below retail, MOQ on your invoice. One B2B client can beat weeks of Etsy sales and gives steady cash flow.'},
+      {ico:'🤝',title:'Lock in repeat orders',desc:'After the first delivery, propose a quarterly restock at the same price. Recurring B2B is the unlock — you stop chasing cold leads.'}
     ];
   }
   function stepHtml(s,i,border){
@@ -2568,24 +2445,9 @@ function renderRoadmapSteps(){
       +'<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--line2);flex-shrink:0;line-height:1;padding-top:2px">'+(i+1)+'</div>'
       +'</div>';
   }
-  /* Show only step 1 free; lock steps 2+3 */
-  list.innerHTML=stepHtml(steps[0],0,false);
-  /* Remove old lock block if present */
+  /* Show all steps unlocked for free users */
+  list.innerHTML=steps.map(function(s,i){return stepHtml(s,i,i<steps.length-1);}).join('');
   var oldLock=q('rm-lock-block');if(oldLock)oldLock.remove();
-  if(steps.length>1){
-    var blurHtml=steps.slice(1).map(function(s,i){return stepHtml(s,i+1,i<steps.length-2);}).join('');
-    var lockBlock=document.createElement('div');
-    lockBlock.id='rm-lock-block';
-    lockBlock.style.cssText='position:relative;margin-top:8px;border-radius:12px;overflow:hidden;border:1.5px solid var(--line)';
-    lockBlock.innerHTML='<div style="filter:blur(4px);pointer-events:none;user-select:none">'+blurHtml+'</div>'
-      +'<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:rgba(255,255,255,.82);backdrop-filter:blur(2px);padding:16px">'
-      +'<div style="font-size:20px">🔒</div>'
-      +'<div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:2px">Steps 2 &amp; 3 are Pro only</div>'
-      +'<div style="font-size:11px;color:var(--ink2);text-align:center;max-width:210px;line-height:1.45;margin-bottom:10px">Plus keywords, competitor gaps and the full 847-product catalogue.</div>'
-      +'<a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" onclick="if(window.MM&amp;&amp;MM.track)MM.track(\'cta_click_pro\',{label:\'idea_stripe\'})" style="display:inline-block;padding:10px 20px;background:var(--acc);color:#fff;font-size:12px;font-weight:800;border-radius:10px;text-decoration:none;font-family:\'DM Sans\',sans-serif;letter-spacing:-.01em" target="_blank" rel="noopener">Unlock Pro — $12/mo →</a>'
-      +'</div>';
-    list.parentElement.insertBefore(lockBlock,list.nextSibling);
-  }
 }
 function buildCompetitors(competitors){
   var sec=q("competitors-section");
@@ -2599,7 +2461,11 @@ function buildCompetitors(competitors){
     var domain="";
     try{var u=new URL(c.url);domain=u.hostname.replace(/^www\./,"");}catch(_){}
     var shortUrl=domain+(c.url.replace(/https?:\/\/(www\.)?/,"").length>50?c.url.replace(/https?:\/\/(www\.)?/,"").substring(0,48)+"…":c.url.replace(/https?:\/\/(www\.)?/,""));
+    var imgHtml=c.image?'<a href="'+esc(c.url)+'" target="_blank" rel="noopener" class="comp-card-img" style="background-image:url(\''+esc(c.image)+'\')" aria-label="Open competitor listing"></a>':'<div class="comp-card-img" aria-hidden="true"></div>';
     return '<div class="comp-card">'
+      +'<div class="comp-card-row">'
+      +imgHtml
+      +'<div class="comp-card-row-body">'
       +'<div class="comp-card-top">'
       +'<div class="comp-name">'+esc(c.name||"Competitor listing")+'</div>'
       +'<span class="comp-platform">'+esc(c.platform||"Etsy")+'</span>'
@@ -2609,6 +2475,7 @@ function buildCompetitors(competitors){
       +(c.estMonthlySales?'<span class="comp-sales">~'+esc(c.estMonthlySales)+' est. sales</span>':'')
       +(c.estPrice?'<span class="comp-price">'+esc(c.estPrice)+'</span>':'')
       +'</div>'
+      +'</div></div>'
       +'<div class="comp-why">'+esc(c.whyItWorks)+'</div>'
       +'</div>';
   }).join('');
@@ -2824,7 +2691,7 @@ function runAnalysis(){
 
   if(window.MM&&MM.track)MM.track('analyze_start',{label:isIdeaMode?'idea':'url',meta:{category:qCat||null,channels:isIdeaMode?ideaChannels:null}});
   var fetchAbort=new AbortController();
-  var fetchTimeout=setTimeout(function(){fetchAbort.abort();},75000);
+  var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 110000);
   fetch("/api/analyze",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -2855,12 +2722,13 @@ function runAnalysis(){
     } else if(step===5)setBtn2("How to sell it","",false);
     else if(step===6)setBtn2("Check legal status","",false);
     else if(step===7)setBtn2("See your next step","",false);
-    else if(step===8)setBtn2("Save my results →","",false);
+    else if(step===8)setBtn2("See pro upgrade →","",false);
     else if(step===9)setBtn2("Check another print","dark",false);
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
-    if(err&&err.name==="AbortError")msg="Request timed out – the server may be busy, please try again.";
+    var errMsg=err&&err.message?String(err.message):"";
+    if((err&&err.name==="AbortError")||/abort/i.test(errMsg))msg="Analysis is taking longer than expected – please try again.";
     else if(err&&err.message){
       var m=err.message;
       if(m.indexOf("please wait")>=0||m.indexOf("daily limit")>=0||m.indexOf("rate limit")>=0)msg=m.replace(/^HTTP \d+[:\s]*/,"");
@@ -3172,8 +3040,8 @@ q("btn2").addEventListener("click",function(){
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Save my results →","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
-  if(step===8){step=9;dots(9);slide(9);setBtn2("Check another print","dark",false);showBack(true);var gateEmail=q("email-inp")?q("email-inp").value.trim():"";if(gateEmail&&q("save-email-inp"))q("save-email-inp").value=gateEmail;return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("See pro upgrade →","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
+  if(step===8){step=9;dots(9);slide(9);setBtn2("Check another print","dark",false);showBack(true);return;}
   else{ window.location.href='/idea'; }
 });
 
@@ -3184,7 +3052,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
   if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===9){step=8;dots(8);slide(8);setBtn2("Save my results →","",false);showBack(true);return;}
+  if(step===9){step=8;dots(8);slide(8);setBtn2("See pro upgrade →","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

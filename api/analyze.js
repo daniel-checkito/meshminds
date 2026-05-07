@@ -378,6 +378,17 @@ module.exports = async (req, res) => {
     const seen = new Set();
     const items = [];
 
+    // Find the closest image URL appearing in the markdown before a given index.
+    // Markdown listings on Etsy/eBay/Amazon typically embed `![alt](image_url)`
+    // immediately before the linked listing title.
+    function findImageBefore(md, idx) {
+      const window = md.slice(Math.max(0, idx - 1200), idx);
+      const re = /!\[[^\]]*\]\((https?:\/\/[^\s)]+\.(?:jpe?g|png|webp|gif)(?:\?[^\s)]*)?)\)/gi;
+      let last = null, m;
+      while ((m = re.exec(window)) !== null) last = m[1];
+      return last;
+    }
+
     // Match [Title](etsy_listing_url) together so title is never from a different listing
     const etsyListingRe = /\[([^\]]{5,120})\]\((https?:\/\/(?:www\.)?etsy\.com\/listing\/(\d+)\/[a-z0-9-]+)[^)]*\)/gi;
 
@@ -400,6 +411,7 @@ module.exports = async (req, res) => {
           price: priceMatch ? `$${priceMatch[1]}` : null,
           reviews: reviewMatch ? parseInt(reviewMatch[1].replace(/,/g, ''), 10) : null,
           sold: soldMatch ? parseInt(soldMatch[1].replace(/,/g, ''), 10) : null,
+          image: findImageBefore(etsyMd, m.index),
           source: 'etsy',
         });
       }
@@ -426,6 +438,7 @@ module.exports = async (req, res) => {
           price: priceMatch ? `$${priceMatch[1].replace(',', '.')}` : null,
           reviews: reviewMatch ? parseInt(reviewMatch[1].replace(/,/g, ''), 10) : null,
           sold: soldMatch ? parseInt(soldMatch[1].replace(/,/g, ''), 10) : null,
+          image: findImageBefore(extraMd, d.index),
           source: isEbay ? 'ebay-sold' : 'amazon-handmade',
         });
       }
@@ -845,6 +858,19 @@ IMPORTANT RULES:
     parsed = parseClaudeResponse(rawText);
   } catch (e) {
     return res.status(502).json({ error: 'analysis_failed', message: e.message });
+  }
+
+  // Merge scraped competitor images into the LLM-shaped competitor list (URL match).
+  if (Array.isArray(parsed.competitors) && competitorRaw.length > 0) {
+    const imgByUrl = new Map();
+    for (const c of competitorRaw) {
+      if (c.url && c.image) imgByUrl.set(c.url, c.image);
+    }
+    parsed.competitors = parsed.competitors.map((c) => {
+      if (!c || !c.url) return c;
+      const img = imgByUrl.get(c.url) || imgByUrl.get(c.url.split('?')[0]) || null;
+      return img ? { ...c, image: img } : c;
+    });
   }
 
   // Deterministic IP override — if any high-risk trademark was matched, force

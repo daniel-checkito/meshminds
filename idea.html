@@ -756,7 +756,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     </button>
     <div class="try-eg" id="try-eg-hint">Not sure where to start? <button class="btn-try-eg" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">Try an example →</button></div>
     <div class="dots" id="dots" style="display:none">
-      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div>
+      <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
     </div>
   </div>
 
@@ -1838,7 +1838,7 @@ function completeLoadingAnim(callback){
 
 function openLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.add("open");}
 function closeLegal(id){var el=document.getElementById("lo-"+id);if(el)el.classList.remove("open");}
-function dots(s){for(var i=0;i<9;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
+function dots(s){for(var i=0;i<10;i++){var d=q("d"+i);if(d)d.className="dot"+(i<s?" done":i===s?" on":"");}}
 function slide(s){var w=document.querySelector(".scroll").offsetWidth;q("track").style.transform="translateX("+(-s*w)+"px)";}
 
 function verdict(state,msg,note){
@@ -2628,10 +2628,6 @@ function analyze(){
     },30);
     return;
   }
-  if(localStorage.getItem('mm_gate')){
-    runAnalysis();
-    return;
-  }
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);showBack(true);busy=false;
 }
 
@@ -2708,8 +2704,9 @@ function runAnalysis(){
       });
     } else if(step===5)setBtn2("How to sell it","",false);
     else if(step===6)setBtn2("Check legal status","",false);
-    else if(step===7)setBtn2("Done - share your feedback","",false);
-    else if(step===8)setBtn2("Check another print","dark",false);
+    else if(step===7)setBtn2("See your next step","",false);
+    else if(step===8)setBtn2("Save my results →","",false);
+    else if(step===9)setBtn2("Check another print","dark",false);
   }).catch(function(err){
     clearTimeout(fetchTimeout);
     var msg="Analysis failed – please try again.";
@@ -2988,7 +2985,8 @@ q("btn2").addEventListener("click",function(){
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);return;}
   if(step===6){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
-  if(step===7){step=8;dots(8);slide(8);setBtn2("Check another print","dark",false);showBack(true);updateOfferPanel();buildRoadmap();var gateEmail=q("email-inp")?q("email-inp").value.trim():"";if(gateEmail&&q("save-email-inp"))q("save-email-inp").value=gateEmail;return;}
+  if(step===7){step=8;dots(8);slide(8);setBtn2("Save my results →","",false);showBack(true);updateOfferPanel();buildRoadmap();return;}
+  if(step===8){step=9;dots(9);slide(9);setBtn2("Check another print","dark",false);showBack(true);var gateEmail=q("email-inp")?q("email-inp").value.trim():"";if(gateEmail&&q("save-email-inp"))q("save-email-inp").value=gateEmail;return;}
   else{reset();}
 });
 
@@ -2999,6 +2997,7 @@ q("btn-back").addEventListener("click",function(){
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("Check legal status","",false);showBack(true);return;}
   if(step===8){step=7;dots(7);slide(7);setBtn2("See your next step","",false);showBack(true);return;}
+  if(step===9){step=8;dots(8);slide(8);setBtn2("Save my results →","",false);showBack(true);return;}
 });
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);

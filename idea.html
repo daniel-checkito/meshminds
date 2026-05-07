@@ -268,6 +268,8 @@ body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .fl{animation:fg .5s ease forwards}
 .price-slider-wrap{background:#f7f7f7;border-radius:11px;padding:12px 13px 10px;margin-bottom:14px}
 .price-slider-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.hero-price-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.hero-divider{height:1px;background:rgba(21,128,61,.18);margin:14px -2px 12px}
 .price-slider-lbl{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:"DM Mono",sans-serif}
 .price-slider-val{font-size:22px;font-weight:800;color:var(--ink);font-family:"DM Mono",sans-serif;font-variant-numeric:tabular-nums;line-height:1}
 input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cursor:pointer}
@@ -1371,43 +1373,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="erank-insight" id="ins"><div class="ins-dot"></div><span id="ins-text"></span></div>
         </div>
 
-        <!-- Platform ranking -->
-        <div class="sell-section-hd">Where to sell</div>
-        <div class="platform-cards">
-          <div class="platform-card platform-card-etsy">
-            <span class="platform-rank pr-primary">Primary</span>
-            <div>
-              <div class="platform-name">Etsy</div>
-              <div class="platform-desc">Highest buyer intent for handmade. Optimise titles with niche keywords and add listing variations.</div>
-            </div>
-          </div>
-          <div class="platform-card platform-card-amz">
-            <span class="platform-rank pr-growth">Growth</span>
-            <div>
-              <div class="platform-name">Amazon Handmade</div>
-              <div class="platform-desc">Larger audience with badge-verified sellers. Higher competition but stronger repeat buyer rate and Prime trust.</div>
-            </div>
-          </div>
-          <div class="platform-card platform-card-stl">
-            <span class="platform-rank pr-passive">Passive</span>
-            <div>
-              <div class="platform-name">Sell the STL file</div>
-              <div class="platform-desc">List on Cults3D, Gumroad, or Printables. One upload earns forever - no printing, no shipping, no stock.</div>
-            </div>
-          </div>
-          <div class="platform-card platform-card-shop">
-            <span class="platform-rank pr-scale">Scale</span>
-            <div>
-              <div class="platform-name">Own shop</div>
-              <div class="platform-desc">Shopify or WooCommerce once you have repeat buyers - higher margins and full brand control.</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Price slider -->
-        <div class="sell-section-hd">Set your sell price</div>
-        <div class="price-slider-wrap">
-          <div class="price-slider-row">
+        <!-- Price + estimated monthly profit (merged) -->
+        <div class="hero" id="hero" style="margin-top:8px;text-align:left">
+          <div class="hero-price-row">
             <span class="price-slider-lbl">Sell price</span>
             <span class="price-slider-val" id="price-display">€-</span>
           </div>
@@ -1415,20 +1383,20 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="price-slider-limits"><span id="ps-min">€5</span><span id="ps-max">€120</span></div>
           <div id="price-ctx" class="price-ctx" style="display:none"></div>
           <div id="sweet-spot-hint" class="q-hint" style="margin-top:6px"></div>
-          <div id="price-scale" style="position:relative;height:42px;margin-top:14px;border-radius:8px;background:#f5f3ee;border:1px solid var(--line);overflow:hidden">
+          <div id="price-scale" style="position:relative;height:42px;margin-top:14px;border-radius:8px;background:rgba(255,255,255,.55);border:1px solid rgba(21,128,61,.18);overflow:hidden">
             <div id="ps-sweet" style="position:absolute;top:0;bottom:0;background:rgba(21,128,61,0.16);border-left:1.5px dashed rgba(21,128,61,0.45);border-right:1.5px dashed rgba(21,128,61,0.45)"></div>
             <div id="ps-sweet-lbl" style="position:absolute;top:3px;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.13em;font-weight:700;color:#15803d;white-space:nowrap;transform:translateX(-50%);pointer-events:none">SWEET SPOT</div>
             <div id="ps-marker" style="position:absolute;top:0;bottom:0;width:2px;background:#15803d;box-shadow:0 0 0 2px rgba(255,255,255,0.9)"></div>
             <div id="ps-marker-lbl" style="position:absolute;bottom:3px;font-family:'DM Mono',monospace;font-size:10px;font-weight:800;color:var(--ink);background:#fff;padding:1px 6px;border-radius:4px;border:1px solid var(--line);transform:translateX(-50%);white-space:nowrap"></div>
           </div>
           <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:9.5px;color:var(--ink3);margin-top:6px"><span id="ps-scale-min">€-</span><span id="ps-scale-max">€-</span></div>
-        </div>
-
-        <div class="hero" id="hero" style="margin-top:12px">
-          <div class="h-eye">Est. monthly profit</div>
-          <div class="h-big" id="hbig">€-</div>
-          <div class="h-sub" id="hsub">at your current price</div>
-          <div class="h-bd" id="hbd">
+          <div class="hero-divider"></div>
+          <div style="text-align:center">
+            <div class="h-eye">Est. monthly profit</div>
+            <div class="h-big" id="hbig">€-</div>
+            <div class="h-sub" id="hsub">at your current price</div>
+          </div>
+          <div class="h-bd" id="hbd" style="margin-top:10px">
             <div class="h-row"><span class="h-lbl">Gross revenue</span><span class="h-val" id="hv0">-</span></div>
             <div class="h-row"><span class="h-lbl">Print cost</span><span class="h-val n" id="hv1">-</span></div>
             <div class="h-row"><span class="h-lbl">Platform fees (~12%)</span><span class="h-val n" id="hv2">-</span></div>

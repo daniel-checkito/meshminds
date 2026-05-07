@@ -10,7 +10,7 @@ module.exports = async (req, res) => {
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
   const { url, title, score, verdict, imageUrl, profitEst, isPublic, fullData } = req.body || {};
-  if (!url) return res.status(400).json({ error: 'url required' });
+  if (!url && !title) return res.status(400).json({ error: 'url or title required' });
 
   try {
     // Get user's default_public setting

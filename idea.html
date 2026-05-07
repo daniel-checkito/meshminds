@@ -817,8 +817,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         </ul>
       </div>
       <div style="display:flex;gap:6px;background:var(--surf);border:1.5px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px" id="mode-toggle" role="tablist" aria-label="Choose how to validate your idea">
-        <button class="mode-btn mode-btn-active" id="mode-url" onclick="setMode('url')" role="tab" aria-selected="true"><span class="mode-btn-ico">🔗</span><span>Paste a model URL</span><span class="mode-btn-sub">MakerWorld · Printables · etc.</span></button>
-        <button class="mode-btn" id="mode-idea" onclick="setMode('idea')" role="tab" aria-selected="false"><span class="mode-btn-ico">💡</span><span>Describe your idea</span><span class="mode-btn-sub">Have your own idea? Check if people like it.</span></button>
+        <button class="mode-btn mode-btn-active" id="mode-url" onclick="setMode('url')" role="tab" aria-selected="true"><span class="mode-btn-ico">🔗</span><span>Paste a model URL</span></button>
+        <button class="mode-btn" id="mode-idea" onclick="setMode('idea')" role="tab" aria-selected="false"><span class="mode-btn-ico">💡</span><span>Describe your idea</span></button>
       </div>
       <div class="inp-card" id="inp-card">
         <div class="inp-inner">
@@ -833,7 +833,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div id="idea-mode-form" style="display:none">
         <!-- Step 1 -->
         <div id="idea-step-1">
-          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Step 1 of 4 · Your idea<span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
           <div style="font-size:11px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em;font-family:'DM Mono',monospace;margin-bottom:7px">What's your idea?</div>
           <textarea id="idea-name" rows="3" placeholder="e.g. Wall-mounted key holder with hooks, a hidden coin tray and wood-look PLA - keep it short, anything that makes it different is gold." style="width:100%;padding:12px 13px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:#fafafa;outline:none;margin-bottom:10px;transition:border-color .2s;resize:vertical;min-height:74px" onfocus="this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)'"></textarea>
         </div>
@@ -1318,9 +1317,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <textarea id="fb-comment" maxlength="1000" placeholder="What did we get wrong? (optional)" style="width:100%;height:36px;padding:9px 11px;border:1.5px solid var(--line2);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:#fafafa;outline:none;resize:none;transition:all .2s;box-sizing:border-box" onfocus="this.style.height='80px';this.style.borderColor='var(--acc)'" onblur="this.style.borderColor='var(--line2)';if(!this.value)this.style.height='36px'"></textarea>
             <div id="fb-thanks" style="display:none;font-size:12px;color:var(--good);font-weight:600;margin-top:8px;font-family:'DM Sans',sans-serif">Thanks - your feedback helps us calibrate the AI.</div>
           </div>
-          <div id="fb-signed-out" style="display:none">
-            <a href="/login" style="display:block;font-size:13px;color:var(--acc);font-weight:600;text-decoration:none;text-align:center;padding:10px;background:var(--surf);border:1px dashed var(--line2);border-radius:10px">Sign in to give feedback and save your scans →</a>
-          </div>
+          <div id="fb-signed-out" style="display:none"></div>
         </div>
 
       </div>
@@ -1764,18 +1761,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     <div class="section-lbl">Popular prints analysed</div>
     <div style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;line-height:1.45">Real scored products - <b>tap any card to see the full analysis</b>.</div>
     <div id="landing-preview-grid" class="eg-grid" style="margin-bottom:16px"></div>
-    <div class="stat-grid" style="margin-bottom:16px">
-      <div class="stat-cell"><div class="stat-n">~20s</div><div class="stat-l">Full analysis</div></div>
-      <div class="stat-cell"><div class="stat-n">50+</div><div class="stat-l">Legal rules checked</div></div>
-      <div class="stat-cell"><div class="stat-n">1 in 4</div><div class="stat-l">Ideas has IP risk</div></div>
-    </div>
   </div>
 
   <div class="lp-divider"></div>
 
   <div class="lp-sec" style="padding-bottom:8px">
   <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;color:var(--ink);margin-bottom:4px">What we check</div>
-  <div style="font-size:12px;color:var(--ink3);margin-bottom:14px">6 checks per scan - about 20 seconds, on real live data. Tap any to expand.</div>
+  <div style="font-size:12px;color:var(--ink3);margin-bottom:14px">Tap any to expand.</div>
   <div id="wwc-list" style="display:grid;grid-template-columns:1fr;gap:8px"></div>
   <div style="margin-top:12px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:11.5px;color:var(--ink2);line-height:1.5">
     <b>Free to try:</b> 25 scans/day · 50/day with a free login · <b>unlimited with Pro</b>.

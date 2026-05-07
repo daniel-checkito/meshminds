@@ -3186,6 +3186,14 @@ q("btn-back").addEventListener("click",function(){
 
 verdict("idle");setBtn0("Check this print",false);showFooter(false);dots(0);
 try{renderScanHistory();}catch(_){ }
+/* Pull live count for the email-gate trust signal (cached 1h server-side) */
+fetch('/api/stats',{cache:'force-cache'}).then(function(r){return r.json();}).then(function(s){
+  if(s&&s.users){
+    var n=Math.round(s.users/100)*100;
+    var lbl=q('gate-trust-count');
+    if(lbl)lbl.textContent=n.toLocaleString('en-US')+'+';
+  }
+}).catch(function(){});
 
 function toggleFaq(btn){
   var item=btn.closest('.faq-item');

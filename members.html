@@ -387,306 +387,189 @@
 
   <div class="divider"></div>
 
-  <!-- ── TOP 10 ── -->
+
+  <!-- ── ALL WINNERS CATALOGUE (rendered from data/winners.json) ── -->
   <div class="sec-hd">
     <div>
-      <div class="sec-hd-label">All-time catalogue</div>
-      <div class="sec-hd-title">Top 10 - Highest rated</div>
+      <div class="sec-hd-label">Catalogue · all-time winners</div>
+      <div class="sec-hd-title">All scored winners</div>
     </div>
+    <div id="cat-count-pill" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.13em;color:var(--ink3);text-transform:uppercase"></div>
   </div>
 
-  <div class="rank-list">
+  <div id="cat-filter-chips" style="display:flex;gap:6px;overflow-x:auto;padding:0 16px 8px;margin-bottom:8px;-webkit-overflow-scrolling:touch"></div>
 
-    <div class="rank-row" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
-      <div class="rank-num top">1</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Personalised Name Sign</div>
-        <div class="rank-sub">Decor · ~$140/mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">94<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
-    </div>
+  <div id="cat-grid" class="niche-grid" style="padding:0 16px 12px"></div>
 
-    <div class="rank-row" onclick="openProdModal('Succulent Planter Set')" style="cursor:pointer">
-      <div class="rank-num top">2</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Succulent Planter Set</div>
-        <div class="rank-sub">Home · ~$110/mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">91<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
-    </div>
+  <div id="cat-empty" style="display:none;text-align:center;font-size:12.5px;color:var(--ink3);padding:24px 16px">No winners on file for this category yet.</div>
 
-    <div class="rank-row" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
-      <div class="rank-num top">3</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Cable Management Box</div>
-        <div class="rank-sub">Functional · ~$95/mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">88<span class="rank-fire">🔥</span></div><span class="verified-badge">Verified</span></div>
-    </div>
+  <script>
+  /* Pull /data/winners.json once, render a category-filterable catalogue,
+     and reuse the existing openProdModal flow. We hydrate PRODUCT_DATA so
+     the same modal works for every winner, with all the rich winners.json
+     fields surfaced (revenue, price, IP risk, why-it-sells, differentiator,
+     notes, source, ip_holder). */
+  (function(){
+    var CAT_LABEL={
+      decor:'Decor',
+      lighting_lamps:'Lighting',
+      planters_garden:'Planters',
+      desk_office:'Desk',
+      home_organization:'Home',
+      tech_accessories:'Tech',
+      dnd_gaming:'D&D / Gaming',
+      toys_fidgets:'Toys / Fidgets',
+      personalized_gifts:'Gifts',
+      pet_accessories:'Pet',
+      replacement_parts:'Replacement parts',
+      automotive_bike:'Auto / Bike',
+      kids_nursery:'Kids',
+      cosplay_props:'Cosplay',
+      wedding_events:'Wedding',
+      fashion_accessories:'Fashion',
+      tools_workshop_jigs:'Workshop',
+      miniatures_terrain:'Miniatures',
+      musical_instruments_accessories:'Music gear'
+    };
+    var CAT_ICON={
+      decor:'🏡', lighting_lamps:'💡', planters_garden:'🪴', desk_office:'🖊',
+      home_organization:'📦', tech_accessories:'📱', dnd_gaming:'🎲',
+      toys_fidgets:'🧸', personalized_gifts:'🎁', pet_accessories:'🐶',
+      replacement_parts:'🔧', automotive_bike:'🚗', kids_nursery:'👶',
+      cosplay_props:'🗡', wedding_events:'💍', fashion_accessories:'👜',
+      tools_workshop_jigs:'🔨', miniatures_terrain:'🏔', musical_instruments_accessories:'🎸'
+    };
+    var IMAGE_BY_CAT={
+      decor:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp',
+      lighting_lamps:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp',
+      planters_garden:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp',
+      desk_office:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp',
+      home_organization:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp',
+      tech_accessories:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp',
+      dnd_gaming:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp',
+      toys_fidgets:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp',
+      personalized_gifts:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp',
+      pet_accessories:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp',
+      replacement_parts:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp',
+      automotive_bike:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp'
+    };
+    var DEFAULT_IMG='https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp';
 
-    <div class="rank-row" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
-      <div class="rank-num">4</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Adjustable Phone Stand</div>
-        <div class="rank-sub">Functional · ~$78/mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">85</div><span class="verified-badge">Verified</span></div>
-    </div>
+    var winners=[], activeCat='all', winnersById={};
 
-    <div class="rank-row" onclick="openProdModal('Modular Desk Organiser')" style="cursor:pointer">
-      <div class="rank-num">5</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Modular Desk Organiser</div>
-        <div class="rank-sub">Office · ~$84/mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:5px"><div class="rank-score g">82</div><span class="verified-badge">Verified</span></div>
-    </div>
+    function loadWinners(){
+      return fetch('/data/winners.json',{cache:'force-cache'})
+        .then(function(r){return r.json();})
+        .then(function(j){winners=(j&&j.winners)||[];hydrateProductData();render();})
+        .catch(function(){
+          var grid=document.getElementById('cat-grid');
+          if(grid)grid.innerHTML='<div style="font-size:12.5px;color:var(--ink3);padding:18px;text-align:center">Could not load winners. Try refreshing.</div>';
+        });
+    }
 
-    <div class="rank-row" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
-      <div class="rank-num">6</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Articulated Dragon</div>
-        <div class="rank-sub">Toy / Art · ~$62/mo</div>
-      </div>
-      <div class="rank-score g">79</div>
-    </div>
+    function ipBadge(w){
+      if(!w.ip_risk||w.ip_risk==='none')return '';
+      var col=w.ip_risk==='high'?'#b91c1c':w.ip_risk==='medium'?'#92400e':'#92400e';
+      var bg=w.ip_risk==='high'?'#fee2e2':w.ip_risk==='medium'?'#fef3c7':'#fef9c3';
+      return '<span style="font-family:\'DM Mono\',monospace;font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:5px;background:'+bg+';color:'+col+'">⚠ IP '+esc(w.ip_risk)+'</span>';
+    }
+    function srcBadge(w){
+      var s=w.source||'etsy';
+      var bg=s==='ebay'?'#fde68a':'#dbeafe';
+      var col=s==='ebay'?'#92400e':'#1d4ed8';
+      return '<span style="font-family:\'DM Mono\',monospace;font-size:8.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:5px;background:'+bg+';color:'+col+'">'+esc(s.toUpperCase())+'</span>';
+    }
 
-    <div class="rank-row" style="cursor:pointer">
-      <div class="rank-num">7</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Custom Wedding Gift Box</div>
-        <div class="rank-sub">Gifts · ~$58/mo</div>
-      </div>
-      <div class="rank-score g">77</div>
-    </div>
+    /* Hydrate the existing PRODUCT_DATA map so openProdModal works for any
+       winner. Builds an entry shaped like the modal expects. */
+    function hydrateProductData(){
+      if(typeof PRODUCT_DATA==='undefined')return;
+      winners.forEach(function(w){
+        if(!w.name||PRODUCT_DATA[w.name])return;
+        var img=IMAGE_BY_CAT[w.category_id]||DEFAULT_IMG;
+        var sc=Math.min(98,Math.max(20,Math.round(50+Math.log10(Math.max(50,w.monthly_revenue_eur||100))*15)));
+        var cat=CAT_LABEL[w.category_id]||'Other';
+        var verdict=w.is_recommended===false?'Cautionary - IP':sc>=70?'Top earner':sc>=55?'Strong seller':'Marginal';
+        var rev=w.monthly_revenue_eur?'~€'+w.monthly_revenue_eur+'/mo':'-';
+        PRODUCT_DATA[w.name]={
+          score:sc,cat:cat,verdict:verdict,img:img,verified:false,
+          monthlySearches:'-',
+          competition:cat==='D&D / Gaming'||cat==='Pet'?'Medium':'Medium',
+          avgPrice:w.price_eur?('€'+w.price_eur):'-',
+          estProfit:rev,printTime:'-',
+          why:(w.why_it_sells||'')+(w.differentiator?' '+w.differentiator:'')+(w.notes?' Note: '+w.notes:''),
+          competitors:[],
+          source:w.source||'etsy',
+          ip_risk:w.ip_risk||'none',
+          ip_holder:w.ip_holder||'',
+          monthly_revenue_eur:w.monthly_revenue_eur||0,
+          is_recommended:w.is_recommended!==false,
+          tags:Array.isArray(w.tags)?w.tags:[]
+        };
+        winnersById[w.id]=w.name;
+      });
+    }
 
-    <div class="rank-row" onclick="openProdModal('Hex Wall Organiser')" style="cursor:pointer">
-      <div class="rank-num">8</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Hex Wall Organiser</div>
-        <div class="rank-sub">Home · ~$47/mo</div>
-      </div>
-      <div class="rank-score g">75</div>
-    </div>
+    function categoryCount(cid){
+      return winners.filter(function(w){return w.category_id===cid;}).length;
+    }
 
-    <div class="rank-row" onclick="openProdModal('Watch Stand')" style="cursor:pointer">
-      <div class="rank-num">9</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Watch Display Stand</div>
-        <div class="rank-sub">Tech · ~$44/mo</div>
-      </div>
-      <div class="rank-score g">73</div>
-    </div>
+    function buildFilterChips(){
+      var host=document.getElementById('cat-filter-chips');if(!host)return;
+      var counts={};
+      winners.forEach(function(w){counts[w.category_id]=(counts[w.category_id]||0)+1;});
+      var ids=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
+      var chips=[{id:'all',label:'All ('+winners.length+')'}];
+      ids.forEach(function(id){
+        var lbl=(CAT_ICON[id]||'•')+' '+(CAT_LABEL[id]||id)+' ('+counts[id]+')';
+        chips.push({id:id,label:lbl});
+      });
+      host.innerHTML=chips.map(function(c){
+        var on=c.id===activeCat;
+        return '<button data-cat="'+esc(c.id)+'" style="flex-shrink:0;font-family:\'DM Mono\',monospace;font-size:10.5px;letter-spacing:.04em;padding:7px 11px;border-radius:18px;border:1.5px solid '+(on?'var(--acc)':'var(--line)')+';background:'+(on?'rgba(255,92,0,.08)':'#fff')+';color:'+(on?'var(--acc)':'var(--ink2)')+';cursor:pointer;font-weight:700;-webkit-tap-highlight-color:transparent;white-space:nowrap">'+esc(c.label)+'</button>';
+      }).join('');
+      host.querySelectorAll('[data-cat]').forEach(function(b){
+        b.addEventListener('click',function(){activeCat=b.getAttribute('data-cat');render();});
+      });
+    }
 
-    <div class="rank-row" onclick="openProdModal('Controller Stand')" style="cursor:pointer">
-      <div class="rank-num">10</div>
-      <div class="rank-thumb" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
-      <div class="rank-info">
-        <div class="rank-name">Controller Stand</div>
-        <div class="rank-sub">Gaming · ~$38/mo</div>
-      </div>
-      <div class="rank-score g">71</div>
-    </div>
+    function render(){
+      buildFilterChips();
+      var grid=document.getElementById('cat-grid');
+      var empty=document.getElementById('cat-empty');
+      var pill=document.getElementById('cat-count-pill');
+      if(!grid)return;
+      var list=activeCat==='all'?winners.slice():winners.filter(function(w){return w.category_id===activeCat;});
+      list.sort(function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);});
+      if(pill)pill.textContent=list.length+' product'+(list.length===1?'':'s');
+      if(!list.length){grid.innerHTML='';empty.style.display='';return;}
+      empty.style.display='none';
+      grid.innerHTML=list.map(function(w){
+        var img=IMAGE_BY_CAT[w.category_id]||DEFAULT_IMG;
+        var rev=w.monthly_revenue_eur?'~€'+w.monthly_revenue_eur.toLocaleString('en-US')+'/mo':'-';
+        var sc=Math.min(98,Math.max(20,Math.round(50+Math.log10(Math.max(50,w.monthly_revenue_eur||100))*15)));
+        var scClass=sc>=70?'g':sc>=50?'y':'r';
+        var ip=ipBadge(w);
+        var src=srcBadge(w);
+        return '<div class="niche-card" onclick="openProdModal('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')" style="cursor:pointer">'+
+          '<div class="niche-img" style="background-image:url('+esc(img)+')">'+
+            '<div class="niche-score-dot '+scClass+'">'+sc+'</div>'+
+          '</div>'+
+          '<div class="niche-body">'+
+            '<div class="niche-name">'+esc(w.name)+'</div>'+
+            '<div class="niche-profit"><b>'+esc(rev)+'</b></div>'+
+            '<div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">'+src+ip+'</div>'+
+          '</div>'+
+        '</div>';
+      }).join('');
+    }
 
-  </div>
-
-
-  <div class="divider"></div>
-
-  <!-- ── NICHE: HOME & DECOR ── -->
-  <div class="sec-hd">
-    <div>
-      <div class="sec-hd-label">Niche collection</div>
-      <div class="sec-hd-title">Home &amp; Decor</div>
-    </div>
-  </div>
-
-  <div class="niche-banner" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0">
-    <div class="niche-banner-ico">🏡</div>
-    <div class="niche-banner-body">
-      <div class="niche-banner-title">Strong year-round market</div>
-      <div class="niche-banner-sub">Personalised decor and planters have consistent Etsy demand with low IP risk. Best margins in this niche.</div>
-    </div>
-  </div>
-
-  <div class="niche-grid">
-
-    <div class="niche-card" onclick="openProdModal('Personalised Name Sign')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)">
-        <div class="niche-score-dot g">94</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Custom Name Sign</div>
-        <div class="niche-profit">~<b>$140/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Succulent Planter Set')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
-        <div class="niche-score-dot g">91</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Succulent Planter</div>
-        <div class="niche-profit">~<b>$110/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Hex Wall Organiser')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
-        <div class="niche-score-dot g">88</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Hex Wall Organiser</div>
-        <div class="niche-profit">~<b>$75/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Geometric Tealight')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
-        <div class="niche-score-dot g">82</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Geometric Tealight</div>
-        <div class="niche-profit">~<b>$55/mo</b></div>
-      </div>
-    </div>
-
-  </div>
-
-
-  <div class="divider"></div>
-
-  <!-- ── NICHE: GAMING & TABLETOP ── -->
-  <div class="sec-hd">
-    <div>
-      <div class="sec-hd-label">Niche collection</div>
-      <div class="sec-hd-title">Gaming &amp; Tabletop</div>
-    </div>
-  </div>
-
-  <div class="niche-banner" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:1px solid #c4b5fd">
-    <div class="niche-banner-ico">🎲</div>
-    <div class="niche-banner-body">
-      <div class="niche-banner-title">Loyal, high-spend buyers</div>
-      <div class="niche-banner-sub">DnD and tabletop buyers are repeat purchasers. Accessories and terrain sell well above generic items.</div>
-    </div>
-  </div>
-
-  <div class="niche-grid">
-
-    <div class="niche-card" onclick="openProdModal('Articulated Dragon')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)">
-        <div class="niche-score-dot g">79</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Articulated Dragon</div>
-        <div class="niche-profit">~<b>$62/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Controller Stand')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
-        <div class="niche-score-dot g">71</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Controller Stand</div>
-        <div class="niche-profit">~<b>$38/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Dice Tower')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
-        <div class="niche-score-dot y">68</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Dice Tower</div>
-        <div class="niche-profit">~<b>$28/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Miniature Base Set')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
-        <div class="niche-score-dot y">65</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Miniature Base Set</div>
-        <div class="niche-profit">~<b>$22/mo</b></div>
-      </div>
-    </div>
-
-  </div>
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',loadWinners);
+    else loadWinners();
+  })();
+  </script>
 
 
-  <div class="divider"></div>
-
-  <!-- ── NICHE: FUNCTIONAL & OFFICE ── -->
-  <div class="sec-hd">
-    <div>
-      <div class="sec-hd-label">Niche collection</div>
-      <div class="sec-hd-title">Functional &amp; Office</div>
-    </div>
-  </div>
-
-  <div class="niche-banner" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe">
-    <div class="niche-banner-ico">🖥️</div>
-    <div class="niche-banner-body">
-      <div class="niche-banner-title">Evergreen demand</div>
-      <div class="niche-banner-sub">Home-office buyers buy year-round. Cable management and desk accessories have strong repeat purchase rates.</div>
-    </div>
-  </div>
-
-  <div class="niche-grid">
-
-    <div class="niche-card" onclick="openProdModal('Cable Management Box')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp)">
-        <div class="niche-score-dot g">88</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Cable Box</div>
-        <div class="niche-profit">~<b>$95/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Modular Desk Organiser')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp)">
-        <div class="niche-score-dot g">82</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Desk Organiser</div>
-        <div class="niche-profit">~<b>$84/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Adjustable Phone Stand')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)">
-        <div class="niche-score-dot g">85</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Phone Stand</div>
-        <div class="niche-profit">~<b>$78/mo</b></div>
-      </div>
-    </div>
-
-    <div class="niche-card" onclick="openProdModal('Watch Stand')" style="cursor:pointer">
-      <div class="niche-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)">
-        <div class="niche-score-dot g">73</div>
-      </div>
-      <div class="niche-body">
-        <div class="niche-name">Watch Stand</div>
-        <div class="niche-profit">~<b>$44/mo</b></div>
-      </div>
-    </div>
-
-  </div>
 
 
   <div style="height:1px;background:var(--line);margin:20px 16px 0"></div>
@@ -889,7 +772,29 @@ function openProdModal(name) {
   var d = PRODUCT_DATA[name];
   if (!d) return;
   var sc = d.score >= 70 ? 'g' : d.score >= 50 ? 'y' : 'r';
-  var compsHtml = d.competitors.length ? d.competitors.map(function(c){
+  /* New badges row from winners.json fields (source, IP risk). Only renders
+     if at least one is present, so the legacy hand-curated entries that
+     don't have these fields stay clean. */
+  var badgesRow = '';
+  if (d.source || (d.ip_risk && d.ip_risk !== 'none')) {
+    var bits = [];
+    if (d.source) {
+      var sBg = d.source === 'ebay' ? '#fde68a' : '#dbeafe';
+      var sCol = d.source === 'ebay' ? '#92400e' : '#1d4ed8';
+      bits.push('<span style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:' + sBg + ';color:' + sCol + '">' + esc(d.source.toUpperCase()) + '</span>');
+    }
+    if (d.ip_risk && d.ip_risk !== 'none') {
+      var iBg = d.ip_risk === 'high' ? '#fee2e2' : d.ip_risk === 'medium' ? '#fef3c7' : '#fef9c3';
+      var iCol = d.ip_risk === 'high' ? '#b91c1c' : '#92400e';
+      var ipNote = d.ip_holder ? ' (' + esc(d.ip_holder) + ')' : '';
+      bits.push('<span style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:' + iBg + ';color:' + iCol + '">⚠ IP ' + esc(d.ip_risk) + ipNote + '</span>');
+    }
+    if (d.is_recommended === false) {
+      bits.push('<span style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:#fee2e2;color:#991b1b">Cautionary</span>');
+    }
+    badgesRow = '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px">' + bits.join('') + '</div>';
+  }
+  var compsHtml = d.competitors && d.competitors.length ? d.competitors.map(function(c){
     return '<div class="pm-comp-card">' +
       '<div class="pm-comp-name">' + esc(c.name) + '</div>' +
       '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" class="pm-comp-url">' + esc(c.url.replace(/https?:\/\/(www\.)?/,'').slice(0,50)) + '</a>' +
@@ -900,10 +805,11 @@ function openProdModal(name) {
       '</div>' +
       '<div class="pm-comp-why">' + esc(c.why) + '</div>' +
     '</div>';
-  }).join('') : '<div style="font-size:13px;color:var(--ink3);padding:8px 0">No competitor data available yet.</div>';
+  }).join('') : '';
 
   document.getElementById('prod-modal-content').innerHTML =
     (d.verified ? '<div style="margin-bottom:10px"><span class="verified-badge" style="font-size:9px;padding:3px 9px">Daniel Verified</span></div>' : '') +
+    badgesRow +
     '<div class="pm-header">' +
       '<div class="pm-img" style="background-image:url(' + esc(d.img) + ')"></div>' +
       '<div>' +

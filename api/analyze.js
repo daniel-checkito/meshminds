@@ -558,6 +558,14 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
     sourceUrl || '',
     body.url || '',
   ].join('\n'));
+  // Pick 2-3 real Etsy winners matching the category for strategy.realWorldExample
+  const winners = matchedMarket ? pickWinnersForCategory(matchedMarket.id, ipMatches.length > 0) : [];
+  const winnersBlock = winners.length
+    ? `REAL WINNERS in this category (verified Etsy listings with monthly revenue — use these for strategy.realWorldExample. If you cite one, use the EXACT name and approximate revenue. Do NOT invent your own example):
+${winners.map(w => `- ${w.name} — €${w.monthly_revenue_eur}/mo @ €${w.price_eur}. Why: ${w.why_it_sells} Differentiator: ${w.differentiator}${w.ip_risk && w.ip_risk !== 'none' ? ` ⚠️ ${w.ip_risk} IP risk (${w.ip_holder}).` : ''}`).join('\n')}
+`
+    : '';
+
   const ipBlock = ipMatches.length
     ? `IP FLAGS DETECTED in title/description — these are real trademarks, not guesses:
 ${ipMatches.map(m => `- "${m.keyword}" (${m.ip_holder}, ${m.risk_level} risk): ${m.notes}`).join('\n')}
@@ -585,7 +593,7 @@ ${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${rec
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
-${ipBlock}${marketBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
+${ipBlock}${marketBlock}${winnersBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -910,6 +918,36 @@ IMPORTANT RULES:
 };
 
 // ── Helpers ────────────────────────────────────────────────────────────────
+
+// Lazy-load winners (real Etsy benchmarks) once per lambda warm instance
+let _winners = null;
+function loadWinners() {
+  if (_winners) return _winners;
+  try {
+    const path = require('path');
+    const fs = require('fs');
+    const file = path.join(__dirname, '..', 'data', 'winners.json');
+    _winners = JSON.parse(fs.readFileSync(file, 'utf8'));
+  } catch { _winners = { winners: [] }; }
+  return _winners;
+}
+
+// Pick up to 3 winners for the matched category. Prefers is_recommended=true.
+// If the scan itself already triggered IP flags, also include cautionary
+// (is_recommended=false) winners so the AI can frame them as "this format
+// works but at high risk — consider an original-character version".
+function pickWinnersForCategory(categoryId, scanHasIpRisk) {
+  const data = loadWinners();
+  if (!data.winners?.length || !categoryId) return [];
+  const matches = data.winners.filter(w => w.category_id === categoryId);
+  const recommended = matches.filter(w => w.is_recommended).sort((a, b) => b.monthly_revenue_eur - a.monthly_revenue_eur).slice(0, 3);
+  if (scanHasIpRisk) {
+    // Add up to 1 cautionary high-revenue example so the AI can compare
+    const cautionary = matches.filter(w => !w.is_recommended).sort((a, b) => b.monthly_revenue_eur - a.monthly_revenue_eur)[0];
+    if (cautionary) return [...recommended.slice(0, 2), cautionary];
+  }
+  return recommended;
+}
 
 // Lazy-load IP flags once per lambda warm instance
 let _ipFlags = null;

@@ -43,7 +43,10 @@ body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .hero-eyebrow::before{content:'';display:block;width:18px;height:1.5px;background:var(--acc);flex-shrink:0}
 .hero-h1{font-family:"Bebas Neue",sans-serif;font-size:54px;line-height:.92;letter-spacing:.01em;margin-bottom:14px}
 .hero-h1 em{font-style:normal;color:var(--acc)}
-.hero-sub{font-size:14px;color:#aaa;line-height:1.5;margin-bottom:20px}
+.hero-sub{font-size:14px;color:#aaa;line-height:1.5;margin-bottom:14px}
+.hero-bullets{list-style:none;margin:0 0 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+.hero-bullets li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--ink2);line-height:1.4}
+.hb-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#dcfce7;color:#15803d;font-size:11px;font-weight:800;flex-shrink:0}
 
 .mode-btn{flex:1;padding:8px 12px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;background:transparent;color:var(--ink3);min-height:44px}
 .mode-btn-active{background:#fff;color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.1)}
@@ -755,7 +758,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <div id="hero-text" style="padding:8px 0 6px">
         <div class="hero-eyebrow">Make money 3D printing</div>
         <div class="hero-h1">Will this 3D print<br><em>actually</em> sell?</div>
-        <p class="hero-sub">Paste a 3D model link. We check demand, profit &amp; legal risk in 30 seconds.</p>
+        <p class="hero-sub">Get a real verdict in 30 seconds — before you waste a roll of filament.</p>
+        <ul class="hero-bullets">
+          <li><span class="hb-tick">✓</span> Real Etsy demand &amp; live search volume</li>
+          <li><span class="hb-tick">✓</span> Top 5 competitors with prices &amp; sales</li>
+          <li><span class="hb-tick">✓</span> Copyright &amp; IP-takedown check</li>
+          <li><span class="hb-tick">✓</span> Backed by €200K of my own Etsy sales</li>
+        </ul>
       </div>
       <div style="display:flex;background:var(--surf);border:1.5px solid var(--line);border-radius:11px;padding:3px;margin-bottom:12px" id="mode-toggle">
         <button class="mode-btn mode-btn-active" id="mode-url" onclick="setMode('url')">🔗 Paste a URL</button>
@@ -768,7 +777,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="plat-tags">
           <span class="plat-tag">✓ Start free</span>
           <span class="plat-tag">⚡ 30 seconds</span>
-          <span class="plat-tag">↑ Upgrade anytime</span>
         </div>
       </div>
       <button class="try-eg-btn" id="try-eg-hint" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">
@@ -1765,7 +1773,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
     </div>
     <div style="display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--surf);border-radius:10px;border:1px solid var(--line)">
       <span style="font-size:20px;flex-shrink:0">🏭</span>
-      <div style="font-size:13px;font-weight:600;color:var(--ink);line-height:1.3">Manufacturing-method check (is 3D printing right?)</div>
+      <div style="font-size:13px;font-weight:600;color:var(--ink);line-height:1.3">Cool print or real business? (we tell you straight)</div>
     </div>
   </div>
   <div style="margin-top:12px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:11.5px;color:var(--ink2);line-height:1.5">

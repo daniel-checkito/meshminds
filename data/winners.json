@@ -3,132 +3,2255 @@
   "_doc": "Real Etsy winners with verified monthly revenue. Used to populate strategy.realWorldExample with confidence (no AI hallucination) and as inspiration for what's working in each category. is_recommended=false entries are kept as cautionary examples - they earn well but face IP enforcement risk.",
   "exchange_rate_usd_to_eur": 0.93,
   "winners": [
-    { "id": "amber-table-lamp", "name": "Amber Table Lamp", "category_id": "lighting_lamps", "tags": ["lamp", "decor", "premium"], "price_eur": 88, "monthly_revenue_eur": 7870, "why_it_sells": "Premium aesthetic lamp; warm amber glow is on-trend in home decor; very high perceived value.", "differentiator": "Highest sustained monthly revenue in this list. Complex print commands premium price; photography is make-or-break.", "ip_risk": "none", "is_recommended": true },
-    { "id": "crossbow-dice-roller", "name": "Crossbow Dice Roller and Holder", "category_id": "dnd_gaming", "tags": ["dice", "mechanical", "tabletop"], "price_eur": 45, "monthly_revenue_eur": 7712, "why_it_sells": "Mechanical design with high perceived value; DnD community is passionate and high-spending.", "differentiator": "Original mechanical design - no IP risk. Excellent bundle potential with dice sets.", "ip_risk": "none", "is_recommended": true },
-    { "id": "mystic-conch-shell", "name": "Mystic Conch Shell Dice Storage", "category_id": "dnd_gaming", "tags": ["dice", "decor"], "price_eur": 42, "monthly_revenue_eur": 5255, "why_it_sells": "Unique decorative gaming accessory; high perceived value; dice storage inside adds function.", "differentiator": "Original design with no IP risk. Strong photography potential. Excellent bundle piece with a dice set.", "ip_risk": "none", "is_recommended": true },
-    { "id": "personalized-headphone-stand", "name": "Personalized Headphone Stand", "category_id": "desk_office", "tags": ["headphone", "personalised", "gamer"], "price_eur": 45, "monthly_revenue_eur": 4242, "why_it_sells": "Premium desk accessory + personalisation = strong gift; popular with gamers and WFH buyers.", "differentiator": "Custom name engraving justifies premium price; Q4 gift spike. Same product from another seller earned 5–10× less, proving photography and SEO determine outcome.", "ip_risk": "none", "is_recommended": true },
-    { "id": "glitch-fidget-slider", "name": "The Glitch Fidget Slider", "category_id": "toys_fidgets", "tags": ["fidget", "mechanical", "adult"], "price_eur": 22, "monthly_revenue_eur": 2855, "why_it_sells": "Mechanical fidget satisfies tactile need; professional aesthetic appeals to adults not just kids.", "differentiator": "Original multi-layer mechanism - hard to replicate without engineering skill. Two sellers with the same design had 5× revenue gap based on listing quality alone.", "ip_risk": "none", "is_recommended": true },
-    { "id": "water-dispenser-lever", "name": "Water Dispenser Lever (Replacement)", "category_id": "replacement_parts", "tags": ["replacement", "appliance", "exact-fit"], "price_eur": 7, "monthly_revenue_eur": 2799, "why_it_sells": "Solves a frustrating real problem; exact-fit replacement; near-zero competition.", "differentiator": "Possibly the highest return per gram of filament in this list - simple print with massive demand. Strongest argument for the replacement parts niche.", "ip_risk": "none", "is_recommended": true },
-    { "id": "break-glass-emergency", "name": "Break Glass in Case of Emergency", "category_id": "personalized_gifts", "tags": ["novelty", "gift", "humour"], "price_eur": 13, "monthly_revenue_eur": 1411, "why_it_sells": "Humorous novelty; perfect low-cost gift; huge impulse-buy appeal.", "differentiator": "Low filament cost; extremely fast print; viral social media potential.", "ip_risk": "none", "is_recommended": true },
-    { "id": "mini-tv-apple-watch", "name": "Mini TV Apple Watch Charging Station", "category_id": "tech_accessories", "tags": ["apple watch", "retro", "gift"], "price_eur": 35, "monthly_revenue_eur": 1386, "why_it_sells": "Solves a real problem elegantly; nostalgic mini-TV form factor makes it highly giftable.", "differentiator": "Unique form factor with strong gifting angle; evergreen as long as Apple Watch sells.", "ip_risk": "none", "is_recommended": true },
-    { "id": "homepod-outlet-stand", "name": "HomePod Mini Outlet Stand", "category_id": "tech_accessories", "tags": ["homepod", "apple", "outlet mount"], "price_eur": 22, "monthly_revenue_eur": 1228, "why_it_sells": "Saves desk space; outlet-mount is a clever functional solve; Apple ecosystem buyers are loyal.", "differentiator": "Niche but loyal buyer base; low print time; functional need with no Amazon alternative. v2 listing earned 3× more than v1 - better photography/SEO is the difference.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true, "notes": "Avoid Apple logo or 'Designed for Apple' phrasing." },
-    { "id": "flipper-zero-case", "name": "Flipper Zero WiFi Dev Board Case", "category_id": "tech_accessories", "tags": ["maker", "exact-fit", "hacker"], "price_eur": 26, "monthly_revenue_eur": 1125, "why_it_sells": "Exact-fit case for a cult hacker/maker device; passionate technical community with disposable income.", "differentiator": "No IP risk; niche maker audience is loyal and active; low Etsy competition; evergreen as long as Flipper Zero sells.", "ip_risk": "none", "is_recommended": true },
-    { "id": "toilet-paper-holder", "name": "Designer Toilet Paper Holder", "category_id": "decor", "tags": ["bathroom", "decor", "functional"], "price_eur": 22, "monthly_revenue_eur": 1169, "why_it_sells": "Functional replacement product with design angle; every bathroom needs one.", "differentiator": "Low competition for unique shapes; replacement market = high buyer urgency.", "ip_risk": "none", "is_recommended": true },
-    { "id": "capybara-dice-holder", "name": "Capybara Dice Holder", "category_id": "dnd_gaming", "tags": ["dice", "animal", "trend"], "price_eur": 20, "monthly_revenue_eur": 941, "why_it_sells": "Trending animal meets DnD accessory; double-niche drives strong conversion from two audiences.", "differentiator": "Trend-aware design in an evergreen niche; pairs well with a matching dice tray for AOV uplift.", "ip_risk": "none", "is_recommended": true },
-    { "id": "gas-can-ornament", "name": "Gas Can Christmas Ornament", "category_id": "decor", "tags": ["ornament", "novelty", "Q4"], "price_eur": 13, "monthly_revenue_eur": 841, "why_it_sells": "Petrolhead gifting; strong humour and novelty angle; Christmas ornament seasonal spike.", "differentiator": "Q4 spike (Oct–Dec); low filament cost; obvious gift for car/truck enthusiasts with near-zero competition.", "ip_risk": "none", "is_recommended": true },
-    { "id": "iphone-magsafe-weighted-ball", "name": "iPhone MagSafe Weighted Ball Charger Stand", "category_id": "tech_accessories", "tags": ["magsafe", "iphone", "premium"], "price_eur": 26, "monthly_revenue_eur": 844, "why_it_sells": "Premium feel; weighted base prevents tipping; clean minimal aesthetic.", "differentiator": "Material weight = perceived premium. MagSafe market is evergreen with each new iPhone generation. Older listing still converting strongly proves sustained demand.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true, "notes": "Avoid Apple/MagSafe logos in product photos." },
-    { "id": "kitchenaid-tool-holder", "name": "KitchenAid Tool Holder Set of 3", "category_id": "home_organization", "tags": ["kitchenaid", "exact-fit", "premium"], "price_eur": 22, "monthly_revenue_eur": 787, "why_it_sells": "Exact fit for a beloved premium appliance; KitchenAid owners are loyal and high-income.", "differentiator": "Buyers of a €300+ appliance pay for quality. Set of 3 boosts AOV significantly. Low IP risk: avoid the KitchenAid wordmark and rely on 'fits stand mixers' phrasing.", "ip_risk": "low", "ip_holder": "KitchenAid / Whirlpool", "is_recommended": true, "notes": "Use generic phrasing like 'fits stand mixer'; do not imply official affiliation." },
-    { "id": "ford-f150-magsafe-mount", "name": "Ford F-150 MagSafe Phone Mount", "category_id": "automotive_bike", "tags": ["ford", "exact-fit", "magsafe"], "price_eur": 20, "monthly_revenue_eur": 785, "why_it_sells": "Exact-fit vehicle mount; F-150 is the best-selling vehicle in the USA - huge addressable market.", "differentiator": "Hyper-niche exact fit = near-zero competition. Strong repeat angle for truck owners upgrading phones.", "ip_risk": "medium", "ip_holder": "Ford Motor Company", "is_recommended": true, "notes": "Avoid Blue Oval or F-150 logo in photos. Use 'fits 2015–2020 F-150' phrasing." },
-    { "id": "dyson-accessory-holders", "name": "Dyson Accessory Holders (set of 6)", "category_id": "home_organization", "tags": ["dyson", "exact-fit", "premium"], "price_eur": 26, "monthly_revenue_eur": 709, "why_it_sells": "Exact-fit for a premium Dyson vacuum; organises expensive accessories buyers already own.", "differentiator": "Set of 6 = high AOV; Dyson owners are high-income and loyal; evergreen as long as Dyson sells.", "ip_risk": "low", "ip_holder": "Dyson Ltd.", "is_recommended": true, "notes": "Dyson does not actively pursue third-party accessory makers. Avoid 'Dyson' in title; use 'fits V8/V10/V11'." },
-    { "id": "hello-neighbour-puzzle", "name": "Hello Neighbour Lock and Key Puzzle", "category_id": "personalized_gifts", "tags": ["puzzle", "mechanical", "gift"], "price_eur": 14, "monthly_revenue_eur": 612, "why_it_sells": "Playful puzzle mechanic; satisfying unboxing; strong gift appeal.", "differentiator": "Mechanical design moat - hard to copy without understanding the mechanism.", "ip_risk": "none", "is_recommended": true },
-    { "id": "baby-mjolnir-rattle", "name": "Baby First Mjolnir (Thor Hammer Rattle)", "category_id": "kids_nursery", "tags": ["baby", "geek-parent", "rattle"], "price_eur": 22, "monthly_revenue_eur": 666, "why_it_sells": "Clever mashup: baby rattle + Marvel reference = perfect geek parent gift; highly shareable.", "differentiator": "Geeky parent niche is underserved and willing to pay. Mjolnir is a grey-area IP because of Norse mythology origin.", "ip_risk": "medium", "ip_holder": "Marvel / Disney", "is_recommended": true, "notes": "Generic rounded-hammer design with no Marvel logo is lower risk than MCU-style replicas." },
-    { "id": "apple-combo-stand", "name": "Apple HomePod Mini + Echo Dot Combo Stand", "category_id": "tech_accessories", "tags": ["smart home", "stand"], "price_eur": 24, "monthly_revenue_eur": 472, "why_it_sells": "Solves multi-device desk clutter; appeals to smart home buyers who own both devices.", "differentiator": "Combo stand = premium price justification. Smart home market growing; differentiated from single-device stands.", "ip_risk": "low", "ip_holder": "Apple / Amazon", "is_recommended": true },
-    { "id": "mini-barbell-pen-holder", "name": "Mini Barbell Squat Rack Pen Holder", "category_id": "desk_office", "tags": ["gym", "novelty", "gift"], "price_eur": 13, "monthly_revenue_eur": 401, "why_it_sells": "Gym culture novelty gift; instantly shareable; obvious gifting angle for fitness lovers.", "differentiator": "Very fast print; low filament cost; strong social media shareability; evergreen gym community.", "ip_risk": "none", "is_recommended": true },
-    { "id": "dyson-ruggable-adapter", "name": "Dyson Vacuum Adapter for Ruggable Rug", "category_id": "replacement_parts", "tags": ["dyson", "ruggable", "exact-fit"], "price_eur": 15, "monthly_revenue_eur": 339, "why_it_sells": "Solves a specific Dyson + Ruggable incompatibility; very targeted buyer with no other option.", "differentiator": "Near-zero competition; buyer is motivated and price-tolerant; exact-problem solve.", "ip_risk": "low", "ip_holder": "Dyson / Ruggable", "is_recommended": true },
-    { "id": "magsafe-desk-mount", "name": "MagSafe Desk Mount", "category_id": "tech_accessories", "tags": ["magsafe", "desk", "minimal"], "price_eur": 17, "monthly_revenue_eur": 310, "why_it_sells": "Clean minimal desk organisation; MagSafe is Apple ecosystem standard used by millions.", "differentiator": "Functional evergreen product; low filament cost; easy to photograph cleanly on white desk.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true },
-    { "id": "raised-slow-feeder-bowl", "name": "Raised Slow-Feeder Pet Bowl", "category_id": "pet_accessories", "tags": ["pet", "feeder", "vet-recommended"], "price_eur": 20, "monthly_revenue_eur": 300, "why_it_sells": "Functional pet health accessory; vet-recommended slow feeding is a growing buyer-driven trend.", "differentiator": "Underserved sub-niche. Use food-safe PETG or resin and add a clear material disclaimer to overcome the FDM-PLA-not-food-safe objection.", "ip_risk": "none", "is_recommended": true, "notes": "Food contact concern - must be PETG/resin not standard PLA, with disclaimer on listing." },
-    { "id": "chest-switch-holder", "name": "Treasure Chest Nintendo Switch Holder", "category_id": "tech_accessories", "tags": ["switch", "gaming", "storage"], "price_eur": 17, "monthly_revenue_eur": 276, "why_it_sells": "Clever treasure chest form for Switch storage; gaming nostalgia drives gifting.", "differentiator": "Chest form factor without any Nintendo logo is the safer way to capture this audience.", "ip_risk": "medium", "ip_holder": "Nintendo", "is_recommended": true, "notes": "Avoid Nintendo or Switch branding in title; use 'console storage' phrasing." },
-    { "id": "personalized-cat-bowl", "name": "Personalized Cat Food Bowl (Small)", "category_id": "pet_accessories", "tags": ["pet", "personalised"], "price_eur": 15, "monthly_revenue_eur": 248, "why_it_sells": "Custom name adds emotional value; pet owners are highly motivated buyers.", "differentiator": "Personalisation premium; repeat buyer potential for multi-pet households.", "ip_risk": "none", "is_recommended": true, "notes": "Food contact concern - PLA is not food-safe. Use PETG or add a clear product disclaimer." },
-    { "id": "little-tikes-numberplate", "name": "Little Tikes Rear Numberplate (Replacement)", "category_id": "replacement_parts", "tags": ["toy", "replacement", "exact-fit"], "price_eur": 8, "monthly_revenue_eur": 237, "why_it_sells": "Exact replacement for a discontinued toy part; parents desperate to fix a beloved toy.", "differentiator": "Near-zero competition; buyer urgency is maximum. Strongest argument for the replacement parts niche.", "ip_risk": "medium", "ip_holder": "MGA Entertainment", "is_recommended": true, "notes": "Functional replacement parts are typically tolerated. Avoid Little Tikes wordmark in title." },
-    { "id": "personalized-cord-organiser", "name": "Personalized Charging Cord Organiser", "category_id": "tech_accessories", "tags": ["personalised", "cable", "gift"], "price_eur": 11, "monthly_revenue_eur": 202, "why_it_sells": "Personalisation adds gifting value to a mundane object; desk organisation trend ongoing.", "differentiator": "Low filament cost; easy to customise per order; stocking-filler price point boosts Q4 volume.", "ip_risk": "none", "is_recommended": true },
-    { "id": "tesla-sunglasses-holder", "name": "Tesla Model 3/Y Sunglasses Holder", "category_id": "automotive_bike", "tags": ["tesla", "exact-fit", "interior"], "price_eur": 19, "monthly_revenue_eur": 117, "why_it_sells": "Exact-fit interior accessory; Tesla owners are passionate and high-income.", "differentiator": "Loyal niche community; works in both Model 3 and Y - doubles addressable market; low competition.", "ip_risk": "medium", "ip_holder": "Tesla Inc.", "is_recommended": true, "notes": "Avoid Tesla wordmark or logo in listing title or photos." },
-    { "id": "jack-stand-phone-holder", "name": "Jack Stand Phone Holder", "category_id": "tech_accessories", "tags": ["automotive", "novelty"], "price_eur": 9, "monthly_revenue_eur": 132, "why_it_sells": "Novelty form factor (car jack) appeals to automotive hobbyists; low price = impulse buy.", "differentiator": "Concept has more potential with better photography and SEO - still an early-stage listing.", "ip_risk": "none", "is_recommended": true },
-    { "id": "tesla-supercharger-stand", "name": "Tesla Supercharger Phone Charger Stand", "category_id": "automotive_bike", "tags": ["tesla", "novelty", "gift"], "price_eur": 30, "monthly_revenue_eur": 1459, "why_it_sells": "Nostalgic Tesla Supercharger form factor on a functional object; strong Tesla community gifting.", "differentiator": "Tesla fandom is active and high-income. Strong gifting angle.", "ip_risk": "medium", "ip_holder": "Tesla Inc.", "is_recommended": true, "notes": "Don't use the Supercharger or Tesla logo. Sell as 'EV charger inspired phone stand'." },
-
-    { "id": "snorlax-watch-cover", "name": "Snorlax Apple Watch Charger Cover", "category_id": "tech_accessories", "tags": ["pokemon", "apple watch"], "price_eur": 24, "monthly_revenue_eur": 2524, "why_it_sells": "Character shape matches Apple Watch puck perfectly; Pokémon fandom is massive and buying.", "differentiator": "High earner but built on Nintendo IP - listing can be removed at any time. Use as evidence of demand for the format, not as a model to copy.", "ip_risk": "high", "ip_holder": "Nintendo / Game Freak / TPC", "is_recommended": false, "notes": "Cautionary example - Nintendo enforcement is aggressive. Sell an original character instead of copying this." },
-    { "id": "simpsons-sponge-holder", "name": "Simpsons Sponge Holder", "category_id": "home_organization", "tags": ["character", "kitchen"], "price_eur": 20, "monthly_revenue_eur": 2256, "why_it_sells": "Homer's mouth is the perfect sponge slot; viral social share potential; highly recognisable.", "differentiator": "Strong revenue but one DMCA = shop gone. Use as proof that the 'character mouth holds object' format works - design an original character around the same concept.", "ip_risk": "high", "ip_holder": "Fox / Disney", "is_recommended": false, "notes": "Cautionary example. Original character with a similar form factor is the safer play." },
-    { "id": "thwomp-tissue-cover", "name": "Super Mario Thwomp Tissue Box Cover", "category_id": "decor", "tags": ["mario", "gaming"], "price_eur": 26, "monthly_revenue_eur": 1474, "why_it_sells": "Viral gaming decor; instantly recognisable character; functional novelty for gamer homes.", "differentiator": "Nintendo is the most aggressive IP enforcer on Etsy - high suspension risk. Demonstrates demand for 'gaming character as functional household object', not a template to copy.", "ip_risk": "high", "ip_holder": "Nintendo", "is_recommended": false, "notes": "Cautionary example. Build an original character/creature around the same concept." },
-    { "id": "avengers-tower-echo", "name": "Avengers Tower Amazon Echo Dot Holder", "category_id": "tech_accessories", "tags": ["marvel", "echo dot"], "price_eur": 30, "monthly_revenue_eur": 1129, "why_it_sells": "Iconic architecture fits Echo Dot perfectly; Marvel fans are passionate and high-spending.", "differentiator": "Very high revenue potential but suspension risk is real. Format works for any tall iconic landmark.", "ip_risk": "high", "ip_holder": "Marvel / Disney", "is_recommended": false, "notes": "Cautionary example. Try a generic skyscraper or original architecture instead." },
-    { "id": "r2d2-echo-dot", "name": "Amazon Echo Dot R2-D2 Accessory", "category_id": "tech_accessories", "tags": ["star wars", "echo dot"], "price_eur": 24, "monthly_revenue_eur": 709, "why_it_sells": "Star Wars fandom; R2-D2 form factor matches Echo Dot shape perfectly.", "differentiator": "High IP risk. Disney actively enforces Star Wars on Etsy. Use as proof that 'cylindrical character on Echo Dot' works - design an original robot.", "ip_risk": "high", "ip_holder": "Disney / Lucasfilm", "is_recommended": false },
-    { "id": "mickey-watch-cover", "name": "Mickey Apple Watch Charger Cover", "category_id": "tech_accessories", "tags": ["disney", "apple watch"], "price_eur": 20, "monthly_revenue_eur": 252, "why_it_sells": "Character-branded tech accessory; strong gifting angle for Disney fans.", "differentiator": "High IP risk (Disney). Etsy ban likely if flagged. Demand exists - capture it with an original character.", "ip_risk": "high", "ip_holder": "Disney", "is_recommended": false },
-    { "id": "lightsaber-wall-mount", "name": "Lightsaber Wall Mount", "category_id": "cosplay_props", "tags": ["star wars", "display"], "price_eur": 30, "monthly_revenue_eur": 624, "why_it_sells": "Display mount for prop collectors; collectors pay well for quality display solutions.", "differentiator": "Etsy actively removes Star Wars listings. Generic 'sword display mount' captures most of the same buyers.", "ip_risk": "high", "ip_holder": "Disney / Lucasfilm", "is_recommended": false },
-    { "id": "baby-rattle-lightsaber", "name": "Baby Rattle Lightsaber", "category_id": "kids_nursery", "tags": ["star wars", "baby", "gift"], "price_eur": 17, "monthly_revenue_eur": 94, "why_it_sells": "Geek parent gifting angle; Star Wars fandom is huge.", "differentiator": "High IP risk (Disney/Lucasfilm). Lower revenue than the equivalent Mjolnir rattle confirms Star Wars enforcement is stricter.", "ip_risk": "high", "ip_holder": "Disney / Lucasfilm", "is_recommended": false },
-    { "id": "captain-underpants-ring", "name": "Captain Underpants Hypno Ring", "category_id": "personalized_gifts", "tags": ["character", "novelty"], "price_eur": 8, "monthly_revenue_eur": 172, "why_it_sells": "IP-adjacent novelty; low price = impulse buy.", "differentiator": "Low margin combined with IP risk makes this a poor recommendation. Original-character novelty rings serve the same impulse-buy buyer.", "ip_risk": "high", "ip_holder": "Scholastic / DreamWorks", "is_recommended": false },
-
-    { "id": "chinese-takeout-planter", "name": "Chinese Takeout Box Planter", "category_id": "planters_garden", "tags": ["planter", "novelty", "takeout"], "price_eur": 18, "monthly_revenue_eur": 6459, "why_it_sells": "Iconic takeout-box silhouette is instantly recognisable; doubles as a novelty kitchen-windowsill planter; viral on TikTok.", "differentiator": "Top-tier earner in the planter category. Compact form factor cuts ship cost; the recognisable shape does the marketing.", "ip_risk": "none", "is_recommended": true },
-    { "id": "butt-planter", "name": "Booty Pot / Butt Planter", "category_id": "planters_garden", "tags": ["planter", "novelty", "humour"], "price_eur": 22, "monthly_revenue_eur": 3454, "why_it_sells": "Humour + decor crossover dominates Etsy gift search. Adult-novelty sub-niche has loyal repeat buyers.", "differentiator": "Sustained earner over 5+ years - proves novelty doesn't always burn out if the design is genuinely funny.", "ip_risk": "none", "is_recommended": true },
-    { "id": "cute-book-planter", "name": "Cute Book-Shaped Planter", "category_id": "planters_garden", "tags": ["planter", "book", "decor"], "price_eur": 24, "monthly_revenue_eur": 8440, "why_it_sells": "Reader/book-lover gift demographic + house-plant trend = double niche. Aesthetic shelfie-ready.", "differentiator": "Top earner in the dataset for any planter. Targets a buyer the generic geometric planters don't reach.", "ip_risk": "none", "is_recommended": true },
-    { "id": "hands-planter", "name": "Hands Planter", "category_id": "planters_garden", "tags": ["planter", "decor", "sculptural"], "price_eur": 22, "monthly_revenue_eur": 740, "why_it_sells": "Sculptural form factor with broad decorative appeal; cradling-hands silhouette photographs well from every angle.", "differentiator": "Evergreen seller across 4+ years; works in any decor style.", "ip_risk": "none", "is_recommended": true },
-    { "id": "curvy-body-planter", "name": "Curvy Female Body Planter", "category_id": "planters_garden", "tags": ["planter", "decor", "sculptural"], "price_eur": 24, "monthly_revenue_eur": 1920, "why_it_sells": "Sculptural human-form planter; gift-buyer favourite; photographs beautifully on a shelf.", "differentiator": "Long-tail evergreen seller. Variants (different body shapes, sizes) compound the original SKU.", "ip_risk": "none", "is_recommended": true },
-    { "id": "car-planter", "name": "Car Planter", "category_id": "planters_garden", "tags": ["planter", "automotive", "novelty"], "price_eur": 18, "monthly_revenue_eur": 2420, "why_it_sells": "Niche planter aimed at car enthusiasts and dads. Crosses planter buyers with automotive gift buyers.", "differentiator": "Double-niche product captures buyers from a category (automotive gifts) that planter sellers ignore.", "ip_risk": "none", "is_recommended": true },
-    { "id": "wall-mount-planter", "name": "Wall Mount Planter", "category_id": "planters_garden", "tags": ["planter", "wall", "decor"], "price_eur": 24, "monthly_revenue_eur": 2000, "why_it_sells": "Solves the small-apartment problem - planters without floor space. Renter-friendly mounting.", "differentiator": "Functional planter category is far less saturated than decorative; buyers are problem-solving, not browsing.", "ip_risk": "none", "is_recommended": true },
-    { "id": "happy-face-planter", "name": "Happy Face Planter", "category_id": "planters_garden", "tags": ["planter", "smiley", "novelty"], "price_eur": 18, "monthly_revenue_eur": 220, "why_it_sells": "Smiley/Y2K aesthetic is on-trend with Gen Z desk decor.", "differentiator": "Trend-aware design tapping the Y2K nostalgia wave; pairs well with similar-aesthetic accessories.", "ip_risk": "low", "ip_holder": "Smiley Company (the official Smiley logo is trademarked, generic happy face is fine)", "is_recommended": true, "notes": "Use a generic happy face design, not the Smiley wordmark or registered trademark." },
-    { "id": "coffee-love-planter", "name": "Coffee Love Planter", "category_id": "planters_garden", "tags": ["planter", "coffee", "decor"], "price_eur": 16, "monthly_revenue_eur": 605, "why_it_sells": "Coffee-themed gifts is a huge gift category; planters cross over into the cafe-decor crowd.", "differentiator": "Niche-of-a-niche - coffee lovers who also like plants. Specific buyer = less competition.", "ip_risk": "none", "is_recommended": true },
-    { "id": "cowboy-boot-vase", "name": "Cowboy Boot Vase", "category_id": "planters_garden", "tags": ["vase", "western", "decor"], "price_eur": 22, "monthly_revenue_eur": 1540, "why_it_sells": "Western/cowboycore aesthetic is having a moment. Specific vase shape converts on Pinterest and TikTok.", "differentiator": "Trend-aware niche product; shippable in flat-pack mode lowers logistics cost.", "ip_risk": "none", "is_recommended": true },
-    { "id": "curvy-plant-stand", "name": "Curvy Plant Stand", "category_id": "planters_garden", "tags": ["plant stand", "decor", "indoor"], "price_eur": 28, "monthly_revenue_eur": 392, "why_it_sells": "Sculptural plant stand for indoor plants; complements not competes with planters.", "differentiator": "Adjacent product to planters; same buyer, different SKU = AOV uplift if bundled.", "ip_risk": "none", "is_recommended": true },
-    { "id": "pendant-amber-lampshade", "name": "Pendant Lampshade Amber", "category_id": "lighting_lamps", "tags": ["lamp", "pendant", "amber"], "price_eur": 65, "monthly_revenue_eur": 705, "why_it_sells": "Amber/warm-glow lighting is trending in home decor; pendant format is one of the highest-AOV lamp types.", "differentiator": "Premium pendant tier (€60+) with low competition vs the saturated table-lamp segment.", "ip_risk": "none", "is_recommended": true },
-    { "id": "toro-table-lamp", "name": "TORO Mid-Century Table Lamp", "category_id": "lighting_lamps", "tags": ["lamp", "midcentury", "decor"], "price_eur": 90, "monthly_revenue_eur": 967, "why_it_sells": "Mid-century-modern aesthetic is evergreen on Etsy. Lamp at €90+ commands a strong margin.", "differentiator": "Distinct silhouette + named design (TORO) lets the seller defend the brand if knock-offs appear.", "ip_risk": "none", "is_recommended": true },
-    { "id": "todai-table-lamp", "name": "TODAI Mid-Century Table Lamp", "category_id": "lighting_lamps", "tags": ["lamp", "midcentury", "minimal"], "price_eur": 75, "monthly_revenue_eur": 601, "why_it_sells": "Minimalist mid-century lamp aesthetic. Targets the design-conscious buyer who wouldn't buy from IKEA.", "differentiator": "Premium pricing on a fast-printable design; named SKU helps brand recognition.", "ip_risk": "none", "is_recommended": true },
-    { "id": "polyhedragon-dice-holder", "name": "Polyhedragon Dragon Dice Holder", "category_id": "dnd_gaming", "tags": ["dice", "dragon", "gaming"], "price_eur": 36, "monthly_revenue_eur": 1237, "why_it_sells": "Original dragon-themed dice holder for the DnD market - dragon obsession is core to the audience.", "differentiator": "Original sculptural design; not a generic dragon. Mechanical/sculptural design serves as a moat.", "ip_risk": "none", "is_recommended": true },
-    { "id": "dice-tower-storage", "name": "Dice Tower with Storage Box", "category_id": "dnd_gaming", "tags": ["dice", "tower", "storage"], "price_eur": 28, "monthly_revenue_eur": 261, "why_it_sells": "Dice tower + storage in one piece solves a real DnD-table problem; fewer SKUs the buyer has to assemble.", "differentiator": "Combo design hits two buyer needs in one purchase, lifting AOV vs separate dice tower + bag.", "ip_risk": "none", "is_recommended": true },
-    { "id": "dog-ring-holder", "name": "Dog-Shaped Wedding Ring Holder", "category_id": "wedding_events", "tags": ["wedding", "ring", "pet", "personalised"], "price_eur": 22, "monthly_revenue_eur": 2860, "why_it_sells": "Wedding ring bearer + pet-owner sentimentality = high-emotion gift. Personalisation lifts AOV.", "differentiator": "Cross-niche product hits both wedding and pet-gift buyers. Engraving makes it premium-priced and one-of-a-kind.", "ip_risk": "none", "is_recommended": true },
-    { "id": "litterbox-geckos", "name": "LitterBox for Geckos", "category_id": "pet_accessories", "tags": ["pet", "reptile", "exact-fit"], "price_eur": 18, "monthly_revenue_eur": 828, "why_it_sells": "Hyper-niche reptile-keeper product solving a real cleanliness problem; low competition.", "differentiator": "Reptile keepers are an underserved Etsy niche; buyers are passionate and quality-tolerant.", "ip_risk": "none", "is_recommended": true },
-    { "id": "stroodies-bubbleloft", "name": "Stroodies Original BubbleLoft", "category_id": "pet_accessories", "tags": ["pet", "betta fish", "aquarium"], "price_eur": 22, "monthly_revenue_eur": 882, "why_it_sells": "Solves a specific need for betta fish keepers (resting platform near surface). Niche within a niche.", "differentiator": "Hyper-targeted aquarium product. Original IP that the seller has held for 7+ years. Cult buyer base.", "ip_risk": "none", "is_recommended": true },
-    { "id": "shelf-riser-display", "name": "Shelf Riser for Display", "category_id": "home_organization", "tags": ["shelf", "riser", "organizer"], "price_eur": 18, "monthly_revenue_eur": 1494, "why_it_sells": "Display-shelf risers solve a real problem for collectors and Funko Pop / sneaker fans. High-intent buyer.", "differentiator": "Functional product with a defined customer (collectors). Variants by size = upsell opportunity.", "ip_risk": "none", "is_recommended": true },
-    { "id": "vinyl-record-stand", "name": "Vinyl Record Stand", "category_id": "desk_office", "tags": ["vinyl", "record", "decor"], "price_eur": 18, "monthly_revenue_eur": 355, "why_it_sells": "Vinyl is back; collectors need display solutions. Aesthetic over functional - photographs well.", "differentiator": "Trending category (vinyl resurgence) with low FDM competition vs metal/wood alternatives.", "ip_risk": "none", "is_recommended": true },
-    { "id": "now-playing-vinyl-stand", "name": "Now Playing Vinyl Stand", "category_id": "desk_office", "tags": ["vinyl", "now playing", "display"], "price_eur": 25, "monthly_revenue_eur": 1025, "why_it_sells": "'Now playing' display = active-use product, not just storage. Vinyl owners listen and switch records often.", "differentiator": "Hybrid storage + display function; the user touches it every listening session, building brand affection.", "ip_risk": "none", "is_recommended": true },
-    { "id": "now-playing-wall-mount", "name": "Now Playing Wall-Mount Vinyl Display", "category_id": "desk_office", "tags": ["vinyl", "wall mount", "display"], "price_eur": 22, "monthly_revenue_eur": 212, "why_it_sells": "Wall-mounted version targets renters and small-apartment vinyl collectors. Niche-of-a-niche.", "differentiator": "Variant of the bestselling 'Now Playing' family. Compact ship size keeps margins.", "ip_risk": "none", "is_recommended": true },
-    { "id": "stream-deck-desk-mount", "name": "Stream Deck Under-Desk Mount", "category_id": "desk_office", "tags": ["stream deck", "desk", "exact-fit"], "price_eur": 18, "monthly_revenue_eur": 1372, "why_it_sells": "Streamers and content creators are high-spend buyers. Exact-fit for Elgato Stream Deck = no competition from generic clamps.", "differentiator": "Niche functional product for a high-income hobby segment. Hardware-specific fit kills knock-offs.", "ip_risk": "low", "ip_holder": "Elgato / Corsair", "is_recommended": true, "notes": "Avoid Elgato or Stream Deck wordmark in the title; use 'fits Stream Deck MK.1/MK.2' phrasing." },
-    { "id": "airpods-max-stand", "name": "AirPods Max Deep-Sleep Stand", "category_id": "tech_accessories", "tags": ["airpods", "stand", "exact-fit"], "price_eur": 22, "monthly_revenue_eur": 521, "why_it_sells": "Solves a real AirPods Max battery-drain problem (auto-sleep when stored on the stand). Functional + premium buyer.", "differentiator": "Functional solve, not just decoration. AirPods Max owners are wealthy and loyal.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true, "notes": "Avoid AirPods or Apple wordmarks in the title; use 'over-ear headphone stand' phrasing." },
-    { "id": "marshall-amp-decor", "name": "Personalised Marshall-Style Amp", "category_id": "personalized_gifts", "tags": ["amp", "music", "personalised"], "price_eur": 22, "monthly_revenue_eur": 1258, "why_it_sells": "Music-lover gift category; Marshall amp aesthetic is universally recognised. Personalisation lifts AOV.", "differentiator": "Music + gift + personalisation = three buyer intents in one listing. High emotional buy.", "ip_risk": "medium", "ip_holder": "Marshall Amplification", "is_recommended": true, "notes": "Critical: do NOT use the Marshall wordmark, logo or script font. Use 'amp-style speaker' or 'guitar amp inspired' phrasing only." },
-    { "id": "fidget-ring-spinner", "name": "Fidget Ring Spinner", "category_id": "toys_fidgets", "tags": ["fidget", "ring", "spinner"], "price_eur": 12, "monthly_revenue_eur": 600, "why_it_sells": "Wearable-fidget hybrid; satisfies tactile need + jewelry aesthetic. Cross-niche product.", "differentiator": "Adult fidget category in a wearable form. Lower competition than standard fidget toys.", "ip_risk": "none", "is_recommended": true },
-    { "id": "einstein-tile-set", "name": "Einstein Aperiodic Tile Set", "category_id": "toys_fidgets", "tags": ["math", "puzzle", "aperiodic"], "price_eur": 28, "monthly_revenue_eur": 134, "why_it_sells": "Maths/puzzle community discovered the aperiodic Einstein tile in 2023; collectors and educators want a physical set.", "differentiator": "Niche maths-community product with built-in publicity narrative (the discovery story). Educator buyer = bulk orders.", "ip_risk": "none", "is_recommended": true },
-    { "id": "vr-quest-stock", "name": "VR Stock for Meta Quest Headsets", "category_id": "tech_accessories", "tags": ["vr", "quest", "exact-fit"], "price_eur": 32, "monthly_revenue_eur": 1100, "why_it_sells": "Exact-fit accessory for the Meta Quest line; FPS gamers buy gunstocks to improve aim. Cult community.", "differentiator": "Hardware-specific fit for a single device family - no generic competitor. VR community is small but devoted.", "ip_risk": "low", "ip_holder": "Meta Platforms", "is_recommended": true, "notes": "Avoid Meta/Quest logos; use 'fits Quest 2/3/Pro' phrasing." },
-    { "id": "apple-watch-ipod-case", "name": "Apple Watch iPod-Style Case", "category_id": "tech_accessories", "tags": ["apple watch", "retro", "ipod"], "price_eur": 22, "monthly_revenue_eur": 600, "why_it_sells": "Nostalgia tap (classic iPod) on a current device (Apple Watch); retro-tech buyers are passionate gift-givers.", "differentiator": "Mash-up product hitting two Apple-ecosystem nostalgia waves at once.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true, "notes": "Avoid Apple, iPod or click-wheel logos. Use 'retro-MP3-style case' phrasing." },
-    { "id": "name-charm-clogs", "name": "Custom Name Charm for Clogs", "category_id": "fashion_accessories", "tags": ["clogs", "personalised", "shoe charm"], "price_eur": 12, "monthly_revenue_eur": 295, "why_it_sells": "Crocs-style clog charms is a huge niche; personalisation lifts conversion and lets you escape generic-charm competition.", "differentiator": "Adjacent to the Solefully model (Croc charms) but personalised. Lower-volume but higher-margin per unit.", "ip_risk": "low", "ip_holder": "Crocs Inc.", "is_recommended": true, "notes": "Use 'fits clog-style shoes' phrasing; do not name Crocs in the title." },
-    { "id": "thing-hand-decor", "name": "Severed Hand Halloween Decor (Thing-style)", "category_id": "decor", "tags": ["halloween", "wednesday", "novelty"], "price_eur": 20, "monthly_revenue_eur": 620, "why_it_sells": "Wednesday/Addams Family fandom + Halloween Q4 spike = strong seasonal earner.", "differentiator": "Strong seasonal demand. The hand silhouette itself isn't trademarked, but listings using 'Wednesday' or 'Thing' branding face takedown risk.", "ip_risk": "medium", "ip_holder": "MGM / Netflix (Wednesday)", "is_recommended": true, "notes": "Sell as 'severed hand Halloween decor' or 'creepy crawling hand' - avoid Wednesday/Thing/Addams branding." },
-
-    { "id": "futurama-echo-dot", "name": "Futurama Amazon Echo Dot Holder", "source": "etsy", "category_id": "tech_accessories", "tags": ["futurama", "echo dot", "character"], "price_eur": 28, "monthly_revenue_eur": 1116, "why_it_sells": "Beloved-cartoon nostalgia + functional smart-home accessory. Strong Q4 gift demand from millennial buyers.", "differentiator": "Cautionary example - high revenue, but Fox/Disney enforce on Etsy. The 'cartoon-character holds Echo Dot' format works with original characters.", "ip_risk": "high", "ip_holder": "Fox / Disney", "is_recommended": false },
-    { "id": "brave-toaster-sponge", "name": "Brave Little Toaster Sponge Holder", "source": "etsy", "category_id": "home_organization", "tags": ["disney", "kitchen", "novelty"], "price_eur": 26, "monthly_revenue_eur": 1116, "why_it_sells": "Cult-classic Disney film + functional kitchen object = nostalgia-driven gift. Wide millennial buyer base.", "differentiator": "Cautionary example. Disney enforces aggressively. Same form factor with an original retro-appliance character avoids the takedown risk.", "ip_risk": "high", "ip_holder": "Disney", "is_recommended": false },
-    { "id": "tesla-license-plate-holder", "name": "Tesla License Plate Holder", "source": "etsy", "category_id": "automotive_bike", "tags": ["tesla", "license plate", "exact-fit"], "price_eur": 18, "monthly_revenue_eur": 798, "why_it_sells": "Tesla owners are loyal, high-income buyers; exact-fit accessories for Model 3/Y are a near-evergreen niche.", "differentiator": "5+ years sustained sales prove Tesla niche is durable. Avoid Tesla wordmark or T logo in photos.", "ip_risk": "medium", "ip_holder": "Tesla Inc.", "is_recommended": true, "notes": "Use 'fits Model 3 / Model Y' phrasing; never the Tesla T logo." },
-
-    { "id": "ebay-aztec-death-whistle-onyx", "name": "Aztec Death Whistle Onyx Black Skull", "source": "ebay", "category_id": "decor", "tags": ["novelty", "viral", "halloween"], "price_eur": 5, "monthly_revenue_eur": 428, "why_it_sells": "Novelty noisemaker that went viral on TikTok. Low filament cost; high impulse-buy rate at sub-$5 price.", "differentiator": "Top eBay 3D-print earner in this dataset by volume (5,800+ units). Variants on 'death whistle' compound the SKU.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-aztec-quetzalcoatl-whistle", "name": "Aztec Quetzalcoatl Death Whistle", "source": "ebay", "category_id": "decor", "tags": ["novelty", "viral"], "price_eur": 9, "monthly_revenue_eur": 250, "why_it_sells": "Themed variant of the death-whistle category - feathered serpent design appeals to a slightly different aesthetic buyer.", "differentiator": "Demonstrates the depth of the death-whistle niche; variant designs each find their own audience.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-glock-rear-sight-tool", "name": "Glock Rear Sight Pusher Tool", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["firearms", "tool", "exact-fit"], "price_eur": 18, "monthly_revenue_eur": 1377, "why_it_sells": "Universal sight-pusher that fits all Glock models; firearms hobbyists pay for tools that save trips to a gunsmith.", "differentiator": "Highest sustained eBay revenue in this dataset (3,400+ units sold). Firearms parts are eBay-allowed but Etsy-banned, so eBay is the right channel.", "ip_risk": "low", "ip_holder": "Glock Ges.m.b.H.", "is_recommended": true, "notes": "Etsy bans firearms-related listings; this is an eBay-only product. Avoid the Glock wordmark - sell as 'rear sight pusher tool'." },
-    { "id": "ebay-rooflight-locks-heki", "name": "Rooflight Security Locks (Heki / Dometic)", "source": "ebay", "category_id": "replacement_parts", "tags": ["motorhome", "exact-fit", "security"], "price_eur": 5, "monthly_revenue_eur": 310, "why_it_sells": "Solves a real motorhome-security problem (rooflight latches are easily forced). Buyers are urgent - they're securing a vehicle they own.", "differentiator": "Hyper-niche replacement-part product with near-zero competition. Caravan/motorhome owners are a high-LTV repeat-buyer base.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-modular-hotwheels-display", "name": "Modular Hot Wheels 1:64 Wall Display Shelf", "source": "ebay", "category_id": "home_organization", "tags": ["hot wheels", "display", "modular"], "price_eur": 21, "monthly_revenue_eur": 1265, "why_it_sells": "1:64 collectors are massive, organised and willing to pay for display solutions. Modular system means buyers come back to extend.", "differentiator": "Modular product = recurring revenue; the buyer's first 18-car shelf becomes their second and third.", "ip_risk": "low", "ip_holder": "Mattel (Hot Wheels)", "is_recommended": true, "notes": "Avoid Hot Wheels or Mattel wordmarks; use 'fits 1:64 scale die-cast cars'." },
-    { "id": "ebay-football-helmet-hanger", "name": "Football Mini Helmet Wall Hanger", "source": "ebay", "category_id": "home_organization", "tags": ["football", "display", "wall mount"], "price_eur": 6, "monthly_revenue_eur": 370, "why_it_sells": "Mini-helmet collectors number in the millions; wall mounts are the missing accessory. Cheap to ship.", "differentiator": "Low-priced impulse buy with strong repeat-purchase pattern (collectors mount many helmets).", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-daisy-bb-speed-loader", "name": "Daisy Red Ryder BB Gun Speed Loader", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["bb gun", "exact-fit", "loader"], "price_eur": 6, "monthly_revenue_eur": 312, "why_it_sells": "Solves a tedious problem (loading BBs by hand) for a beloved childhood-gift product (Daisy Red Ryder). Dad-and-kid demographic.", "differentiator": "eBay-only - Etsy bans BB-gun related listings. Niche-of-a-niche with near-zero competition.", "ip_risk": "low", "ip_holder": "Daisy Outdoor Products", "is_recommended": true, "notes": "Etsy doesn't allow this category; eBay is the channel. Avoid Daisy or Red Ryder branding." },
-    { "id": "ebay-hotwheels-car-lift", "name": "1/64 Hot Wheels Car Lift", "source": "ebay", "category_id": "toys_fidgets", "tags": ["hot wheels", "diorama", "1:64"], "price_eur": 3, "monthly_revenue_eur": 156, "why_it_sells": "Diorama accessory for 1:64 collectors. Low-priced impulse buy that pads order value when bought with display shelves.", "differentiator": "Pairs with the Hot Wheels wall display - upsell opportunity. Repeat buyer category.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-rc-thumb-screw-nuts", "name": "Pro-Line Body Mount Thumb Screw Nuts (RC, 12-pack)", "source": "ebay", "category_id": "toys_fidgets", "tags": ["rc", "exact-fit", "tool-free"], "price_eur": 9, "monthly_revenue_eur": 344, "why_it_sells": "RC hobbyists do body-changes constantly; thumb-screw nuts let them swap without a wrench. 12-pack form lifts AOV.", "differentiator": "Replacement-part-style product in a passionate hobby. Tool-free function is the value prop.", "ip_risk": "low", "ip_holder": "Pro-Line Racing", "is_recommended": true, "notes": "Use 'fits Pro-Line body mounts' phrasing." },
-    { "id": "ebay-galaxy-lamp", "name": "3D Galaxy Lamp / Moon Light", "source": "ebay", "category_id": "lighting_lamps", "tags": ["lamp", "moon", "novelty"], "price_eur": 11, "monthly_revenue_eur": 367, "why_it_sells": "Touch-color-change moon lamp is a TikTok mainstay. Low price, high gift-buy potential.", "differentiator": "Saturated category but eBay's looser SEO rules let smaller listings still find buyers.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-vinyl-shelf-wall", "name": "Vinyl Record Display Shelf (Wall Mount)", "source": "ebay", "category_id": "desk_office", "tags": ["vinyl", "display", "wall mount"], "price_eur": 4, "monthly_revenue_eur": 148, "why_it_sells": "Vinyl resurgence + apartment-friendly wall mount = huge buyer pool. Sub-$5 price drives volume.", "differentiator": "Cheaper than the Etsy 'Now Playing' equivalents; competes on volume not premium.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-galaxy-edge-lightsaber-stand", "name": "Universal Lightsaber Display Stand (Galaxy's Edge)", "source": "ebay", "category_id": "cosplay_props", "tags": ["star wars", "display", "lightsaber"], "price_eur": 28, "monthly_revenue_eur": 5690, "why_it_sells": "Disney Galaxy's Edge legacy-saber collectors are a passionate, high-spend audience. Display stands are the missing accessory.", "differentiator": "Cautionary - high revenue but Disney IP risk is real. Sell as 'sword display mount' to dodge takedowns.", "ip_risk": "high", "ip_holder": "Disney / Lucasfilm", "is_recommended": false },
-    { "id": "ebay-kyber-crystal", "name": "Galaxy's Edge Savi's Workshop Kyber Crystal", "source": "ebay", "category_id": "cosplay_props", "tags": ["star wars", "kyber", "lightsaber"], "price_eur": 19, "monthly_revenue_eur": 3790, "why_it_sells": "Customisation accessory for legacy lightsabers; passionate Star-Wars maker community.", "differentiator": "Cautionary IP example. Working kyber-crystal effect proves there's demand for original-IP equivalents (e.g. wizard staff crystal).", "ip_risk": "high", "ip_holder": "Disney / Lucasfilm", "is_recommended": false },
-    { "id": "ebay-rayban-meta-charger", "name": "Charging Stand for Ray-Ban Meta Smart Glasses", "source": "ebay", "category_id": "tech_accessories", "tags": ["ray-ban", "meta", "exact-fit"], "price_eur": 46, "monthly_revenue_eur": 8750, "why_it_sells": "Ray-Ban Meta is the bestselling smart-glasses ever; charging stands are the missing accessory. High-income buyer.", "differentiator": "Massive earner. Hardware launched ~2024 - first-mover advantage on a popular new device. Premium €46+ price.", "ip_risk": "low", "ip_holder": "Meta / Luxottica", "is_recommended": true, "notes": "Avoid Ray-Ban or Meta wordmarks; use 'fits smart glasses with USB-C cradle' phrasing." },
-    { "id": "ebay-dewalt-battery-caddy", "name": "DeWALT Battery Caddy / Carrier (6-pack)", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["dewalt", "tool storage", "exact-fit"], "price_eur": 27, "monthly_revenue_eur": 4940, "why_it_sells": "Trade workers and serious DIYers stockpile DeWALT batteries; a 6-slot caddy keeps the van/garage organised.", "differentiator": "High-volume earner; tradesperson buyer is professional and replaces or expands as fleet grows.", "ip_risk": "low", "ip_holder": "DeWALT / Stanley Black & Decker", "is_recommended": true, "notes": "Use 'fits DeWALT 18V/20V Max batteries' phrasing - not DeWalt wordmark." },
-    { "id": "ebay-aquarium-feeding-cup", "name": "Aquarium Frozen Food Feeding Cup", "source": "ebay", "category_id": "pet_accessories", "tags": ["aquarium", "fish", "feeding"], "price_eur": 6, "monthly_revenue_eur": 888, "why_it_sells": "Solves a specific aquarist problem (thawing/feeding frozen food without mess). Niche keepers are passionate buyers.", "differentiator": "Adjacent to the Stroodies BubbleLoft model - hyper-niche aquarium products win.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-echo-dot-3rd-gen-socket", "name": "Echo Dot 3rd Gen Outlet Socket Holder", "source": "ebay", "category_id": "tech_accessories", "tags": ["echo dot", "outlet", "exact-fit"], "price_eur": 7, "monthly_revenue_eur": 992, "why_it_sells": "Frees desk space for Echo Dot 3rd-gen owners. Massive installed base = consistent demand.", "differentiator": "Older device but evergreen - Amazon doesn't replace ageing Echo Dots quickly. Variant of the HomePod outlet stand model.", "ip_risk": "low", "ip_holder": "Amazon", "is_recommended": true, "notes": "Avoid Amazon/Echo wordmarks; use 'fits round smart speakers'." },
-    { "id": "ebay-airtag-bike-mount", "name": "AirTag Under-Bottle Bicycle Mount", "source": "ebay", "category_id": "automotive_bike", "tags": ["airtag", "bike", "anti-theft"], "price_eur": 5, "monthly_revenue_eur": 820, "why_it_sells": "Bike theft is a real, urgent problem; AirTag is the standard tracking solution. Hidden under-bottle mount is the buyer's specific ask.", "differentiator": "Concealment is the unique value prop - off-the-shelf mounts are visible. Cyclist buyer is high-LTV.", "ip_risk": "low", "ip_holder": "Apple Inc.", "is_recommended": true, "notes": "Avoid AirTag/Apple wordmarks; use 'tracker mount under bottle cage'." },
-    { "id": "ebay-ikea-detolf-clips", "name": "IKEA DETOLF Shelf Support Clips (12-pack)", "source": "ebay", "category_id": "home_organization", "tags": ["ikea", "exact-fit", "shelf"], "price_eur": 11, "monthly_revenue_eur": 210, "why_it_sells": "DETOLF is one of IKEA's most popular display cabinets; the original 4 shelves don't satisfy serious collectors. 12-clip pack lets buyers add 3+ shelves.", "differentiator": "5+ year sustained seller. Solves a specific IKEA-extension problem; collectors are repeat buyers.", "ip_risk": "low", "ip_holder": "IKEA", "is_recommended": true, "notes": "Avoid IKEA wordmark; use 'fits DETOLF cabinet'." },
-    { "id": "ebay-spiderman-noir-hat", "name": "Spider-Man Noir Hat (Marvel Legends)", "source": "ebay", "category_id": "cosplay_props", "tags": ["marvel", "spiderman", "1:12"], "price_eur": 8, "monthly_revenue_eur": 1155, "why_it_sells": "Action-figure customisers buy 1:12 accessories for figures Marvel never released with a hat. Tiny SKU, big collector market.", "differentiator": "Cautionary - Marvel/Disney enforce. Original-character hat for the same scale figures avoids the IP risk.", "ip_risk": "high", "ip_holder": "Marvel / Disney", "is_recommended": false },
-    { "id": "ebay-corner-clamp-irwin", "name": "Heavy Duty Corner Clamp Adapters (Irwin Mini Quick Grip)", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["irwin", "clamp", "exact-fit"], "price_eur": 14, "monthly_revenue_eur": 1810, "why_it_sells": "Wood-workers and DIYers extend their existing Irwin clamps to 90-degree corners with a 3D-printed adapter. Cheaper than buying corner clamps.", "differentiator": "Replacement-style accessory that extends an existing tool. Pairs strongly with eBay's tradesperson buyer base.", "ip_risk": "low", "ip_holder": "Irwin / Stanley Black & Decker", "is_recommended": true, "notes": "Use 'fits Irwin Mini Quick Grip' phrasing." },
-    { "id": "ebay-lego-saturn-wall-mount", "name": "Wall Mount Display for Lego Saturn V", "source": "ebay", "category_id": "decor", "tags": ["lego", "saturn v", "display"], "price_eur": 28, "monthly_revenue_eur": 3683, "why_it_sells": "Adult Lego collectors built a $400+ Saturn V and want to wall-mount it horizontally - the official set lacks a stable display option.", "differentiator": "High-AOV accessory for a high-AOV product. Lego AFOL (Adult Fan of Lego) buyer is high-income.", "ip_risk": "low", "ip_holder": "Lego Group / NASA", "is_recommended": true, "notes": "Avoid Lego wordmark or trademarked imagery; use 'fits 1969-piece space rocket model'." },
-    { "id": "ebay-motorhome-trim-tool", "name": "Motorhome Window Rubber Trim Fitting Tool", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["caravan", "motorhome", "trim"], "price_eur": 11, "monthly_revenue_eur": 193, "why_it_sells": "Specific repair tool for caravan/motorhome owners installing replacement window seals. Buyers are urgent and quality-tolerant.", "differentiator": "Hyper-niche tool with near-zero competition. Repeat purchase across 23mm + 25mm trim variants.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-switch-piranha-plant-stand", "name": "Nintendo Switch Piranha Plant Charging Stand", "source": "ebay", "category_id": "tech_accessories", "tags": ["switch", "mario", "plant"], "price_eur": 47, "monthly_revenue_eur": 5300, "why_it_sells": "Mario fans + Switch owners + TikTok virality = three converging niches. Premium €47+ price proves design value.", "differentiator": "Cautionary - massive earner but Nintendo enforces aggressively. Original 'plant-shaped charging stand' avoids the IP risk.", "ip_risk": "high", "ip_holder": "Nintendo", "is_recommended": false },
-    { "id": "ebay-f1-desk-sign", "name": "F1 / Formula 1 Desk Sign", "source": "ebay", "category_id": "desk_office", "tags": ["formula 1", "racing", "desk"], "price_eur": 13, "monthly_revenue_eur": 207, "why_it_sells": "Formula-1 fandom is global and growing fast (Drive to Survive effect). Desk decor is an underserved sub-niche.", "differentiator": "Trend-aware product riding the F1 popularity wave. Avoid Formula 1 logo; sell as 'motorsport desk sign'.", "ip_risk": "medium", "ip_holder": "Formula One Group", "is_recommended": true, "notes": "Avoid F1, Formula 1, FIA logos; sell as 'motorsport / racing fan desk sign'." },
-    { "id": "ebay-deadpool-mask", "name": "Deadpool & Wolverine Realistic Halloween Mask", "source": "ebay", "category_id": "cosplay_props", "tags": ["marvel", "deadpool", "cosplay"], "price_eur": 51, "monthly_revenue_eur": 7030, "why_it_sells": "Highest eBay revenue in the Halloween cosplay category. Movie release year (2024) drove demand peak.", "differentiator": "Cautionary - Marvel/Disney enforce. Realistic-mask format works with original characters or generic horror masks.", "ip_risk": "high", "ip_holder": "Marvel / Disney", "is_recommended": false },
-    { "id": "ebay-blockbuster-sign", "name": "Light-Up Blockbuster Video Decoration Sign", "source": "ebay", "category_id": "decor", "tags": ["blockbuster", "retro", "sign"], "price_eur": 33, "monthly_revenue_eur": 3220, "why_it_sells": "90s/00s nostalgia-decor is a huge demographic; Blockbuster brand is defunct so trademark enforcement is dormant.", "differentiator": "Defunct-brand IP is the safer-than-Disney play. Same retro nostalgia, no active rights-holder pursuing takedowns.", "ip_risk": "medium", "ip_holder": "Blockbuster (defunct)", "is_recommended": true, "notes": "Trademark technically lapsed but original holder's IP partially survives - keep listings safe by avoiding the original logo style." },
-    { "id": "ebay-greenlight-truckbed-toolbox", "name": "1:64 Truck Bed Toolbox (Greenlight / M2)", "source": "ebay", "category_id": "toys_fidgets", "tags": ["1:64", "diorama", "greenlight"], "price_eur": 4, "monthly_revenue_eur": 64, "why_it_sells": "Diorama accessories for 1:64 die-cast collectors. Pairs with truck models from Greenlight, M2 Machines, GreenLight Hauliers.", "differentiator": "Sub-$5 impulse buy that grows order value when bundled with display shelves and other diorama pieces.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-stitch-cookie-cutter", "name": "Stitch Cookie Cutter (Disney)", "source": "ebay", "category_id": "decor", "tags": ["disney", "kitchen", "cookie cutter"], "price_eur": 7, "monthly_revenue_eur": 700, "why_it_sells": "Disney-character cookie cutters are an enormous birthday-party niche. Stitch fandom is one of the most consistent on Etsy/eBay.", "differentiator": "Cautionary - Disney enforces but cookie cutters often slip through. Generic-shape cutters with the same form factor are the safe play.", "ip_risk": "high", "ip_holder": "Disney", "is_recommended": false },
-    { "id": "ebay-aero-traxxas-c10", "name": "Aero Downforce Kit (Traxxas Slash, 1967 C10)", "source": "ebay", "category_id": "automotive_bike", "tags": ["rc", "traxxas", "exact-fit"], "price_eur": 46, "monthly_revenue_eur": 4100, "why_it_sells": "RC drag-truck enthusiasts buy aero kits to tune performance. Specific platform (Traxxas Slash) keeps competition low.", "differentiator": "Hardware-specific functional product for a passionate hobby segment. €46+ price commands real margin.", "ip_risk": "low", "ip_holder": "Traxxas / GM (Chevrolet C10 silhouette)", "is_recommended": true, "notes": "Avoid Chevrolet or Traxxas trademarked logos; use 'fits Traxxas Slash, 1967 truck-style body' phrasing." },
-    { "id": "ebay-ho-scale-trash", "name": "HO-Scale Dumpsters / Pallets / Drums (Set of 15)", "source": "ebay", "category_id": "miniatures_terrain", "tags": ["model railway", "ho scale", "scenery"], "price_eur": 12, "monthly_revenue_eur": 977, "why_it_sells": "Model railway scenery is an evergreen hobby with high-LTV buyers. Bulk pack of trash items is the missing accessory.", "differentiator": "Niche-of-a-niche functional category. Buyers come back as their layouts grow.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-stitch-cutter-2", "name": "McDonalds Twin In-Car Sauce Holder (DipClip)", "source": "ebay", "category_id": "automotive_bike", "tags": ["mcdonalds", "in-car", "novelty"], "price_eur": 6, "monthly_revenue_eur": 507, "why_it_sells": "McDonalds dipping sauces in-car is a universal annoyance. DipClip solves it for £6 - perfect impulse buy.", "differentiator": "Volume play: 834 units sold over 6 years. Generic 'twin sauce holder' phrasing dodges the McDonalds trademark.", "ip_risk": "low", "ip_holder": "McDonalds Corporation", "is_recommended": true, "notes": "Sell as 'twin dipping sauce in-car holder' - never use McDonalds branding." },
-    { "id": "ebay-grey-alien-figure", "name": "Grey Alien Area 51 Action Figure", "source": "ebay", "category_id": "toys_fidgets", "tags": ["alien", "novelty", "action figure"], "price_eur": 18, "monthly_revenue_eur": 1112, "why_it_sells": "Pop-culture grey-alien iconography has zero IP holder. Halloween + Area 51 conspiracy buyers feed evergreen demand.", "differentiator": "Original-design action figure with no trademark exposure; the silhouette belongs to no one.", "ip_risk": "none", "is_recommended": true },
-    { "id": "ebay-bmw-e30-ashtray-delete", "name": "BMW E30 Rear Ash Tray Delete Plate", "source": "ebay", "category_id": "automotive_bike", "tags": ["bmw", "e30", "exact-fit"], "price_eur": 23, "monthly_revenue_eur": 1255, "why_it_sells": "E30 BMW restorers want to clean up the rear cabin; original ashtray is universally hated. 30+ year old car, evergreen restoration community.", "differentiator": "Hyper-specific restoration accessory. E30 community is small but obsessive and price-tolerant.", "ip_risk": "low", "ip_holder": "BMW AG", "is_recommended": true, "notes": "Avoid BMW logo or M3 trademark; use 'fits E30 1984-1991' phrasing." },
-    { "id": "ebay-jeep-xj-cupholder", "name": "Cupholder for 1984-1996 Jeep XJ Cherokee / MJ Comanche", "source": "ebay", "category_id": "automotive_bike", "tags": ["jeep", "cherokee", "exact-fit"], "price_eur": 47, "monthly_revenue_eur": 1810, "why_it_sells": "XJ Jeep Cherokee restorers are a passionate community; original cup-holder is poor or missing. Premium €47+ price.", "differentiator": "Replacement-style product for a beloved discontinued vehicle. Premium pricing on a 30+ year old platform.", "ip_risk": "low", "ip_holder": "Stellantis (Jeep)", "is_recommended": true, "notes": "Avoid Jeep wordmark or grille logo; use 'fits 1984-1996 XJ / MJ' phrasing." },
-    { "id": "ebay-milwaukee-blower-nozzle", "name": "Car Drying Nozzle for Milwaukee M18 Fuel Blower", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["milwaukee", "car care", "exact-fit"], "price_eur": 33, "monthly_revenue_eur": 2440, "why_it_sells": "Auto-detailing and car-care community uses cordless blowers to dry cars; matched nozzle profile beats generic adapters.", "differentiator": "Cross-niche product (car care + Milwaukee tools). Buyer often owns both ecosystems.", "ip_risk": "low", "ip_holder": "Milwaukee Tool / TTI", "is_recommended": true, "notes": "Avoid Milwaukee or M18 wordmarks; use 'fits Milwaukee M18 Fuel Blower' phrasing." },
-    { "id": "ebay-ghostbusters-proton-pack", "name": "Real Ghostbusters Proton Pack & Streams (Set of 4)", "source": "ebay", "category_id": "cosplay_props", "tags": ["ghostbusters", "kenner", "vintage"], "price_eur": 21, "monthly_revenue_eur": 1025, "why_it_sells": "Vintage Kenner Real Ghostbusters action figure customisers; missing accessory for figures from 1986-1991.", "differentiator": "Cautionary - Ghostbusters IP is enforced by Sony. Same 'vintage figure accessory' format works with original franchises.", "ip_risk": "high", "ip_holder": "Sony / Kenner / Hasbro", "is_recommended": false },
-    { "id": "ebay-cessna-throttle-quadrant", "name": "Cessna Throttle Quadrant for Flight Simulators", "source": "ebay", "category_id": "desk_office", "tags": ["flight sim", "cessna", "controller"], "price_eur": 110, "monthly_revenue_eur": 4980, "why_it_sells": "Flight-sim hobbyists invest serious money in realism; Cessna-replica throttle is a step up from Logitech generic.", "differentiator": "Premium €110+ price commands real margin. Flight-sim community is small but extremely high-LTV.", "ip_risk": "low", "ip_holder": "Textron Aviation (Cessna)", "is_recommended": true, "notes": "Avoid Cessna wordmark; use 'GA-style throttle quadrant for flight simulators'." },
-    { "id": "ebay-music-gear-stand", "name": "Music Gear Stand (Roland, Arturia, Teenage Engineering)", "source": "ebay", "category_id": "musical_instruments_accessories", "tags": ["music gear", "stand", "exact-fit"], "price_eur": 14, "monthly_revenue_eur": 580, "why_it_sells": "Synthesizer / groovebox owners stack their gear; matched stands keep things organised. Specific brands lock out generic competition.", "differentiator": "Variants for each device family (Roland SP-404, Arturia BeatStep, EP-133, Novation Circuit) compound a single SKU into many.", "ip_risk": "low", "ip_holder": "Various (Roland / Arturia / Novation)", "is_recommended": true },
-    { "id": "ebay-milwaukee-battery-adapter", "name": "Milwaukee M18 Battery Output Adapter (DIY)", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["milwaukee", "diy", "battery"], "price_eur": 11, "monthly_revenue_eur": 568, "why_it_sells": "DIY robotics / electronics hobbyists power custom projects from Milwaukee 18V batteries; the adapter is the missing connector.", "differentiator": "Cross-niche product (Milwaukee + DIY electronics). High-LTV buyer with multiple project ideas.", "ip_risk": "low", "ip_holder": "Milwaukee Tool / TTI", "is_recommended": true, "notes": "Avoid Milwaukee or M18 wordmarks; use 'fits 18V power tool batteries'." },
-    { "id": "ebay-sheet-metal-dimple-die", "name": "Sheet Metal Dimple Die Set (Harbor Freight Hydraulic Punch)", "source": "ebay", "category_id": "tools_workshop_jigs", "tags": ["sheet metal", "exact-fit", "punch"], "price_eur": 79, "monthly_revenue_eur": 3790, "why_it_sells": "Auto-fab and home-shop metalworkers want lightening-hole dies but commercial sets cost $400+. 3D-printed at $85 wins on price.", "differentiator": "Premium €79+ price into a working-class buyer base. Pairs with a specific Harbor Freight tool kit.", "ip_risk": "low", "ip_holder": "Harbor Freight / Central Pneumatic", "is_recommended": true, "notes": "Avoid Harbor Freight wordmark; use 'fits hydraulic hand punch driver kits' phrasing." },
-    { "id": "ebay-kraken-rum-holder", "name": "Kraken Rum Bottle Holder (700ml)", "source": "ebay", "category_id": "decor", "tags": ["bar", "novelty", "kraken"], "price_eur": 53, "monthly_revenue_eur": 2540, "why_it_sells": "Bar/man-cave decor + premium rum brand fans = strong gift demand. Mystical-creature aesthetic photographs well.", "differentiator": "Premium €53+ price proves design value. Kraken brand has strong opinion-leader following.", "ip_risk": "medium", "ip_holder": "Kraken Rum / Proximo Spirits", "is_recommended": true, "notes": "Avoid Kraken wordmark or octopus logo; sell as 'tentacle bottle holder for 700ml rum bottles'." },
-    { "id": "ebay-gameboy-color-stand", "name": "Game Boy Color Double Display Stand", "source": "ebay", "category_id": "tech_accessories", "tags": ["nintendo", "retro", "display"], "price_eur": 18, "monthly_revenue_eur": 637, "why_it_sells": "Retro-gaming collectors mount their Game Boys; single console + games-stand combo lifts AOV.", "differentiator": "Adjacent-niche product (retro display). Generic stand silhouette dodges Nintendo enforcement.", "ip_risk": "low", "ip_holder": "Nintendo", "is_recommended": true, "notes": "Use 'retro handheld console display stand' phrasing - never name Game Boy or Nintendo." },
-    { "id": "ebay-ps2-slim-stand", "name": "PlayStation 2 Slim Vertical Stand", "source": "ebay", "category_id": "tech_accessories", "tags": ["sony", "ps2", "exact-fit"], "price_eur": 10, "monthly_revenue_eur": 101, "why_it_sells": "Retro-gaming community mounts old consoles vertically to save desk/shelf space. PS2 Slim is one of the most-collected consoles.", "differentiator": "Generic 'console stand' phrasing keeps it Sony-trademark-safe.", "ip_risk": "low", "ip_holder": "Sony Interactive Entertainment", "is_recommended": true, "notes": "Avoid PS2 / PlayStation wordmarks; use 'fits Sony PS2 Slim'." },
-    { "id": "ebay-pokedex-slab-holder", "name": "Pokédex Slab Holder (PSA / CGC / BGS)", "source": "ebay", "category_id": "dnd_gaming", "tags": ["pokemon", "tcg", "slab"], "price_eur": 33, "monthly_revenue_eur": 98, "why_it_sells": "Pokémon TCG-grading community wants themed display for graded cards. Themed buyer overlaps massively with Pokémon TCG buyers.", "differentiator": "Cautionary - Pokémon Company enforces aggressively. Generic 'graded card slab holder' avoids the takedown risk.", "ip_risk": "high", "ip_holder": "Nintendo / The Pokémon Company", "is_recommended": false },
-    { "id": "ebay-voigtlander-lens-hood", "name": "Voigtlander Nokton VM Lens Hood", "source": "ebay", "category_id": "tech_accessories", "tags": ["camera", "lens", "exact-fit"], "price_eur": 33, "monthly_revenue_eur": 40, "why_it_sells": "Niche photography accessory; Voigtlander VM lens hood replacements are unavailable from manufacturer.", "differentiator": "Very small but evergreen niche; rangefinder photography community is loyal.", "ip_risk": "low", "ip_holder": "Voigtländer / Cosina", "is_recommended": true, "notes": "Sell as 'fits VM-mount 35/40/50mm lenses' - safer than naming Voigtlander directly." },
-    { "id": "ebay-3-car-hauler", "name": "1/64 Scale 3-Car Hauler Trailer", "source": "ebay", "category_id": "toys_fidgets", "tags": ["1:64", "greenlight", "diorama"], "price_eur": 21, "monthly_revenue_eur": 71, "why_it_sells": "1:64 die-cast haulers are a missing accessory for Greenlight Gooseneck collectors. Higher-AOV than basic shelves.", "differentiator": "Premium accessory for the high-engagement 1:64 collector niche.", "ip_risk": "low", "ip_holder": "Greenlight Collectibles", "is_recommended": true, "notes": "Use 'fits Greenlight 1:64 Gooseneck Trailer' phrasing - not Greenlight wordmark." },
-    { "id": "ebay-star-trek-phaser", "name": "Star Trek Original Phaser Pistol Prop Kit", "source": "ebay", "category_id": "cosplay_props", "tags": ["star trek", "prop", "kit"], "price_eur": 19, "monthly_revenue_eur": 2330, "why_it_sells": "Star Trek cosplayers and fans want screen-accurate phaser replicas; Paramount licenced ones are $200+.", "differentiator": "Cautionary - Paramount enforces. Generic 'sci-fi blaster prop kit' format works with original-IP designs.", "ip_risk": "high", "ip_holder": "Paramount / CBS", "is_recommended": false }
+    {
+      "id": "amber-table-lamp",
+      "name": "Amber Table Lamp",
+      "category_id": "lighting_lamps",
+      "tags": [
+        "lamp",
+        "decor",
+        "premium"
+      ],
+      "price_eur": 88,
+      "monthly_revenue_eur": 7870,
+      "why_it_sells": "Premium aesthetic lamp; warm amber glow is on-trend in home decor; very high perceived value.",
+      "differentiator": "Highest sustained monthly revenue in this list. Complex print commands premium price; photography is make-or-break.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1340468140"
+    },
+    {
+      "id": "crossbow-dice-roller",
+      "name": "Crossbow Dice Roller and Holder",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "dice",
+        "mechanical",
+        "tabletop"
+      ],
+      "price_eur": 45,
+      "monthly_revenue_eur": 7712,
+      "why_it_sells": "Mechanical design with high perceived value; DnD community is passionate and high-spending.",
+      "differentiator": "Original mechanical design - no IP risk. Excellent bundle potential with dice sets.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1226830807"
+    },
+    {
+      "id": "mystic-conch-shell",
+      "name": "Mystic Conch Shell Dice Storage",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "dice",
+        "decor"
+      ],
+      "price_eur": 42,
+      "monthly_revenue_eur": 5255,
+      "why_it_sells": "Unique decorative gaming accessory; high perceived value; dice storage inside adds function.",
+      "differentiator": "Original design with no IP risk. Strong photography potential. Excellent bundle piece with a dice set.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1023717134"
+    },
+    {
+      "id": "personalized-headphone-stand",
+      "name": "Personalized Headphone Stand",
+      "category_id": "desk_office",
+      "tags": [
+        "headphone",
+        "personalised",
+        "gamer"
+      ],
+      "price_eur": 45,
+      "monthly_revenue_eur": 4242,
+      "why_it_sells": "Premium desk accessory + personalisation = strong gift; popular with gamers and WFH buyers.",
+      "differentiator": "Custom name engraving justifies premium price; Q4 gift spike. Same product from another seller earned 5–10× less, proving photography and SEO determine outcome.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1264417484"
+    },
+    {
+      "id": "glitch-fidget-slider",
+      "name": "The Glitch Fidget Slider",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "fidget",
+        "mechanical",
+        "adult"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 2855,
+      "why_it_sells": "Mechanical fidget satisfies tactile need; professional aesthetic appeals to adults not just kids.",
+      "differentiator": "Original multi-layer mechanism - hard to replicate without engineering skill. Two sellers with the same design had 5× revenue gap based on listing quality alone.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1173466200"
+    },
+    {
+      "id": "water-dispenser-lever",
+      "name": "Water Dispenser Lever (Replacement)",
+      "category_id": "replacement_parts",
+      "tags": [
+        "replacement",
+        "appliance",
+        "exact-fit"
+      ],
+      "price_eur": 7,
+      "monthly_revenue_eur": 2799,
+      "why_it_sells": "Solves a frustrating real problem; exact-fit replacement; near-zero competition.",
+      "differentiator": "Possibly the highest return per gram of filament in this list - simple print with massive demand. Strongest argument for the replacement parts niche.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1559445969"
+    },
+    {
+      "id": "break-glass-emergency",
+      "name": "Break Glass in Case of Emergency",
+      "category_id": "personalized_gifts",
+      "tags": [
+        "novelty",
+        "gift",
+        "humour"
+      ],
+      "price_eur": 13,
+      "monthly_revenue_eur": 1411,
+      "why_it_sells": "Humorous novelty; perfect low-cost gift; huge impulse-buy appeal.",
+      "differentiator": "Low filament cost; extremely fast print; viral social media potential.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1571332975"
+    },
+    {
+      "id": "mini-tv-apple-watch",
+      "name": "Mini TV Apple Watch Charging Station",
+      "category_id": "tech_accessories",
+      "tags": [
+        "apple watch",
+        "retro",
+        "gift"
+      ],
+      "price_eur": 35,
+      "monthly_revenue_eur": 1386,
+      "why_it_sells": "Solves a real problem elegantly; nostalgic mini-TV form factor makes it highly giftable.",
+      "differentiator": "Unique form factor with strong gifting angle; evergreen as long as Apple Watch sells.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/989237928"
+    },
+    {
+      "id": "homepod-outlet-stand",
+      "name": "HomePod Mini Outlet Stand",
+      "category_id": "tech_accessories",
+      "tags": [
+        "homepod",
+        "apple",
+        "outlet mount"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 1228,
+      "why_it_sells": "Saves desk space; outlet-mount is a clever functional solve; Apple ecosystem buyers are loyal.",
+      "differentiator": "Niche but loyal buyer base; low print time; functional need with no Amazon alternative. v2 listing earned 3× more than v1 - better photography/SEO is the difference.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "notes": "Avoid Apple logo or 'Designed for Apple' phrasing.",
+      "url": "https://www.etsy.com/listing/916643563"
+    },
+    {
+      "id": "flipper-zero-case",
+      "name": "Flipper Zero WiFi Dev Board Case",
+      "category_id": "tech_accessories",
+      "tags": [
+        "maker",
+        "exact-fit",
+        "hacker"
+      ],
+      "price_eur": 26,
+      "monthly_revenue_eur": 1125,
+      "why_it_sells": "Exact-fit case for a cult hacker/maker device; passionate technical community with disposable income.",
+      "differentiator": "No IP risk; niche maker audience is loyal and active; low Etsy competition; evergreen as long as Flipper Zero sells.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1398755792"
+    },
+    {
+      "id": "toilet-paper-holder",
+      "name": "Designer Toilet Paper Holder",
+      "category_id": "decor",
+      "tags": [
+        "bathroom",
+        "decor",
+        "functional"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 1169,
+      "why_it_sells": "Functional replacement product with design angle; every bathroom needs one.",
+      "differentiator": "Low competition for unique shapes; replacement market = high buyer urgency.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1465740883"
+    },
+    {
+      "id": "capybara-dice-holder",
+      "name": "Capybara Dice Holder",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "dice",
+        "animal",
+        "trend"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 941,
+      "why_it_sells": "Trending animal meets DnD accessory; double-niche drives strong conversion from two audiences.",
+      "differentiator": "Trend-aware design in an evergreen niche; pairs well with a matching dice tray for AOV uplift.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1543265743"
+    },
+    {
+      "id": "gas-can-ornament",
+      "name": "Gas Can Christmas Ornament",
+      "category_id": "decor",
+      "tags": [
+        "ornament",
+        "novelty",
+        "Q4"
+      ],
+      "price_eur": 13,
+      "monthly_revenue_eur": 841,
+      "why_it_sells": "Petrolhead gifting; strong humour and novelty angle; Christmas ornament seasonal spike.",
+      "differentiator": "Q4 spike (Oct–Dec); low filament cost; obvious gift for car/truck enthusiasts with near-zero competition.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1326637778"
+    },
+    {
+      "id": "iphone-magsafe-weighted-ball",
+      "name": "iPhone MagSafe Weighted Ball Charger Stand",
+      "category_id": "tech_accessories",
+      "tags": [
+        "magsafe",
+        "iphone",
+        "premium"
+      ],
+      "price_eur": 26,
+      "monthly_revenue_eur": 844,
+      "why_it_sells": "Premium feel; weighted base prevents tipping; clean minimal aesthetic.",
+      "differentiator": "Material weight = perceived premium. MagSafe market is evergreen with each new iPhone generation. Older listing still converting strongly proves sustained demand.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "notes": "Avoid Apple/MagSafe logos in product photos.",
+      "url": "https://www.etsy.com/listing/903550698"
+    },
+    {
+      "id": "kitchenaid-tool-holder",
+      "name": "KitchenAid Tool Holder Set of 3",
+      "category_id": "home_organization",
+      "tags": [
+        "kitchenaid",
+        "exact-fit",
+        "premium"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 787,
+      "why_it_sells": "Exact fit for a beloved premium appliance; KitchenAid owners are loyal and high-income.",
+      "differentiator": "Buyers of a €300+ appliance pay for quality. Set of 3 boosts AOV significantly. Low IP risk: avoid the KitchenAid wordmark and rely on 'fits stand mixers' phrasing.",
+      "ip_risk": "low",
+      "ip_holder": "KitchenAid / Whirlpool",
+      "is_recommended": true,
+      "notes": "Use generic phrasing like 'fits stand mixer'; do not imply official affiliation.",
+      "url": "https://www.etsy.com/listing/943188373"
+    },
+    {
+      "id": "ford-f150-magsafe-mount",
+      "name": "Ford F-150 MagSafe Phone Mount",
+      "category_id": "automotive_bike",
+      "tags": [
+        "ford",
+        "exact-fit",
+        "magsafe"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 785,
+      "why_it_sells": "Exact-fit vehicle mount; F-150 is the best-selling vehicle in the USA - huge addressable market.",
+      "differentiator": "Hyper-niche exact fit = near-zero competition. Strong repeat angle for truck owners upgrading phones.",
+      "ip_risk": "medium",
+      "ip_holder": "Ford Motor Company",
+      "is_recommended": true,
+      "notes": "Avoid Blue Oval or F-150 logo in photos. Use 'fits 2015–2020 F-150' phrasing.",
+      "url": "https://www.etsy.com/listing/1418154890"
+    },
+    {
+      "id": "dyson-accessory-holders",
+      "name": "Dyson Accessory Holders (set of 6)",
+      "category_id": "home_organization",
+      "tags": [
+        "dyson",
+        "exact-fit",
+        "premium"
+      ],
+      "price_eur": 26,
+      "monthly_revenue_eur": 709,
+      "why_it_sells": "Exact-fit for a premium Dyson vacuum; organises expensive accessories buyers already own.",
+      "differentiator": "Set of 6 = high AOV; Dyson owners are high-income and loyal; evergreen as long as Dyson sells.",
+      "ip_risk": "low",
+      "ip_holder": "Dyson Ltd.",
+      "is_recommended": true,
+      "notes": "Dyson does not actively pursue third-party accessory makers. Avoid 'Dyson' in title; use 'fits V8/V10/V11'.",
+      "url": "https://www.etsy.com/listing/861571984"
+    },
+    {
+      "id": "hello-neighbour-puzzle",
+      "name": "Hello Neighbour Lock and Key Puzzle",
+      "category_id": "personalized_gifts",
+      "tags": [
+        "puzzle",
+        "mechanical",
+        "gift"
+      ],
+      "price_eur": 14,
+      "monthly_revenue_eur": 612,
+      "why_it_sells": "Playful puzzle mechanic; satisfying unboxing; strong gift appeal.",
+      "differentiator": "Mechanical design moat - hard to copy without understanding the mechanism.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1279248548"
+    },
+    {
+      "id": "baby-mjolnir-rattle",
+      "name": "Baby First Mjolnir (Thor Hammer Rattle)",
+      "category_id": "kids_nursery",
+      "tags": [
+        "baby",
+        "geek-parent",
+        "rattle"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 666,
+      "why_it_sells": "Clever mashup: baby rattle + Marvel reference = perfect geek parent gift; highly shareable.",
+      "differentiator": "Geeky parent niche is underserved and willing to pay. Mjolnir is a grey-area IP because of Norse mythology origin.",
+      "ip_risk": "medium",
+      "ip_holder": "Marvel / Disney",
+      "is_recommended": true,
+      "notes": "Generic rounded-hammer design with no Marvel logo is lower risk than MCU-style replicas.",
+      "url": "https://www.etsy.com/listing/563123160"
+    },
+    {
+      "id": "apple-combo-stand",
+      "name": "Apple HomePod Mini + Echo Dot Combo Stand",
+      "category_id": "tech_accessories",
+      "tags": [
+        "smart home",
+        "stand"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 472,
+      "why_it_sells": "Solves multi-device desk clutter; appeals to smart home buyers who own both devices.",
+      "differentiator": "Combo stand = premium price justification. Smart home market growing; differentiated from single-device stands.",
+      "ip_risk": "low",
+      "ip_holder": "Apple / Amazon",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/939446394"
+    },
+    {
+      "id": "mini-barbell-pen-holder",
+      "name": "Mini Barbell Squat Rack Pen Holder",
+      "category_id": "desk_office",
+      "tags": [
+        "gym",
+        "novelty",
+        "gift"
+      ],
+      "price_eur": 13,
+      "monthly_revenue_eur": 401,
+      "why_it_sells": "Gym culture novelty gift; instantly shareable; obvious gifting angle for fitness lovers.",
+      "differentiator": "Very fast print; low filament cost; strong social media shareability; evergreen gym community.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1623011637"
+    },
+    {
+      "id": "dyson-ruggable-adapter",
+      "name": "Dyson Vacuum Adapter for Ruggable Rug",
+      "category_id": "replacement_parts",
+      "tags": [
+        "dyson",
+        "ruggable",
+        "exact-fit"
+      ],
+      "price_eur": 15,
+      "monthly_revenue_eur": 339,
+      "why_it_sells": "Solves a specific Dyson + Ruggable incompatibility; very targeted buyer with no other option.",
+      "differentiator": "Near-zero competition; buyer is motivated and price-tolerant; exact-problem solve.",
+      "ip_risk": "low",
+      "ip_holder": "Dyson / Ruggable",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1057295498"
+    },
+    {
+      "id": "magsafe-desk-mount",
+      "name": "MagSafe Desk Mount",
+      "category_id": "tech_accessories",
+      "tags": [
+        "magsafe",
+        "desk",
+        "minimal"
+      ],
+      "price_eur": 17,
+      "monthly_revenue_eur": 310,
+      "why_it_sells": "Clean minimal desk organisation; MagSafe is Apple ecosystem standard used by millions.",
+      "differentiator": "Functional evergreen product; low filament cost; easy to photograph cleanly on white desk.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1179450941"
+    },
+    {
+      "id": "raised-slow-feeder-bowl",
+      "name": "Raised Slow-Feeder Pet Bowl",
+      "category_id": "pet_accessories",
+      "tags": [
+        "pet",
+        "feeder",
+        "vet-recommended"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 300,
+      "why_it_sells": "Functional pet health accessory; vet-recommended slow feeding is a growing buyer-driven trend.",
+      "differentiator": "Underserved sub-niche. Use food-safe PETG or resin and add a clear material disclaimer to overcome the FDM-PLA-not-food-safe objection.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "notes": "Food contact concern - must be PETG/resin not standard PLA, with disclaimer on listing.",
+      "url": "https://www.etsy.com/listing/1022950607"
+    },
+    {
+      "id": "chest-switch-holder",
+      "name": "Treasure Chest Nintendo Switch Holder",
+      "category_id": "tech_accessories",
+      "tags": [
+        "switch",
+        "gaming",
+        "storage"
+      ],
+      "price_eur": 17,
+      "monthly_revenue_eur": 276,
+      "why_it_sells": "Clever treasure chest form for Switch storage; gaming nostalgia drives gifting.",
+      "differentiator": "Chest form factor without any Nintendo logo is the safer way to capture this audience.",
+      "ip_risk": "medium",
+      "ip_holder": "Nintendo",
+      "is_recommended": true,
+      "notes": "Avoid Nintendo or Switch branding in title; use 'console storage' phrasing.",
+      "url": "https://www.etsy.com/listing/1022950607"
+    },
+    {
+      "id": "personalized-cat-bowl",
+      "name": "Personalized Cat Food Bowl (Small)",
+      "category_id": "pet_accessories",
+      "tags": [
+        "pet",
+        "personalised"
+      ],
+      "price_eur": 15,
+      "monthly_revenue_eur": 248,
+      "why_it_sells": "Custom name adds emotional value; pet owners are highly motivated buyers.",
+      "differentiator": "Personalisation premium; repeat buyer potential for multi-pet households.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "notes": "Food contact concern - PLA is not food-safe. Use PETG or add a clear product disclaimer.",
+      "url": "https://www.etsy.com/listing/1332417348"
+    },
+    {
+      "id": "little-tikes-numberplate",
+      "name": "Little Tikes Rear Numberplate (Replacement)",
+      "category_id": "replacement_parts",
+      "tags": [
+        "toy",
+        "replacement",
+        "exact-fit"
+      ],
+      "price_eur": 8,
+      "monthly_revenue_eur": 237,
+      "why_it_sells": "Exact replacement for a discontinued toy part; parents desperate to fix a beloved toy.",
+      "differentiator": "Near-zero competition; buyer urgency is maximum. Strongest argument for the replacement parts niche.",
+      "ip_risk": "medium",
+      "ip_holder": "MGA Entertainment",
+      "is_recommended": true,
+      "notes": "Functional replacement parts are typically tolerated. Avoid Little Tikes wordmark in title.",
+      "url": "https://www.etsy.com/listing/535740099"
+    },
+    {
+      "id": "personalized-cord-organiser",
+      "name": "Personalized Charging Cord Organiser",
+      "category_id": "tech_accessories",
+      "tags": [
+        "personalised",
+        "cable",
+        "gift"
+      ],
+      "price_eur": 11,
+      "monthly_revenue_eur": 202,
+      "why_it_sells": "Personalisation adds gifting value to a mundane object; desk organisation trend ongoing.",
+      "differentiator": "Low filament cost; easy to customise per order; stocking-filler price point boosts Q4 volume.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1105302910"
+    },
+    {
+      "id": "tesla-sunglasses-holder",
+      "name": "Tesla Model 3/Y Sunglasses Holder",
+      "category_id": "automotive_bike",
+      "tags": [
+        "tesla",
+        "exact-fit",
+        "interior"
+      ],
+      "price_eur": 19,
+      "monthly_revenue_eur": 117,
+      "why_it_sells": "Exact-fit interior accessory; Tesla owners are passionate and high-income.",
+      "differentiator": "Loyal niche community; works in both Model 3 and Y - doubles addressable market; low competition.",
+      "ip_risk": "medium",
+      "ip_holder": "Tesla Inc.",
+      "is_recommended": true,
+      "notes": "Avoid Tesla wordmark or logo in listing title or photos.",
+      "url": "https://www.etsy.com/listing/835044317"
+    },
+    {
+      "id": "jack-stand-phone-holder",
+      "name": "Jack Stand Phone Holder",
+      "category_id": "tech_accessories",
+      "tags": [
+        "automotive",
+        "novelty"
+      ],
+      "price_eur": 9,
+      "monthly_revenue_eur": 132,
+      "why_it_sells": "Novelty form factor (car jack) appeals to automotive hobbyists; low price = impulse buy.",
+      "differentiator": "Concept has more potential with better photography and SEO - still an early-stage listing.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1573482770"
+    },
+    {
+      "id": "tesla-supercharger-stand",
+      "name": "Tesla Supercharger Phone Charger Stand",
+      "category_id": "automotive_bike",
+      "tags": [
+        "tesla",
+        "novelty",
+        "gift"
+      ],
+      "price_eur": 30,
+      "monthly_revenue_eur": 1459,
+      "why_it_sells": "Nostalgic Tesla Supercharger form factor on a functional object; strong Tesla community gifting.",
+      "differentiator": "Tesla fandom is active and high-income. Strong gifting angle.",
+      "ip_risk": "medium",
+      "ip_holder": "Tesla Inc.",
+      "is_recommended": true,
+      "notes": "Don't use the Supercharger or Tesla logo. Sell as 'EV charger inspired phone stand'.",
+      "url": "https://www.etsy.com/listing/1099392704"
+    },
+    {
+      "id": "snorlax-watch-cover",
+      "name": "Snorlax Apple Watch Charger Cover",
+      "category_id": "tech_accessories",
+      "tags": [
+        "pokemon",
+        "apple watch"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 2524,
+      "why_it_sells": "Character shape matches Apple Watch puck perfectly; Pokémon fandom is massive and buying.",
+      "differentiator": "High earner but built on Nintendo IP - listing can be removed at any time. Use as evidence of demand for the format, not as a model to copy.",
+      "ip_risk": "high",
+      "ip_holder": "Nintendo / Game Freak / TPC",
+      "is_recommended": false,
+      "notes": "Cautionary example - Nintendo enforcement is aggressive. Sell an original character instead of copying this.",
+      "url": "https://www.etsy.com/listing/1483135699"
+    },
+    {
+      "id": "simpsons-sponge-holder",
+      "name": "Simpsons Sponge Holder",
+      "category_id": "home_organization",
+      "tags": [
+        "character",
+        "kitchen"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 2256,
+      "why_it_sells": "Homer's mouth is the perfect sponge slot; viral social share potential; highly recognisable.",
+      "differentiator": "Strong revenue but one DMCA = shop gone. Use as proof that the 'character mouth holds object' format works - design an original character around the same concept.",
+      "ip_risk": "high",
+      "ip_holder": "Fox / Disney",
+      "is_recommended": false,
+      "notes": "Cautionary example. Original character with a similar form factor is the safer play.",
+      "url": "https://www.etsy.com/listing/1483135699"
+    },
+    {
+      "id": "thwomp-tissue-cover",
+      "name": "Super Mario Thwomp Tissue Box Cover",
+      "category_id": "decor",
+      "tags": [
+        "mario",
+        "gaming"
+      ],
+      "price_eur": 26,
+      "monthly_revenue_eur": 1474,
+      "why_it_sells": "Viral gaming decor; instantly recognisable character; functional novelty for gamer homes.",
+      "differentiator": "Nintendo is the most aggressive IP enforcer on Etsy - high suspension risk. Demonstrates demand for 'gaming character as functional household object', not a template to copy.",
+      "ip_risk": "high",
+      "ip_holder": "Nintendo",
+      "is_recommended": false,
+      "notes": "Cautionary example. Build an original character/creature around the same concept.",
+      "url": "https://www.etsy.com/listing/1520238137"
+    },
+    {
+      "id": "avengers-tower-echo",
+      "name": "Avengers Tower Amazon Echo Dot Holder",
+      "category_id": "tech_accessories",
+      "tags": [
+        "marvel",
+        "echo dot"
+      ],
+      "price_eur": 30,
+      "monthly_revenue_eur": 1129,
+      "why_it_sells": "Iconic architecture fits Echo Dot perfectly; Marvel fans are passionate and high-spending.",
+      "differentiator": "Very high revenue potential but suspension risk is real. Format works for any tall iconic landmark.",
+      "ip_risk": "high",
+      "ip_holder": "Marvel / Disney",
+      "is_recommended": false,
+      "notes": "Cautionary example. Try a generic skyscraper or original architecture instead.",
+      "url": "https://www.etsy.com/listing/1483135699"
+    },
+    {
+      "id": "r2d2-echo-dot",
+      "name": "Amazon Echo Dot R2-D2 Accessory",
+      "category_id": "tech_accessories",
+      "tags": [
+        "star wars",
+        "echo dot"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 709,
+      "why_it_sells": "Star Wars fandom; R2-D2 form factor matches Echo Dot shape perfectly.",
+      "differentiator": "High IP risk. Disney actively enforces Star Wars on Etsy. Use as proof that 'cylindrical character on Echo Dot' works - design an original robot.",
+      "ip_risk": "high",
+      "ip_holder": "Disney / Lucasfilm",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/989291132"
+    },
+    {
+      "id": "mickey-watch-cover",
+      "name": "Mickey Apple Watch Charger Cover",
+      "category_id": "tech_accessories",
+      "tags": [
+        "disney",
+        "apple watch"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 252,
+      "why_it_sells": "Character-branded tech accessory; strong gifting angle for Disney fans.",
+      "differentiator": "High IP risk (Disney). Etsy ban likely if flagged. Demand exists - capture it with an original character.",
+      "ip_risk": "high",
+      "ip_holder": "Disney",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/698551950"
+    },
+    {
+      "id": "lightsaber-wall-mount",
+      "name": "Lightsaber Wall Mount",
+      "category_id": "cosplay_props",
+      "tags": [
+        "star wars",
+        "display"
+      ],
+      "price_eur": 30,
+      "monthly_revenue_eur": 624,
+      "why_it_sells": "Display mount for prop collectors; collectors pay well for quality display solutions.",
+      "differentiator": "Etsy actively removes Star Wars listings. Generic 'sword display mount' captures most of the same buyers.",
+      "ip_risk": "high",
+      "ip_holder": "Disney / Lucasfilm",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/756682722"
+    },
+    {
+      "id": "baby-rattle-lightsaber",
+      "name": "Baby Rattle Lightsaber",
+      "category_id": "kids_nursery",
+      "tags": [
+        "star wars",
+        "baby",
+        "gift"
+      ],
+      "price_eur": 17,
+      "monthly_revenue_eur": 94,
+      "why_it_sells": "Geek parent gifting angle; Star Wars fandom is huge.",
+      "differentiator": "High IP risk (Disney/Lucasfilm). Lower revenue than the equivalent Mjolnir rattle confirms Star Wars enforcement is stricter.",
+      "ip_risk": "high",
+      "ip_holder": "Disney / Lucasfilm",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/1247776717"
+    },
+    {
+      "id": "captain-underpants-ring",
+      "name": "Captain Underpants Hypno Ring",
+      "category_id": "personalized_gifts",
+      "tags": [
+        "character",
+        "novelty"
+      ],
+      "price_eur": 8,
+      "monthly_revenue_eur": 172,
+      "why_it_sells": "IP-adjacent novelty; low price = impulse buy.",
+      "differentiator": "Low margin combined with IP risk makes this a poor recommendation. Original-character novelty rings serve the same impulse-buy buyer.",
+      "ip_risk": "high",
+      "ip_holder": "Scholastic / DreamWorks",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/1032444882"
+    },
+    {
+      "id": "chinese-takeout-planter",
+      "name": "Chinese Takeout Box Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "novelty",
+        "takeout"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 6459,
+      "why_it_sells": "Iconic takeout-box silhouette is instantly recognisable; doubles as a novelty kitchen-windowsill planter; viral on TikTok.",
+      "differentiator": "Top-tier earner in the planter category. Compact form factor cuts ship cost; the recognisable shape does the marketing.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1299234732"
+    },
+    {
+      "id": "butt-planter",
+      "name": "Booty Pot / Butt Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "novelty",
+        "humour"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 3454,
+      "why_it_sells": "Humour + decor crossover dominates Etsy gift search. Adult-novelty sub-niche has loyal repeat buyers.",
+      "differentiator": "Sustained earner over 5+ years - proves novelty doesn't always burn out if the design is genuinely funny.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/791339097"
+    },
+    {
+      "id": "cute-book-planter",
+      "name": "Cute Book-Shaped Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "book",
+        "decor"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 8440,
+      "why_it_sells": "Reader/book-lover gift demographic + house-plant trend = double niche. Aesthetic shelfie-ready.",
+      "differentiator": "Top earner in the dataset for any planter. Targets a buyer the generic geometric planters don't reach.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1771290046"
+    },
+    {
+      "id": "hands-planter",
+      "name": "Hands Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "decor",
+        "sculptural"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 740,
+      "why_it_sells": "Sculptural form factor with broad decorative appeal; cradling-hands silhouette photographs well from every angle.",
+      "differentiator": "Evergreen seller across 4+ years; works in any decor style.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/897819823"
+    },
+    {
+      "id": "curvy-body-planter",
+      "name": "Curvy Female Body Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "decor",
+        "sculptural"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 1920,
+      "why_it_sells": "Sculptural human-form planter; gift-buyer favourite; photographs beautifully on a shelf.",
+      "differentiator": "Long-tail evergreen seller. Variants (different body shapes, sizes) compound the original SKU.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1058378999"
+    },
+    {
+      "id": "car-planter",
+      "name": "Car Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "automotive",
+        "novelty"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 2420,
+      "why_it_sells": "Niche planter aimed at car enthusiasts and dads. Crosses planter buyers with automotive gift buyers.",
+      "differentiator": "Double-niche product captures buyers from a category (automotive gifts) that planter sellers ignore.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/874147144"
+    },
+    {
+      "id": "wall-mount-planter",
+      "name": "Wall Mount Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "wall",
+        "decor"
+      ],
+      "price_eur": 24,
+      "monthly_revenue_eur": 2000,
+      "why_it_sells": "Solves the small-apartment problem - planters without floor space. Renter-friendly mounting.",
+      "differentiator": "Functional planter category is far less saturated than decorative; buyers are problem-solving, not browsing.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1516926539"
+    },
+    {
+      "id": "happy-face-planter",
+      "name": "Happy Face Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "smiley",
+        "novelty"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 220,
+      "why_it_sells": "Smiley/Y2K aesthetic is on-trend with Gen Z desk decor.",
+      "differentiator": "Trend-aware design tapping the Y2K nostalgia wave; pairs well with similar-aesthetic accessories.",
+      "ip_risk": "low",
+      "ip_holder": "Smiley Company (the official Smiley logo is trademarked, generic happy face is fine)",
+      "is_recommended": true,
+      "notes": "Use a generic happy face design, not the Smiley wordmark or registered trademark.",
+      "url": "https://www.etsy.com/de-en/listing/1797237931"
+    },
+    {
+      "id": "coffee-love-planter",
+      "name": "Coffee Love Planter",
+      "category_id": "planters_garden",
+      "tags": [
+        "planter",
+        "coffee",
+        "decor"
+      ],
+      "price_eur": 16,
+      "monthly_revenue_eur": 605,
+      "why_it_sells": "Coffee-themed gifts is a huge gift category; planters cross over into the cafe-decor crowd.",
+      "differentiator": "Niche-of-a-niche - coffee lovers who also like plants. Specific buyer = less competition.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1193836857"
+    },
+    {
+      "id": "cowboy-boot-vase",
+      "name": "Cowboy Boot Vase",
+      "category_id": "planters_garden",
+      "tags": [
+        "vase",
+        "western",
+        "decor"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 1540,
+      "why_it_sells": "Western/cowboycore aesthetic is having a moment. Specific vase shape converts on Pinterest and TikTok.",
+      "differentiator": "Trend-aware niche product; shippable in flat-pack mode lowers logistics cost.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1636375942"
+    },
+    {
+      "id": "curvy-plant-stand",
+      "name": "Curvy Plant Stand",
+      "category_id": "planters_garden",
+      "tags": [
+        "plant stand",
+        "decor",
+        "indoor"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 392,
+      "why_it_sells": "Sculptural plant stand for indoor plants; complements not competes with planters.",
+      "differentiator": "Adjacent product to planters; same buyer, different SKU = AOV uplift if bundled.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1562285441"
+    },
+    {
+      "id": "pendant-amber-lampshade",
+      "name": "Pendant Lampshade Amber",
+      "category_id": "lighting_lamps",
+      "tags": [
+        "lamp",
+        "pendant",
+        "amber"
+      ],
+      "price_eur": 65,
+      "monthly_revenue_eur": 705,
+      "why_it_sells": "Amber/warm-glow lighting is trending in home decor; pendant format is one of the highest-AOV lamp types.",
+      "differentiator": "Premium pendant tier (€60+) with low competition vs the saturated table-lamp segment.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1082453835"
+    },
+    {
+      "id": "toro-table-lamp",
+      "name": "TORO Mid-Century Table Lamp",
+      "category_id": "lighting_lamps",
+      "tags": [
+        "lamp",
+        "midcentury",
+        "decor"
+      ],
+      "price_eur": 90,
+      "monthly_revenue_eur": 967,
+      "why_it_sells": "Mid-century-modern aesthetic is evergreen on Etsy. Lamp at €90+ commands a strong margin.",
+      "differentiator": "Distinct silhouette + named design (TORO) lets the seller defend the brand if knock-offs appear.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1016235580"
+    },
+    {
+      "id": "todai-table-lamp",
+      "name": "TODAI Mid-Century Table Lamp",
+      "category_id": "lighting_lamps",
+      "tags": [
+        "lamp",
+        "midcentury",
+        "minimal"
+      ],
+      "price_eur": 75,
+      "monthly_revenue_eur": 601,
+      "why_it_sells": "Minimalist mid-century lamp aesthetic. Targets the design-conscious buyer who wouldn't buy from IKEA.",
+      "differentiator": "Premium pricing on a fast-printable design; named SKU helps brand recognition.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1069953738"
+    },
+    {
+      "id": "polyhedragon-dice-holder",
+      "name": "Polyhedragon Dragon Dice Holder",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "dice",
+        "dragon",
+        "gaming"
+      ],
+      "price_eur": 36,
+      "monthly_revenue_eur": 1237,
+      "why_it_sells": "Original dragon-themed dice holder for the DnD market - dragon obsession is core to the audience.",
+      "differentiator": "Original sculptural design; not a generic dragon. Mechanical/sculptural design serves as a moat.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1695464312"
+    },
+    {
+      "id": "dice-tower-storage",
+      "name": "Dice Tower with Storage Box",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "dice",
+        "tower",
+        "storage"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 261,
+      "why_it_sells": "Dice tower + storage in one piece solves a real DnD-table problem; fewer SKUs the buyer has to assemble.",
+      "differentiator": "Combo design hits two buyer needs in one purchase, lifting AOV vs separate dice tower + bag.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1228726580"
+    },
+    {
+      "id": "dog-ring-holder",
+      "name": "Dog-Shaped Wedding Ring Holder",
+      "category_id": "wedding_events",
+      "tags": [
+        "wedding",
+        "ring",
+        "pet",
+        "personalised"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 2860,
+      "why_it_sells": "Wedding ring bearer + pet-owner sentimentality = high-emotion gift. Personalisation lifts AOV.",
+      "differentiator": "Cross-niche product hits both wedding and pet-gift buyers. Engraving makes it premium-priced and one-of-a-kind.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/1615658033"
+    },
+    {
+      "id": "litterbox-geckos",
+      "name": "LitterBox for Geckos",
+      "category_id": "pet_accessories",
+      "tags": [
+        "pet",
+        "reptile",
+        "exact-fit"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 828,
+      "why_it_sells": "Hyper-niche reptile-keeper product solving a real cleanliness problem; low competition.",
+      "differentiator": "Reptile keepers are an underserved Etsy niche; buyers are passionate and quality-tolerant.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/641511393"
+    },
+    {
+      "id": "stroodies-bubbleloft",
+      "name": "Stroodies Original BubbleLoft",
+      "category_id": "pet_accessories",
+      "tags": [
+        "pet",
+        "betta fish",
+        "aquarium"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 882,
+      "why_it_sells": "Solves a specific need for betta fish keepers (resting platform near surface). Niche within a niche.",
+      "differentiator": "Hyper-targeted aquarium product. Original IP that the seller has held for 7+ years. Cult buyer base.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/577954866"
+    },
+    {
+      "id": "shelf-riser-display",
+      "name": "Shelf Riser for Display",
+      "category_id": "home_organization",
+      "tags": [
+        "shelf",
+        "riser",
+        "organizer"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 1494,
+      "why_it_sells": "Display-shelf risers solve a real problem for collectors and Funko Pop / sneaker fans. High-intent buyer.",
+      "differentiator": "Functional product with a defined customer (collectors). Variants by size = upsell opportunity.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1528680896"
+    },
+    {
+      "id": "vinyl-record-stand",
+      "name": "Vinyl Record Stand",
+      "category_id": "desk_office",
+      "tags": [
+        "vinyl",
+        "record",
+        "decor"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 355,
+      "why_it_sells": "Vinyl is back; collectors need display solutions. Aesthetic over functional - photographs well.",
+      "differentiator": "Trending category (vinyl resurgence) with low FDM competition vs metal/wood alternatives.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/758589195"
+    },
+    {
+      "id": "now-playing-vinyl-stand",
+      "name": "Now Playing Vinyl Stand",
+      "category_id": "desk_office",
+      "tags": [
+        "vinyl",
+        "now playing",
+        "display"
+      ],
+      "price_eur": 25,
+      "monthly_revenue_eur": 1025,
+      "why_it_sells": "'Now playing' display = active-use product, not just storage. Vinyl owners listen and switch records often.",
+      "differentiator": "Hybrid storage + display function; the user touches it every listening session, building brand affection.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1441856558"
+    },
+    {
+      "id": "now-playing-wall-mount",
+      "name": "Now Playing Wall-Mount Vinyl Display",
+      "category_id": "desk_office",
+      "tags": [
+        "vinyl",
+        "wall mount",
+        "display"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 212,
+      "why_it_sells": "Wall-mounted version targets renters and small-apartment vinyl collectors. Niche-of-a-niche.",
+      "differentiator": "Variant of the bestselling 'Now Playing' family. Compact ship size keeps margins.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1545244806"
+    },
+    {
+      "id": "stream-deck-desk-mount",
+      "name": "Stream Deck Under-Desk Mount",
+      "category_id": "desk_office",
+      "tags": [
+        "stream deck",
+        "desk",
+        "exact-fit"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 1372,
+      "why_it_sells": "Streamers and content creators are high-spend buyers. Exact-fit for Elgato Stream Deck = no competition from generic clamps.",
+      "differentiator": "Niche functional product for a high-income hobby segment. Hardware-specific fit kills knock-offs.",
+      "ip_risk": "low",
+      "ip_holder": "Elgato / Corsair",
+      "is_recommended": true,
+      "notes": "Avoid Elgato or Stream Deck wordmark in the title; use 'fits Stream Deck MK.1/MK.2' phrasing.",
+      "url": "https://www.etsy.com/de-en/listing/1316518631"
+    },
+    {
+      "id": "airpods-max-stand",
+      "name": "AirPods Max Deep-Sleep Stand",
+      "category_id": "tech_accessories",
+      "tags": [
+        "airpods",
+        "stand",
+        "exact-fit"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 521,
+      "why_it_sells": "Solves a real AirPods Max battery-drain problem (auto-sleep when stored on the stand). Functional + premium buyer.",
+      "differentiator": "Functional solve, not just decoration. AirPods Max owners are wealthy and loyal.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "notes": "Avoid AirPods or Apple wordmarks in the title; use 'over-ear headphone stand' phrasing.",
+      "url": "https://www.etsy.com/de-en/listing/1422871902"
+    },
+    {
+      "id": "marshall-amp-decor",
+      "name": "Personalised Marshall-Style Amp",
+      "category_id": "personalized_gifts",
+      "tags": [
+        "amp",
+        "music",
+        "personalised"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 1258,
+      "why_it_sells": "Music-lover gift category; Marshall amp aesthetic is universally recognised. Personalisation lifts AOV.",
+      "differentiator": "Music + gift + personalisation = three buyer intents in one listing. High emotional buy.",
+      "ip_risk": "medium",
+      "ip_holder": "Marshall Amplification",
+      "is_recommended": true,
+      "notes": "Critical: do NOT use the Marshall wordmark, logo or script font. Use 'amp-style speaker' or 'guitar amp inspired' phrasing only.",
+      "url": "https://www.etsy.com/de-en/listing/1586837798"
+    },
+    {
+      "id": "fidget-ring-spinner",
+      "name": "Fidget Ring Spinner",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "fidget",
+        "ring",
+        "spinner"
+      ],
+      "price_eur": 12,
+      "monthly_revenue_eur": 600,
+      "why_it_sells": "Wearable-fidget hybrid; satisfies tactile need + jewelry aesthetic. Cross-niche product.",
+      "differentiator": "Adult fidget category in a wearable form. Lower competition than standard fidget toys.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/listing/468562831"
+    },
+    {
+      "id": "einstein-tile-set",
+      "name": "Einstein Aperiodic Tile Set",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "math",
+        "puzzle",
+        "aperiodic"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 134,
+      "why_it_sells": "Maths/puzzle community discovered the aperiodic Einstein tile in 2023; collectors and educators want a physical set.",
+      "differentiator": "Niche maths-community product with built-in publicity narrative (the discovery story). Educator buyer = bulk orders.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.etsy.com/de-en/listing/1442642614"
+    },
+    {
+      "id": "vr-quest-stock",
+      "name": "VR Stock for Meta Quest Headsets",
+      "category_id": "tech_accessories",
+      "tags": [
+        "vr",
+        "quest",
+        "exact-fit"
+      ],
+      "price_eur": 32,
+      "monthly_revenue_eur": 1100,
+      "why_it_sells": "Exact-fit accessory for the Meta Quest line; FPS gamers buy gunstocks to improve aim. Cult community.",
+      "differentiator": "Hardware-specific fit for a single device family - no generic competitor. VR community is small but devoted.",
+      "ip_risk": "low",
+      "ip_holder": "Meta Platforms",
+      "is_recommended": true,
+      "notes": "Avoid Meta/Quest logos; use 'fits Quest 2/3/Pro' phrasing.",
+      "url": "https://www.etsy.com/de-en/listing/1585617894"
+    },
+    {
+      "id": "apple-watch-ipod-case",
+      "name": "Apple Watch iPod-Style Case",
+      "category_id": "tech_accessories",
+      "tags": [
+        "apple watch",
+        "retro",
+        "ipod"
+      ],
+      "price_eur": 22,
+      "monthly_revenue_eur": 600,
+      "why_it_sells": "Nostalgia tap (classic iPod) on a current device (Apple Watch); retro-tech buyers are passionate gift-givers.",
+      "differentiator": "Mash-up product hitting two Apple-ecosystem nostalgia waves at once.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "notes": "Avoid Apple, iPod or click-wheel logos. Use 'retro-MP3-style case' phrasing.",
+      "url": "https://www.etsy.com/de-en/listing/1757610332"
+    },
+    {
+      "id": "name-charm-clogs",
+      "name": "Custom Name Charm for Clogs",
+      "category_id": "fashion_accessories",
+      "tags": [
+        "clogs",
+        "personalised",
+        "shoe charm"
+      ],
+      "price_eur": 12,
+      "monthly_revenue_eur": 295,
+      "why_it_sells": "Crocs-style clog charms is a huge niche; personalisation lifts conversion and lets you escape generic-charm competition.",
+      "differentiator": "Adjacent to the Solefully model (Croc charms) but personalised. Lower-volume but higher-margin per unit.",
+      "ip_risk": "low",
+      "ip_holder": "Crocs Inc.",
+      "is_recommended": true,
+      "notes": "Use 'fits clog-style shoes' phrasing; do not name Crocs in the title.",
+      "url": "https://www.etsy.com/de-en/listing/1721464818"
+    },
+    {
+      "id": "thing-hand-decor",
+      "name": "Severed Hand Halloween Decor (Thing-style)",
+      "category_id": "decor",
+      "tags": [
+        "halloween",
+        "wednesday",
+        "novelty"
+      ],
+      "price_eur": 20,
+      "monthly_revenue_eur": 620,
+      "why_it_sells": "Wednesday/Addams Family fandom + Halloween Q4 spike = strong seasonal earner.",
+      "differentiator": "Strong seasonal demand. The hand silhouette itself isn't trademarked, but listings using 'Wednesday' or 'Thing' branding face takedown risk.",
+      "ip_risk": "medium",
+      "ip_holder": "MGM / Netflix (Wednesday)",
+      "is_recommended": true,
+      "notes": "Sell as 'severed hand Halloween decor' or 'creepy crawling hand' - avoid Wednesday/Thing/Addams branding.",
+      "url": "https://www.etsy.com/de-en/listing/1363270232"
+    },
+    {
+      "id": "futurama-echo-dot",
+      "name": "Futurama Amazon Echo Dot Holder",
+      "source": "etsy",
+      "category_id": "tech_accessories",
+      "tags": [
+        "futurama",
+        "echo dot",
+        "character"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 1116,
+      "why_it_sells": "Beloved-cartoon nostalgia + functional smart-home accessory. Strong Q4 gift demand from millennial buyers.",
+      "differentiator": "Cautionary example - high revenue, but Fox/Disney enforce on Etsy. The 'cartoon-character holds Echo Dot' format works with original characters.",
+      "ip_risk": "high",
+      "ip_holder": "Fox / Disney",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/1483135699"
+    },
+    {
+      "id": "brave-toaster-sponge",
+      "name": "Brave Little Toaster Sponge Holder",
+      "source": "etsy",
+      "category_id": "home_organization",
+      "tags": [
+        "disney",
+        "kitchen",
+        "novelty"
+      ],
+      "price_eur": 26,
+      "monthly_revenue_eur": 1116,
+      "why_it_sells": "Cult-classic Disney film + functional kitchen object = nostalgia-driven gift. Wide millennial buyer base.",
+      "differentiator": "Cautionary example. Disney enforces aggressively. Same form factor with an original retro-appliance character avoids the takedown risk.",
+      "ip_risk": "high",
+      "ip_holder": "Disney",
+      "is_recommended": false,
+      "url": "https://www.etsy.com/listing/1483135699"
+    },
+    {
+      "id": "tesla-license-plate-holder",
+      "name": "Tesla License Plate Holder",
+      "source": "etsy",
+      "category_id": "automotive_bike",
+      "tags": [
+        "tesla",
+        "license plate",
+        "exact-fit"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 798,
+      "why_it_sells": "Tesla owners are loyal, high-income buyers; exact-fit accessories for Model 3/Y are a near-evergreen niche.",
+      "differentiator": "5+ years sustained sales prove Tesla niche is durable. Avoid Tesla wordmark or T logo in photos.",
+      "ip_risk": "medium",
+      "ip_holder": "Tesla Inc.",
+      "is_recommended": true,
+      "notes": "Use 'fits Model 3 / Model Y' phrasing; never the Tesla T logo.",
+      "url": "https://www.etsy.com/listing/630380948"
+    },
+    {
+      "id": "ebay-aztec-death-whistle-onyx",
+      "name": "Aztec Death Whistle Onyx Black Skull",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "novelty",
+        "viral",
+        "halloween"
+      ],
+      "price_eur": 5,
+      "monthly_revenue_eur": 428,
+      "why_it_sells": "Novelty noisemaker that went viral on TikTok. Low filament cost; high impulse-buy rate at sub-$5 price.",
+      "differentiator": "Top eBay 3D-print earner in this dataset by volume (5,800+ units). Variants on 'death whistle' compound the SKU.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/193305004314"
+    },
+    {
+      "id": "ebay-aztec-quetzalcoatl-whistle",
+      "name": "Aztec Quetzalcoatl Death Whistle",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "novelty",
+        "viral"
+      ],
+      "price_eur": 9,
+      "monthly_revenue_eur": 250,
+      "why_it_sells": "Themed variant of the death-whistle category - feathered serpent design appeals to a slightly different aesthetic buyer.",
+      "differentiator": "Demonstrates the depth of the death-whistle niche; variant designs each find their own audience.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/193346426805"
+    },
+    {
+      "id": "ebay-glock-rear-sight-tool",
+      "name": "Glock Rear Sight Pusher Tool",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "firearms",
+        "tool",
+        "exact-fit"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 1377,
+      "why_it_sells": "Universal sight-pusher that fits all Glock models; firearms hobbyists pay for tools that save trips to a gunsmith.",
+      "differentiator": "Highest sustained eBay revenue in this dataset (3,400+ units sold). Firearms parts are eBay-allowed but Etsy-banned, so eBay is the right channel.",
+      "ip_risk": "low",
+      "ip_holder": "Glock Ges.m.b.H.",
+      "is_recommended": true,
+      "notes": "Etsy bans firearms-related listings; this is an eBay-only product. Avoid the Glock wordmark - sell as 'rear sight pusher tool'.",
+      "url": "https://www.ebay.com/itm/154565067192"
+    },
+    {
+      "id": "ebay-rooflight-locks-heki",
+      "name": "Rooflight Security Locks (Heki / Dometic)",
+      "source": "ebay",
+      "category_id": "replacement_parts",
+      "tags": [
+        "motorhome",
+        "exact-fit",
+        "security"
+      ],
+      "price_eur": 5,
+      "monthly_revenue_eur": 310,
+      "why_it_sells": "Solves a real motorhome-security problem (rooflight latches are easily forced). Buyers are urgent - they're securing a vehicle they own.",
+      "differentiator": "Hyper-niche replacement-part product with near-zero competition. Caravan/motorhome owners are a high-LTV repeat-buyer base.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/265704654419"
+    },
+    {
+      "id": "ebay-modular-hotwheels-display",
+      "name": "Modular Hot Wheels 1:64 Wall Display Shelf",
+      "source": "ebay",
+      "category_id": "home_organization",
+      "tags": [
+        "hot wheels",
+        "display",
+        "modular"
+      ],
+      "price_eur": 21,
+      "monthly_revenue_eur": 1265,
+      "why_it_sells": "1:64 collectors are massive, organised and willing to pay for display solutions. Modular system means buyers come back to extend.",
+      "differentiator": "Modular product = recurring revenue; the buyer's first 18-car shelf becomes their second and third.",
+      "ip_risk": "low",
+      "ip_holder": "Mattel (Hot Wheels)",
+      "is_recommended": true,
+      "notes": "Avoid Hot Wheels or Mattel wordmarks; use 'fits 1:64 scale die-cast cars'.",
+      "url": "https://www.ebay.com/itm/176096190836"
+    },
+    {
+      "id": "ebay-football-helmet-hanger",
+      "name": "Football Mini Helmet Wall Hanger",
+      "source": "ebay",
+      "category_id": "home_organization",
+      "tags": [
+        "football",
+        "display",
+        "wall mount"
+      ],
+      "price_eur": 6,
+      "monthly_revenue_eur": 370,
+      "why_it_sells": "Mini-helmet collectors number in the millions; wall mounts are the missing accessory. Cheap to ship.",
+      "differentiator": "Low-priced impulse buy with strong repeat-purchase pattern (collectors mount many helmets).",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.co.uk/itm/134386078808"
+    },
+    {
+      "id": "ebay-daisy-bb-speed-loader",
+      "name": "Daisy Red Ryder BB Gun Speed Loader",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "bb gun",
+        "exact-fit",
+        "loader"
+      ],
+      "price_eur": 6,
+      "monthly_revenue_eur": 312,
+      "why_it_sells": "Solves a tedious problem (loading BBs by hand) for a beloved childhood-gift product (Daisy Red Ryder). Dad-and-kid demographic.",
+      "differentiator": "eBay-only - Etsy bans BB-gun related listings. Niche-of-a-niche with near-zero competition.",
+      "ip_risk": "low",
+      "ip_holder": "Daisy Outdoor Products",
+      "is_recommended": true,
+      "notes": "Etsy doesn't allow this category; eBay is the channel. Avoid Daisy or Red Ryder branding.",
+      "url": "https://www.ebay.com/itm/115499547943"
+    },
+    {
+      "id": "ebay-hotwheels-car-lift",
+      "name": "1/64 Hot Wheels Car Lift",
+      "source": "ebay",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "hot wheels",
+        "diorama",
+        "1:64"
+      ],
+      "price_eur": 3,
+      "monthly_revenue_eur": 156,
+      "why_it_sells": "Diorama accessory for 1:64 collectors. Low-priced impulse buy that pads order value when bought with display shelves.",
+      "differentiator": "Pairs with the Hot Wheels wall display - upsell opportunity. Repeat buyer category.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.co.uk/itm/335575264665"
+    },
+    {
+      "id": "ebay-rc-thumb-screw-nuts",
+      "name": "Pro-Line Body Mount Thumb Screw Nuts (RC, 12-pack)",
+      "source": "ebay",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "rc",
+        "exact-fit",
+        "tool-free"
+      ],
+      "price_eur": 9,
+      "monthly_revenue_eur": 344,
+      "why_it_sells": "RC hobbyists do body-changes constantly; thumb-screw nuts let them swap without a wrench. 12-pack form lifts AOV.",
+      "differentiator": "Replacement-part-style product in a passionate hobby. Tool-free function is the value prop.",
+      "ip_risk": "low",
+      "ip_holder": "Pro-Line Racing",
+      "is_recommended": true,
+      "notes": "Use 'fits Pro-Line body mounts' phrasing.",
+      "url": "https://www.ebay.co.uk/itm/203545992503"
+    },
+    {
+      "id": "ebay-galaxy-lamp",
+      "name": "3D Galaxy Lamp / Moon Light",
+      "source": "ebay",
+      "category_id": "lighting_lamps",
+      "tags": [
+        "lamp",
+        "moon",
+        "novelty"
+      ],
+      "price_eur": 11,
+      "monthly_revenue_eur": 367,
+      "why_it_sells": "Touch-color-change moon lamp is a TikTok mainstay. Low price, high gift-buy potential.",
+      "differentiator": "Saturated category but eBay's looser SEO rules let smaller listings still find buyers.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/234338468311"
+    },
+    {
+      "id": "ebay-vinyl-shelf-wall",
+      "name": "Vinyl Record Display Shelf (Wall Mount)",
+      "source": "ebay",
+      "category_id": "desk_office",
+      "tags": [
+        "vinyl",
+        "display",
+        "wall mount"
+      ],
+      "price_eur": 4,
+      "monthly_revenue_eur": 148,
+      "why_it_sells": "Vinyl resurgence + apartment-friendly wall mount = huge buyer pool. Sub-$5 price drives volume.",
+      "differentiator": "Cheaper than the Etsy 'Now Playing' equivalents; competes on volume not premium.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/184647285458"
+    },
+    {
+      "id": "ebay-galaxy-edge-lightsaber-stand",
+      "name": "Universal Lightsaber Display Stand (Galaxy's Edge)",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "star wars",
+        "display",
+        "lightsaber"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 5690,
+      "why_it_sells": "Disney Galaxy's Edge legacy-saber collectors are a passionate, high-spend audience. Display stands are the missing accessory.",
+      "differentiator": "Cautionary - high revenue but Disney IP risk is real. Sell as 'sword display mount' to dodge takedowns.",
+      "ip_risk": "high",
+      "ip_holder": "Disney / Lucasfilm",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/202802708374"
+    },
+    {
+      "id": "ebay-kyber-crystal",
+      "name": "Galaxy's Edge Savi's Workshop Kyber Crystal",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "star wars",
+        "kyber",
+        "lightsaber"
+      ],
+      "price_eur": 19,
+      "monthly_revenue_eur": 3790,
+      "why_it_sells": "Customisation accessory for legacy lightsabers; passionate Star-Wars maker community.",
+      "differentiator": "Cautionary IP example. Working kyber-crystal effect proves there's demand for original-IP equivalents (e.g. wizard staff crystal).",
+      "ip_risk": "high",
+      "ip_holder": "Disney / Lucasfilm",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/144629727757"
+    },
+    {
+      "id": "ebay-rayban-meta-charger",
+      "name": "Charging Stand for Ray-Ban Meta Smart Glasses",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "ray-ban",
+        "meta",
+        "exact-fit"
+      ],
+      "price_eur": 46,
+      "monthly_revenue_eur": 8750,
+      "why_it_sells": "Ray-Ban Meta is the bestselling smart-glasses ever; charging stands are the missing accessory. High-income buyer.",
+      "differentiator": "Massive earner. Hardware launched ~2024 - first-mover advantage on a popular new device. Premium €46+ price.",
+      "ip_risk": "low",
+      "ip_holder": "Meta / Luxottica",
+      "is_recommended": true,
+      "notes": "Avoid Ray-Ban or Meta wordmarks; use 'fits smart glasses with USB-C cradle' phrasing.",
+      "url": "https://www.ebay.com/itm/235562472641"
+    },
+    {
+      "id": "ebay-dewalt-battery-caddy",
+      "name": "DeWALT Battery Caddy / Carrier (6-pack)",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "dewalt",
+        "tool storage",
+        "exact-fit"
+      ],
+      "price_eur": 27,
+      "monthly_revenue_eur": 4940,
+      "why_it_sells": "Trade workers and serious DIYers stockpile DeWALT batteries; a 6-slot caddy keeps the van/garage organised.",
+      "differentiator": "High-volume earner; tradesperson buyer is professional and replaces or expands as fleet grows.",
+      "ip_risk": "low",
+      "ip_holder": "DeWALT / Stanley Black & Decker",
+      "is_recommended": true,
+      "notes": "Use 'fits DeWALT 18V/20V Max batteries' phrasing - not DeWalt wordmark.",
+      "url": "https://www.ebay.com/itm/145243585970"
+    },
+    {
+      "id": "ebay-aquarium-feeding-cup",
+      "name": "Aquarium Frozen Food Feeding Cup",
+      "source": "ebay",
+      "category_id": "pet_accessories",
+      "tags": [
+        "aquarium",
+        "fish",
+        "feeding"
+      ],
+      "price_eur": 6,
+      "monthly_revenue_eur": 888,
+      "why_it_sells": "Solves a specific aquarist problem (thawing/feeding frozen food without mess). Niche keepers are passionate buyers.",
+      "differentiator": "Adjacent to the Stroodies BubbleLoft model - hyper-niche aquarium products win.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/324973569955"
+    },
+    {
+      "id": "ebay-echo-dot-3rd-gen-socket",
+      "name": "Echo Dot 3rd Gen Outlet Socket Holder",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "echo dot",
+        "outlet",
+        "exact-fit"
+      ],
+      "price_eur": 7,
+      "monthly_revenue_eur": 992,
+      "why_it_sells": "Frees desk space for Echo Dot 3rd-gen owners. Massive installed base = consistent demand.",
+      "differentiator": "Older device but evergreen - Amazon doesn't replace ageing Echo Dots quickly. Variant of the HomePod outlet stand model.",
+      "ip_risk": "low",
+      "ip_holder": "Amazon",
+      "is_recommended": true,
+      "notes": "Avoid Amazon/Echo wordmarks; use 'fits round smart speakers'.",
+      "url": "https://www.ebay.com/itm/153985205178"
+    },
+    {
+      "id": "ebay-airtag-bike-mount",
+      "name": "AirTag Under-Bottle Bicycle Mount",
+      "source": "ebay",
+      "category_id": "automotive_bike",
+      "tags": [
+        "airtag",
+        "bike",
+        "anti-theft"
+      ],
+      "price_eur": 5,
+      "monthly_revenue_eur": 820,
+      "why_it_sells": "Bike theft is a real, urgent problem; AirTag is the standard tracking solution. Hidden under-bottle mount is the buyer's specific ask.",
+      "differentiator": "Concealment is the unique value prop - off-the-shelf mounts are visible. Cyclist buyer is high-LTV.",
+      "ip_risk": "low",
+      "ip_holder": "Apple Inc.",
+      "is_recommended": true,
+      "notes": "Avoid AirTag/Apple wordmarks; use 'tracker mount under bottle cage'.",
+      "url": "https://www.ebay.co.uk/itm/124769073438"
+    },
+    {
+      "id": "ebay-ikea-detolf-clips",
+      "name": "IKEA DETOLF Shelf Support Clips (12-pack)",
+      "source": "ebay",
+      "category_id": "home_organization",
+      "tags": [
+        "ikea",
+        "exact-fit",
+        "shelf"
+      ],
+      "price_eur": 11,
+      "monthly_revenue_eur": 210,
+      "why_it_sells": "DETOLF is one of IKEA's most popular display cabinets; the original 4 shelves don't satisfy serious collectors. 12-clip pack lets buyers add 3+ shelves.",
+      "differentiator": "5+ year sustained seller. Solves a specific IKEA-extension problem; collectors are repeat buyers.",
+      "ip_risk": "low",
+      "ip_holder": "IKEA",
+      "is_recommended": true,
+      "notes": "Avoid IKEA wordmark; use 'fits DETOLF cabinet'.",
+      "url": "https://www.ebay.com/itm/254274091838"
+    },
+    {
+      "id": "ebay-spiderman-noir-hat",
+      "name": "Spider-Man Noir Hat (Marvel Legends)",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "marvel",
+        "spiderman",
+        "1:12"
+      ],
+      "price_eur": 8,
+      "monthly_revenue_eur": 1155,
+      "why_it_sells": "Action-figure customisers buy 1:12 accessories for figures Marvel never released with a hat. Tiny SKU, big collector market.",
+      "differentiator": "Cautionary - Marvel/Disney enforce. Original-character hat for the same scale figures avoids the IP risk.",
+      "ip_risk": "high",
+      "ip_holder": "Marvel / Disney",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/352572926892"
+    },
+    {
+      "id": "ebay-corner-clamp-irwin",
+      "name": "Heavy Duty Corner Clamp Adapters (Irwin Mini Quick Grip)",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "irwin",
+        "clamp",
+        "exact-fit"
+      ],
+      "price_eur": 14,
+      "monthly_revenue_eur": 1810,
+      "why_it_sells": "Wood-workers and DIYers extend their existing Irwin clamps to 90-degree corners with a 3D-printed adapter. Cheaper than buying corner clamps.",
+      "differentiator": "Replacement-style accessory that extends an existing tool. Pairs strongly with eBay's tradesperson buyer base.",
+      "ip_risk": "low",
+      "ip_holder": "Irwin / Stanley Black & Decker",
+      "is_recommended": true,
+      "notes": "Use 'fits Irwin Mini Quick Grip' phrasing.",
+      "url": "https://www.ebay.com/itm/145152177973"
+    },
+    {
+      "id": "ebay-lego-saturn-wall-mount",
+      "name": "Wall Mount Display for Lego Saturn V",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "lego",
+        "saturn v",
+        "display"
+      ],
+      "price_eur": 28,
+      "monthly_revenue_eur": 3683,
+      "why_it_sells": "Adult Lego collectors built a $400+ Saturn V and want to wall-mount it horizontally - the official set lacks a stable display option.",
+      "differentiator": "High-AOV accessory for a high-AOV product. Lego AFOL (Adult Fan of Lego) buyer is high-income.",
+      "ip_risk": "low",
+      "ip_holder": "Lego Group / NASA",
+      "is_recommended": true,
+      "notes": "Avoid Lego wordmark or trademarked imagery; use 'fits 1969-piece space rocket model'.",
+      "url": "https://www.ebay.co.uk/itm/285102396961"
+    },
+    {
+      "id": "ebay-motorhome-trim-tool",
+      "name": "Motorhome Window Rubber Trim Fitting Tool",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "caravan",
+        "motorhome",
+        "trim"
+      ],
+      "price_eur": 11,
+      "monthly_revenue_eur": 193,
+      "why_it_sells": "Specific repair tool for caravan/motorhome owners installing replacement window seals. Buyers are urgent and quality-tolerant.",
+      "differentiator": "Hyper-niche tool with near-zero competition. Repeat purchase across 23mm + 25mm trim variants.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/203232988484"
+    },
+    {
+      "id": "ebay-switch-piranha-plant-stand",
+      "name": "Nintendo Switch Piranha Plant Charging Stand",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "switch",
+        "mario",
+        "plant"
+      ],
+      "price_eur": 47,
+      "monthly_revenue_eur": 5300,
+      "why_it_sells": "Mario fans + Switch owners + TikTok virality = three converging niches. Premium €47+ price proves design value.",
+      "differentiator": "Cautionary - massive earner but Nintendo enforces aggressively. Original 'plant-shaped charging stand' avoids the IP risk.",
+      "ip_risk": "high",
+      "ip_holder": "Nintendo",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/256111228148"
+    },
+    {
+      "id": "ebay-f1-desk-sign",
+      "name": "F1 / Formula 1 Desk Sign",
+      "source": "ebay",
+      "category_id": "desk_office",
+      "tags": [
+        "formula 1",
+        "racing",
+        "desk"
+      ],
+      "price_eur": 13,
+      "monthly_revenue_eur": 207,
+      "why_it_sells": "Formula-1 fandom is global and growing fast (Drive to Survive effect). Desk decor is an underserved sub-niche.",
+      "differentiator": "Trend-aware product riding the F1 popularity wave. Avoid Formula 1 logo; sell as 'motorsport desk sign'.",
+      "ip_risk": "medium",
+      "ip_holder": "Formula One Group",
+      "is_recommended": true,
+      "notes": "Avoid F1, Formula 1, FIA logos; sell as 'motorsport / racing fan desk sign'.",
+      "url": "https://www.ebay.com/itm/375567033979"
+    },
+    {
+      "id": "ebay-deadpool-mask",
+      "name": "Deadpool & Wolverine Realistic Halloween Mask",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "marvel",
+        "deadpool",
+        "cosplay"
+      ],
+      "price_eur": 51,
+      "monthly_revenue_eur": 7030,
+      "why_it_sells": "Highest eBay revenue in the Halloween cosplay category. Movie release year (2024) drove demand peak.",
+      "differentiator": "Cautionary - Marvel/Disney enforce. Realistic-mask format works with original characters or generic horror masks.",
+      "ip_risk": "high",
+      "ip_holder": "Marvel / Disney",
+      "is_recommended": false,
+      "url": "https://www.ebay.co.uk/itm/186618942103"
+    },
+    {
+      "id": "ebay-blockbuster-sign",
+      "name": "Light-Up Blockbuster Video Decoration Sign",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "blockbuster",
+        "retro",
+        "sign"
+      ],
+      "price_eur": 33,
+      "monthly_revenue_eur": 3220,
+      "why_it_sells": "90s/00s nostalgia-decor is a huge demographic; Blockbuster brand is defunct so trademark enforcement is dormant.",
+      "differentiator": "Defunct-brand IP is the safer-than-Disney play. Same retro nostalgia, no active rights-holder pursuing takedowns.",
+      "ip_risk": "medium",
+      "ip_holder": "Blockbuster (defunct)",
+      "is_recommended": true,
+      "notes": "Trademark technically lapsed but original holder's IP partially survives - keep listings safe by avoiding the original logo style.",
+      "url": "https://www.ebay.com/itm/256384837180"
+    },
+    {
+      "id": "ebay-greenlight-truckbed-toolbox",
+      "name": "1:64 Truck Bed Toolbox (Greenlight / M2)",
+      "source": "ebay",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "1:64",
+        "diorama",
+        "greenlight"
+      ],
+      "price_eur": 4,
+      "monthly_revenue_eur": 64,
+      "why_it_sells": "Diorama accessories for 1:64 die-cast collectors. Pairs with truck models from Greenlight, M2 Machines, GreenLight Hauliers.",
+      "differentiator": "Sub-$5 impulse buy that grows order value when bundled with display shelves and other diorama pieces.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/185399976985"
+    },
+    {
+      "id": "ebay-stitch-cookie-cutter",
+      "name": "Stitch Cookie Cutter (Disney)",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "disney",
+        "kitchen",
+        "cookie cutter"
+      ],
+      "price_eur": 7,
+      "monthly_revenue_eur": 700,
+      "why_it_sells": "Disney-character cookie cutters are an enormous birthday-party niche. Stitch fandom is one of the most consistent on Etsy/eBay.",
+      "differentiator": "Cautionary - Disney enforces but cookie cutters often slip through. Generic-shape cutters with the same form factor are the safe play.",
+      "ip_risk": "high",
+      "ip_holder": "Disney",
+      "is_recommended": false,
+      "url": "https://www.ebay.co.uk/itm/393907677938"
+    },
+    {
+      "id": "ebay-aero-traxxas-c10",
+      "name": "Aero Downforce Kit (Traxxas Slash, 1967 C10)",
+      "source": "ebay",
+      "category_id": "automotive_bike",
+      "tags": [
+        "rc",
+        "traxxas",
+        "exact-fit"
+      ],
+      "price_eur": 46,
+      "monthly_revenue_eur": 4100,
+      "why_it_sells": "RC drag-truck enthusiasts buy aero kits to tune performance. Specific platform (Traxxas Slash) keeps competition low.",
+      "differentiator": "Hardware-specific functional product for a passionate hobby segment. €46+ price commands real margin.",
+      "ip_risk": "low",
+      "ip_holder": "Traxxas / GM (Chevrolet C10 silhouette)",
+      "is_recommended": true,
+      "notes": "Avoid Chevrolet or Traxxas trademarked logos; use 'fits Traxxas Slash, 1967 truck-style body' phrasing.",
+      "url": "https://www.ebay.com/itm/234105869229"
+    },
+    {
+      "id": "ebay-ho-scale-trash",
+      "name": "HO-Scale Dumpsters / Pallets / Drums (Set of 15)",
+      "source": "ebay",
+      "category_id": "miniatures_terrain",
+      "tags": [
+        "model railway",
+        "ho scale",
+        "scenery"
+      ],
+      "price_eur": 12,
+      "monthly_revenue_eur": 977,
+      "why_it_sells": "Model railway scenery is an evergreen hobby with high-LTV buyers. Bulk pack of trash items is the missing accessory.",
+      "differentiator": "Niche-of-a-niche functional category. Buyers come back as their layouts grow.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/195671721636"
+    },
+    {
+      "id": "ebay-stitch-cutter-2",
+      "name": "McDonalds Twin In-Car Sauce Holder (DipClip)",
+      "source": "ebay",
+      "category_id": "automotive_bike",
+      "tags": [
+        "mcdonalds",
+        "in-car",
+        "novelty"
+      ],
+      "price_eur": 6,
+      "monthly_revenue_eur": 507,
+      "why_it_sells": "McDonalds dipping sauces in-car is a universal annoyance. DipClip solves it for £6 - perfect impulse buy.",
+      "differentiator": "Volume play: 834 units sold over 6 years. Generic 'twin sauce holder' phrasing dodges the McDonalds trademark.",
+      "ip_risk": "low",
+      "ip_holder": "McDonalds Corporation",
+      "is_recommended": true,
+      "notes": "Sell as 'twin dipping sauce in-car holder' - never use McDonalds branding.",
+      "url": "https://www.ebay.co.uk/itm/362544954075"
+    },
+    {
+      "id": "ebay-grey-alien-figure",
+      "name": "Grey Alien Area 51 Action Figure",
+      "source": "ebay",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "alien",
+        "novelty",
+        "action figure"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 1112,
+      "why_it_sells": "Pop-culture grey-alien iconography has zero IP holder. Halloween + Area 51 conspiracy buyers feed evergreen demand.",
+      "differentiator": "Original-design action figure with no trademark exposure; the silhouette belongs to no one.",
+      "ip_risk": "none",
+      "is_recommended": true,
+      "url": "https://www.ebay.com/itm/124495239547"
+    },
+    {
+      "id": "ebay-bmw-e30-ashtray-delete",
+      "name": "BMW E30 Rear Ash Tray Delete Plate",
+      "source": "ebay",
+      "category_id": "automotive_bike",
+      "tags": [
+        "bmw",
+        "e30",
+        "exact-fit"
+      ],
+      "price_eur": 23,
+      "monthly_revenue_eur": 1255,
+      "why_it_sells": "E30 BMW restorers want to clean up the rear cabin; original ashtray is universally hated. 30+ year old car, evergreen restoration community.",
+      "differentiator": "Hyper-specific restoration accessory. E30 community is small but obsessive and price-tolerant.",
+      "ip_risk": "low",
+      "ip_holder": "BMW AG",
+      "is_recommended": true,
+      "notes": "Avoid BMW logo or M3 trademark; use 'fits E30 1984-1991' phrasing.",
+      "url": "https://www.ebay.com/itm/164254993639"
+    },
+    {
+      "id": "ebay-jeep-xj-cupholder",
+      "name": "Cupholder for 1984-1996 Jeep XJ Cherokee / MJ Comanche",
+      "source": "ebay",
+      "category_id": "automotive_bike",
+      "tags": [
+        "jeep",
+        "cherokee",
+        "exact-fit"
+      ],
+      "price_eur": 47,
+      "monthly_revenue_eur": 1810,
+      "why_it_sells": "XJ Jeep Cherokee restorers are a passionate community; original cup-holder is poor or missing. Premium €47+ price.",
+      "differentiator": "Replacement-style product for a beloved discontinued vehicle. Premium pricing on a 30+ year old platform.",
+      "ip_risk": "low",
+      "ip_holder": "Stellantis (Jeep)",
+      "is_recommended": true,
+      "notes": "Avoid Jeep wordmark or grille logo; use 'fits 1984-1996 XJ / MJ' phrasing.",
+      "url": "https://www.ebay.com/itm/254879442144"
+    },
+    {
+      "id": "ebay-milwaukee-blower-nozzle",
+      "name": "Car Drying Nozzle for Milwaukee M18 Fuel Blower",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "milwaukee",
+        "car care",
+        "exact-fit"
+      ],
+      "price_eur": 33,
+      "monthly_revenue_eur": 2440,
+      "why_it_sells": "Auto-detailing and car-care community uses cordless blowers to dry cars; matched nozzle profile beats generic adapters.",
+      "differentiator": "Cross-niche product (car care + Milwaukee tools). Buyer often owns both ecosystems.",
+      "ip_risk": "low",
+      "ip_holder": "Milwaukee Tool / TTI",
+      "is_recommended": true,
+      "notes": "Avoid Milwaukee or M18 wordmarks; use 'fits Milwaukee M18 Fuel Blower' phrasing.",
+      "url": "https://www.ebay.com/itm/385037858914"
+    },
+    {
+      "id": "ebay-ghostbusters-proton-pack",
+      "name": "Real Ghostbusters Proton Pack & Streams (Set of 4)",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "ghostbusters",
+        "kenner",
+        "vintage"
+      ],
+      "price_eur": 21,
+      "monthly_revenue_eur": 1025,
+      "why_it_sells": "Vintage Kenner Real Ghostbusters action figure customisers; missing accessory for figures from 1986-1991.",
+      "differentiator": "Cautionary - Ghostbusters IP is enforced by Sony. Same 'vintage figure accessory' format works with original franchises.",
+      "ip_risk": "high",
+      "ip_holder": "Sony / Kenner / Hasbro",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/173994804598"
+    },
+    {
+      "id": "ebay-cessna-throttle-quadrant",
+      "name": "Cessna Throttle Quadrant for Flight Simulators",
+      "source": "ebay",
+      "category_id": "desk_office",
+      "tags": [
+        "flight sim",
+        "cessna",
+        "controller"
+      ],
+      "price_eur": 110,
+      "monthly_revenue_eur": 4980,
+      "why_it_sells": "Flight-sim hobbyists invest serious money in realism; Cessna-replica throttle is a step up from Logitech generic.",
+      "differentiator": "Premium €110+ price commands real margin. Flight-sim community is small but extremely high-LTV.",
+      "ip_risk": "low",
+      "ip_holder": "Textron Aviation (Cessna)",
+      "is_recommended": true,
+      "notes": "Avoid Cessna wordmark; use 'GA-style throttle quadrant for flight simulators'.",
+      "url": "https://www.ebay.com/itm/185263479548"
+    },
+    {
+      "id": "ebay-music-gear-stand",
+      "name": "Music Gear Stand (Roland, Arturia, Teenage Engineering)",
+      "source": "ebay",
+      "category_id": "musical_instruments_accessories",
+      "tags": [
+        "music gear",
+        "stand",
+        "exact-fit"
+      ],
+      "price_eur": 14,
+      "monthly_revenue_eur": 580,
+      "why_it_sells": "Synthesizer / groovebox owners stack their gear; matched stands keep things organised. Specific brands lock out generic competition.",
+      "differentiator": "Variants for each device family (Roland SP-404, Arturia BeatStep, EP-133, Novation Circuit) compound a single SKU into many.",
+      "ip_risk": "low",
+      "ip_holder": "Various (Roland / Arturia / Novation)",
+      "is_recommended": true,
+      "url": "https://www.ebay.co.uk/itm/383756525580"
+    },
+    {
+      "id": "ebay-milwaukee-battery-adapter",
+      "name": "Milwaukee M18 Battery Output Adapter (DIY)",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "milwaukee",
+        "diy",
+        "battery"
+      ],
+      "price_eur": 11,
+      "monthly_revenue_eur": 568,
+      "why_it_sells": "DIY robotics / electronics hobbyists power custom projects from Milwaukee 18V batteries; the adapter is the missing connector.",
+      "differentiator": "Cross-niche product (Milwaukee + DIY electronics). High-LTV buyer with multiple project ideas.",
+      "ip_risk": "low",
+      "ip_holder": "Milwaukee Tool / TTI",
+      "is_recommended": true,
+      "notes": "Avoid Milwaukee or M18 wordmarks; use 'fits 18V power tool batteries'.",
+      "url": "https://www.ebay.com/itm/283876225491"
+    },
+    {
+      "id": "ebay-sheet-metal-dimple-die",
+      "name": "Sheet Metal Dimple Die Set (Harbor Freight Hydraulic Punch)",
+      "source": "ebay",
+      "category_id": "tools_workshop_jigs",
+      "tags": [
+        "sheet metal",
+        "exact-fit",
+        "punch"
+      ],
+      "price_eur": 79,
+      "monthly_revenue_eur": 3790,
+      "why_it_sells": "Auto-fab and home-shop metalworkers want lightening-hole dies but commercial sets cost $400+. 3D-printed at $85 wins on price.",
+      "differentiator": "Premium €79+ price into a working-class buyer base. Pairs with a specific Harbor Freight tool kit.",
+      "ip_risk": "low",
+      "ip_holder": "Harbor Freight / Central Pneumatic",
+      "is_recommended": true,
+      "notes": "Avoid Harbor Freight wordmark; use 'fits hydraulic hand punch driver kits' phrasing.",
+      "url": "https://www.ebay.com/itm/125011549606"
+    },
+    {
+      "id": "ebay-kraken-rum-holder",
+      "name": "Kraken Rum Bottle Holder (700ml)",
+      "source": "ebay",
+      "category_id": "decor",
+      "tags": [
+        "bar",
+        "novelty",
+        "kraken"
+      ],
+      "price_eur": 53,
+      "monthly_revenue_eur": 2540,
+      "why_it_sells": "Bar/man-cave decor + premium rum brand fans = strong gift demand. Mystical-creature aesthetic photographs well.",
+      "differentiator": "Premium €53+ price proves design value. Kraken brand has strong opinion-leader following.",
+      "ip_risk": "medium",
+      "ip_holder": "Kraken Rum / Proximo Spirits",
+      "is_recommended": true,
+      "notes": "Avoid Kraken wordmark or octopus logo; sell as 'tentacle bottle holder for 700ml rum bottles'.",
+      "url": "https://www.ebay.com/itm/166811546539"
+    },
+    {
+      "id": "ebay-gameboy-color-stand",
+      "name": "Game Boy Color Double Display Stand",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "nintendo",
+        "retro",
+        "display"
+      ],
+      "price_eur": 18,
+      "monthly_revenue_eur": 637,
+      "why_it_sells": "Retro-gaming collectors mount their Game Boys; single console + games-stand combo lifts AOV.",
+      "differentiator": "Adjacent-niche product (retro display). Generic stand silhouette dodges Nintendo enforcement.",
+      "ip_risk": "low",
+      "ip_holder": "Nintendo",
+      "is_recommended": true,
+      "notes": "Use 'retro handheld console display stand' phrasing - never name Game Boy or Nintendo.",
+      "url": "https://www.ebay.com/itm/174574488644"
+    },
+    {
+      "id": "ebay-ps2-slim-stand",
+      "name": "PlayStation 2 Slim Vertical Stand",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "sony",
+        "ps2",
+        "exact-fit"
+      ],
+      "price_eur": 10,
+      "monthly_revenue_eur": 101,
+      "why_it_sells": "Retro-gaming community mounts old consoles vertically to save desk/shelf space. PS2 Slim is one of the most-collected consoles.",
+      "differentiator": "Generic 'console stand' phrasing keeps it Sony-trademark-safe.",
+      "ip_risk": "low",
+      "ip_holder": "Sony Interactive Entertainment",
+      "is_recommended": true,
+      "notes": "Avoid PS2 / PlayStation wordmarks; use 'fits Sony PS2 Slim'.",
+      "url": "https://www.ebay.com/itm/264892972822"
+    },
+    {
+      "id": "ebay-pokedex-slab-holder",
+      "name": "Pokédex Slab Holder (PSA / CGC / BGS)",
+      "source": "ebay",
+      "category_id": "dnd_gaming",
+      "tags": [
+        "pokemon",
+        "tcg",
+        "slab"
+      ],
+      "price_eur": 33,
+      "monthly_revenue_eur": 98,
+      "why_it_sells": "Pokémon TCG-grading community wants themed display for graded cards. Themed buyer overlaps massively with Pokémon TCG buyers.",
+      "differentiator": "Cautionary - Pokémon Company enforces aggressively. Generic 'graded card slab holder' avoids the takedown risk.",
+      "ip_risk": "high",
+      "ip_holder": "Nintendo / The Pokémon Company",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/225813413222"
+    },
+    {
+      "id": "ebay-voigtlander-lens-hood",
+      "name": "Voigtlander Nokton VM Lens Hood",
+      "source": "ebay",
+      "category_id": "tech_accessories",
+      "tags": [
+        "camera",
+        "lens",
+        "exact-fit"
+      ],
+      "price_eur": 33,
+      "monthly_revenue_eur": 40,
+      "why_it_sells": "Niche photography accessory; Voigtlander VM lens hood replacements are unavailable from manufacturer.",
+      "differentiator": "Very small but evergreen niche; rangefinder photography community is loyal.",
+      "ip_risk": "low",
+      "ip_holder": "Voigtländer / Cosina",
+      "is_recommended": true,
+      "notes": "Sell as 'fits VM-mount 35/40/50mm lenses' - safer than naming Voigtlander directly.",
+      "url": "https://www.ebay.com/itm/364999392929"
+    },
+    {
+      "id": "ebay-3-car-hauler",
+      "name": "1/64 Scale 3-Car Hauler Trailer",
+      "source": "ebay",
+      "category_id": "toys_fidgets",
+      "tags": [
+        "1:64",
+        "greenlight",
+        "diorama"
+      ],
+      "price_eur": 21,
+      "monthly_revenue_eur": 71,
+      "why_it_sells": "1:64 die-cast haulers are a missing accessory for Greenlight Gooseneck collectors. Higher-AOV than basic shelves.",
+      "differentiator": "Premium accessory for the high-engagement 1:64 collector niche.",
+      "ip_risk": "low",
+      "ip_holder": "Greenlight Collectibles",
+      "is_recommended": true,
+      "notes": "Use 'fits Greenlight 1:64 Gooseneck Trailer' phrasing - not Greenlight wordmark.",
+      "url": "https://www.ebay.com/itm/224667476586"
+    },
+    {
+      "id": "ebay-star-trek-phaser",
+      "name": "Star Trek Original Phaser Pistol Prop Kit",
+      "source": "ebay",
+      "category_id": "cosplay_props",
+      "tags": [
+        "star trek",
+        "prop",
+        "kit"
+      ],
+      "price_eur": 19,
+      "monthly_revenue_eur": 2330,
+      "why_it_sells": "Star Trek cosplayers and fans want screen-accurate phaser replicas; Paramount licenced ones are $200+.",
+      "differentiator": "Cautionary - Paramount enforces. Generic 'sci-fi blaster prop kit' format works with original-IP designs.",
+      "ip_risk": "high",
+      "ip_holder": "Paramount / CBS",
+      "is_recommended": false,
+      "url": "https://www.ebay.com/itm/372625101576"
+    }
   ]
 }

@@ -435,7 +435,7 @@
         var verdict=w.is_recommended===false?'Cautionary - IP':sc>=70?'Top earner':sc>=55?'Strong seller':'Marginal';
         var rev=w.monthly_revenue_eur?'~€'+w.monthly_revenue_eur+'/mo':'-';
         PRODUCT_DATA[w.name]={
-          score:sc,cat:cat,verdict:verdict,img:null,categoryId:w.category_id,verified:false,
+          score:sc,cat:cat,verdict:verdict,img:w.image||null,categoryId:w.category_id,verified:false,
           monthlySearches:'-',
           competition:cat==='D&D / Gaming'||cat==='Pet'?'Medium':'Medium',
           avgPrice:w.price_eur?('€'+w.price_eur):'-',
@@ -514,14 +514,22 @@
         var scClass=sc>=70?'g':sc>=50?'y':'r';
         var ip=ipBadge(w);
         var src=srcBadge(w);
-        /* Category-tinted placeholder thumb - never reuse another winner's
-           product photo here. Real product images can be added later by
-           setting w.image (or running the og:image scraper). */
-        return '<div class="niche-card" onclick="openProdModal('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')" style="cursor:pointer">'+
-          '<div class="niche-img" style="'+placeholderStyleFor(w.category_id)+'">'+
+        /* Use the winner's real product image if scripts/refresh-winner-images.js
+           has populated it; otherwise fall back to the category-tinted
+           placeholder. We never reuse another winner's product photo here. */
+        var thumbInner;
+        if(w.image){
+          thumbInner='<div class="niche-img" style="background-image:url('+esc(w.image)+');background-size:cover;background-position:center">'+
+            '<div class="niche-score-dot '+scClass+'">'+sc+'</div>'+
+            '</div>';
+        } else {
+          thumbInner='<div class="niche-img" style="'+placeholderStyleFor(w.category_id)+'">'+
             placeholderInnerFor(w.category_id)+
             '<div class="niche-score-dot '+scClass+'">'+sc+'</div>'+
-          '</div>'+
+            '</div>';
+        }
+        return '<div class="niche-card" onclick="openProdModal('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')" style="cursor:pointer">'+
+          thumbInner+
           '<div class="niche-body">'+
             '<div class="niche-name">'+esc(w.name)+'</div>'+
             '<div class="niche-profit"><b>'+esc(rev)+'</b></div>'+

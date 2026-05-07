@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/analyze.js": { "maxDuration": 60 },
+    "api/analyze.js": { "maxDuration": 90 },
     "api/keyword.js": { "maxDuration": 30 },
     "api/save-results.js": { "maxDuration": 10 },
     "api/pro-auth.js": { "maxDuration": 15 },

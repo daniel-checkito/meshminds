@@ -819,7 +819,7 @@ IMPORTANT RULES:
 
   let claudeJson;
   const clAbort = new AbortController();
-  const clTimeout = setTimeout(() => clAbort.abort(), 42000);
+  const clTimeout = setTimeout(() => clAbort.abort(), 65000);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',

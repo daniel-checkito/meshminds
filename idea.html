@@ -1109,14 +1109,18 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <!-- STEP 3: unused (merged into step 2) -->
       <div class="panel"></div>
 
-      <!-- EMAIL GATE -->
+      <!-- EMAIL GATE / LOADING (merged) -->
       <div class="panel" id="email-panel">
-        <div id="gate-content">
-          <div class="gate-head">
-            <div class="gate-check loading" id="gate-check">⏳</div>
-            <div class="gate-title" id="gate-title">Analyzing your idea…</div>
-            <div class="gate-sub" id="gate-sub">Takes ~20 sec  -  enter your email and we'll show the full results</div>
+        <!-- Shared loading ring + title (always visible while analysing) -->
+        <div id="gate-ring-wrap" style="text-align:center;padding:6px 0 0">
+          <div style="position:relative;width:110px;height:110px;margin:0 auto 12px">
+            <canvas id="gate-ring" width="110" height="110"></canvas>
+            <div id="gate-pct" style="position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;font-family:'DM Mono',sans-serif;color:#f59e0b;letter-spacing:-.02em">0%</div>
           </div>
+          <div id="gate-headline" style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:3px;line-height:1">Analysing your idea…</div>
+          <div id="gate-subline" style="font-size:11.5px;color:var(--ink3);margin-bottom:14px;line-height:1.4">Takes ~20 seconds. We'll email you the report so you can come back anytime.</div>
+        </div>
+        <div id="gate-content">
           <div class="tease-grid">
             <div class="tease-card">
               <div class="tease-lbl">Market score</div>
@@ -1133,8 +1137,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
           <div class="gate-form">
             <div class="gate-form-lbl">Unlock your free report</div>
-            <div id="gate-progress-hint" style="display:flex;align-items:center;gap:7px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:7px 10px;margin-bottom:10px;font-size:11.5px;color:#1d4ed8;line-height:1.4"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#1d4ed8;animation:gpulse 1.2s infinite ease-in-out;flex-shrink:0"></span>Already scanning - your report will be ready by the time you hit submit.</div>
-            <style>@keyframes gpulse{0%,100%{opacity:.4;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}</style>
             <input type="email" id="email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email">
             <input type="text" id="hp-field" name="website" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
             <label class="gate-consent">
@@ -1157,14 +1159,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Loading screen shown while waiting for analysis after email submission -->
-        <div id="loading-overlay" style="display:none;text-align:center;padding:14px 0 6px">
-          <div style="position:relative;width:110px;height:110px;margin:0 auto 14px">
-            <canvas id="loading-ring" width="110" height="110"></canvas>
-            <div id="loading-pct" style="position:absolute;inset:0;display:grid;place-items:center;font-size:22px;font-weight:800;font-family:'DM Mono',sans-serif;color:#f59e0b;letter-spacing:-.02em">0%</div>
-          </div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;margin-bottom:3px">Analyzing your product…</div>
-          <div style="font-size:11.5px;color:var(--ink3);margin-bottom:14px;line-height:1.4" id="loading-phase">Scraping product page…</div>
+        <!-- Detailed scraping steps shown after email submit (or for returning users) -->
+        <div id="loading-overlay" style="display:none;text-align:center;padding:0">
           <div style="display:flex;flex-direction:column;gap:0;background:#f7f7f7;border-radius:11px;overflow:hidden;border:1px solid var(--line)">
             <div class="loading-step" id="ls0" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Scraping product page</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Reading title, tags, license and print specs from MakerWorld / Printables</div></div></div>
             <div class="loading-step" id="ls1" style="padding:10px 14px;border-bottom:1px solid var(--line)"><div class="ls-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">Market scan &amp; top competitors</div><div class="ls-sub" style="font-size:10.5px;color:var(--ink3);margin-top:1px">Live listing count from Etsy + top competing products from Etsy and Google</div></div></div>
@@ -1852,14 +1848,18 @@ function startPulse(){
 function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}}
 
 function drawLoadingRing(p,color){
-  var c=q("loading-ring");if(!c)return;
-  var ctx=c.getContext("2d"),cx=55,cy=55,r=44,th=8;
-  ctx.clearRect(0,0,110,110);
-  ctx.beginPath();ctx.lineWidth=th;ctx.lineCap="round";ctx.strokeStyle="#e8e8e8";
-  ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
-  if(p>0){ctx.beginPath();ctx.strokeStyle=color||"#f59e0b";ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*p);ctx.stroke();}
-  var el=q("loading-pct");
-  if(el){el.textContent=Math.round(p*100)+"%";el.style.color=color||"#f59e0b";}
+  var col=color||"#f59e0b";
+  ["gate-ring","loading-ring"].forEach(function(id){
+    var c=q(id);if(!c)return;
+    var ctx=c.getContext("2d"),cx=55,cy=55,r=44,th=8;
+    ctx.clearRect(0,0,110,110);
+    ctx.beginPath();ctx.lineWidth=th;ctx.lineCap="round";ctx.strokeStyle="#e8e8e8";
+    ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+    if(p>0){ctx.beginPath();ctx.strokeStyle=col;ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+Math.PI*2*p);ctx.stroke();}
+  });
+  ["gate-pct","loading-pct"].forEach(function(id){
+    var el=q(id);if(el){el.textContent=Math.round(p*100)+"%";el.style.color=col;}
+  });
 }
 
 function startLoadingAnim(){
@@ -1884,7 +1884,7 @@ function startLoadingAnim(){
       if(p>=phases[i].at){
         if(activePhase!==i){
           activePhase=i;
-          if(q("loading-phase"))q("loading-phase").textContent=phases[i].text;
+          if(q("gate-subline"))q("gate-subline").textContent=phases[i].text;
           for(var j=0;j<i;j++){var el=q(phases[j].step);if(el){el.classList.remove("active");el.classList.add("done");}}
           var cur=q(phases[i].step);if(cur){cur.classList.remove("done");cur.classList.add("active");}
         }
@@ -1899,7 +1899,8 @@ function startLoadingAnim(){
 function completeLoadingAnim(callback){
   if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
   ["ls0","ls1","ls2","ls3"].forEach(function(id){var el=q(id);if(el){el.classList.remove("active");el.classList.add("done");}});
-  if(q("loading-phase"))q("loading-phase").textContent="Report ready!";
+  if(q("gate-subline"))q("gate-subline").textContent="Report ready!";
+  if(q("gate-headline"))q("gate-headline").textContent="Done.";
   var startP=loadingProgress,t0=null;
   function tick(ts){
     if(!t0)t0=ts;
@@ -2759,7 +2760,7 @@ function runAnalysis(){
   var fetchAbort=new AbortController();
   activeAnalysisAbort=fetchAbort;
   if(activeAnalysisTimeout){clearTimeout(activeAnalysisTimeout);}
-  var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 110000);
+  var fetchTimeout=setTimeout(function(){try{fetchAbort.abort();}catch(_){}}, 135000);
   activeAnalysisTimeout=fetchTimeout;
   fetch("/api/analyze",{
     method:"POST",
@@ -2779,8 +2780,10 @@ function runAnalysis(){
   }).then(function(data){
     populate(data);
     analysisComplete=true;
-    var hint=q("gate-progress-hint");
-    if(hint){hint.innerHTML='<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#15803d;flex-shrink:0"></span>Report ready - enter your email to view it.';hint.style.background='#f0fdf4';hint.style.border='1px solid #86efac';hint.style.color='#15803d';}
+    if(q("gate-headline"))q("gate-headline").textContent="Report ready.";
+    if(q("gate-subline"))q("gate-subline").textContent="Enter your email to unlock the full analysis.";
+    if(q("gate-pct"))q("gate-pct").style.color="#15803d";
+    drawLoadingRing(1,"#15803d");
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
     if(data&&data.scanId){window.lastScanId=data.scanId;if(typeof showFeedbackWidget==='function'){try{showFeedbackWidget();}catch(e){}}}
     try{recordScanHistory(data);}catch(_){ }
@@ -2819,16 +2822,19 @@ function runAnalysis(){
     if(window.MM&&MM.track)MM.track('analyze_error',{label:msg.slice(0,80)});
   });
 
-  /* Move to email gate – or skip if user already consented */
+  /* Move to email gate. Ring + scraping animation starts immediately so the
+     loading state is visible whether or not the user still has the email
+     gate in front of them. */
+  step=4;dots(4);slide(4);
   if(localStorage.getItem('mm_gate')){
-    step=4;dots(4);slide(4);
     if(q("gate-content"))q("gate-content").style.display="none";
     if(q("loading-overlay"))q("loading-overlay").style.display="";
     waitingForAnalysis=true;
-    startLoadingAnim();
   } else {
-    step=4;dots(4);slide(4);
+    if(q("gate-content"))q("gate-content").style.display="";
+    if(q("loading-overlay"))q("loading-overlay").style.display="none";
   }
+  startLoadingAnim();
   showFooter(false);
   busy=false;
 }
@@ -2914,9 +2920,10 @@ function reset(){
   if(q("example-card"))q("example-card").style.display="none";
   showFooter(false);setBtn0("Check this print",false);
   try{renderScanHistory();}catch(_){ }
-  if(q("gate-check")){q("gate-check").textContent="⏳";q("gate-check").className="gate-check loading";}
-  if(q("gate-title"))q("gate-title").textContent="Analyzing your idea…";
-  if(q("gate-sub"))q("gate-sub").textContent="Takes ~20 sec  -  enter your email and we'll show the full results";
+  if(q("gate-headline"))q("gate-headline").textContent="Analysing your idea…";
+  if(q("gate-subline"))q("gate-subline").textContent="Takes ~20 seconds. We'll email you the report so you can come back anytime.";
+  if(q("gate-pct")){q("gate-pct").textContent="0%";q("gate-pct").style.color="#f59e0b";}
+  drawLoadingRing(0,"#f59e0b");
   if(q("email-inp"))q("email-inp").value="";
   if(q("consent-check"))q("consent-check").checked=true;
   if(q("bl-email"))q("bl-email").textContent="Get my free report →";
@@ -3168,14 +3175,15 @@ q("btn-email").addEventListener("click",function(){
   }).catch(function(){});
   localStorage.setItem('mm_gate','1');
   if(analysisComplete){
-    /* Analysis already done - skip loading overlay, go straight to results */
+    /* Analysis already done - stop the loading animation and skip straight to results */
+    if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
     step=5;dots(5);slide(5);showFooter(true);showBack(true);
     setBtn2("How to sell it","",false);revealScore();populateLegalCerts();
   } else {
     if(q("gate-content"))q("gate-content").style.display="none";
     if(q("loading-overlay"))q("loading-overlay").style.display="";
     waitingForAnalysis=true;
-    startLoadingAnim();
+    if(!loadingRaf)startLoadingAnim();
   }
 });
 

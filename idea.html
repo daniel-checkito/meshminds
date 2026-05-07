@@ -1320,16 +1320,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div id="cert-section"></div>
       </div>
 
-      <!-- STEP 8: Community offer -->
+      <!-- STEP 8: Your roadmap -->
       <div class="panel" id="offer-panel">
-        <div class="res-sec-hd res-sec-hd-offer"><span class="res-sec-ico">🚀</span><span class="res-sec-lbl">Your next step</span></div>
-
-        <!-- Contextual roadmap -->
-        <div id="roadmap-section" style="margin-bottom:16px;display:none">
-          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Your roadmap <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
-          <div id="roadmap-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
-          <div id="roadmap-steps" style="display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)"></div>
-        </div>
+        <div class="res-sec-hd res-sec-hd-offer"><span class="res-sec-ico">🗺</span><span class="res-sec-lbl">Your action plan</span></div>
 
         <!-- Score badge -->
         <div class="offer-score-badge" id="offer-badge">
@@ -1341,102 +1334,19 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <span class="offer-score-num" id="offer-badge-num">—</span>
         </div>
 
-        <!-- Offer card with lock overlay -->
-        <div class="offer-panel-wrap">
-          <!-- Lock overlay (shown when score < 60) -->
-          <div class="offer-lock" id="offer-lock" style="display:none">
-            <div class="offer-lock-icon">🔒</div>
-            <div class="offer-lock-title">Not ready to sell yet</div>
-            <div class="offer-lock-sub">This offer unlocks at a score of 60+. Find a better print or refine your niche first.</div>
-            <div class="offer-lock-score" id="offer-lock-score">Your score: - / 100</div>
-          </div>
-
-          <!-- Pro catalogue card -->
-          <div class="pro-wrap" id="skool-card" style="margin-top:0">
-            <div class="pro-fomo-bar">
-              <span class="pro-fomo-ico">🔥</span>
-              <div class="pro-fomo-txt">You checked 1 product. Pro members are scanning the full catalogue — <b><span id="offer-pro-count">847</span> scored products</b> with prices, verdicts and revenue data. You only see yours.</div>
-            </div>
-            <div class="pro-card">
-              <div class="pro-card-head">
-                <span class="pro-badge-pill">Pro</span>
-                <span class="pro-card-name">The Full Catalogue</span>
-                <div class="pro-price-tag">
-                  <span class="pro-price-big">$12</span>
-                  <span class="pro-price-per">/mo</span>
-                </div>
-              </div>
-              <div class="pro-headline">Stop guessing what sells. Pro gives you the full catalogue of validated products — with revenue estimates, keywords and the competition gap you need to win on Etsy.</div>
-              <div class="pro-features-list">
-                <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">🔥</span>Live Trending Now list - what's hot this week</div>
-                <div class="pro-feat"><span class="pro-feat-ico">✓</span>All <span id="offer-pro-count2">847</span> validated products + scores + revenue</div>
-                <div class="pro-feat"><span class="pro-feat-ico">✓</span>Monthly Hot List - Daniel's personal picks to print right now</div>
-                <div class="pro-feat"><span class="pro-feat-ico">✓</span>Top keywords last 30 days - see what buyers are searching</div>
-                <div class="pro-feat"><span class="pro-feat-ico">✓</span>$250K Etsy benchmark data - real prices and margins</div>
-              </div>
-              <div class="pro-early-row">
-                <span class="pro-early-dot"></span>
-                <span class="pro-early-txt">Early adopter price - <b id="offer-spots">33 spots left</b> at $12/mo - locked in for life</span>
-              </div>
-              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">See what's already selling — $12/mo →</a>
-              <div class="pro-tagline">Cancel anytime · no commitment · early-adopter price locked for life</div>
-            </div>
-          </div>
+        <!-- Contextual roadmap -->
+        <div id="roadmap-section" style="margin-bottom:16px;display:none">
+          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Step-by-step roadmap <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
+          <div id="roadmap-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
+          <div id="roadmap-steps" style="display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)"></div>
         </div>
 
-        <!-- Save results -->
-        <div id="save-results-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:13px;padding:15px 15px 14px;margin-bottom:14px">
-          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#3b82f6;margin-bottom:4px">Save your report</div>
-          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">📩 Email me these results</div>
-          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.4">Get a copy of this analysis in your inbox so you can refer back to it later.</div>
-          <div id="save-form-wrap">
-            <input type="email" id="save-email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email" style="margin-bottom:8px">
-            <button class="btn" id="save-btn" onclick="saveResults()" style="background:#3b82f6">
-              <div class="spin" id="sp-save" style="display:none"></div>
-              <span id="bl-save">Send me the analysis →</span>
-            </button>
-          </div>
-          <div id="save-success" style="display:none;text-align:center;padding:10px 0;font-size:13px;font-weight:700;color:#15803d">✓ Check your inbox – results are on their way!</div>
-        </div>
-
-        <!-- FAQ (2 items) -->
-        <div class="faq-list" style="margin-bottom:14px">
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">
-              <span>Where does the data come from?</span>
-              <span class="faq-chevron">⌄</span>
-            </button>
-            <div class="faq-a">Every score is derived from real Etsy sales data - $250K in verified revenue from my own store, plus 3,000+ hours of market research. Not AI guesses. Real numbers.</div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-q" onclick="toggleFaq(this)">
-              <span>Can I cancel Pro anytime?</span>
-              <span class="faq-chevron">⌄</span>
-            </button>
-            <div class="faq-a">Yes. No contracts, no questions. Cancel in one click. Your access stays active until the end of the billing period.</div>
-          </div>
-        </div>
-
-        <!-- Blurred image catalogue preview -->
-        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Pro members see all <span id="s8-bl-count">847</span> scored products</div>
-        <div style="position:relative;border-radius:12px;overflow:hidden">
-          <div class="eg-grid" style="margin-bottom:0">
-            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div><div class="eg-vol">16.6k</div><div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div></div></div>
-            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div><div class="eg-vol">9.2k</div><div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div></div></div>
-            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div><div class="eg-vol">7.8k</div><div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div></div></div>
-            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div><div class="eg-vol">22.1k</div><div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div></div></div>
-            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div><div class="eg-vol">11.3k</div><div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div></div></div>
-            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div><div class="eg-vol">14.2k</div><div class="eg-info"><div class="eg-name">Name Plaque</div><div class="eg-meta">Decor</div></div></div></div>
-            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="68.3 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">84</text></svg></div><div class="eg-info"><div class="eg-name">Hex Organizer</div><div class="eg-meta">Home</div></div></div></div>
-            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">88</text></svg></div><div class="eg-info"><div class="eg-name">Watch Stand</div><div class="eg-meta">Tech</div></div></div></div>
-            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#1d4ed8" stroke-width="3.5" stroke-dasharray="57.2 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#1d4ed8" font-size="8" font-weight="800" font-family="DM Mono,monospace">70</text></svg></div><div class="eg-info"><div class="eg-name">DnD Dice Tower</div><div class="eg-meta">Gaming</div></div></div></div>
-          </div>
-          <div class="bl-blur-overlay" style="height:260px">
-            <div class="bl-lock-card" style="margin:0">
-              <div class="bl-lock-title">See all <span id="s8-bl-count2">847</span> scored products</div>
-              <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
-              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro - $12/month →</a>
-            </div>
+        <!-- Teaser to next step -->
+        <div style="border:1.5px solid var(--line2);border-radius:12px;padding:13px 14px;background:var(--surf);display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px;flex-shrink:0">💾</span>
+          <div style="flex:1">
+            <div style="font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:2px">Save these results</div>
+            <div style="font-size:11.5px;color:var(--ink3);line-height:1.4">Email yourself a copy or upgrade to Pro to auto-save every scan to your personal dashboard.</div>
           </div>
         </div>
 
@@ -1500,6 +1410,99 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
               <div class="winner-name">Phone Stand</div>
               <div class="winner-why">High search volume, easy to differentiate with custom angles</div>
             </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- STEP 9: Save & Pro offer -->
+      <div class="panel" id="pro-panel">
+
+        <!-- Save results - top of page, most actionable -->
+        <div id="save-results-card" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1.5px solid #86efac;border-radius:13px;padding:15px 15px 14px;margin-bottom:16px">
+          <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#15803d;margin-bottom:4px">Save your report</div>
+          <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px">📩 Email me these results</div>
+          <div style="font-size:12px;color:var(--ink3);margin-bottom:12px;line-height:1.4">Get a copy of this analysis in your inbox so you can refer back to it anytime.</div>
+          <div id="save-form-wrap">
+            <input type="email" id="save-email-inp" class="gate-inp" placeholder="you@email.com" autocomplete="email" style="margin-bottom:8px">
+            <button class="btn" id="save-btn" onclick="saveResults()" style="background:#15803d">
+              <div class="spin" id="sp-save" style="display:none"></div>
+              <span id="bl-save">Send me the analysis →</span>
+            </button>
+          </div>
+          <div id="save-success" style="display:none;text-align:center;padding:10px 0;font-size:13px;font-weight:700;color:#15803d">✓ Check your inbox – results are on their way!</div>
+        </div>
+
+        <!-- Pro offer - redesigned around saving + unlimited -->
+        <div class="pro-wrap" id="skool-card" style="margin-top:0;margin-bottom:16px">
+          <div class="pro-fomo-bar">
+            <span class="pro-fomo-ico">💾</span>
+            <div class="pro-fomo-txt">This result isn't saved to an account. <b>Pro members auto-save every scan</b> — all your scored ideas in one place, forever. You only see this one.</div>
+          </div>
+          <div class="pro-card">
+            <div class="pro-card-head">
+              <span class="pro-badge-pill">Pro</span>
+              <span class="pro-card-name">MeshMinds Pro</span>
+              <div class="pro-price-tag">
+                <span class="pro-price-big">$12</span>
+                <span class="pro-price-per">/mo</span>
+              </div>
+            </div>
+            <div class="pro-headline">Never lose a scored idea again. Pro automatically saves every scan to your personal dashboard — plus gives you unlimited scans and access to <span id="offer-pro-count">847</span> pre-validated products.</div>
+            <div class="pro-features-list">
+              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">💾</span>Auto-save all scored ideas to your dashboard</div>
+              <div class="pro-feat pro-feat-hot"><span class="pro-feat-ico">♾️</span>Unlimited scans — no daily limits, ever</div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span>All <span id="offer-pro-count2">847</span> pre-scored products — scores, revenue &amp; keywords</div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span>Live Trending Now list — what's hot this week</div>
+              <div class="pro-feat"><span class="pro-feat-ico">✓</span>Monthly Hot List — Daniel's personal picks</div>
+            </div>
+            <div class="pro-early-row">
+              <span class="pro-early-dot"></span>
+              <span class="pro-early-txt">Early adopter price — <b id="offer-spots">33 spots left</b> at $12/mo, locked in for life</span>
+            </div>
+            <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" id="offer-pro-cta" class="pro-cta-btn" target="_blank" rel="noopener">Save all my ideas + go unlimited — $12/mo →</a>
+            <div class="pro-tagline">Cancel anytime · no commitment · early-adopter price locked for life</div>
+          </div>
+        </div>
+
+        <!-- Blurred catalogue preview -->
+        <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px">Pro members see all <span id="s8-bl-count">847</span> scored products</div>
+        <div style="position:relative;border-radius:12px;overflow:hidden;margin-bottom:16px">
+          <div class="eg-grid" style="margin-bottom:0">
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="76.8 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">94</text></svg></div><div class="eg-vol">16.6k</div><div class="eg-info"><div class="eg-name">Custom Name Sign</div><div class="eg-meta">Decor</div></div></div></div>
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">87</text></svg></div><div class="eg-vol">9.2k</div><div class="eg-info"><div class="eg-name">Geometric Planter</div><div class="eg-meta">Home</div></div></div></div>
+            <div class="eg-card"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="67.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">82</text></svg></div><div class="eg-vol">7.8k</div><div class="eg-info"><div class="eg-name">Cable Mgmt Box</div><div class="eg-meta">Functional</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="58.0 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">71</text></svg></div><div class="eg-vol">22.1k</div><div class="eg-info"><div class="eg-name">Articulated Dragon</div><div class="eg-meta">Toy / Art</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="62.1 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">76</text></svg></div><div class="eg-vol">11.3k</div><div class="eg-info"><div class="eg-name">Phone Stand</div><div class="eg-meta">Functional</div></div></div></div>
+            <div class="eg-card" style="filter:blur(5px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="73.5 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">90</text></svg></div><div class="eg-vol">14.2k</div><div class="eg-info"><div class="eg-name">Name Plaque</div><div class="eg-meta">Decor</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="68.3 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">84</text></svg></div><div class="eg-info"><div class="eg-name">Hex Organizer</div><div class="eg-meta">Home</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#15803d" stroke-width="3.5" stroke-dasharray="71.9 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#15803d" font-size="8" font-weight="800" font-family="DM Mono,monospace">88</text></svg></div><div class="eg-info"><div class="eg-name">Watch Stand</div><div class="eg-meta">Tech</div></div></div></div>
+            <div class="eg-card" style="filter:blur(8px);user-select:none"><div class="eg-img" style="background:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp) center/cover no-repeat"><div class="eg-donut"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="13" fill="rgba(255,255,255,0.82)" stroke="none"/><circle cx="17" cy="17" r="13" fill="none" stroke="#1d4ed8" stroke-width="3.5" stroke-dasharray="57.2 81.7" stroke-linecap="round" transform="rotate(-90 17 17)"/><text x="17" y="17.5" dominant-baseline="middle" text-anchor="middle" fill="#1d4ed8" font-size="8" font-weight="800" font-family="DM Mono,monospace">70</text></svg></div><div class="eg-info"><div class="eg-name">DnD Dice Tower</div><div class="eg-meta">Gaming</div></div></div></div>
+          </div>
+          <div class="bl-blur-overlay" style="height:260px">
+            <div class="bl-lock-card" style="margin:0">
+              <div class="bl-lock-title">See all <span id="s8-bl-count2">847</span> scored products</div>
+              <div class="bl-lock-sub">Full scores · revenue estimates · trending this week</div>
+              <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="bl-lock-cta" target="_blank" rel="noopener">Unlock Pro - $12/month →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-list" style="margin-bottom:14px">
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">
+              <span>Where does the data come from?</span>
+              <span class="faq-chevron">⌄</span>
+            </button>
+            <div class="faq-a">Every score is derived from real Etsy sales data - $250K in verified revenue from my own store, plus 3,000+ hours of market research. Not AI guesses. Real numbers.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">
+              <span>Can I cancel Pro anytime?</span>
+              <span class="faq-chevron">⌄</span>
+            </button>
+            <div class="faq-a">Yes. No contracts, no questions. Cancel in one click. Your access stays active until the end of the billing period.</div>
           </div>
         </div>
 

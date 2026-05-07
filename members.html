@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <title>My Dashboard – MeshMinds Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --acc:#f56a00;
+      --ink:#0d0d0d;
+      --ink2:#4b4b4b;
+      --ink3:#8c8c8c;
+      --surf:#f9f9f9;
+      --surf2:#f0f0f0;
+      --line:#e8e8e8;
+      --line2:#d0d0d0;
+      --good:#15803d;
+      --warn:#d97706;
+      --bad:#dc2626;
+    }
+    body{
+      font-family:'DM Sans',sans-serif;
+      background:#f4f4f4;
+      color:var(--ink);
+      min-height:100vh;
+    }
+    .page{
+      max-width:430px;
+      margin:0 auto;
+      background:#fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    /* Header */
+    .hdr{
+      padding:14px 18px 13px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      position:sticky;
+      top:0;
+      background:#fff;
+      z-index:10;
+    }
+    .logo{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:22px;
+      letter-spacing:.04em;
+      color:var(--ink);
+      line-height:1;
+    }
+    .logo span{color:var(--acc)}
+    .hdr-badge{
+      font-family:'DM Mono',monospace;
+      font-size:9px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:var(--acc);
+      color:#fff;
+      border-radius:5px;
+      padding:3px 7px;
+    }
+    .hdr-right{
+      margin-left:auto;
+      font-size:12px;
+      color:var(--ink3);
+      font-weight:500;
+    }
+
+    /* Upgrade banner */
+    .upgrade-banner{
+      margin:14px 16px 0;
+      background:linear-gradient(135deg,#fff7ed,#ffedd5);
+      border:1.5px solid #fed7aa;
+      border-radius:12px;
+      padding:12px 14px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .upgrade-banner-ico{font-size:22px;flex-shrink:0}
+    .upgrade-banner-body{flex:1}
+    .upgrade-banner-title{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+    .upgrade-banner-sub{font-size:11.5px;color:var(--ink2);line-height:1.4}
+    .upgrade-btn{
+      display:inline-block;
+      margin-top:9px;
+      background:var(--acc);
+      color:#fff;
+      font-size:11.5px;
+      font-weight:700;
+      border-radius:8px;
+      padding:7px 14px;
+      text-decoration:none;
+    }
+
+    /* Section heading */
+    .sec-hd{
+      font-family:'DM Mono',monospace;
+      font-size:9px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--ink3);
+      padding:18px 16px 10px;
+    }
+
+    /* Card grid */
+    .cards{
+      padding:0 16px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    /* Idea card */
+    .idea-card{
+      border:1px solid var(--line);
+      border-radius:13px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .idea-card-top{
+      display:flex;
+      gap:12px;
+      padding:12px 13px;
+      align-items:flex-start;
+    }
+    .idea-thumb{
+      width:62px;
+      height:62px;
+      border-radius:9px;
+      object-fit:cover;
+      flex-shrink:0;
+      background:var(--surf2);
+    }
+    .idea-thumb-img{
+      width:62px;
+      height:62px;
+      border-radius:9px;
+      flex-shrink:0;
+      background-size:cover;
+      background-position:center;
+    }
+    .idea-meta{flex:1;min-width:0}
+    .idea-name{
+      font-size:13.5px;
+      font-weight:700;
+      color:var(--ink);
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .idea-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px}
+    .tag{
+      font-size:10.5px;
+      font-weight:600;
+      border-radius:5px;
+      padding:2px 7px;
+    }
+    .tag-green{background:#dcfce7;color:var(--good)}
+    .tag-yellow{background:#fef9c3;color:var(--warn)}
+    .tag-red{background:#fee2e2;color:var(--bad)}
+    .tag-gray{background:var(--surf2);color:var(--ink3)}
+    .idea-profit{font-size:11.5px;color:var(--ink2)}
+    .idea-profit b{color:var(--ink)}
+
+    /* Score badge */
+    .score-badge{
+      flex-shrink:0;
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:'DM Mono',monospace;
+      font-size:14px;
+      font-weight:700;
+    }
+    .score-green{background:#dcfce7;color:var(--good)}
+    .score-yellow{background:#fef9c3;color:var(--warn)}
+    .score-red{background:#fee2e2;color:var(--bad)}
+
+    /* Card footer */
+    .idea-card-foot{
+      border-top:1px solid var(--line);
+      padding:8px 13px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .idea-date{font-size:10.5px;color:var(--ink3)}
+    .view-link{
+      font-size:11.5px;
+      font-weight:600;
+      color:var(--acc);
+      text-decoration:none;
+    }
+    .view-link:hover{text-decoration:underline}
+
+    /* Empty slot card */
+    .empty-card{
+      border:1.5px dashed var(--line2);
+      border-radius:13px;
+      padding:20px 16px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:6px;
+      background:var(--surf);
+      text-align:center;
+    }
+    .empty-card-ico{font-size:26px}
+    .empty-card-title{font-size:13px;font-weight:700;color:var(--ink2)}
+    .empty-card-sub{font-size:11.5px;color:var(--ink3);line-height:1.4;max-width:240px}
+    .empty-card-link{
+      margin-top:4px;
+      display:inline-block;
+      font-size:12px;
+      font-weight:700;
+      color:var(--acc);
+      text-decoration:none;
+    }
+    .empty-card-link:hover{text-decoration:underline}
+
+    /* Footer */
+    .pg-foot{
+      margin-top:auto;
+      padding:20px 16px;
+      border-top:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .pg-foot-logo{
+      font-family:'Bebas Neue',sans-serif;
+      font-size:16px;
+      letter-spacing:.04em;
+      color:var(--ink3);
+    }
+    .pg-foot-logo span{color:var(--acc)}
+    .pg-foot-link{
+      font-size:12px;
+      font-weight:600;
+      color:var(--acc);
+      text-decoration:none;
+    }
+    .pg-foot-link:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="logo">Mesh<span>Minds</span></div>
+    <div class="hdr-badge">Pro</div>
+    <div class="hdr-right">My Dashboard</div>
+  </div>
+
+  <!-- Upgrade banner -->
+  <div class="upgrade-banner">
+    <div class="upgrade-banner-ico">💾</div>
+    <div class="upgrade-banner-body">
+      <div class="upgrade-banner-title">Pro auto-saves every scan</div>
+      <div class="upgrade-banner-sub">Your scored ideas live here. Upgrade to Pro and every future scan is saved automatically — no copy-pasting, no lost results.</div>
+      <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" class="upgrade-btn" target="_blank" rel="noopener">Upgrade to Pro — $12/mo →</a>
+    </div>
+  </div>
+
+  <!-- Saved ideas -->
+  <div class="sec-hd">My scored ideas (4)</div>
+
+  <div class="cards">
+
+    <!-- Card 1: Custom Name Sign — score 94 -->
+    <div class="idea-card">
+      <div class="idea-card-top">
+        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp)"></div>
+        <div class="idea-meta">
+          <div class="idea-name">Custom Name Sign</div>
+          <div class="idea-tags">
+            <span class="tag tag-green">Sellable</span>
+            <span class="tag tag-gray">Decor</span>
+          </div>
+          <div class="idea-profit">Est. profit: <b>~$140/mo</b></div>
+        </div>
+        <div class="score-badge score-green">94</div>
+      </div>
+      <div class="idea-card-foot">
+        <span class="idea-date">Scanned 6 May 2026</span>
+        <a href="#" class="view-link">View full report →</a>
+      </div>
+    </div>
+
+    <!-- Card 2: Geometric Planter — score 87 -->
+    <div class="idea-card">
+      <div class="idea-card-top">
+        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp)"></div>
+        <div class="idea-meta">
+          <div class="idea-name">Geometric Planter</div>
+          <div class="idea-tags">
+            <span class="tag tag-green">Sellable</span>
+            <span class="tag tag-gray">Home</span>
+          </div>
+          <div class="idea-profit">Est. profit: <b>~$95/mo</b></div>
+        </div>
+        <div class="score-badge score-green">87</div>
+      </div>
+      <div class="idea-card-foot">
+        <span class="idea-date">Scanned 4 May 2026</span>
+        <a href="#" class="view-link">View full report →</a>
+      </div>
+    </div>
+
+    <!-- Card 3: Phone Stand — score 63 -->
+    <div class="idea-card">
+      <div class="idea-card-top">
+        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp)"></div>
+        <div class="idea-meta">
+          <div class="idea-name">Phone Stand</div>
+          <div class="idea-tags">
+            <span class="tag tag-yellow">Marginal</span>
+            <span class="tag tag-gray">Functional</span>
+          </div>
+          <div class="idea-profit">Est. profit: <b>~$38/mo</b></div>
+        </div>
+        <div class="score-badge score-yellow">63</div>
+      </div>
+      <div class="idea-card-foot">
+        <span class="idea-date">Scanned 2 May 2026</span>
+        <a href="#" class="view-link">View full report →</a>
+      </div>
+    </div>
+
+    <!-- Card 4: DnD Dice Tower — score 41 -->
+    <div class="idea-card">
+      <div class="idea-card-top">
+        <div class="idea-thumb-img" style="background-image:url(https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp)"></div>
+        <div class="idea-meta">
+          <div class="idea-name">DnD Dice Tower</div>
+          <div class="idea-tags">
+            <span class="tag tag-red">Skip it</span>
+            <span class="tag tag-gray">Gaming</span>
+          </div>
+          <div class="idea-profit">Est. profit: <b>~$12/mo</b></div>
+        </div>
+        <div class="score-badge score-red">41</div>
+      </div>
+      <div class="idea-card-foot">
+        <span class="idea-date">Scanned 1 May 2026</span>
+        <a href="#" class="view-link">View full report →</a>
+      </div>
+    </div>
+
+    <!-- Empty slot -->
+    <div class="empty-card">
+      <div class="empty-card-ico">🔍</div>
+      <div class="empty-card-title">Check another idea</div>
+      <div class="empty-card-sub">Scan a new 3D print and it'll appear here automatically with Pro.</div>
+      <a href="/" class="empty-card-link">Check another idea →</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="pg-foot">
+    <div class="pg-foot-logo">Mesh<span>Minds</span> Pro</div>
+    <a href="/" class="pg-foot-link">Check another idea →</a>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1202,7 +1202,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="verdict-card" id="verdict-card">
           <div class="verdict-header">
             <div>
-              <div class="verdict-eyebrow">Verdict</div>
+              <div class="verdict-eyebrow">Verdict <span id="ai-tier-badge" style="display:none;margin-left:6px;font-size:8.5px;font-weight:700;letter-spacing:.08em;padding:2px 6px;border-radius:5px;vertical-align:1px"></span></div>
               <div class="verdict-label">
                 <span id="verdict-emoji">…</span>
                 <span id="verdict-text">Analyzing</span>
@@ -1401,7 +1401,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div class="pro-insights-lock">
             <div style="font-size:22px;margin-bottom:6px">🔒</div>
             <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px">Pro members see this</div>
-            <div style="font-size:11px;color:var(--ink2);text-align:center;line-height:1.45;margin-bottom:12px;max-width:220px">Keywords, competitor gaps, trending data and the full catalogue of 847 scored products.</div>
+            <div style="font-size:11px;color:var(--ink2);text-align:center;line-height:1.45;margin-bottom:12px;max-width:240px">Sharper Sonnet 4.6 analysis, keywords, competitor gaps, trending data and the full catalogue of 847 scored products.</div>
             <a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" onclick="if(window.MM&&MM.track)MM.track('cta_click_pro',{label:'idea_stripe'})" class="btn" style="margin:0;padding:10px 20px;font-size:12px;width:auto;display:inline-block;text-decoration:none" target="_blank" rel="noopener">Unlock Pro - $12/mo →</a>
           </div>
         </div>
@@ -1553,6 +1553,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
             <div style="font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:.95;letter-spacing:.01em;color:var(--ink);margin-bottom:8px">GO PRO.<br>PRINT TO PROFIT.</div>
             <div style="font-size:14px;color:var(--ink2);line-height:1.45;margin-bottom:22px;max-width:340px;margin-left:auto;margin-right:auto">Get every profitable 3D-print our community has scored. Stop guessing. Start scaling.</div>
             <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px;text-align:left">
+              <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">🧠</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Most accurate AI (Sonnet 4.6)<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">Free uses fast Haiku 4.5. Pro upgrades you to Sonnet 4.6 - sharper niche analysis, better tips, fewer false positives.</div></div></div>
               <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">♾️</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Unlimited scans<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">No daily cap. Score as many as you want.</div></div></div>
               <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">💾</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">Every scan auto-saved<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">Personal dashboard with all your scored ideas, forever.</div></div></div>
               <div style="display:flex;align-items:center;gap:14px"><div style="font-size:30px;line-height:1;flex-shrink:0">🔒</div><div style="font-size:16px;font-weight:700;color:var(--ink);line-height:1.3">100% private scans<div style="font-size:12px;color:var(--ink3);font-weight:400;margin-top:2px">Your ideas stay yours. Never shown in the community feed, never used as training data.</div></div></div>
@@ -2049,6 +2050,23 @@ function drawRevenueChart(currentPrice){
 function populate(data){
   /* Sync Pro banner counts */
   document.querySelectorAll("#pro-count,.pro-count-inline").forEach(function(el){el.textContent=PRO_VALIDATED_COUNT;});
+  /* AI tier badge: free = Haiku 4.5 (fast), pro = Sonnet 4.6 (most accurate). */
+  var tierBadge=q("ai-tier-badge");
+  if(tierBadge){
+    if(data.aiTier==='pro'){
+      tierBadge.textContent='✦ PRO · SONNET 4.6';
+      tierBadge.style.background='#dbeafe';
+      tierBadge.style.color='#1d4ed8';
+      tierBadge.style.display='inline-block';
+      tierBadge.title='Most accurate AI tier - included with Pro.';
+    } else {
+      tierBadge.textContent='FREE · HAIKU 4.5';
+      tierBadge.style.background='var(--surf2)';
+      tierBadge.style.color='var(--ink3)';
+      tierBadge.style.display='inline-block';
+      tierBadge.title='Fast AI tier. Pro members get the more accurate Sonnet 4.6.';
+    }
+  }
   function obj(v){if(typeof v==="string"){try{return JSON.parse(v);}catch(e){}}return v||{};}
   var p=obj(data.product);
   var m=obj(data.market);

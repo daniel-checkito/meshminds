@@ -717,9 +717,8 @@ MARKET KNOWLEDGE - treat as ground truth for calibrating estimates:
 - COMPETITION CALIBRATION - real Etsy listing counts for known saturated categories. ALWAYS use these as hard anchors when estimating etsyListings - do not guess lower than these ranges: Fidget toys, fidget cubes, fidget spinners, fidget rings, sensory toys: 60,000–120,000 listings (extreme competition - score must reflect this). Articulated/flexi animals (dragons, fish, cats, dogs, octopus, sharks): 30,000–80,000 listings. Generic keychains with no character angle: 100,000+ listings. Generic cable clips, cord management: 20,000–40,000 listings. Generic phone stands/holders: 40,000–70,000 listings. Generic bookmarks: 50,000+ listings. Generic planters: 40,000–60,000 listings. Laptop stands/risers (generic): 10,000–15,000 listings. Dice towers and DnD accessories: 5,000–12,000 listings. Monitor stands/risers with unique angle: 3,000–8,000 listings. Miniatures (tabletop, busts): 8,000–20,000 listings. Custom name signs: 200,000+ listings but high personalisation differentiates effectively. AirPods/Apple Watch holders without IP: 8,000–15,000 listings. Bathroom accessories (toothbrush holders, dispensers): 25,000–50,000 listings. When the product clearly falls into a known-saturated category above, set etsyListings to the upper half of the range or higher - underestimating competition is the most common calibration error.
 - Top-performing product patterns (market-verified): (1) Dice and DnD accessories - evergreen, passionate buyers, strong search volume. (2) Tech accessory holders (Echo Dot, AirPods, Apple Watch chargers) with pop-culture or character angle - high revenue but significant IP risk. (3) Personalised name items - evergreen, highest conversion rate, justifies €6–14 premium per order. (4) Planters with a twist (animal, food-themed, character-adjacent without licensed IP) - low competition relative to view counts. (5) Monitor stands and risers - very low competition vs. strong search volume, strong B2B angle for offices.
 - Revenue benchmarks: top performers earn €500–€5,000/month. Mid-tier: €150–€500/month. Beginners with a proven product: €50–€200/month in first 6 months.
-- Etsy SEO reality: keyword-dense titles, all 13 tags used, and long-tail descriptions matter as much as product quality. Review accumulation is a compounding moat - a new seller needs a strategy to get first reviews fast.
-- Sales and discounts strategy: 25–30% off flash sales for 1–2 day windows create FOMO. Etsy notifies customers when a sale ends. Many top stores run a permanent 20% off to boost perceived value.
-- B2B and retail angle: one B2B client (restaurant, office, event planner, interior designer, boutique home store) can equal weeks of B2C sales. Flag this when relevant - especially for monitor risers, table signs, menu holders, display stands, cable management, geometric décor, designer planters, and bathroom accessories. For visually striking décor items, also flag influencer gifting as a high-ROI launch tactic: 2–3 samples sent to home décor or bathroom micro-influencers (10k–100k followers) typically costs under €30 and can drive hundreds of Etsy visits.
+- Etsy SEO: keyword-dense titles + all 13 tags + long-tail descriptions matter as much as product quality. New sellers need a first-reviews strategy.
+- B2B / influencer angle is a high-ROI launch lever for monitor risers, signs, menu holders, displays, cable management, geometric décor, designer planters, bathroom accessories, and any visually striking item - flag in topTips when applicable.
 - Etsy policy (March 2026): reselling prints is permitted when the seller has an appropriate commercial/print-for-sale license from the designer. Check the license shown in the scraped data. If the file is explicitly licensed for commercial use or selling prints: low Etsy ban risk. If the license is unclear or not visible: set etsyBanRisk to "medium" and tell the seller to check the model page license tab and consider messaging the designer directly to request a commercial license. If the file is marked personal use only / non-commercial: set etsyBanRisk to "high". Do NOT auto-flag as high simply because the URL is on MakerWorld, Printables, or another external repository.
 SCORING CALIBRATION based on seller inputs:
 - Seller goal = "testing": use conservative revenue projections (50% of median). goal = "side-hustle": median projections. goal = "business" or "scaling": optimistic projections (120–150% of median).
@@ -866,16 +865,9 @@ IMPORTANT RULES:
 - strategy.platformAdvice: if the source is an external STL repo, note the license status found in scraped data. If license is unclear, advise checking the model page and contacting the creator for a commercial license. Only flag as a hard blocker if the file is explicitly personal-use-only.
 - certificates: include GPSR if sellFrom is an EU country. Add category certs for any legalFlags set.
 - Adjust revenue.unitsPerMonth for seller experience level and printer output ceiling - never project more units than the stated printer setup can realistically print given the stated print time
-- Extract product.likes/saves/downloads/prints/author from scraped data; set to null if not found
-- On MakerWorld (makerworld.bambulab.com): look for "Downloaded by X", "Liked by X", "Collected X times", "X Makes"
-- On Printables (printables.com): look for "Downloads", "Likes", "Makes", "Collections"
-- On Thingiverse (thingiverse.com): look for "Downloads", "Likes", "Remixes", "Collectors"
-- On Cults3D (cults3d.com): look for "Downloads" and "Likes" near the designer name; check if free or paid
-- On MyMiniFactory (myminifactory.com): look for "Downloads", "Likes", "Makes" and whether free or paid
-- On CGTrader (cgtrader.com): look for product type, price, star rating, and review count
-- On Thangs (thangs.com): look for "Downloads", "Views", "Likes"
-- Never include a literal double-quote character inside any JSON string value - rephrase or use single quotes
-- competitors: use ONLY URLs from the LIVE COMPETITOR LISTINGS section. If no competitor data was provided, return an empty array []. Never invent URLs or listing IDs.
+- Extract product.likes/saves/downloads/prints/author from the scraped data when present; set to null if not visible.
+- Never include a literal double-quote character inside any JSON string value - rephrase or use single quotes.
+- competitors: use ONLY URLs from the LIVE COMPETITOR LISTINGS section. If no competitor data was provided, return [].
 - Return ONLY the JSON object. No other text.`;
 
   // ── 3. Call Claude ───────────────────────────────────────────────────────
@@ -886,14 +878,15 @@ IMPORTANT RULES:
 
   let claudeJson;
   const clAbort = new AbortController();
-  // Hobby plan caps the lambda at 60s. Anthropic call is the long pole, so
-  // give it most of that budget but leave 8s of headroom for parsing,
-  // database writes and response.
-  // Lambda total budget is 60s on Hobby. Reserve ~5s for scrape + ~18s for
-  // Haiku fallback if Sonnet aborts, leaving ~37s for the Sonnet call. Most
-  // Sonnet 4.6 responses come back in 18-28s, so this still succeeds for the
-  // common case while leaving the fallback enough time to actually run.
-  const clTimeout = setTimeout(() => clAbort.abort(), 37000);
+  /* Pro users get Sonnet 4.6 (most accurate, slower). Free users get Haiku
+     4.5 - 3-5x faster (typical 8-15s) so the Hobby-plan 60s lambda has plenty
+     of headroom. Quality dip is small because the prompt has rich anchoring
+     data (matched-category baselines, real winners, IP rules). Pro stays on
+     Sonnet so 'most accurate AI analysis' is a tangible upgrade benefit. */
+  const isProTier = !!_quotaIsPro;
+  const primaryModel = isProTier ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
+  const primaryTimeoutMs = isProTier ? 37000 : 28000;
+  const clTimeout = setTimeout(() => clAbort.abort(), primaryTimeoutMs);
   try {
     const claudeResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -904,7 +897,7 @@ IMPORTANT RULES:
         'anthropic-beta': 'prompt-caching-2024-07-31',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: primaryModel,
         max_tokens: 2048,
         system: [{ type: 'text', text: staticPart, cache_control: { type: 'ephemeral' } }],
         messages: [{
@@ -1042,6 +1035,9 @@ IMPORTANT RULES:
   } catch { /* swallow - saving the dataset must never break the response */ }
 
   if (savedScanId) parsed.scanId = savedScanId;
+  /* Tell the client which AI tier was used so the UI can label it. */
+  parsed.aiTier = isProTier ? 'pro' : 'free';
+  parsed.aiModel = primaryModel;
 
   // Attach the same matched businesses that were given to the AI so the UI
   // can render the inspiration panel beside the analysis.

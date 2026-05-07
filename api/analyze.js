@@ -104,6 +104,7 @@ module.exports = async (req, res) => {
     ideaType = '',
     ideaBuyer = '',
     ideaUsp = '',
+    ideaChannels = '',
     category,
     marketplace,
     priceRange,
@@ -446,7 +447,9 @@ module.exports = async (req, res) => {
 "${ideaText.trim()}"
 - Product type: ${ideaType || 'not specified'}
 - Target buyer: ${ideaBuyer || 'not specified'}
-- Unique selling point: ${ideaUsp || 'not specified'}`;
+- Unique selling point: ${ideaUsp || 'not specified'}
+- Preferred sales channels (seller-stated): ${ideaChannels || 'not specified — pick the best channel for this product'}
+${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platformAdvice to these specific channels. If "not-sure" is among them, recommend the single best fit and briefly justify; if multiple specific channels are picked, prioritise them in order of fit and explain why.' : ''}`;
     if (ideaKeywords) {
       const [etsyMd, ebayMd, amazonMd] = await Promise.all([
         fetchEtsy(ideaKeywords), fetchEbay(ideaKeywords), fetchAmazon(ideaKeywords),

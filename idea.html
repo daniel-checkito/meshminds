@@ -672,6 +672,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 /* Bigger try-eg tap target */
 .try-eg{margin-top:10px;font-size:12.5px;color:var(--ink3);display:flex;align-items:center;gap:5px;justify-content:center;padding:11px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surf);cursor:pointer;-webkit-tap-highlight-color:rgba(255,92,0,.1)}
 .try-eg:active{background:var(--surf2)}
+.try-eg-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:13px 16px;background:var(--surf);border:1px solid var(--line);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;min-height:48px;-webkit-tap-highlight-color:rgba(255,92,0,.1);transition:background .15s,border-color .15s}
+.try-eg-btn:hover,.try-eg-btn:active{background:var(--surf2);border-color:var(--line2)}
 .btn-try-eg{background:none;border:none;font-family:"DM Mono",monospace;font-size:12px;color:var(--acc);cursor:pointer;padding:0;letter-spacing:.02em;font-weight:700}
 /* Seller avatar */
 .seller-profile-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
@@ -769,16 +771,10 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <span class="plat-tag">↑ Upgrade anytime</span>
         </div>
       </div>
-      <div style="margin:8px 2px 0;font-size:11.5px;color:var(--ink3);text-align:center;line-height:1.5">
-        Not sure where to start? <button class="btn-try-eg-inline" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()" style="background:none;border:none;color:var(--acc);font-weight:700;cursor:pointer;padding:0;font-size:11.5px;font-family:inherit">Try an example →</button>
-        <div style="margin-top:4px;color:var(--ink3)">Find models on
-          <a href="https://makerworld.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600">MakerWorld</a>
-          ·
-          <a href="https://www.printables.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600">Printables</a>
-          ·
-          <a href="https://cults3d.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600">Cults3D</a>
-        </div>
-      </div>
+      <button class="try-eg-btn" id="try-eg-hint" onclick="document.getElementById('ui').value='https://makerworld.com/en/models/77709';document.getElementById('btn').click()">
+        <span style="color:var(--ink3)">Not sure where to start?</span>
+        <span style="color:var(--acc);font-weight:700">Try an example →</span>
+      </button>
       <!-- Idea mode form (hidden by default) -->
       <div id="idea-mode-form" style="display:none">
         <!-- Step 1 -->
@@ -848,11 +844,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
-    <!-- Landing preview cards (after the main CTA so the button is above the fold) -->
-    <div id="landing-preview">
-      <div class="lp-head">See what you'll get</div>
-      <div class="lp-sub">Real scored products — <b>tap any card to see the full analysis</b>.</div>
-      <div id="landing-preview-grid"></div>
+    <div id="find-models-line" style="margin-top:10px;text-align:center;font-size:12px;color:var(--ink3);line-height:1.5">
+      Find models on
+      <a href="https://makerworld.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">MakerWorld</a>
+      ·
+      <a href="https://www.printables.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">Printables</a>
+      ·
+      <a href="https://cults3d.com" target="_blank" rel="noopener" style="color:var(--ink2);font-weight:600;text-decoration:none">Cults3D</a>
     </div>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div>
@@ -1712,6 +1710,15 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <!-- ── Landing page sections ─────────────────────────────────────────────── -->
 <div class="lp">
 
+  <!-- See what you'll get (real scored product cards) -->
+  <div class="lp-sec" id="landing-preview" style="padding-top:24px;padding-bottom:16px">
+    <div class="lp-head">See what you'll get</div>
+    <div class="lp-sub">Real scored products — <b>tap any card to see the full analysis</b>.</div>
+    <div id="landing-preview-grid" style="margin-top:12px"></div>
+  </div>
+
+  <div class="lp-divider"></div>
+
   <!-- Popular prints -->
   <div class="lp-sec" style="padding-top:24px;padding-bottom:16px">
     <div class="section-lbl">Popular prints analysed</div>
@@ -2567,7 +2574,7 @@ function renderRoadmapSteps(){
       +'<div style="font-size:20px">🔒</div>'
       +'<div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:2px">Steps 2 &amp; 3 are Pro only</div>'
       +'<div style="font-size:11px;color:var(--ink2);text-align:center;max-width:210px;line-height:1.45;margin-bottom:10px">Plus keywords, competitor gaps and the full 847-product catalogue.</div>'
-      +'<a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" onclick="if(window.MM&&MM.track)MM.track('cta_click_pro',{label:'idea_stripe'})" style="display:inline-block;padding:10px 20px;background:var(--acc);color:#fff;font-size:12px;font-weight:800;border-radius:10px;text-decoration:none;font-family:\'DM Sans\',sans-serif;letter-spacing:-.01em" target="_blank" rel="noopener">Unlock Pro — $12/mo →</a>'
+      +'<a href="https://buy.stripe.com/aFafZg53M5Da9wf9njcIE00" onclick="if(window.MM&amp;&amp;MM.track)MM.track(\'cta_click_pro\',{label:\'idea_stripe\'})" style="display:inline-block;padding:10px 20px;background:var(--acc);color:#fff;font-size:12px;font-weight:800;border-radius:10px;text-decoration:none;font-family:\'DM Sans\',sans-serif;letter-spacing:-.01em" target="_blank" rel="noopener">Unlock Pro — $12/mo →</a>'
       +'</div>';
     list.parentElement.insertBefore(lockBlock,list.nextSibling);
   }
@@ -2705,7 +2712,7 @@ function analyze(){
   window.scrollTo(0,0);
   q("dots").style.display="flex";
   q("submit-block").style.display="none";
-  if(q("landing-preview"))q("landing-preview").style.display="none";
+  if(q("find-models-line"))q("find-models-line").style.display="none";
   q("btn").style.display="none";
   if(q("try-eg-hint"))q("try-eg-hint").style.display="none";
 
@@ -2888,7 +2895,7 @@ function reset(){
   if(q("browser-el"))q("browser-el").style.display="";
   dots(0);slide(0);q("dots").style.display="none";
   stopPulse();ring(0,"#ccc");q("rn").textContent="";q("rn").style.color="var(--ink3)";rv=0;
-  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";if(q("landing-preview"))q("landing-preview").style.display="";if(q("try-eg-hint"))q("try-eg-hint").style.display="";showBack(false);
+  q("ui").value="";verdict("idle");q("submit-block").style.display="";q("btn").style.display="";q("vbar").style.display="none";if(q("find-models-line"))q("find-models-line").style.display="";if(q("try-eg-hint"))q("try-eg-hint").style.display="";showBack(false);
   if(q("cert-section"))q("cert-section").innerHTML="";
   if(q("mfg-section"))q("mfg-section").style.display="none";
   if(q("mfg-alt-wrap"))q("mfg-alt-wrap").style.display="none";

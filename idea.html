@@ -758,6 +758,10 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .biz-card{display:block;text-decoration:none;color:inherit;border:1.5px solid var(--line);border-radius:12px;padding:12px 13px 11px;background:#fff;border-left-width:4px;border-left-color:#1d4ed8;transition:transform .12s,border-color .12s,box-shadow .12s}
 .biz-card:hover{transform:translateY(-1px);border-color:var(--line2);box-shadow:0 2px 8px rgba(0,0,0,.04)}
 .biz-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:6px}
+.biz-card-row{display:flex;align-items:flex-start;gap:11px;margin-bottom:6px}
+.biz-card-logo{width:48px;height:48px;border-radius:9px;flex-shrink:0;background:var(--surf2) center/cover no-repeat;background-size:cover;border:1px solid var(--line)}
+.biz-card-logo-fallback{display:flex;align-items:center;justify-content:center;font-family:"Bebas Neue",sans-serif;font-size:22px;color:var(--ink2);background:linear-gradient(135deg,#dbeafe,#eff6ff)}
+.biz-card-row-body{flex:1;min-width:0}
 .biz-name{font-size:13px;font-weight:800;color:var(--ink);line-height:1.25;flex:1;min-width:0}
 .biz-theme{font-size:8.5px;font-weight:800;font-family:"DM Mono",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:6px;background:#dbeafe;color:#1d4ed8;flex-shrink:0;margin-top:1px;white-space:nowrap}
 .biz-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px}
@@ -2604,6 +2608,15 @@ function buildBusinessInspiration(list){
     var themeLbl=THEME_LABEL[b.theme]||"";
     var domain="";
     if(b.url){try{var u=new URL(b.url);domain=u.hostname.replace(/^www\./,"");}catch(_){}}
+    /* Logo: prefer a curated `logo` URL from data/businesses.json (set by the
+       refresh-business-logos script), fall back to Google's favicon service
+       for any business that hasn't been refreshed yet, and finally the brand
+       initial in a coloured circle. */
+    var logoUrl=b.logo||(domain?('https://www.google.com/s2/favicons?sz=128&domain='+encodeURIComponent(domain)):'');
+    var initial=esc((b.name||'?').charAt(0).toUpperCase());
+    var logoHtml=logoUrl
+      ? '<div class="biz-card-logo" style="background-image:url(\''+esc(logoUrl)+'\')" aria-hidden="true"></div>'
+      : '<div class="biz-card-logo biz-card-logo-fallback">'+initial+'</div>';
     var nameHtml=b.url?'<a href="'+esc(b.url)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">'+esc(b.name)+(domain?' <span style="font-size:10px;color:var(--ink3);font-weight:500"> ↗ '+esc(domain)+'</span>':'')+'</a>':esc(b.name);
     var meta='';
     if(b.location)meta+='<span class="biz-meta-pill">📍 '+esc(b.location)+'</span>';
@@ -2611,11 +2624,15 @@ function buildBusinessInspiration(list){
     if(b.scale)meta+='<span class="biz-meta-pill scale">'+esc(b.scale)+'</span>';
     if(b.founder)meta+='<span class="biz-meta-pill">👤 '+esc(b.founder)+'</span>';
     return '<div class="biz-card">'
+      +'<div class="biz-card-row">'
+      +logoHtml
+      +'<div class="biz-card-row-body">'
       +'<div class="biz-card-top">'
       +'<div class="biz-name">'+nameHtml+'</div>'
       +(themeLbl?'<span class="biz-theme">'+esc(themeLbl)+'</span>':'')
       +'</div>'
       +(meta?'<div class="biz-meta">'+meta+'</div>':'')
+      +'</div></div>'
       +(b.summary?'<div class="biz-summary">'+esc(b.summary)+'</div>':'')
       +(b.differentiator?'<div class="biz-diff"><span>'+esc(b.differentiator)+'</span></div>':'')
       +'</div>';

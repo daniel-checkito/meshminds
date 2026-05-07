@@ -352,19 +352,20 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .chip.on .chip-eg{color:var(--acc);opacity:.7}
 .q-hint{font-size:11px;color:var(--ink3);margin-top:7px;line-height:1.45;font-family:"DM Mono",sans-serif}
 /* Copyright section */
-.cp-banner{display:flex;align-items:center;gap:9px;padding:12px 14px;border-radius:11px;font-size:13px;font-weight:600;margin-bottom:14px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif;line-height:1.4}
+.cp-banner{display:flex;align-items:center;gap:11px;padding:16px 16px;border-radius:12px;font-size:15px;font-weight:700;margin-bottom:18px;background:#dcfce7;color:#15803d;font-family:"DM Sans",sans-serif;line-height:1.4}
 .cp-banner.warn{background:#fef9c3;color:#854d0e}
 .cp-banner.bad{background:#fee2e2;color:#991b1b}
-.cp-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.cp-card{border:1px solid var(--line);border-radius:11px;background:#fff;overflow:hidden;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cp-card-summary{display:flex;align-items:center;gap:10px;padding:11px 13px}
-.cp-card-left{flex-shrink:0;display:flex;align-items:center;gap:7px}
-.cp-risk{font-size:10px;font-weight:800;font-family:"DM Mono",sans-serif;padding:3px 8px;border-radius:6px;display:inline-block;letter-spacing:.04em}
-.cp-clabel{font-size:12px;color:var(--ink);font-weight:600;line-height:1.2}
-.cp-desc{font-size:12px;color:var(--ink2);line-height:1.45;padding:0 13px 11px 13px;display:none}
-.cp-card.open .cp-desc{display:block}
-.cp-chevron{font-size:14px;color:var(--ink3);margin-left:auto;transition:transform .2s;flex-shrink:0}
-.cp-card.open .cp-chevron{transform:rotate(90deg)}
+.cp-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.cp-card{border:1.5px solid var(--line);border-radius:12px;background:#fff;overflow:hidden;-webkit-tap-highlight-color:transparent;border-left-width:4px}
+.cp-card.cp-card-low{border-left-color:#15803d}
+.cp-card.cp-card-medium{border-left-color:#b45309;background:#fffbeb}
+.cp-card.cp-card-high{border-left-color:#b91c1c;background:#fef2f2}
+.cp-card-summary{display:flex;align-items:center;gap:12px;padding:14px 15px 8px}
+.cp-card-left{flex-shrink:0;display:flex;align-items:center;gap:10px}
+.cp-risk{font-size:11px;font-weight:800;font-family:"DM Mono",sans-serif;padding:5px 10px;border-radius:7px;display:inline-block;letter-spacing:.06em}
+.cp-clabel{font-size:16px;color:var(--ink);font-weight:700;line-height:1.2}
+.cp-desc{font-size:14px;color:var(--ink2);line-height:1.55;padding:0 15px 14px 15px}
+.cp-chevron{display:none}
 /* Consolidated results section headers */
 .res-sec-hd{display:flex;align-items:center;gap:10px;margin:-16px -16px 16px;padding:12px 16px;border-bottom:2px solid rgba(0,0,0,.05)}
 .res-sec-hd-sell{background:linear-gradient(90deg,#fff3e6 0%,#fdfaf8 100%)}
@@ -1404,23 +1405,6 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
-        <!-- Pro insights teaser -->
-        <div class="pro-insights-gate" id="pro-insights-gate" style="display:none">
-          <div class="pro-insights-blur">
-            <div class="pro-insights-row"><span>Top search keywords</span><span class="pro-insights-val">cat decor gift, cute desk toy...</span></div>
-            <div class="pro-insights-row"><span>Best time to list</span><span class="pro-insights-val">Thu–Fri, 8–10am EST</span></div>
-            <div class="pro-insights-row"><span>Competitor weak spot</span><span class="pro-insights-val">No personalisation offered</span></div>
-            <div class="pro-insights-row"><span>847 similar products scored</span><span class="pro-insights-val">See full catalogue →</span></div>
-          </div>
-          <div class="pro-insights-lock">
-            <div style="font-size:22px;margin-bottom:6px">🔒</div>
-            <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:4px">Pro members see this</div>
-            <div style="font-size:11px;color:var(--ink2);text-align:center;line-height:1.45;margin-bottom:12px;max-width:240px">Sharper analysis, keywords, competitor gaps, trending data and the full catalogue of 847 scored products.</div>
-            <a href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" onclick="if(window.MM&&MM.track)MM.track('cta_click_pro',{label:'idea_stripe'})" class="btn" style="margin:0;padding:10px 20px;font-size:12px;width:auto;display:inline-block;text-decoration:none" target="_blank" rel="noopener">Unlock Pro - $8/mo →</a>
-          </div>
-        </div>
-
-
       </div>
 
       <!-- COMPETITORS + INSPIRATION (own step) -->
@@ -1446,33 +1430,30 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="res-sec-hd res-sec-hd-legal"><span class="res-sec-ico">⚖️</span><span class="res-sec-lbl">Legal &amp; Copyright Check</span></div>
         <div class="cp-banner" id="cp-status">✅ No legal issues found  -  safe to sell</div>
         <div class="cp-grid">
-          <div class="cp-card" onclick="this.classList.toggle('open')">
+          <div class="cp-card cp-card-low" id="ck-etsy-card">
             <div class="cp-card-summary">
               <div class="cp-card-left">
                 <div class="cp-risk risk-low" id="ck-etsy-risk">LOW</div>
                 <span class="cp-clabel">Etsy ban risk</span>
               </div>
-              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-etsy-desc">No Etsy policy issues detected.</div>
           </div>
-          <div class="cp-card" onclick="this.classList.toggle('open')">
+          <div class="cp-card cp-card-low" id="ck-legal-card">
             <div class="cp-card-summary">
               <div class="cp-card-left">
                 <div class="cp-risk risk-low" id="ck-legal-risk">LOW</div>
                 <span class="cp-clabel">Legal risk</span>
               </div>
-              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-legal-desc">No legal restrictions found.</div>
           </div>
-          <div class="cp-card" onclick="this.classList.toggle('open')">
+          <div class="cp-card cp-card-low" id="ck-copy-card">
             <div class="cp-card-summary">
               <div class="cp-card-left">
                 <div class="cp-risk risk-low" id="ck-copy-risk">LOW</div>
                 <span class="cp-clabel">Copyright / IP</span>
               </div>
-              <span class="cp-chevron">›</span>
             </div>
             <div class="cp-desc" id="ck-copy-desc">No IP concerns detected.</div>
           </div>
@@ -2464,13 +2445,15 @@ function populateCopyright(c){
     else if(anyMed){banner.className="cp-banner warn";banner.textContent="⚠️ Some risks to be aware of  -  read details";}
     else{banner.className="cp-banner";banner.textContent="✅ No legal issues found  -  safe to sell";}
   }
-  /* Auto-open any non-low risk cards */
-  document.querySelectorAll('.cp-card').forEach(function(card){
-    var riskEl=card.querySelector('.cp-risk');
-    if(riskEl&&(riskEl.classList.contains('risk-medium')||riskEl.classList.contains('risk-high'))){
-      card.classList.add('open');
-    }
-  });
+  /* Color the parent card's left border based on risk level */
+  function setCardRisk(cardId,risk){
+    var card=q(cardId);if(!card)return;
+    card.classList.remove('cp-card-low','cp-card-medium','cp-card-high');
+    card.classList.add('cp-card-'+(risk==='medium'?'medium':risk==='high'?'high':'low'));
+  }
+  setCardRisk('ck-etsy-card',etsy);
+  setCardRisk('ck-legal-card',legal);
+  setCardRisk('ck-copy-card',copy);
 }
 
 var roadmapPlatform='';

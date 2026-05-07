@@ -108,6 +108,27 @@ CREATE INDEX IF NOT EXISTS email_leads_created_idx ON email_leads(created_at DES
 ALTER TABLE email_leads ENABLE ROW LEVEL SECURITY;
 -- No public policies: only the service role inserts/reads from server.
 
+-- ── market_observations (self-improving market data) ───────────────────────
+-- Every successful scan logs the AI/scraped numbers for the matched category.
+-- A periodic promotion script aggregates this into data/market-data.json.
+CREATE TABLE IF NOT EXISTS market_observations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  scan_id UUID REFERENCES scans(id) ON DELETE CASCADE,
+  category_id TEXT,                          -- matched id from market-data.json, or null
+  category_name TEXT,                        -- snapshot of name at observation time
+  etsy_listings INT,                         -- count from scrape or AI estimate
+  etsy_avg_price NUMERIC(10,2),              -- € average from scrape or AI
+  search_volume INT,                         -- monthly estimate from AI
+  match_confidence NUMERIC(3,2),             -- 1.00 explicit seller cat, 0.50 keyword match
+  source_query TEXT,                         -- the keywords used for the scrape
+  product_title TEXT,                        -- helps when reviewing uncategorized
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS market_obs_category_idx ON market_observations(category_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS market_obs_uncategorized_idx ON market_observations(created_at DESC) WHERE category_id IS NULL;
+ALTER TABLE market_observations ENABLE ROW LEVEL SECURITY;
+-- No public policies: service role only.
+
 -- ── usage_log (per-day rate limiting) ───────────────────────────────────────
 CREATE TABLE IF NOT EXISTS usage_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

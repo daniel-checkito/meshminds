@@ -536,22 +536,33 @@ ${ideaChannels ? '- IMPORTANT: tailor strategy.bestPlatform and strategy.platfor
   // ── Category match against /data/market-data.json ─────────────────────────
   // Picks the single best category and injects its real numbers into the prompt
   // so the AI cites ground-truth Etsy averages instead of guessing.
-  const matchedMarket = matchMarketCategory({
+  const matchResult = matchMarketCategoryWithConfidence({
     sellerCategory: category,
     productContext,
     ideaText,
     title: (productContext.match(/TITLE:\s*(.+)/) || [])[1],
   });
+  const matchedMarket = matchResult?.category || null;
+  const matchConfidence = matchResult?.confidence || 0;
+
+  // Live blend: pull recent observation medians for this category from Supabase
+  // (cached 10 min in-memory, defensive timeout, falls back to baseline silently)
+  const recentObs = matchedMarket ? await getRecentObservations(matchedMarket.id) : null;
+
   const marketBlock = matchedMarket
-    ? `MATCHED CATEGORY DATA (real Etsy ground truth — use these numbers as anchors for market.searchVolume, market.etsyListings, market.etsyAvgPrice, and revenue.sellPrice ceiling):
+    ? `MATCHED CATEGORY DATA (use these as anchors for market.searchVolume, market.etsyListings, market.etsyAvgPrice, and revenue.sellPrice ceiling):
 - Category: ${matchedMarket.name}
-- Etsy average price: €${matchedMarket.etsy_avg_price}
-- Monthly search volume: ${matchedMarket.search_volume_monthly}
-- Competition level: ${matchedMarket.competition_level}
+- Baseline Etsy average price: €${matchedMarket.etsy_avg_price}
+- Baseline monthly search volume: ${matchedMarket.search_volume_monthly}
+- Baseline competition level: ${matchedMarket.competition_level}
 - Price ceiling: €${matchedMarket.price_ceiling}
 - Top-converting keywords: ${matchedMarket.top_keywords.join(', ')}
 - Category notes: ${matchedMarket.notes}
-`
+${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${recentObs.count} real scans of this category in the last 90 days — weight these heavily, they reflect the live market):
+- Median Etsy listings: ${recentObs.medianListings ?? 'n/a'}
+- Median average price: ${recentObs.medianPrice != null ? '€' + recentObs.medianPrice : 'n/a'}
+- Median monthly search volume: ${recentObs.medianSearch ?? 'n/a'}
+` : ''}`
     : '';
 
   const prompt = `You are an expert Etsy seller, 3D printing business analyst, and product compliance specialist. Your job is to evaluate whether a 3D printed model is worth selling — and whether 3D printing is even the right manufacturing method.
@@ -843,6 +854,26 @@ IMPORTANT RULES:
   } catch { /* swallow — saving the dataset must never break the response */ }
 
   if (savedScanId) parsed.scanId = savedScanId;
+
+  // Fire-and-forget: log this scan's market data so the system improves over time.
+  // We always log — even when no category matched — so the promotion script can
+  // surface candidate new categories from the uncategorized pool.
+  try {
+    const { adminQuery } = require('./_supabase');
+    const obsRow = {
+      scan_id: savedScanId,
+      category_id: matchedMarket?.id || null,
+      category_name: matchedMarket?.name || null,
+      etsy_listings: parsed?.market?.etsyListings != null ? Number(parsed.market.etsyListings) : null,
+      etsy_avg_price: parseEur(parsed?.market?.etsyAvgPrice),
+      search_volume: parsed?.market?.searchVolume != null ? Number(parsed.market.searchVolume) : null,
+      match_confidence: matchConfidence,
+      product_title: parsed?.product?.title ? String(parsed.product.title).slice(0, 200) : null,
+    };
+    // Don't await — this should never delay the response
+    adminQuery({ method: 'POST', table: 'market_observations', body: obsRow }).catch(() => {});
+  } catch {}
+
   return res.status(200).json(parsed);
 };
 
@@ -861,9 +892,14 @@ function loadMarketData() {
   return _marketData;
 }
 
-// Pick the single most relevant category from /data/market-data.json.
-// Priority: explicit seller-stated category → keyword match in title/idea → null.
-function matchMarketCategory({ sellerCategory, productContext, ideaText, title }) {
+// Compatibility shim: old callers
+function matchMarketCategory(args) {
+  const r = matchMarketCategoryWithConfidence(args);
+  return r ? r.category : null;
+}
+
+// Pick the single most relevant category and report match confidence (0..1).
+function matchMarketCategoryWithConfidence({ sellerCategory, productContext, ideaText, title }) {
   const md = loadMarketData();
   if (!md.categories?.length) return null;
   const cats = md.categories;
@@ -901,7 +937,7 @@ function matchMarketCategory({ sellerCategory, productContext, ideaText, title }
     const targetId = synonyms[sellerSlug];
     if (targetId) {
       const hit = cats.find(c => c.id === targetId);
-      if (hit) return hit;
+      if (hit) return { category: hit, confidence: 1.0 };
     }
   }
 
@@ -912,11 +948,64 @@ function matchMarketCategory({ sellerCategory, productContext, ideaText, title }
   for (const cat of cats) {
     let score = 0;
     for (const kw of cat.top_keywords) {
-      if (haystack.includes(kw.toLowerCase())) score += kw.split(' ').length; // longer phrases score higher
+      if (haystack.includes(kw.toLowerCase())) score += kw.split(' ').length;
     }
     if (score > bestScore) { bestScore = score; best = cat; }
   }
-  return bestScore >= 2 ? best : null; // require at least one decent keyword hit to avoid bad matches
+  if (bestScore < 2) return null;
+  // Confidence scales with keyword overlap — 2 hits = 0.5, 4+ = 0.8
+  const confidence = Math.min(0.85, 0.4 + bestScore * 0.1);
+  return { category: best, confidence };
+}
+
+// ── Recent market observations cache ──────────────────────────────────────
+// Per-category in-memory cache of the last-90-day medians from Supabase.
+// 10-minute TTL; defensive 1.5s timeout; silently falls back to null on error.
+const _OBS_CACHE = new Map();
+const _OBS_TTL_MS = 10 * 60 * 1000;
+async function getRecentObservations(categoryId) {
+  if (!categoryId) return null;
+  const hit = _OBS_CACHE.get(categoryId);
+  if (hit && Date.now() - hit.at < _OBS_TTL_MS) return hit.data;
+  const env = process.env;
+  const url = (env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || '').replace(/\/$/, '');
+  const key = env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_KEY || '';
+  if (!url || !key) return null;
+  try {
+    const since = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString();
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 1500);
+    const res = await fetch(
+      `${url}/rest/v1/market_observations?category_id=eq.${encodeURIComponent(categoryId)}&created_at=gte.${since}&select=etsy_listings,etsy_avg_price,search_volume&order=created_at.desc&limit=200`,
+      { headers: { apikey: key, Authorization: `Bearer ${key}` }, signal: ctrl.signal }
+    );
+    clearTimeout(t);
+    if (!res.ok) throw new Error('rest ' + res.status);
+    const rows = await res.json();
+    const data = (rows || []).length >= 5 ? {
+      count: rows.length,
+      medianListings: median(rows.map(r => r.etsy_listings).filter(Number.isFinite)),
+      medianPrice: median(rows.map(r => parseFloat(r.etsy_avg_price)).filter(Number.isFinite)),
+      medianSearch: median(rows.map(r => r.search_volume).filter(Number.isFinite)),
+    } : null;
+    _OBS_CACHE.set(categoryId, { at: Date.now(), data });
+    return data;
+  } catch {
+    _OBS_CACHE.set(categoryId, { at: Date.now(), data: null });
+    return null;
+  }
+}
+function median(arr) {
+  if (!arr.length) return null;
+  const s = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(s.length / 2);
+  return s.length % 2 ? s[mid] : Math.round(((s[mid - 1] + s[mid]) / 2) * 100) / 100;
+}
+function parseEur(s) {
+  if (typeof s === 'number') return s;
+  if (!s) return null;
+  const m = String(s).match(/(\d+(?:[.,]\d+)?)/);
+  return m ? parseFloat(m[1].replace(',', '.')) : null;
 }
 
 function extractProductContext(fcData) {

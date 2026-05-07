@@ -906,10 +906,16 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           }
           pickChip('type','functional');
           pickChip('channel','etsy');
-          /* Click the main button to advance to step 2; user can then click
-             again to run the analysis. */
+          /* First click advances idea-form step 1 -> step 2; second click
+             starts the analysis. We wait a tick between clicks so the DOM
+             update from setIdeaStep(2) lands before we re-click. */
           var btn=document.getElementById('btn');
-          if(btn)btn.click();
+          if(btn){
+            btn.click();
+            setTimeout(function(){
+              if(typeof ideaStep!=='undefined' && ideaStep===2 && !busy) btn.click();
+            },120);
+          }
         } else {
           var ui=document.getElementById('ui');
           if(ui)ui.value='https://makerworld.com/en/models/77709';

@@ -579,6 +579,17 @@ ${winners.map(w => `- ${w.name} — €${w.monthly_revenue_eur}/mo @ €${w.pric
 `
     : '';
 
+  // Pick up to 3 real businesses (not single listings — whole brands) succeeding
+  // in this category. Used by the AI as concrete reference points it can name
+  // in topTips and platformAdvice ("position like X — here's the moat to copy").
+  const inspirationBusinesses = pickBusinessesForCategory(matchedMarket?.id || null);
+  const businessesBlock = inspirationBusinesses.length
+    ? `REAL BUSINESSES winning in this category (whole brands, not single Etsy listings — use these as reference points the seller can study or learn from. If you cite one, use the EXACT name. Do NOT invent businesses or guess at financials beyond what's listed here):
+${inspirationBusinesses.map(b => `- ${b.name}${b.url ? ' (' + b.url + ')' : ''}${b.location ? ' — ' + b.location : ''}${b.scale ? '. Scale: ' + b.scale : ''}${b.price_range ? '. Price: ' + b.price_range : ''}. Theme: ${b.theme}. ${b.summary} Differentiator: ${b.differentiator}`).join('\n')}
+You may reference one or two of these by name in strategy.platformAdvice or strategy.topTips when the lesson is directly applicable to this product. Be specific about WHAT to copy (the moat / angle) — never copy financial claims that aren't listed above.
+`
+    : '';
+
   const ipBlock = ipMatches.length
     ? `IP FLAGS DETECTED in title/description — these are real trademarks, not guesses:
 ${ipMatches.map(m => `- "${m.keyword}" (${m.ip_holder}, ${m.risk_level} risk): ${m.notes}`).join('\n')}
@@ -606,7 +617,7 @@ ${recentObs && recentObs.count >= 5 ? `RECENT OBSERVED DATA (median across ${rec
 Analyse the product data below and return ONLY a valid JSON object — no markdown, no explanation, no code fences.
 Product data:
 ${productContext}
-${ipBlock}${marketBlock}${winnersBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
+${ipBlock}${marketBlock}${winnersBlock}${businessesBlock}${etsyRealData ? etsyRealData + '\n' : ''}${competitorContext ? competitorContext + '\n' : ''}
 Image URL (use as product.image if valid, otherwise null):
 ${imageUrl}
 Source URL: ${sourceUrl}
@@ -921,12 +932,9 @@ IMPORTANT RULES:
 
   if (savedScanId) parsed.scanId = savedScanId;
 
-  // Attach 2-3 real businesses doing well in this category so the UI can
-  // show concrete inspiration alongside the AI analysis.
-  try {
-    const insp = pickBusinessesForCategory(matchedMarket?.id || null);
-    if (insp.length) parsed.businessInspiration = insp;
-  } catch { /* non-fatal */ }
+  // Attach the same matched businesses that were given to the AI so the UI
+  // can render the inspiration panel beside the analysis.
+  if (inspirationBusinesses.length) parsed.businessInspiration = inspirationBusinesses;
 
   // Fire-and-forget: log this scan's market data so the system improves over time.
   // We always log — even when no category matched — so the promotion script can

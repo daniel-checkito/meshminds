@@ -27,21 +27,23 @@ const CONCURRENCY = 2;          // gentler on Etsy/eBay than 4
 const REQUEST_GAP_MS = 600;      // small jitter so we don't burst
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36';
-const HEADERS = {
-  'User-Agent': UA,
+/* Both Etsy and eBay block real browser UAs at the CDN edge for anything
+   that looks like scraping, but they whitelist social-media bots because
+   they WANT links to preview on Facebook/Twitter/Slack/etc. We try the
+   social UAs in order; the first one that returns a 200 wins. */
+const UA_FALLBACKS = [
+  'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+  'Twitterbot/1.0',
+  'LinkedInBot/1.0 (compatible; Mozilla/5.0; Apache-HttpClient +http://www.linkedin.com)',
+  'Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)',
+  'WhatsApp/2.21.12.21 A',
+  UA, // last-resort real Chrome
+];
+const HEADERS_BASE = {
   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
   'Accept-Language': 'en-US,en;q=0.9',
   'Accept-Encoding': 'gzip, deflate, br',
   'Cache-Control': 'no-cache',
-  'Pragma': 'no-cache',
-  'Sec-Ch-Ua': '"Not)A;Brand";v="99", "Google Chrome";v="127", "Chromium";v="127"',
-  'Sec-Ch-Ua-Mobile': '?0',
-  'Sec-Ch-Ua-Platform': '"macOS"',
-  'Sec-Fetch-Dest': 'document',
-  'Sec-Fetch-Mode': 'navigate',
-  'Sec-Fetch-Site': 'none',
-  'Sec-Fetch-User': '?1',
-  'Upgrade-Insecure-Requests': '1',
 };
 
 function abs(base, src) {
@@ -114,19 +116,25 @@ function pickPlatformCdn(html, isEtsy, isEbay) {
 }
 
 async function fetchHtml(url) {
-  const ac = new AbortController();
-  const t = setTimeout(() => ac.abort(), TIMEOUT_MS);
-  try {
-    const r = await fetch(url, {
-      headers: HEADERS,
-      redirect: 'follow',
-      signal: ac.signal,
-    });
-    if (!r.ok) return { html: null, status: r.status };
-    return { html: await r.text(), status: r.status };
-  } catch (e) {
-    return { html: null, status: 'err:' + (e.code || e.name || 'unknown') };
-  } finally { clearTimeout(t); }
+  /* Try each UA in the fallback list until one returns 200. We stop early
+     on success so most URLs only need a single request. */
+  let lastStatus = null;
+  for (const ua of UA_FALLBACKS) {
+    const ac = new AbortController();
+    const t = setTimeout(() => ac.abort(), TIMEOUT_MS);
+    try {
+      const r = await fetch(url, {
+        headers: { ...HEADERS_BASE, 'User-Agent': ua },
+        redirect: 'follow',
+        signal: ac.signal,
+      });
+      lastStatus = r.status;
+      if (r.ok) return { html: await r.text(), status: r.status, ua };
+    } catch (e) {
+      lastStatus = 'err:' + (e.code || e.name || 'unknown');
+    } finally { clearTimeout(t); }
+  }
+  return { html: null, status: lastStatus, ua: null };
 }
 
 let dumpedDebug = false;

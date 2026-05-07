@@ -1,6 +1,46 @@
 // Shared Supabase REST helpers - no npm packages, pure fetch
 
+const crypto = require('crypto');
 const env = process.env;
+
+// SHA-256 hash an IP (so we never store raw IPs)
+function hashIp(ip) {
+  if (!ip) return 'anon';
+  const salt = env.IP_HASH_SALT || 'meshminds-default-salt';
+  return crypto.createHash('sha256').update(salt + ':' + ip).digest('hex').slice(0, 32);
+}
+
+// Daily usage check. Returns { allowed: bool, used: int, limit: int }.
+// userId = Supabase user.id when logged in, null otherwise.
+// isPro = true if the user is on a pro plan (no limit).
+async function checkDailyLimit({ userId, ipHash, isPro }) {
+  if (isPro) return { allowed: true, used: 0, limit: -1 };
+  const limit = userId ? 50 : 25;
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const filterKey = userId ? `user_id=eq.${userId}` : `ip_hash=eq.${ipHash}`;
+  try {
+    const rows = await adminQuery({
+      table: 'usage_log',
+      filters: `${filterKey}&kind=eq.scan&created_at=gte.${since}&select=id`,
+    });
+    const used = Array.isArray(rows) ? rows.length : 0;
+    return { allowed: used < limit, used, limit };
+  } catch (e) {
+    // If the table doesn't exist or DB is unreachable, fail open
+    return { allowed: true, used: 0, limit };
+  }
+}
+
+// Log a scan attempt for rate-limiting purposes.
+async function logUsage({ userId, ipHash, kind = 'scan' }) {
+  try {
+    await adminQuery({
+      method: 'POST',
+      table: 'usage_log',
+      body: { user_id: userId || null, ip_hash: ipHash || null, kind },
+    });
+  } catch { /* swallow — logging should never break the request */ }
+}
 
 function supabaseUrl() {
   const u = env.SUPABASE_URL || env.NEXT_PUBLIC_SUPABASE_URL || env.PUBLIC_SUPABASE_URL || env.VITE_SUPABASE_URL || '';
@@ -79,4 +119,4 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 }
 
-module.exports = { getUser, adminQuery, extractToken, cors };
+module.exports = { getUser, adminQuery, extractToken, cors, hashIp, checkDailyLimit, logUsage };

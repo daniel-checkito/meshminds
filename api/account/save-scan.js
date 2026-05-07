@@ -9,7 +9,32 @@ module.exports = async (req, res) => {
   const user = await getUser(token);
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { url, title, score, verdict, imageUrl, profitEst, isPublic, fullData } = req.body || {};
+  const body = req.body || {};
+
+  // ── Feedback action: update an existing scan with rating + comment ──
+  if (body.action === 'feedback') {
+    const { scanId, rating, comment } = body;
+    if (!scanId) return res.status(400).json({ error: 'scanId required' });
+    const r = rating === 1 || rating === -1 || rating === 0 ? rating : null;
+    try {
+      const updated = await adminQuery({
+        method: 'PATCH',
+        table: 'scans',
+        filters: `id=eq.${scanId}&user_id=eq.${user.id}`,
+        body: {
+          feedback_rating: r,
+          feedback_comment: comment ? String(comment).slice(0, 1000) : null,
+          feedback_at: new Date().toISOString(),
+        },
+      });
+      if (!updated || updated.length === 0) return res.status(404).json({ error: 'Scan not found' });
+      return res.status(200).json({ ok: true });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
+  const { url, title, score, verdict, imageUrl, profitEst, isPublic, fullData } = body;
   if (!url && !title) return res.status(400).json({ error: 'url or title required' });
 
   try {

@@ -80,7 +80,23 @@ ALTER TABLE scans
   ADD COLUMN IF NOT EXISTS is_public BOOLEAN NOT NULL DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS image_url TEXT,
   ADD COLUMN IF NOT EXISTS profit_est TEXT,
-  ADD COLUMN IF NOT EXISTS full_data JSONB;
+  ADD COLUMN IF NOT EXISTS full_data JSONB,
+  ADD COLUMN IF NOT EXISTS feedback_rating SMALLINT,    -- -1 / 0 / 1
+  ADD COLUMN IF NOT EXISTS feedback_comment TEXT,
+  ADD COLUMN IF NOT EXISTS feedback_at TIMESTAMPTZ;
+
+-- ── usage_log (per-day rate limiting) ───────────────────────────────────────
+CREATE TABLE IF NOT EXISTS usage_log (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  ip_hash TEXT,
+  kind TEXT NOT NULL DEFAULT 'scan',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS usage_log_user_idx ON usage_log(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS usage_log_ip_idx ON usage_log(ip_hash, created_at DESC);
+ALTER TABLE usage_log ENABLE ROW LEVEL SECURITY;
+-- No public policies: only the service role (server-side) reads/writes this table.
 
 -- Public scans policy
 DO $$ BEGIN

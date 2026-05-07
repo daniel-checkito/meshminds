@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
   /* ── Bot protection ── */
   const clientIp = (req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.socket?.remoteAddress || 'unknown').split(',')[0].trim();
 
-  /* Rate limit: max 8 requests per IP per 10 minutes */
+  /* Rate limit: max 8 requests per IP per 10 minutes (burst protection) */
   if (!checkRate(clientIp, 8, 10 * 60 * 1000)) {
     return res.status(429).json({ error: 'Too many requests. Please wait a few minutes before trying again.' });
   }
@@ -44,6 +44,40 @@ module.exports = async (req, res) => {
   if (isBotUa) {
     return res.status(403).json({ error: 'Automated requests are not allowed.' });
   }
+
+  /* Daily quota: anonymous 25/day, free logged-in 50/day, pro unlimited */
+  let _quotaUser = null, _quotaIsPro = false;
+  let _quotaIpHash = '';
+  try {
+    const { getUser, extractToken, hashIp, checkDailyLimit, adminQuery } = require('./_supabase');
+    _quotaIpHash = hashIp(clientIp);
+    const _tok = extractToken(req);
+    if (_tok) {
+      _quotaUser = await getUser(_tok);
+      if (_quotaUser?.id) {
+        try {
+          const profiles = await adminQuery({
+            table: 'profiles',
+            filters: `id=eq.${_quotaUser.id}`,
+            select: 'is_premium,premium_until',
+          });
+          const p = profiles?.[0];
+          _quotaIsPro = !!(p && p.is_premium && (!p.premium_until || new Date(p.premium_until) > new Date()));
+        } catch {}
+      }
+    }
+    const quota = await checkDailyLimit({
+      userId: _quotaUser?.id || null,
+      ipHash: _quotaIpHash,
+      isPro: _quotaIsPro,
+    });
+    if (!quota.allowed) {
+      const upgradeMsg = _quotaUser
+        ? `You've used all ${quota.limit} free scans today. Upgrade to Pro for unlimited scans.`
+        : `You've used all ${quota.limit} free scans today. Sign up for a free account to get 50 scans/day, or upgrade to Pro for unlimited.`;
+      return res.status(429).json({ error: upgradeMsg, quotaExceeded: true, used: quota.used, limit: quota.limit, isLoggedIn: !!_quotaUser });
+    }
+  } catch { /* fail open if Supabase is unreachable */ }
 
   const body = req.body || {};
   const isIdeaMode = body.mode === 'idea';
@@ -570,6 +604,14 @@ IMPORTANT RULES:
     parsed = parseClaudeResponse(rawText);
   } catch (e) {
     return res.status(502).json({ error: 'analysis_failed', message: e.message });
+  }
+
+  // Log usage for daily-quota enforcement (skipped for pro users — uncapped)
+  if (!_quotaIsPro) {
+    try {
+      const { logUsage } = require('./_supabase');
+      logUsage({ userId: _quotaUser?.id || null, ipHash: _quotaIpHash, kind: 'scan' });
+    } catch {}
   }
 
   return res.status(200).json(parsed);

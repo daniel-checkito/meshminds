@@ -426,9 +426,8 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 .verdict-card.bad .res-note-txt{color:#991b1b}
 .verdict-card.bad .res-note-txt b{color:#7f1d1d}
 /* Signal cards */
-.signals-hd{font-family:"DM Mono",monospace;font-size:9.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;margin:16px 0 9px;display:flex;align-items:center;gap:8px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.signals-hd{font-family:"Bebas Neue",sans-serif;font-size:22px;font-weight:400;color:var(--ink);letter-spacing:.02em;margin:20px 0 10px;display:flex;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent;line-height:1.1}
 .signals-hd::after{content:'';flex:1;height:1px;background:var(--line)}
-.sig-extra{display:none}
 .signal-card{border-radius:11px;padding:13px 14px;margin-bottom:8px}
 .signal-card.up{background:#f0fdf4;border:1px solid #bbf7d0}
 .signal-card.dn{background:#fffbeb;border:1px solid #fde68a}
@@ -2460,22 +2459,9 @@ function populateVerdictCard(data){
     var el=q(id);if(!el)return;
     var arr=type==="up"?"↑":"↓";
     var cls=type==="up"?"up":"dn";
-    el.innerHTML=sigs.map(function(s,i){
-      return '<div class="signal-card '+type+(i>0?' sig-extra':'')+'"><div class="signal-row"><span class="signal-arr signal-'+cls+'">'+arr+'</span><div><div class="signal-title">'+s.title+'</div><div class="signal-desc">'+s.desc+'</div></div></div></div>';
+    el.innerHTML=sigs.map(function(s){
+      return '<div class="signal-card '+type+'"><div class="signal-row"><span class="signal-arr signal-'+cls+'">'+arr+'</span><div><div class="signal-title">'+s.title+'</div><div class="signal-desc">'+s.desc+'</div></div></div></div>';
     }).join("");
-    if(sigs.length>1){
-      var hd=q(type==="up"?"why-hd":"risk-hd");
-      if(hd){
-        hd.innerHTML=(type==="up"?"Why it's worth it":"Risks to consider")+' <span style="font-size:10px;color:var(--acc);font-family:\'DM Mono\',monospace;text-transform:none;letter-spacing:0;font-weight:700" id="'+(type==="up"?"why-toggle":"risk-toggle")+'">'+(sigs.length-1)+' more</span>';
-        hd.onclick=function(){
-          var extras=el.querySelectorAll('.sig-extra');
-          var toggleEl=q(type==="up"?"why-toggle":"risk-toggle");
-          var isHidden=extras[0]&&extras[0].style.display==='none';
-          extras.forEach(function(x){x.style.display=isHidden?'':'none';});
-          if(toggleEl)toggleEl.textContent=isHidden?'less':(sigs.length-1)+' more';
-        };
-      }
-    }
   }
   renderSigs("signals-why",whySigs,"up");
   renderSigs("signals-risks",riskSigs,"dn");

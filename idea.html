@@ -1861,9 +1861,22 @@ function stopPulse(){if(pulseRaf){cancelAnimationFrame(pulseRaf);pulseRaf=null;}
 
 function drawLoadingRing(p,color){
   var col=color||"#f59e0b";
+  var dpr=Math.max(1,Math.round(window.devicePixelRatio||1));
   ["gate-ring","loading-ring"].forEach(function(id){
     var c=q(id);if(!c)return;
-    var ctx=c.getContext("2d"),cx=55,cy=55,r=44,th=8;
+    /* Lazy HiDPI scale: bring the canvas backing store up to devicePixelRatio
+       so the ring is crisp on retina/4K screens. We do it once per canvas;
+       _dprScale stamps which dpr the canvas was set up for. */
+    if(c._dprScale!==dpr){
+      c.width=110*dpr;
+      c.height=110*dpr;
+      c.style.width="110px";
+      c.style.height="110px";
+      c._dprScale=dpr;
+    }
+    var ctx=c.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var cx=55,cy=55,r=44,th=8;
     ctx.clearRect(0,0,110,110);
     ctx.beginPath();ctx.lineWidth=th;ctx.lineCap="round";ctx.strokeStyle="#e8e8e8";
     ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();

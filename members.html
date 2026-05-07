@@ -450,21 +450,48 @@
       cosplay_props:'🗡', wedding_events:'💍', fashion_accessories:'👜',
       tools_workshop_jigs:'🔨', miniatures_terrain:'🏔', musical_instruments_accessories:'🎸'
     };
-    var IMAGE_BY_CAT={
-      decor:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp',
-      lighting_lamps:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp',
-      planters_garden:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp',
-      desk_office:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp',
-      home_organization:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp',
-      tech_accessories:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp',
-      dnd_gaming:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp',
-      toys_fidgets:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp',
-      personalized_gifts:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/7904e0389ffe6671.webp',
-      pet_accessories:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp',
-      replacement_parts:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp',
-      automotive_bike:'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp'
+    /* Category-themed gradient backgrounds for the placeholder thumbs.
+       We deliberately do NOT reuse other winners' product photos as a
+       generic image - showing a planter photo for an unrelated planter is
+       misleading. Each winner that doesn't have its own image gets a
+       branded category placeholder instead. */
+    var CAT_GRAD={
+      decor:                            ['#fef3c7','#fde68a'],
+      lighting_lamps:                   ['#fef9c3','#fde047'],
+      planters_garden:                  ['#dcfce7','#86efac'],
+      desk_office:                      ['#e0e7ff','#a5b4fc'],
+      home_organization:                ['#f1f5f9','#cbd5e1'],
+      tech_accessories:                 ['#dbeafe','#93c5fd'],
+      dnd_gaming:                       ['#ede9fe','#c4b5fd'],
+      toys_fidgets:                     ['#fce7f3','#f9a8d4'],
+      personalized_gifts:               ['#ffe4e6','#fda4af'],
+      pet_accessories:                  ['#fef3c7','#fcd34d'],
+      replacement_parts:                ['#f3f4f6','#9ca3af'],
+      automotive_bike:                  ['#e0f2fe','#7dd3fc'],
+      kids_nursery:                     ['#fef9c3','#fde68a'],
+      cosplay_props:                    ['#fee2e2','#fca5a5'],
+      wedding_events:                   ['#fdf2f8','#f9a8d4'],
+      fashion_accessories:              ['#f5f3ff','#c4b5fd'],
+      tools_workshop_jigs:              ['#fef3c7','#fbbf24'],
+      miniatures_terrain:               ['#dcfce7','#6ee7b7'],
+      musical_instruments_accessories:  ['#fae8ff','#e9d5ff']
     };
-    var DEFAULT_IMG='https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp';
+    function placeholderStyleFor(catId){
+      var g=CAT_GRAD[catId]||['#f5f3ee','#e8e6e0'];
+      return 'background:linear-gradient(135deg,'+g[0]+','+g[1]+')';
+    }
+    function placeholderInnerFor(catId){
+      var icon=CAT_ICON[catId]||'✦';
+      var label=CAT_LABEL[catId]||'Other';
+      return '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:rgba(0,0,0,.32)">'+
+        '<div style="font-size:30px;line-height:1">'+icon+'</div>'+
+        '<div style="font-family:\'DM Mono\',monospace;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase">'+esc(label)+'</div>'+
+        '</div>';
+    }
+    /* Expose so the modal handler (outside this IIFE) can render the same
+       placeholder when a winner has no real product image. */
+    window._placeholderStyleFor=placeholderStyleFor;
+    window._placeholderInnerFor=placeholderInnerFor;
 
     var winners=[], activeCat='all', activeSort='revenue', activeSearch='', winnersById={};
 
@@ -497,13 +524,14 @@
       if(typeof PRODUCT_DATA==='undefined')return;
       winners.forEach(function(w){
         if(!w.name||PRODUCT_DATA[w.name])return;
-        var img=IMAGE_BY_CAT[w.category_id]||DEFAULT_IMG;
+        /* No real product image -> the modal handler will detect img===null
+           and render the same category placeholder we use on the cards. */
         var sc=Math.min(98,Math.max(20,Math.round(50+Math.log10(Math.max(50,w.monthly_revenue_eur||100))*15)));
         var cat=CAT_LABEL[w.category_id]||'Other';
         var verdict=w.is_recommended===false?'Cautionary - IP':sc>=70?'Top earner':sc>=55?'Strong seller':'Marginal';
         var rev=w.monthly_revenue_eur?'~€'+w.monthly_revenue_eur+'/mo':'-';
         PRODUCT_DATA[w.name]={
-          score:sc,cat:cat,verdict:verdict,img:img,verified:false,
+          score:sc,cat:cat,verdict:verdict,img:null,categoryId:w.category_id,verified:false,
           monthlySearches:'-',
           competition:cat==='D&D / Gaming'||cat==='Pet'?'Medium':'Medium',
           avgPrice:w.price_eur?('€'+w.price_eur):'-',
@@ -577,14 +605,17 @@
       if(!list.length){grid.innerHTML='';empty.style.display='';return;}
       empty.style.display='none';
       grid.innerHTML=list.map(function(w){
-        var img=IMAGE_BY_CAT[w.category_id]||DEFAULT_IMG;
         var rev=w.monthly_revenue_eur?'~€'+w.monthly_revenue_eur.toLocaleString('en-US')+'/mo':'-';
         var sc=Math.min(98,Math.max(20,Math.round(50+Math.log10(Math.max(50,w.monthly_revenue_eur||100))*15)));
         var scClass=sc>=70?'g':sc>=50?'y':'r';
         var ip=ipBadge(w);
         var src=srcBadge(w);
+        /* Category-tinted placeholder thumb - never reuse another winner's
+           product photo here. Real product images can be added later by
+           setting w.image (or running the og:image scraper). */
         return '<div class="niche-card" onclick="openProdModal('+JSON.stringify(w.name).replace(/"/g,'&quot;')+')" style="cursor:pointer">'+
-          '<div class="niche-img" style="background-image:url('+esc(img)+')">'+
+          '<div class="niche-img" style="'+placeholderStyleFor(w.category_id)+'">'+
+            placeholderInnerFor(w.category_id)+
             '<div class="niche-score-dot '+scClass+'">'+sc+'</div>'+
           '</div>'+
           '<div class="niche-body">'+
@@ -850,7 +881,9 @@ function openProdModal(name) {
     (d.verified ? '<div style="margin-bottom:10px"><span class="verified-badge" style="font-size:9px;padding:3px 9px">Daniel Verified</span></div>' : '') +
     badgesRow +
     '<div class="pm-header">' +
-      '<div class="pm-img" style="background-image:url(' + esc(d.img) + ')"></div>' +
+      (d.img
+        ? '<div class="pm-img" style="background-image:url(' + esc(d.img) + ')"></div>'
+        : '<div class="pm-img" style="position:relative;' + (window._placeholderStyleFor ? window._placeholderStyleFor(d.categoryId||'') : 'background:var(--surf2)') + '">' + (window._placeholderInnerFor ? window._placeholderInnerFor(d.categoryId||'') : '') + '</div>') +
       '<div>' +
         '<div class="pm-cat">' + esc(d.cat) + '</div>' +
         '<div class="pm-title">' + esc(name) + '</div>' +

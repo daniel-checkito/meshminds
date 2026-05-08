@@ -172,6 +172,14 @@ body{min-height:100%;background:#fff;font-family:"Manrope",sans-serif;margin:0}
 .eg-angle{display:flex;align-items:center;gap:6px;padding:7px 10px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-top:1px solid #bfdbfe;border-bottom:1px solid #bfdbfe}
 .eg-angle-ico{font-size:13px;flex-shrink:0;line-height:1}
 .eg-angle-lbl{font-size:11px;font-weight:800;color:#1d4ed8;font-family:"DM Mono",monospace;letter-spacing:.04em;text-transform:uppercase;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lp-filters{display:flex;gap:6px;flex-wrap:wrap;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.lp-filter-btn{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;padding:7px 12px;border-radius:18px;border:1.5px solid var(--line);background:#fff;color:var(--ink2);cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;transition:all .15s}
+.lp-filter-btn:hover{border-color:var(--line2)}
+.lp-filter-btn.on{border-color:var(--acc);background:rgba(255,92,0,.08);color:var(--acc)}
+.eg-card.bad-card{border-color:#fca5a5}
+.eg-card.bad-card .eg-angle{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-top-color:#fca5a5;border-bottom-color:#fca5a5}
+.eg-card.bad-card .eg-angle-lbl{color:#991b1b}
+.eg-card.bad-card .eg-img{filter:grayscale(.5) opacity(.7)}
 @media (max-width:420px){
   .eg-stats{padding:6px 7px 7px;gap:5px}
   .eg-stat-row{flex-direction:column;align-items:flex-start;gap:1px}
@@ -1735,9 +1743,16 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   <div class="lp-sec" id="landing-preview" style="padding-top:24px;padding-bottom:16px">
     <div class="lp-eyebrow" style="margin-bottom:6px">Don't have an idea yet?</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--ink);margin-bottom:6px">Start with a winner</div>
-    <div style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Real products that passed the scan. <b>Tap any card</b> to see the full analysis - score, demand, profit, legal risk, and the next 3 steps.</div>
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:10px;line-height:1.5">Real products that passed the scan. <b>Tap any card</b> to see the full analysis - score, demand, profit, legal risk, and the next 3 steps.</div>
+    <div style="font-size:11.5px;color:var(--ink3);background:var(--surf);border:1px dashed var(--line);border-radius:8px;padding:8px 11px;margin-bottom:14px;line-height:1.45"><b style="color:var(--ink2)">Heads-up:</b> most ideas score 40–60. The 70+ winners below are the rare top tier — that's the bar.</div>
+    <div id="lp-filter-chips" class="lp-filters" style="margin-bottom:12px"></div>
     <div id="landing-preview-grid" class="eg-grid" style="margin-bottom:14px"></div>
     <div id="landing-preview-more"></div>
+    <div style="margin-top:30px">
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;letter-spacing:.02em;color:var(--ink);margin-bottom:6px">Avoid these mistakes</div>
+      <div style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Common traps beginners fall into — and what to do instead.</div>
+      <div id="landing-avoid-grid" class="eg-grid"></div>
+    </div>
   </div>
 
   <div class="lp-divider"></div>
@@ -3746,17 +3761,6 @@ window.submitFeedback=submitFeedback;
         {name:"Articulated Dragon Fidget Toy", url:"https://www.etsy.com/listing/123890/articulated-dragon", platform:"Etsy", price:"$24.99", sales:"40–70/mo", why:"'Fidget toy' captures stress-relief buyers with higher price tolerance."}
       ]
     },
-    "Disney Cookie Cutter": {
-      score: 28, cat: "Kitchen", verdict: "Don't sell - IP flagged",
-      angle: "What NOT to sell", angleEmoji: "⚠️",
-      lesson: "Demand is real but Etsy auto-removes Disney listings and can suspend your store. Lesson: pivot to original characters before listing.",
-      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-12-29_d08591307f16a8.webp",
-      verified: false,
-      monthlySearches: "12,400", competition: "High", avgPrice: "-",
-      estProfit: "$0 / banned",
-      why: "Listings using Disney-licensed characters get pulled by Etsy's automated IP enforcement and risk store-wide suspension. Demand is real but you can't safely capture it without a licence. Pivot to your own original character or a parody design that doesn't lift the trademark.",
-      competitors: []
-    },
     "Minimalist Phone Stand": {
       score: 76, cat: "Functional", verdict: "Good seller",
       angle: "Premium sub-niche", angleEmoji: "✨",
@@ -3769,6 +3773,54 @@ window.submitFeedback=submitFeedback;
       competitors: [
         {name:"Wood-Look Adjustable Phone Stand", url:"https://www.etsy.com/listing/456789/wood-phone-stand", platform:"Etsy", price:"$18.00", sales:"60–110/mo", why:"Wood-fill PLA + 'minimalist desk' tags hit two converging buyer intents. Lifestyle photo with MacBook + AirPods cues a target buyer."}
       ]
+    },
+    "KitchenAid Tool Holder": {
+      score: 89, cat: "Functional", verdict: "Top seller",
+      angle: "Replacement / fit", angleEmoji: "🔧",
+      lesson: "Brand-specific accessories have built-in buyer intent. People search 'KitchenAid attachment holder' — they already want one.",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",
+      verified: true,
+      monthlySearches: "5,400", competition: "Low", avgPrice: "$22–$32",
+      estProfit: "~$120/mo", printTime: "4h",
+      why: "Brand- and model-specific accessories beat generic ones every time. The buyer searches 'KitchenAid Artisan tool holder' with intent to buy today. Low competition because it requires research to design a fit for a specific appliance.",
+      competitors: [
+        {name:"KitchenAid Stand Mixer Tool Caddy", url:"https://www.etsy.com/listing/456789/kitchenaid-tool-caddy", platform:"Etsy", price:"$26.00", sales:"50–80/mo", why:"Title front-loads 'KitchenAid Artisan' to capture the model-specific search. Mounts to the side of the mixer — solves a real organisation problem."}
+      ]
+    }
+  };
+  /* Bad-score examples shown in the 'Avoid these mistakes' section. Each
+     card teaches a specific failure mode that beginners reliably fall into:
+     IP infringement, wrong material/method, commodity competing with mass
+     manufacturing, and saturation. The 'fix' line is what the user should
+     do instead — keeps the section actionable, not just discouraging. */
+  var AVOID_PRODUCTS = {
+    "Disney Cookie Cutter": {
+      score: 28, cat: "Kitchen", verdict: "Don't sell - IP flagged",
+      angle: "IP infringement", angleEmoji: "⚠️",
+      fix: "Etsy auto-removes Disney/Marvel/Nintendo listings and can suspend your store. Pivot to original characters or generic shapes (animals, food, holiday icons) — same demand, zero risk.",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-12-29_d08591307f16a8.webp",
+      monthlySearches: "12,400", avgPrice: "—", estProfit: "$0 / banned"
+    },
+    "Generic Phone Stand": {
+      score: 32, cat: "Functional", verdict: "Don't sell - commodity",
+      angle: "Amazon undercuts", angleEmoji: "🛒",
+      fix: "Generic phone stands sell on Amazon for €4-6 with Prime shipping. Don't compete on price. Pick a niche aesthetic (minimalist desk, retro gamer, mid-century) or target a specific phone model with a custom-fit stand.",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-05_147409d207311.webp",
+      monthlySearches: "40,000+", avgPrice: "€4-€8", estProfit: "~€20/mo"
+    },
+    "Plastic Bag Clip": {
+      score: 22, cat: "Kitchen", verdict: "Don't sell - wrong method",
+      angle: "FDM can't flex", angleEmoji: "🚫",
+      fix: "Parts that bend or grip repeatedly snap on FDM PLA. Even TPU doesn't match injection-moulded polypropylene for fatigue life. Skip flexible commodities; pick rigid functional shapes (organisers, holders, mounts) where 3D printing actually wins.",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",
+      monthlySearches: "3,200", avgPrice: "€3-€6", estProfit: "Negative"
+    },
+    "Generic Articulated Dragon": {
+      score: 38, cat: "Toys", verdict: "Don't sell - saturated",
+      angle: "Saturated category", angleEmoji: "📉",
+      fix: "30,000+ identical dragon listings on Etsy. Print times of 8h+ destroy margins. If you love articulated prints, niche down: articulated octopus for diver gifts, articulated rat for vet-clinic gifts, articulated dinosaur for kids' birthday parties.",
+      img: "https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2024-04-04_nga8zg2djixj.webp",
+      monthlySearches: "22,100", avgPrice: "€18-€28", estProfit: "Thin / negative"
     }
   };
   /* Map a category_id from data/winners.json to a winning-angle label so
@@ -3810,29 +3862,111 @@ window.submitFeedback=submitFeedback;
     if(n>=1000)return(n/1000).toFixed(n>=10000?0:1)+'k';
     return String(n);
   }
+  /* Filter chips drive both initial render and incremental rendering of
+     winners.json cards. activeFilter is either '' (show all) or a category
+     bucket key like 'gifts'. The 6 hand-curated PREVIEW_PRODUCTS map to the
+     same buckets. */
+  var activeFilter='';
+  var FILTER_BUCKETS=[
+    {key:'gifts',  label:'🎁 Gifts',     curatedCats:['Decor'], jsonCats:['personalized_gifts','keychains','kids_nursery']},
+    {key:'home',   label:'🏠 Home',      curatedCats:['Home'], jsonCats:['decor','home_organization','planters_garden','lighting_lamps']},
+    {key:'desk',   label:'🛠 Functional', curatedCats:['Functional'], jsonCats:['desk_office','tech_accessories','home_organization','tools_workshop_jigs','replacement_parts','automotive_bike']},
+    {key:'gaming', label:'🎲 Gaming',    curatedCats:['Toy / Art','Gaming'], jsonCats:['dnd_gaming','toys_fidgets','miniatures_terrain','cosplay_props']},
+    {key:'premium',label:'✨ Premium',   curatedCats:[], jsonCats:['lighting_lamps','jewelry_wearables','fashion_accessories'], angles:['Premium sub-niche','Premium positioning','Premium aesthetic']}
+  ];
+  function bucketFor(d, isJson){
+    // Returns the matching FILTER_BUCKETS key for a card, or '' if none.
+    for(var i=0;i<FILTER_BUCKETS.length;i++){
+      var b=FILTER_BUCKETS[i];
+      if(!isJson && b.curatedCats && b.curatedCats.indexOf(d.cat)!==-1)return b.key;
+      if(isJson && d.category_id && b.jsonCats && b.jsonCats.indexOf(d.category_id)!==-1)return b.key;
+      if(b.angles && d.angle && b.angles.indexOf(d.angle)!==-1)return b.key;
+    }
+    return '';
+  }
+  function renderFilterChips(){
+    var host=document.getElementById('lp-filter-chips');if(!host)return;
+    var chips=[{key:'',label:'All'}].concat(FILTER_BUCKETS.map(function(b){return {key:b.key,label:b.label};}));
+    host.innerHTML=chips.map(function(c){
+      return '<button class="lp-filter-btn'+(activeFilter===c.key?' on':'')+'" onclick="setLandingFilter('+JSON.stringify(c.key).replace(/"/g,'&quot;')+')">'+escH(c.label)+'</button>';
+    }).join('');
+  }
+  function cardMatches(d,isJson){
+    if(!activeFilter)return true;
+    return bucketFor(d,isJson)===activeFilter;
+  }
+  function setLandingFilter(key){
+    activeFilter=key;
+    renderFilterChips();
+    renderCards();
+    // If filtering and we have winners cached, also re-render the loaded
+    // extras so the filter works across the full set, not just curated.
+    if(window._winnersCache && window._extraWinnersLoaded){
+      var grid=document.getElementById('landing-preview-grid');
+      if(grid){
+        // Remove old extras then re-append filtered.
+        grid.querySelectorAll('.eg-card.from-json').forEach(function(c){c.remove();});
+        loadMoreWinners(true);
+      }
+    }
+  }
+  function curatedCardHtml(name,d,opts){
+    opts=opts||{};
+    var c=colorFor(d.score);
+    var ipFlag=c==='r';
+    var profitClass=ipFlag?'r':'g';
+    var angleHtml=d.angle?'<div class="eg-angle" onclick="event.stopPropagation();(function(){var b=findBucketByAngle('+JSON.stringify(d.angle).replace(/"/g,'&quot;')+');if(b)setLandingFilter(b);})()" style="cursor:pointer"><span class="eg-angle-ico">'+escH(d.angleEmoji||'✓')+'</span><span class="eg-angle-lbl">'+escH(d.angle)+'</span></div>':'';
+    var openFn=opts.bad?'openAvoidModal':'openPreviewModal';
+    var badClass=opts.bad?' bad-card':'';
+    return '<div class="eg-card'+badClass+'" role="button" tabindex="0" onclick="'+openFn+'('+JSON.stringify(name).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();'+openFn+'('+JSON.stringify(name).replace(/"/g,'&quot;')+')}">'+
+      '<div class="eg-img" style="background:url('+escH(d.img)+') center/cover no-repeat">'+
+        '<div class="eg-donut">'+donutSvg(d.score,c)+'</div>'+
+        '<div class="eg-vol">'+escH(fmtSearches(d.monthlySearches))+'</div>'+
+        '<div class="eg-info"><div class="eg-name">'+escH(name)+'</div>'+
+          (ipFlag&&!opts.bad?'<div class="eg-flag">⚠️ IP flagged</div>':'<div class="eg-meta">'+escH(d.cat||'')+'</div>')+
+        '</div>'+
+      '</div>'+
+      angleHtml+
+      '<div class="eg-stats">'+
+        '<div class="eg-stat-row"><span class="eg-stat-lbl">Avg price</span><span class="eg-stat-val">'+escH(d.avgPrice)+'</span></div>'+
+        '<div class="eg-stat-row"><span class="eg-stat-lbl">'+(opts.bad?'Outcome':'Est. profit')+'</span><span class="eg-stat-val '+profitClass+'">'+escH(d.estProfit)+'</span></div>'+
+      '</div>'+
+    '</div>';
+  }
+  /* Map angle labels to bucket keys so clicking an angle pill filters
+     the gallery to the matching bucket. */
+  var ANGLE_TO_BUCKET={
+    'Personalisation':'gifts',
+    'Year-round demand':'home',
+    'Lifestyle aesthetic':'home',
+    'WFH buyer intent':'desk',
+    'Functional fix':'desk',
+    'Solving real problem':'desk',
+    'Replacement / fit':'desk',
+    'Replacement part':'desk',
+    'Exact-fit niche':'desk',
+    'FDM-only geometry':'gaming',
+    'Niche community':'gaming',
+    'Viral potential':'gaming',
+    'Premium sub-niche':'premium',
+    'Premium positioning':'premium',
+    'Premium aesthetic':'premium',
+    'Passionate buyers':'gifts'
+  };
+  function findBucketByAngle(angle){
+    return ANGLE_TO_BUCKET[angle]||'';
+  }
   function renderCards(){
     var host=document.getElementById('landing-preview-grid');if(!host)return;
     var html='';
     Object.keys(PREVIEW_PRODUCTS).forEach(function(name){
-      var d=PREVIEW_PRODUCTS[name];var c=colorFor(d.score);
-      var ipFlag=c==='r';
-      var profitClass=ipFlag?'r':'g';
-      var angleHtml=d.angle?'<div class="eg-angle"><span class="eg-angle-ico">'+escH(d.angleEmoji||'✓')+'</span><span class="eg-angle-lbl">'+escH(d.angle)+'</span></div>':'';
-      html+='<div class="eg-card" role="button" tabindex="0" onclick="openPreviewModal('+JSON.stringify(name).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openPreviewModal('+JSON.stringify(name).replace(/"/g,'&quot;')+')}">'+
-        '<div class="eg-img" style="background:url('+escH(d.img)+') center/cover no-repeat">'+
-          '<div class="eg-donut">'+donutSvg(d.score,c)+'</div>'+
-          '<div class="eg-vol">'+escH(fmtSearches(d.monthlySearches))+'</div>'+
-          '<div class="eg-info"><div class="eg-name">'+escH(name)+'</div>'+
-            (ipFlag?'<div class="eg-flag">⚠️ IP flagged</div>':'<div class="eg-meta">'+escH(d.cat)+'</div>')+
-          '</div>'+
-        '</div>'+
-        angleHtml+
-        '<div class="eg-stats">'+
-          '<div class="eg-stat-row"><span class="eg-stat-lbl">Avg price</span><span class="eg-stat-val">'+escH(d.avgPrice)+'</span></div>'+
-          '<div class="eg-stat-row"><span class="eg-stat-lbl">Est. profit</span><span class="eg-stat-val '+profitClass+'">'+escH(d.estProfit)+'</span></div>'+
-        '</div>'+
-      '</div>';
+      var d=PREVIEW_PRODUCTS[name];
+      if(!cardMatches(d,false))return;
+      html+=curatedCardHtml(name,d);
     });
+    if(!html){
+      html='<div style="grid-column:1/-1;padding:24px 16px;text-align:center;color:var(--ink3);font-size:13px;background:var(--surf);border-radius:11px;border:1px dashed var(--line)">No curated cards in this filter — tap <b>See more winners ↓</b> to load matching products.</div>';
+    }
     host.innerHTML=html;
     // Render the "See more winners" affordance once the host is populated.
     var more=document.getElementById('landing-preview-more');
@@ -3840,18 +3974,65 @@ window.submitFeedback=submitFeedback;
       more.innerHTML='<button id="lp-see-more" onclick="(function(){loadMoreWinners();})()" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 16px;background:#fff;border:1.5px solid var(--line);border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:13.5px;font-weight:700;color:var(--ink);cursor:pointer;-webkit-tap-highlight-color:rgba(255,92,0,.1);transition:border-color .15s,background .15s">See more winners <span style="font-size:14px">↓</span></button>';
     }
   }
+  function renderAvoidCards(){
+    var host=document.getElementById('landing-avoid-grid');if(!host)return;
+    var html='';
+    Object.keys(AVOID_PRODUCTS).forEach(function(name){
+      var d=AVOID_PRODUCTS[name];
+      html+=curatedCardHtml(name,d,{bad:true});
+    });
+    host.innerHTML=html;
+  }
+  // Open a modal for an AVOID product. Same shape as preview but red-tinted
+  // and leads with the failure mode + the fix.
+  function openAvoidModal(name){
+    var d=AVOID_PRODUCTS[name];if(!d)return;
+    document.getElementById('lp-modal-content').innerHTML=
+      '<div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:14px">'+
+        '<div style="width:72px;height:72px;border-radius:10px;flex-shrink:0;background:url(\''+escH(d.img)+'\') center/cover no-repeat;filter:grayscale(.5) opacity(.7)"></div>'+
+        '<div>'+
+          '<div style="font-size:11px;color:var(--ink3);font-family:\'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">'+escH(d.cat)+'</div>'+
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:24px;color:var(--ink);line-height:1.1;margin-bottom:5px">'+escH(name)+'</div>'+
+          '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
+            '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:36px;line-height:1;color:#991b1b">'+d.score+'</div>'+
+            '<span style="font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 9px;background:#fee2e2;color:#991b1b">'+escH(d.verdict)+'</span>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border:1px solid #fca5a5;border-radius:11px;padding:13px 14px;margin-bottom:16px">'+
+        '<div style="font-size:10px;font-weight:800;font-family:\'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.08em;color:#991b1b;margin-bottom:5px">'+escH(d.angleEmoji)+' Why it fails · '+escH(d.angle)+'</div>'+
+        '<div style="font-size:13.5px;color:var(--ink);line-height:1.55">'+escH(d.fix)+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+
+        (d.monthlySearches?'<div style="flex:1;min-width:120px;background:var(--surf);border-radius:9px;padding:10px 12px"><div style="font-family:\'DM Mono\',monospace;font-size:18px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:2px">'+escH(d.monthlySearches)+'</div><div style="font-size:10.5px;color:var(--ink3)">Monthly searches</div></div>':'')+
+        (d.estProfit?'<div style="flex:1;min-width:120px;background:var(--surf);border-radius:9px;padding:10px 12px"><div style="font-family:\'DM Mono\',monospace;font-size:18px;font-weight:800;color:#991b1b;line-height:1;margin-bottom:2px">'+escH(d.estProfit)+'</div><div style="font-size:10.5px;color:var(--ink3)">Outcome</div></div>':'')+
+      '</div>'+
+      '<div style="background:linear-gradient(135deg,#fff3e6,#fdfaf8);border:1px solid rgba(255,92,0,.25);border-radius:11px;padding:14px;margin-top:14px;text-align:center">'+
+        '<div style="font-size:11px;font-weight:800;font-family:\'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);margin-bottom:5px">Now check your own idea</div>'+
+        '<div style="font-size:13.5px;color:var(--ink2);line-height:1.5;margin-bottom:11px">Avoid surprises like this — get the same risk check on your product before you list.</div>'+
+        '<button onclick="(function(){closePreviewModal();setTimeout(function(){var inp=document.getElementById(\'ui\');if(inp){inp.scrollIntoView({behavior:\'smooth\',block:\'center\'});setTimeout(function(){inp.focus();},400);}},200);})()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer">Scan my own idea →</button>'+
+      '</div>';
+    document.getElementById('lp-overlay').style.display='';
+    document.body.style.overflow='hidden';
+  }
+  window.setLandingFilter=setLandingFilter;
+  window.findBucketByAngle=findBucketByAngle;
+  window.openAvoidModal=openAvoidModal;
   /* Append cards from data/winners.json (already cached for the preview
      modal). Each card gets a winning-angle pill derived from its
      category_id so the user immediately sees WHY it's a winner. */
-  function loadMoreWinners(){
+  function loadMoreWinners(silent){
     var grid=document.getElementById('landing-preview-grid');
     var btnWrap=document.getElementById('landing-preview-more');
     if(!grid)return;
     function fmt(n){if(n==null)return '-';if(n>=1000)return (n/1000).toFixed(n>=10000?0:1)+'k';return String(n);}
     function buildCards(winners){
-      // Sort by monthly_revenue descending and pick up to 12 with images
-      // OR a placeholder, prefer recommended entries, skip IP-risky.
-      var pool=winners.filter(function(w){return w&&w.is_recommended!==false&&w.ip_risk!=='high';})
+      // Filter to recommended non-IP-risky entries; sort by revenue desc.
+      // If a category filter is active, restrict to matching JSON cats.
+      var pool=winners.filter(function(w){
+        if(!w||w.is_recommended===false||w.ip_risk==='high')return false;
+        return cardMatches(w,true);
+      })
         .sort(function(a,b){return (b.monthly_revenue_eur||0)-(a.monthly_revenue_eur||0);})
         .slice(0,12);
       var html='';
@@ -3868,7 +4049,7 @@ window.submitFeedback=submitFeedback;
         // Stash the winner data so the modal can read it
         if(!window._extraWinners)window._extraWinners={};
         window._extraWinners[nameKey]=w;
-        html+='<div class="eg-card" role="button" tabindex="0" onclick="openExtraWinnerModal('+JSON.stringify(nameKey).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openExtraWinnerModal('+JSON.stringify(nameKey).replace(/"/g,'&quot;')+')}">'+
+        html+='<div class="eg-card from-json" role="button" tabindex="0" onclick="openExtraWinnerModal('+JSON.stringify(nameKey).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();openExtraWinnerModal('+JSON.stringify(nameKey).replace(/"/g,'&quot;')+')}">'+
           '<div class="eg-img" style="'+imgStyle+'">'+
             '<div class="eg-donut">'+donutSvg(score,cClass)+'</div>'+
             (rev?'<div class="eg-vol">€'+fmt(rev)+'/mo</div>':'')+
@@ -3884,13 +4065,14 @@ window.submitFeedback=submitFeedback;
         '</div>';
       });
       grid.insertAdjacentHTML('beforeend',html);
+      window._extraWinnersLoaded=true;
       if(btnWrap)btnWrap.style.display='none';
     }
     if(window._winnersCache){
       buildCards(window._winnersCache);
     } else {
       var btn=document.getElementById('lp-see-more');
-      if(btn)btn.textContent='Loading…';
+      if(btn && !silent)btn.textContent='Loading…';
       fetch('/data/winners.json',{cache:'force-cache'}).then(function(r){return r.json();}).then(function(j){
         window._winnersCache=j&&j.winners?j.winners:[];
         buildCards(window._winnersCache);
@@ -4052,8 +4234,13 @@ window.submitFeedback=submitFeedback;
   }
   window.openPreviewModal=openPreviewModal;
   window.closePreviewModal=closePreviewModal;
-  if(document.readyState!=='loading')renderCards();
-  else document.addEventListener('DOMContentLoaded',renderCards);
+  function initLanding(){
+    renderFilterChips();
+    renderCards();
+    renderAvoidCards();
+  }
+  if(document.readyState!=='loading')initLanding();
+  else document.addEventListener('DOMContentLoaded',initLanding);
 })();
 
 </script>

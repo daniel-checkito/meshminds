@@ -52,16 +52,7 @@
   <h1>Score calibration</h1>
   <p class="lead">For every scan below, type the score it <b>should</b> have plus one line explaining why. Click <b>Save</b>. When you're done, hit <b>Export</b> at the top to download a JSON to paste into Claude.</p>
 
-  <div id="gate" class="gate-card" style="display:none">
-    <div style="font-size:13px;color:var(--ink2);margin-bottom:9px">Paste the calibration secret to unlock.</div>
-    <div class="gate-row">
-      <input type="password" id="secretInput" placeholder="CALIBRATE_SECRET" style="flex:1;min-width:200px">
-      <button onclick="unlock()">Unlock</button>
-    </div>
-    <div id="gateErr" class="err"></div>
-  </div>
-
-  <div id="app" style="display:none">
+  <div id="app">
     <div class="topbar">
       <div class="count" id="count">Loading scans…</div>
       <div style="display:flex;gap:6px">
@@ -78,7 +69,6 @@
 <script>
 'use strict';
 
-let SECRET = '';
 const cache = { ideas: [] };
 
 function escH(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -86,24 +76,11 @@ function scorePillCls(s){if(s==null)return '';if(s>=70)return 'g';if(s>=50)retur
 function fmtDate(d){if(!d)return '';try{const x=new Date(d);return x.toLocaleDateString(undefined,{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(_){return ''}}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800);}
 
-function bootSecret(){
-  const url=new URL(location.href);
-  const fromUrl=url.searchParams.get('secret');
-  if(fromUrl){
-    SECRET=fromUrl;
-    sessionStorage.setItem('mm_cal_secret',fromUrl);
-    return true;
-  }
-  const stored=sessionStorage.getItem('mm_cal_secret');
-  if(stored){SECRET=stored;return true;}
-  return false;
-}
-
 async function api(path,opts){
   opts=opts||{};
   opts.headers={'Content-Type':'application/json',...(opts.headers||{})};
   const sep=path.includes('?')?'&':'?';
-  const url=path+sep+'secret='+encodeURIComponent(SECRET);
+  const url=path+sep+'calibrate=1';
   const r=await fetch(url,opts);
   if(!r.ok){
     let msg='Request failed ('+r.status+')';
@@ -114,18 +91,11 @@ async function api(path,opts){
 }
 
 async function load(){
-  document.getElementById('app').style.display='';
-  document.getElementById('gate').style.display='none';
   try{
     const data=await api('/api/account/ideas');
     cache.ideas=data.ideas||[];
     render();
   }catch(e){
-    if(/401|Unauthorized|secret/i.test(e.message)){
-      sessionStorage.removeItem('mm_cal_secret');SECRET='';
-      showGate('Wrong secret. Try again.');
-      return;
-    }
     document.getElementById('count').textContent='Error: '+e.message;
   }
 }
@@ -179,7 +149,7 @@ async function save(id){
   try{
     await api('/api/account/ideas',{
       method:'POST',
-      body:JSON.stringify({action:'calibrate',id,suggestedScore,reason,secret:SECRET}),
+      body:JSON.stringify({action:'calibrate',id,suggestedScore,reason,calibrate:true}),
     });
     const idea=cache.ideas.find(x=>x.id===id);
     if(idea)idea.calibration={suggestedScore,reason};
@@ -207,25 +177,9 @@ async function exportJson(){
 
 function reload(){load();}
 
-function showGate(msg){
-  document.getElementById('gate').style.display='';
-  document.getElementById('app').style.display='none';
-  const err=document.getElementById('gateErr');
-  if(msg){err.textContent=msg;err.style.display='';}
-}
+window.save=save;window.exportJson=exportJson;window.reload=reload;
 
-function unlock(){
-  const v=(document.getElementById('secretInput').value||'').trim();
-  if(!v){return;}
-  SECRET=v;
-  sessionStorage.setItem('mm_cal_secret',v);
-  load();
-}
-document.getElementById('secretInput')&&document.getElementById('secretInput').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
-
-window.save=save;window.exportJson=exportJson;window.reload=reload;window.unlock=unlock;
-
-if(bootSecret())load();else showGate();
+load();
 </script>
 </body>
 </html>

@@ -11,19 +11,24 @@ module.exports = async (req, res) => {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Pull secret from query (GET) or body (POST). Constant-time-ish compare.
-  const providedSecret = (req.query && req.query.secret) || (req.body && req.body.secret) || null;
-  const expectedSecret = process.env.CALIBRATE_SECRET || '';
-  const isAdmin = !!(expectedSecret && providedSecret && providedSecret === expectedSecret);
+  // Calibration mode: opens admin access (list all scans, calibrate any)
+  // when the request comes from the public calibration page. Triggered by
+  // ?calibrate=1 (GET) or {calibrate:true} (POST). Page is noindex/nofollow
+  // so search engines don't pick it up — but the URL itself is unguarded.
+  const calibrateMode = !!(
+    (req.query && (req.query.calibrate === '1' || req.query.calibrate === 'true')) ||
+    (req.body && req.body.calibrate === true)
+  );
 
   let user = null;
-  if (isAdmin) {
-    user = { id: ADMIN_USER_ID, email: 'calibrate@admin' };
+  if (calibrateMode) {
+    user = { id: ADMIN_USER_ID, email: 'calibrate@public' };
   } else {
     const token = extractToken(req);
     user = await getUser(token);
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
   }
+  const isAdmin = calibrateMode;
 
   if (req.method === 'GET') {
     // Special mode: ?export=calibrations dumps the user's calibration log as a

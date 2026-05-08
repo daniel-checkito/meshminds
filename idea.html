@@ -944,6 +944,10 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <a href="https://www.printables.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Printables</a>
       <a href="https://www.thingiverse.com" target="_blank" rel="noopener" style="flex:1;min-width:0;text-align:center;padding:9px 8px;border:1.5px solid var(--line2);border-radius:9px;color:var(--ink2);font-weight:700;font-size:12px;text-decoration:none;background:#fff;-webkit-tap-highlight-color:rgba(255,92,0,.12)">Thingiverse</a>
     </div>
+    <a id="no-idea-hint" href="#landing-preview" onclick="(function(e){e.preventDefault();var el=document.getElementById('landing-preview');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});})(event)" style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;padding:11px 14px;background:linear-gradient(135deg,#fff3e6,#fdfaf8);border:1px solid rgba(255,92,0,.25);border-radius:10px;font-size:12.5px;color:var(--ink2);text-decoration:none;font-weight:600;-webkit-tap-highlight-color:rgba(255,92,0,.12)">
+      <span style="font-size:15px">💡</span>
+      <span>No idea yet? <b style="color:var(--acc)">Browse winning prints below ↓</b></span>
+    </a>
     <div class="dots" id="dots" style="display:none">
       <div class="dot on" id="d0"></div><div class="dot" id="d1"></div><div class="dot" id="d2"></div><div class="dot" id="d3"></div><div class="dot" id="d4"></div><div class="dot" id="d5"></div><div class="dot" id="d6"></div><div class="dot" id="d7"></div><div class="dot" id="d8"></div><div class="dot" id="d9"></div><div class="dot" id="d10"></div>
     </div>
@@ -1016,7 +1020,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
         <div class="val-data-cell"><div class="val-data-val g">LOW</div><div class="val-data-lbl">legal risk</div></div>
         <div class="val-data-cell"><div class="val-data-val">€310</div><div class="val-data-lbl">est. profit/mo</div></div>
       </div>
-      <div class="val-source">Real data · 3,000h Etsy research · $250K verified revenue</div>
+      <div class="val-source">Live Etsy data · 3,000h research · 800+ products validated</div>
     </div>
   </div>
 </div>
@@ -1726,8 +1730,9 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
   <!-- Popular prints (clickable, opens modal with full analysis) -->
   <div class="lp-sec" id="landing-preview" style="padding-top:24px;padding-bottom:16px">
-    <div class="section-lbl">Popular prints analysed</div>
-    <div style="font-size:12px;color:var(--ink3);margin:-8px 0 14px;line-height:1.45">Real scored products - <b>tap any card to see the full analysis</b>.</div>
+    <div class="lp-eyebrow" style="margin-bottom:6px">Don't have an idea yet?</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--ink);margin-bottom:6px">Start with a winner</div>
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Real products that passed the scan. <b>Tap any card</b> to see the full analysis - score, demand, profit, legal risk, and the next 3 steps.</div>
     <div id="landing-preview-grid" class="eg-grid" style="margin-bottom:16px"></div>
   </div>
 
@@ -1744,7 +1749,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 <script>
 (function(){
 var WWC=[
-  {ico:'🎯',title:'Sellability score 0–100 with clear verdict',body:'Weighs Etsy demand-to-supply ratio, design quality, profit margin, IP risk, and platform fit. Calibrated against $250K of verified Etsy sales.'},
+  {ico:'🎯',title:'Sellability score 0–100 with clear verdict',body:'Weighs Etsy demand-to-supply ratio, design quality, profit margin, IP risk, and platform fit. Calibrated against thousands of real Etsy listings.'},
   {ico:'🏆',title:'Live competitor research - Etsy, eBay, Amazon',body:'We scrape Etsy search results, eBay sold listings (real completed-sale prices, not asks) and Amazon Handmade for your keywords - pulling top 5 listings with price, image, review count and sales velocity.'},
   {ico:'💰',title:'Profitable price + monthly revenue estimate',body:'Sweet-spot sell price built from competitor averages and your printer setup (units/day, filament cost at €0.025/g + 6% failure rate, Etsy\'s 12% fees) so the projection matches what you can actually print and ship.'},
   {ico:'⚖️',title:'Legal & compliance - GPSR, CE, IP, STL license',body:'Reads the source page\'s license tab (MakerWorld, Printables, Cults3D, Thingiverse, MyMiniFactory, CGTrader, Thangs), checks 50+ trademark rules and Etsy\'s 2026 STL-license policy, and flags GPSR/CE/ASTM cert needs for your sell-from country.'},
@@ -3870,7 +3875,18 @@ window.submitFeedback=submitFeedback;
         '<div style="font-size:13.5px;color:var(--ink2);line-height:1.55;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #bbf7d0;border-radius:10px;padding:13px 14px">'+escH(d.why)+'</div>'+
       '</div>'+
       '<div style="margin-bottom:16px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:.02em;color:var(--ink);margin-bottom:10px;line-height:1.1;display:flex;align-items:center;gap:10px"><span>Real winners in this niche</span><span style="flex:1;height:1px;background:var(--line)"></span></div><div id="lp-related-winners">'+(winnersHtml||'<div style="font-size:12px;color:var(--ink3);padding:8px 0">Loading…</div>')+'</div></div>'+
-      '<button onclick="closePreviewModal()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer;margin-top:14px">Scan your own product →</button>';
+      '<div style="margin-bottom:16px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:.02em;color:var(--ink);margin-bottom:10px;line-height:1.1;display:flex;align-items:center;gap:10px"><span>First 3 steps to copy this</span><span style="flex:1;height:1px;background:var(--line)"></span></div>'+
+        '<div style="display:flex;flex-direction:column;gap:8px">'+
+          '<div style="display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--acc);line-height:1;flex-shrink:0;padding-top:1px">1</div><div><div style="font-size:13.5px;font-weight:700;line-height:1.3;margin-bottom:2px">Find a commercial-license file</div><div style="font-size:12.5px;color:var(--ink3);line-height:1.45">MakerWorld and Printables both have commercial-use filters. Search "'+escH(String(d.cat||'').toLowerCase())+'" + the keyword above and pick the cleanest geometry.</div></div></div>'+
+          '<div style="display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--acc);line-height:1;flex-shrink:0;padding-top:1px">2</div><div><div style="font-size:13.5px;font-weight:700;line-height:1.3;margin-bottom:2px">Photograph in lifestyle context</div><div style="font-size:12.5px;color:var(--ink3);line-height:1.45">Shoot 8-10 photos: 3 hero (clean background), 3 detail, 2 in-use (on a real desk/wall/etc), 1 size-with-hand. Lifestyle shots convert 2-3× better than catalogue product shots.</div></div></div>'+
+          '<div style="display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 13px"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--acc);line-height:1;flex-shrink:0;padding-top:1px">3</div><div><div style="font-size:13.5px;font-weight:700;line-height:1.3;margin-bottom:2px">Price in the sweet spot</div><div style="font-size:12.5px;color:var(--ink3);line-height:1.45">List at '+escH(d.avgPrice)+' to match the market. After 5 sales, raise by €2-3 and watch conversion - if it holds, you have pricing power.</div></div></div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="background:linear-gradient(135deg,#fff3e6,#fdfaf8);border:1px solid rgba(255,92,0,.25);border-radius:11px;padding:14px;margin-top:14px;text-align:center">'+
+        '<div style="font-size:11px;font-weight:800;font-family:\'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--acc);margin-bottom:5px">This is what your scan looks like</div>'+
+        '<div style="font-size:13.5px;color:var(--ink2);line-height:1.5;margin-bottom:11px">Got an idea or a model link? Get this same report for your own product in 30 seconds.</div>'+
+        '<button onclick="(function(){closePreviewModal();setTimeout(function(){var inp=document.getElementById(\'ui\');if(inp){inp.scrollIntoView({behavior:\'smooth\',block:\'center\'});setTimeout(function(){inp.focus();},400);}},200);})()" style="display:block;width:100%;padding:13px;background:var(--acc);color:#fff;border:none;border-radius:11px;font-family:\'DM Sans\',sans-serif;font-size:14px;font-weight:700;text-align:center;cursor:pointer">Scan my own idea →</button>'+
+      '</div>';
     document.getElementById('lp-overlay').style.display='';
     document.body.style.overflow='hidden';
   }

@@ -156,7 +156,10 @@
   <!-- Tab: Ideas -->
   <div class="section active" id="tab-ideas">
     <div class="sec-inner">
-      <div class="ideas-count" id="ideasCount">Loading…</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
+        <div class="ideas-count" id="ideasCount">Loading…</div>
+        <button id="exportCalBtn" onclick="exportCalibrations()" style="display:none;font-size:12px;font-weight:700;padding:7px 12px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;cursor:pointer">Export calibrations for Claude</button>
+      </div>
       <div id="ideasList"></div>
     </div>
   </div>
@@ -497,6 +500,11 @@
       const data = await apiFetch('/api/account/ideas');
       ideas = data.ideas || [];
       renderIdeas();
+      // Show the export button if any idea already has a calibration on it
+      if (ideas.some(i => i.calibration)) {
+        const btn = document.getElementById('exportCalBtn');
+        if (btn) btn.style.display = '';
+      }
     } catch (e) {
       console.error('Ideas load error:', e);
     }
@@ -559,6 +567,13 @@
             <button class="del-btn" onclick="deleteIdea('${idea.id}')" title="Delete">🗑</button>
           </div>
         </div>
+        <div class="cal-row" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 0 0;margin-top:9px;border-top:1px dashed var(--line)">
+          <span style="font-family:'DM Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);flex-shrink:0">Calibrate</span>
+          <input type="number" min="0" max="100" placeholder="Should be" value="${idea.calibration && idea.calibration.suggestedScore != null ? idea.calibration.suggestedScore : ''}" id="cal-score-${idea.id}" style="width:90px;padding:6px 8px;font-size:13px;border:1px solid var(--line);border-radius:6px;font-family:'DM Mono',monospace">
+          <input type="text" placeholder="One-line reason" maxlength="500" value="${idea.calibration && idea.calibration.reason ? esc(idea.calibration.reason).replace(/"/g,'&quot;') : ''}" id="cal-reason-${idea.id}" style="flex:1;min-width:160px;padding:6px 8px;font-size:13px;border:1px solid var(--line);border-radius:6px">
+          <button onclick="saveCalibration('${idea.id}')" style="font-size:12px;font-weight:700;padding:6px 12px;background:var(--acc);color:#fff;border:none;border-radius:6px;cursor:pointer">Save</button>
+          <span class="cal-ok" id="cal-ok-${idea.id}" style="display:none;font-size:11px;color:var(--good);font-weight:700">✓ Saved</span>
+        </div>
       </div>`;
     }).join('');
   }
@@ -579,6 +594,53 @@
       lbl.textContent = !isPublic ? 'Public' : 'Private';
       if (idea) idea.is_public = !isPublic;
       showToast('Failed to update visibility');
+    }
+  };
+
+  window.saveCalibration = async function(id) {
+    const scoreEl = document.getElementById(`cal-score-${id}`);
+    const reasonEl = document.getElementById(`cal-reason-${id}`);
+    const okEl = document.getElementById(`cal-ok-${id}`);
+    const suggestedScore = scoreEl.value === '' ? null : Number(scoreEl.value);
+    const reason = reasonEl.value.trim();
+    if (suggestedScore === null && !reason) {
+      showToast('Enter a score or a reason (or both)');
+      return;
+    }
+    try {
+      await apiFetch('/api/account/ideas', {
+        method: 'POST',
+        body: JSON.stringify({ action: 'calibrate', id, suggestedScore, reason }),
+      });
+      const idea = ideas.find(i => i.id === id);
+      if (idea) idea.calibration = { suggestedScore, reason };
+      if (okEl) {
+        okEl.style.display = '';
+        setTimeout(() => { okEl.style.display = 'none'; }, 1800);
+      }
+      // Show export button once at least one calibration exists
+      const exportBtn = document.getElementById('exportCalBtn');
+      if (exportBtn) exportBtn.style.display = '';
+    } catch (e) {
+      showToast('Failed to save calibration: ' + e.message);
+    }
+  };
+
+  window.exportCalibrations = async function() {
+    try {
+      const data = await apiFetch('/api/account/ideas?export=calibrations');
+      // Drop a clean download for the user to attach to a Claude chat.
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `calibrations-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      showToast(`Exported ${data.count} calibration${data.count === 1 ? '' : 's'}`);
+    } catch (e) {
+      showToast('Export failed: ' + e.message);
     }
   };
 

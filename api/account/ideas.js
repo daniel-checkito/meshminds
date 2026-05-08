@@ -9,13 +9,44 @@ module.exports = async (req, res) => {
   if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
   if (req.method === 'GET') {
+    // Special mode: ?export=calibrations dumps the user's calibration log as a
+    // download-friendly JSON the founder can paste straight into a Claude chat
+    // for prompt-tuning. Includes related scan summary so reasons have context.
+    if (req.query && req.query.export === 'calibrations') {
+      try {
+        const calibrations = await adminQuery({
+          table: 'calibrations',
+          filters: `user_id=eq.${user.id}&order=created_at.desc`,
+          select: 'scan_id,ai_score,ai_verdict,product_title,product_url,category,suggested_score,reason,created_at',
+        });
+        return res.status(200).json({
+          exportedAt: new Date().toISOString(),
+          count: (calibrations || []).length,
+          calibrations: calibrations || [],
+        });
+      } catch (e) {
+        return res.status(500).json({ error: e.message });
+      }
+    }
     try {
       const ideas = await adminQuery({
         table: 'scans',
         filters: `user_id=eq.${user.id}&order=created_at.desc`,
-        select: 'id,url,title,score,verdict,image_url,profit_est,is_public,created_at',
+        select: 'id,url,title,score,verdict,image_url,profit_est,is_public,full_data,created_at',
       });
-      return res.status(200).json({ ideas: ideas || [] });
+      // Pull the user's calibrations and attach to matching ideas so the UI
+      // can pre-fill the calibration form.
+      let calMap = {};
+      try {
+        const cals = await adminQuery({
+          table: 'calibrations',
+          filters: `user_id=eq.${user.id}`,
+          select: 'scan_id,suggested_score,reason',
+        });
+        (cals || []).forEach(c => { calMap[c.scan_id] = { suggestedScore: c.suggested_score, reason: c.reason }; });
+      } catch (_) {}
+      const enriched = (ideas || []).map(i => ({ ...i, calibration: calMap[i.id] || null }));
+      return res.status(200).json({ ideas: enriched });
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }
@@ -59,6 +90,69 @@ module.exports = async (req, res) => {
           table: 'scans',
           filters: `id=eq.${id}`,
           body: { is_public: Boolean(isPublic) },
+        });
+        return res.status(200).json({ ok: true });
+      } catch (e) {
+        return res.status(500).json({ error: e.message });
+      }
+    }
+
+    if (action === 'calibrate' && id) {
+      const { suggestedScore, reason } = req.body || {};
+      const sScore = suggestedScore == null || suggestedScore === '' ? null : Number(suggestedScore);
+      if (sScore !== null && (Number.isNaN(sScore) || sScore < 0 || sScore > 100)) {
+        return res.status(400).json({ error: 'suggestedScore must be 0-100' });
+      }
+      try {
+        // Confirm scan belongs to user, pull AI metadata for the calibration row
+        const rows = await adminQuery({
+          table: 'scans',
+          filters: `id=eq.${id}&user_id=eq.${user.id}`,
+          select: 'id,score,verdict,title,url,full_data',
+        });
+        if (!rows?.length) return res.status(403).json({ error: 'Not found' });
+        const scan = rows[0];
+        // Try to recover the category from full_data (analyze.js sometimes
+        // stashes payload.category in the full_data blob).
+        let category = null;
+        try {
+          if (scan.full_data && typeof scan.full_data === 'object') {
+            category = scan.full_data.category || scan.full_data?.product?.category || null;
+          }
+        } catch (_) {}
+
+        // If no suggestedScore + no reason → treat as a delete (reset).
+        if (sScore === null && !reason) {
+          await adminQuery({
+            method: 'DELETE',
+            table: 'calibrations',
+            filters: `scan_id=eq.${id}&user_id=eq.${user.id}`,
+          });
+          return res.status(200).json({ ok: true, cleared: true });
+        }
+
+        // Upsert: delete-then-insert (Supabase REST upsert needs a header
+        // we don't have abstracted, and the unique constraint enforces
+        // one-per-(scan_id,user_id) anyway).
+        await adminQuery({
+          method: 'DELETE',
+          table: 'calibrations',
+          filters: `scan_id=eq.${id}&user_id=eq.${user.id}`,
+        });
+        await adminQuery({
+          method: 'POST',
+          table: 'calibrations',
+          body: {
+            scan_id: id,
+            user_id: user.id,
+            ai_score: scan.score != null ? Number(scan.score) : null,
+            ai_verdict: scan.verdict || null,
+            product_title: scan.title || null,
+            product_url: scan.url || null,
+            category,
+            suggested_score: sScore,
+            reason: reason ? String(reason).slice(0, 500) : null,
+          },
         });
         return res.status(200).json({ ok: true });
       } catch (e) {

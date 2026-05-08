@@ -61,7 +61,32 @@ create table if not exists public.market_observations (
 
 create index if not exists market_obs_category_idx   on public.market_observations (category_id, created_at desc);
 
--- 4. Daily quota tracking (anonymous users by IP, signed-in by user_id)
+-- 4. Score calibration log
+-- Founder-driven calibration data: for any scan, the user records what the score
+-- SHOULD have been and a one-line reason. Used to drive prompt edits in
+-- api/analyze.js. One calibration row per (scan_id, user_id) — re-saving
+-- updates the existing row.
+create table if not exists public.calibrations (
+  id              bigserial primary key,
+  scan_id         uuid         references public.scans(id) on delete cascade,
+  user_id         uuid         not null,
+  ai_score        int,
+  ai_verdict      text,
+  product_title   text,
+  product_url     text,
+  category        text,
+  suggested_score int,
+  reason          text,
+  created_at      timestamptz  default now(),
+  updated_at      timestamptz  default now(),
+  unique (scan_id, user_id)
+);
+
+create index if not exists calibrations_user_idx on public.calibrations (user_id, created_at desc);
+
+alter table public.calibrations enable row level security;
+
+-- 5. Daily quota tracking (anonymous users by IP, signed-in by user_id)
 create table if not exists public.usage_log (
   id          bigserial primary key,
   user_id     uuid,

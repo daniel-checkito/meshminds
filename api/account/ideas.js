@@ -1,12 +1,29 @@
 const { getUser, adminQuery, extractToken, cors } = require('../_supabase');
 
+// Founder-only calibration bypass: a long random secret in the env unlocks
+// admin mode (list ALL scans, calibrate any of them) without requiring a
+// Supabase login. Set CALIBRATE_SECRET in Vercel to enable. Calibrations made
+// in admin mode are stored under this synthetic user id so they're isolated
+// from real user calibrations and survive `unique (scan_id, user_id)`.
+const ADMIN_USER_ID = '00000000-0000-0000-0000-000000000001';
+
 module.exports = async (req, res) => {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const token = extractToken(req);
-  const user = await getUser(token);
-  if (!user) return res.status(401).json({ error: 'Unauthorized' });
+  // Pull secret from query (GET) or body (POST). Constant-time-ish compare.
+  const providedSecret = (req.query && req.query.secret) || (req.body && req.body.secret) || null;
+  const expectedSecret = process.env.CALIBRATE_SECRET || '';
+  const isAdmin = !!(expectedSecret && providedSecret && providedSecret === expectedSecret);
+
+  let user = null;
+  if (isAdmin) {
+    user = { id: ADMIN_USER_ID, email: 'calibrate@admin' };
+  } else {
+    const token = extractToken(req);
+    user = await getUser(token);
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+  }
 
   if (req.method === 'GET') {
     // Special mode: ?export=calibrations dumps the user's calibration log as a
@@ -29,9 +46,15 @@ module.exports = async (req, res) => {
       }
     }
     try {
+      // Admin (secret link) sees the most recent 50 scans across all users.
+      // Regular signed-in users see only their own.
+      const limit = isAdmin ? 50 : 200;
+      const filters = isAdmin
+        ? `order=created_at.desc&limit=${limit}`
+        : `user_id=eq.${user.id}&order=created_at.desc`;
       const ideas = await adminQuery({
         table: 'scans',
-        filters: `user_id=eq.${user.id}&order=created_at.desc`,
+        filters,
         select: 'id,url,title,score,verdict,image_url,profit_est,is_public,full_data,created_at',
       });
       // Pull the user's calibrations and attach to matching ideas so the UI
@@ -104,10 +127,13 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'suggestedScore must be 0-100' });
       }
       try {
-        // Confirm scan belongs to user, pull AI metadata for the calibration row
+        // Admin (secret link) can calibrate any scan; regular users only theirs.
+        const scanFilter = isAdmin
+          ? `id=eq.${id}`
+          : `id=eq.${id}&user_id=eq.${user.id}`;
         const rows = await adminQuery({
           table: 'scans',
-          filters: `id=eq.${id}&user_id=eq.${user.id}`,
+          filters: scanFilter,
           select: 'id,score,verdict,title,url,full_data',
         });
         if (!rows?.length) return res.status(403).json({ error: 'Not found' });

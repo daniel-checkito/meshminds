@@ -1088,7 +1088,7 @@ You may be asked to return only a slice of the schema. Honour the requested stag
       verdict: parsed?.verdict ? String(parsed.verdict).slice(0, 200) : null,
       image_url: parsed?.product?.image || null,
       profit_est: profitNum ? `~€${Math.round(profitNum)}/mo` : null,
-      is_public: false,
+      is_public: !_quotaIsPro,
       pro_locked: !!_quotaIsPro,
       full_data: parsed,
       ip_hash: _quotaUser?.id ? null : _quotaIpHash,

@@ -37,7 +37,7 @@ create table if not exists public.scans (
   verdict     text,
   image_url   text,
   profit_est  text,
-  is_public   boolean      default false,
+  is_public   boolean      default true,
   pro_locked  boolean      default false,
   full_data   jsonb,
   ip_hash     text,

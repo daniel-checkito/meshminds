@@ -38,13 +38,24 @@ module.exports = async (req, res) => {
   if (!url && !title) return res.status(400).json({ error: 'url or title required' });
 
   try {
-    // Get user's default_public setting
+    // Free users: scans are always public (it's a free tier benefit — others
+    // can learn from your scan, you get listed on the community feed). Only
+    // Pro users can flip the toggle to private. Read both flags in one query.
     const profiles = await adminQuery({
       table: 'profiles',
       filters: `id=eq.${user.id}`,
-      select: 'default_public',
+      select: 'default_public,is_premium',
     });
-    const defaultPublic = profiles?.[0]?.default_public || false;
+    const isPro = profiles?.[0]?.is_premium || false;
+    const defaultPublic = profiles?.[0]?.default_public;
+    let resolvedPublic;
+    if (!isPro) {
+      resolvedPublic = true; // free tier: always public
+    } else if (isPublic !== undefined) {
+      resolvedPublic = Boolean(isPublic);
+    } else {
+      resolvedPublic = defaultPublic !== false; // pro user without explicit pref → default public
+    }
 
     const row = {
       user_id: user.id,
@@ -54,7 +65,7 @@ module.exports = async (req, res) => {
       verdict: verdict ? String(verdict).slice(0, 200) : null,
       image_url: imageUrl ? String(imageUrl).slice(0, 500) : null,
       profit_est: profitEst ? String(profitEst).slice(0, 50) : null,
-      is_public: isPublic !== undefined ? Boolean(isPublic) : defaultPublic,
+      is_public: resolvedPublic,
       full_data: fullData || null,
     };
 

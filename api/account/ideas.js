@@ -34,6 +34,20 @@ module.exports = async (req, res) => {
         });
         if (!rows?.length) return res.status(403).json({ error: 'Not found' });
 
+        // Free users can't make scans private — public sharing is a free-tier
+        // benefit (and feeds the community catalogue). Pro is what unlocks
+        // the toggle. Check premium status before honouring a private flip.
+        if (Boolean(isPublic) === false) {
+          const profiles = await adminQuery({
+            table: 'profiles',
+            filters: `id=eq.${user.id}`,
+            select: 'is_premium',
+          });
+          if (!profiles?.[0]?.is_premium) {
+            return res.status(403).json({ ok: false, proRequired: true, message: 'Pro members can hide scans. Upgrade to make this private.' });
+          }
+        }
+
         // Pro-locked scans are guaranteed private - they can never be flipped public,
         // even if the user is no longer Pro. This backstops the marketing promise.
         if (rows[0].pro_locked && Boolean(isPublic)) {

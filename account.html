@@ -547,13 +547,15 @@
         <div class="idea-card-foot">
           <span class="idea-date">${fmtDate(idea.created_at)}</span>
           <div class="idea-actions">
-            <div class="toggle-wrap">
-              <span class="toggle-lbl">${idea.is_public ? 'Public' : 'Private'}</span>
-              <label class="toggle">
-                <input type="checkbox" ${idea.is_public ? 'checked' : ''} onchange="togglePublic('${idea.id}', this)">
-                <span class="toggle-slider"></span>
-              </label>
-            </div>
+            ${userProfile && userProfile.isPro
+              ? `<div class="toggle-wrap">
+                  <span class="toggle-lbl">${idea.is_public ? 'Public' : 'Private'}</span>
+                  <label class="toggle">
+                    <input type="checkbox" ${idea.is_public ? 'checked' : ''} onchange="togglePublic('${idea.id}', this)">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>`
+              : `<span class="toggle-lbl" style="color:var(--ink3);font-size:11px">Public · <a href="/idea#pro" style="color:var(--acc);text-decoration:none;font-weight:700">Pro to hide</a></span>`}
             <button class="del-btn" onclick="deleteIdea('${idea.id}')" title="Delete">🗑</button>
           </div>
         </div>

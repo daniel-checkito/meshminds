@@ -1743,9 +1743,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
   <div class="lp-sec" id="landing-preview" style="padding-top:24px;padding-bottom:16px">
     <div class="lp-eyebrow" style="margin-bottom:6px">Don't have an idea yet?</div>
     <div style="font-family:'Bebas Neue',sans-serif;font-size:30px;line-height:1;letter-spacing:.02em;color:var(--ink);margin-bottom:6px">Start with a winner</div>
-    <div style="font-size:13px;color:var(--ink3);margin-bottom:10px;line-height:1.5">Real products that passed the scan. <b>Tap any card</b> to see the full analysis - score, demand, profit, legal risk, and the next 3 steps.</div>
-    <div style="font-size:11.5px;color:var(--ink3);background:var(--surf);border:1px dashed var(--line);border-radius:8px;padding:8px 11px;margin-bottom:14px;line-height:1.45"><b style="color:var(--ink2)">Heads-up:</b> most ideas score 40–60. The 70+ winners below are the rare top tier — that's the bar.</div>
-    <div id="lp-filter-chips" class="lp-filters" style="margin-bottom:12px"></div>
+    <div style="font-size:13px;color:var(--ink3);margin-bottom:14px;line-height:1.5">Real products that passed the scan. <b>Tap any card</b> to see the full analysis - score, demand, profit, legal risk, and the next 3 steps.</div>
     <div id="landing-preview-grid" class="eg-grid" style="margin-bottom:14px"></div>
     <div id="landing-preview-more"></div>
     <div style="margin-top:30px">
@@ -3915,7 +3913,7 @@ window.submitFeedback=submitFeedback;
     var c=colorFor(d.score);
     var ipFlag=c==='r';
     var profitClass=ipFlag?'r':'g';
-    var angleHtml=d.angle?'<div class="eg-angle" onclick="event.stopPropagation();(function(){var b=findBucketByAngle('+JSON.stringify(d.angle).replace(/"/g,'&quot;')+');if(b)setLandingFilter(b);})()" style="cursor:pointer"><span class="eg-angle-ico">'+escH(d.angleEmoji||'✓')+'</span><span class="eg-angle-lbl">'+escH(d.angle)+'</span></div>':'';
+    var angleHtml=d.angle?'<div class="eg-angle"><span class="eg-angle-ico">'+escH(d.angleEmoji||'✓')+'</span><span class="eg-angle-lbl">'+escH(d.angle)+'</span></div>':'';
     var openFn=opts.bad?'openAvoidModal':'openPreviewModal';
     var badClass=opts.bad?' bad-card':'';
     return '<div class="eg-card'+badClass+'" role="button" tabindex="0" onclick="'+openFn+'('+JSON.stringify(name).replace(/"/g,'&quot;')+')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();'+openFn+'('+JSON.stringify(name).replace(/"/g,'&quot;')+')}">'+
@@ -4235,7 +4233,6 @@ window.submitFeedback=submitFeedback;
   window.openPreviewModal=openPreviewModal;
   window.closePreviewModal=closePreviewModal;
   function initLanding(){
-    renderFilterChips();
     renderCards();
     renderAvoidCards();
   }

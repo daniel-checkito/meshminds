@@ -2109,6 +2109,15 @@ function drawRevenueChart(currentPrice){
 }
 
 function populate(data){
+  /* Set pendingScore/lastScore eagerly from data.score so the score reveal
+     still works even if a later step in this function throws. Without this,
+     a render error mid-populate would leave the pulse animation running
+     forever ("…" stuck in the ring number) while the DB has the real score. */
+  if(data && typeof data.score === 'number'){
+    lastScore=data.score;
+    var _sc=data.score>=70?"#15803d":data.score>=40?"#FF5C00":"#b91c1c";
+    pendingScore={score:data.score/100,color:_sc,msg:data.verdict||"",note:null};
+  }
   /* Sync Pro banner counts */
   document.querySelectorAll("#pro-count,.pro-count-inline").forEach(function(el){el.textContent=PRO_VALIDATED_COUNT;});
   /* AI tier badge on the verdict card. Free = fast tier, pro = in-depth tier.
@@ -2677,8 +2686,25 @@ function updateOfferPanel(){
 }
 
 function revealScore(){
-  if(!pendingScore)return;
+  /* Defensive fallback: pendingScore is normally set by populate() right
+     after the AI response lands. If it's null here (e.g. populate threw
+     midway, or we re-entered after a navigation), reconstruct from
+     lastScore so rn/ring still update — otherwise the pulse keeps writing
+     "…" to rn and the user sees a stuck loading state even though the
+     score is in the DB. */
+  if(!pendingScore && typeof lastScore === 'number'){
+    var s=lastScore/100;
+    var c=lastScore>=70?"#15803d":lastScore>=40?"#FF5C00":"#b91c1c";
+    pendingScore={score:s,color:c,msg:"",note:null};
+  }
+  // Always stop the pulse — even with no score, we don't want "…" to keep
+  // animating after this point.
   stopPulse();
+  if(!pendingScore){
+    // Hard fallback: clear the placeholder so the user doesn't see "…".
+    if(q("rn")){q("rn").textContent="";}
+    return;
+  }
   animRing(pendingScore.score,600,pendingScore.color);
   verdict("done",pendingScore.msg,pendingScore.note);
   pendingScore=null;

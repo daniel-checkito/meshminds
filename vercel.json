@@ -1,6 +1,9 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/scan/:id", "destination": "/scan.html?id=:id" }
+  ],
   "functions": {
     "api/analyze.js": { "maxDuration": 60 },
     "api/keyword.js": { "maxDuration": 30 },

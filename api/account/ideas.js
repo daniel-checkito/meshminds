@@ -11,6 +11,25 @@ module.exports = async (req, res) => {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(200).end();
 
+  // Public scan view: fetch a single PUBLIC scan by id, no auth required.
+  // Used by /scan/:id permalink pages so winning scans can be shared
+  // socially and indexed by search engines.
+  if (req.method === 'GET' && req.query && req.query.publicScan) {
+    try {
+      const id = String(req.query.publicScan).slice(0, 64);
+      const rows = await adminQuery({
+        table: 'scans',
+        filters: `id=eq.${id}&is_public=eq.true`,
+        select: 'id,url,title,score,verdict,image_url,profit_est,full_data,created_at',
+      });
+      if (!rows || !rows.length) return res.status(404).json({ error: 'Not found' });
+      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=86400');
+      return res.status(200).json({ scan: rows[0] });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
   // Calibration mode: opens admin access (list all scans, calibrate any)
   // when the request comes from the public calibration page. Triggered by
   // ?calibrate=1 (GET) or {calibrate:true} (POST). Page is noindex/nofollow

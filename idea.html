@@ -1319,6 +1319,13 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           </div>
         </div>
 
+        <!-- Shareable permalink (only visible for scans with a scanId) -->
+        <div id="scan-share" style="display:none;margin-top:10px;padding:10px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;align-items:center;gap:9px;font-size:12.5px;color:var(--ink2)">
+          <span style="font-size:16px;flex-shrink:0">🔗</span>
+          <span style="flex:1;line-height:1.35">Share this scan: <a id="scan-share-url" href="#" target="_blank" rel="noopener" style="color:var(--acc);font-family:'DM Mono',monospace;font-weight:700;text-decoration:none;word-break:break-all">—</a></span>
+          <button onclick="shareScan(event)" style="flex-shrink:0;padding:6px 11px;font-size:11.5px;font-weight:700;background:#1a1a1a;color:#fff;border:none;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif">Copy</button>
+        </div>
+
         <!-- Why it's worth it -->
         <div class="signals-hd" id="why-hd" style="display:none">Why it's worth it</div>
         <div id="signals-why"></div>
@@ -1496,6 +1503,34 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
           <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:8px">Step-by-step roadmap <span style="flex:1;height:1px;background:var(--line);display:block"></span></div>
           <div id="roadmap-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"></div>
           <div id="roadmap-steps" style="display:flex;flex-direction:column;gap:1px;border-radius:12px;overflow:hidden;border:1px solid var(--line)"></div>
+        </div>
+
+        <!-- Pro insights preview: one row unlocked from real data, three locked. -->
+        <div id="pro-insights-preview" style="display:none;margin-bottom:16px;border:1.5px solid var(--line);border-radius:13px;overflow:hidden;background:#fff">
+          <div style="padding:12px 14px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px">
+            <span style="font-size:16px">✦</span>
+            <div style="flex:1">
+              <div style="font-family:'DM Mono',monospace;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:#1d4ed8;font-weight:800">Pro insight · 1 of 4 unlocked</div>
+              <div style="font-size:13.5px;color:var(--ink);font-weight:700;line-height:1.3;margin-top:2px" id="pro-insight-headline">—</div>
+            </div>
+          </div>
+          <div style="padding:11px 14px 12px" id="pro-insight-body">
+            <div style="font-size:13px;color:var(--ink2);line-height:1.5" id="pro-insight-text">—</div>
+          </div>
+          <div style="border-top:1px solid var(--line);padding:0 0 12px">
+            <div style="position:relative">
+              <div style="filter:blur(4px);user-select:none;pointer-events:none;padding:14px 14px 0">
+                <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span style="color:var(--ink3)">Top 3 search keywords</span><span style="font-family:'DM Mono',monospace;font-weight:800;color:var(--acc)">cute desk gift, mini animal…</span></div>
+                <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span style="color:var(--ink3)">Best time to list</span><span style="font-family:'DM Mono',monospace;font-weight:800;color:var(--acc)">Thu–Fri, 8–10am EST</span></div>
+                <div style="display:flex;justify-content:space-between;padding:7px 0;font-size:12.5px"><span style="color:var(--ink3)">Competitor weak spot</span><span style="font-family:'DM Mono',monospace;font-weight:800;color:var(--acc)">No personalisation</span></div>
+              </div>
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,rgba(255,255,255,.6) 0%,rgba(255,255,255,.95) 60%);padding:14px">
+                <div style="font-size:22px;line-height:1">🔒</div>
+                <div style="font-size:13.5px;font-weight:800;color:var(--ink);text-align:center">3 more insights with Pro</div>
+                <a href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" onclick="if(window.MM&&MM.track)MM.track('cta_click_pro',{label:'idea_pro_insight'})" target="_blank" rel="noopener" style="display:inline-block;padding:9px 18px;background:var(--acc);color:#fff;text-decoration:none;font-size:12.5px;font-weight:800;border-radius:8px">Unlock all – $8/mo →</a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Teaser to next step -->
@@ -1837,7 +1872,7 @@ var PRO_SPOTS_LEFT=33; /* update as early-adopter spots fill */
   var s8=document.getElementById('s8-bl-count');if(s8)s8.textContent=PRO_VALIDATED_COUNT;
   var s8b=document.getElementById('s8-bl-count2');if(s8b)s8b.textContent=PRO_VALIDATED_COUNT;
 })();
-var step=0,busy=false,ideaStep=1,lastURL="",lastIsURL=true,inputMode='url',lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null,activeAnalysisAbort=null,activeAnalysisTimeout=null;
+var step=0,busy=false,ideaStep=1,lastURL="",lastIsURL=true,inputMode='url',lastProductContext=null,lastImageUrl=null,qCat="",qPrice="",qExp="",qMarketplace="",qPrintTime="",qMaterial="",qSellerGoal="",qPrinterCount="",qPrinterType="",qWeeklyTime="",qActiveMarkets=[],qSocialMedia=[],qSellTo=[],qLegalFlags=[],analysisComplete=false,pendingScore=null,pendingSubScores=null,baseRevData=null,marketAvgPrice=null,waitingForAnalysis=false,loadingRaf=null,loadingProgress=0,lastAiCerts=null,lastScore=null,activeAnalysisAbort=null,activeAnalysisTimeout=null,softGateActive=false;
 var EXAMPLE_URL='https://makerworld.com/en/models/77709';
 var EXAMPLE_DATA={score:61,verdict:"Marginal - needs a unique angle",product:{title:"Laptop Stand",description:"A minimalist foldable laptop stand designed for most 13–17\" laptops. Prints flat and folds for easy storage.",author:"福气",printTime:"6h 30m",material:"~180g PLA",sourceHost:"makerworld.com/en/models/77709",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",likes:2840,saves:1420,downloads:"8.4k",prints:"2.1k",tags:["laptop stand","desk organiser","computer stand","office accessories"],note:"Functional desk accessories earn consistent Etsy search volume - <b>'laptop stand' returns 10,000+ Etsy listings</b> with mid-tier sellers reporting €150–€400/month, but generic unbranded stands face heavy price pressure from Amazon and AliExpress alternatives under €10."},market:{searchVolume:22000,searchTrend:"→ Stable",etsyListings:10400,etsyAvgPrice:"€28",topSellerSales:340,printTime:"6h 30m",unitsPerDay:"≈2–3 units/day",insight:"<b>High search volume but equally high competition</b> - 10,000+ Etsy listings means buyers are looking, but a generic design gets buried on page 10. <b>Personalisation or a pop-culture angle is essential</b> to rank and command a €28+ price point."},revenue:{unitsPerMonth:18,grossRevenue:504,printCost:90,etsyFees:60,netProfit:354,sellPrice:"€28.00"},manufacturing:{is3DPrintingOptimal:true,verdict:"Works, but has limits",reason:"FDM works well for laptop stands but layer lines can reduce perceived quality for buyers expecting a premium product.",alternatives:[],breakEvenUnits:280,printingAdvantage:"Zero tooling cost - test multiple angle variants and cable cut-outs at no upfront investment."},copyright:{etsyBanRisk:"medium",etsyBanReason:"License on MakerWorld is not explicitly commercial - check the model page license tab and consider messaging the designer directly to request a print-for-sale license before listing.",legalRisk:"low",legalDesc:"Standard FDM plastic products require no certification in most EU and US markets. GPSR Declaration of Conformity recommended if shipping to EU buyers.",copyrightRisk:"low",copyrightDesc:"Original design with no identifiable third-party IP.",insight:"The main risk is the <b>unclear MakerWorld license</b> - Etsy's March 2026 policy requires a verifiable commercial license to sell prints from downloaded STL files."},strategy:{bestPlatform:"Etsy (USA home-office buyers)",platformAdvice:"Etsy is the best channel but <b>personalisation is non-negotiable</b> - generic versions are buried on page 10+. Verify the model license before listing, as MakerWorld files default to personal use unless the designer explicitly grants commercial rights.",realWorldExample:{name:null,url:null,whatTheyDo:null},topTips:["<b>Add a personalisation option</b> - a name or initials engraved into the stand lifts conversion rate and lets you charge €8–12 more per unit.","<b>Target the home-office buyer</b> - use tags like 'ergonomic laptop riser', 'work from home gift', and 'desk accessory' to reach buyers outside the maker community.","<b>Photograph with lifestyle context</b> - show the stand on a real desk with a laptop, keyboard and coffee cup. Lifestyle photos convert 2–3× better than plain product shots."]},certificates:[],competitors:[{url:"https://www.etsy.com/search?q=ergonomic+laptop+stand+wood",name:"Ergonomic Wooden Laptop Stand - Top sellers on Etsy",platform:"Etsy",estPrice:"€24–€38",estMonthlySales:"40–120/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-18_c6ea4fbde48e38.webp",whyItWorks:"Top results lead with 'ergonomic' targeting the WFH buyer keyword. First photo is always a styled home-office shot with a MacBook on a clean desk - lifestyle context converts 2-3x better than plain product shots."},{url:"https://www.etsy.com/search?q=personalized+laptop+stand+gift",name:"Personalized Laptop Stand (engraved) - Etsy",platform:"Etsy",estPrice:"€32–€52",estMonthlySales:"60–150/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-09-04_2d1b2080fdece8.webp",whyItWorks:"Custom name engraving justifies a €8-15 premium and dominates the gift segment. Sellers add 'office gift', 'graduation gift', 'co-worker gift' to their tags to capture high-intent holiday and milestone shoppers."},{url:"https://www.amazon.com/s?k=3D+printed+laptop+riser",name:"3D-printed Laptop Riser (multi-color) - Amazon Handmade",platform:"Amazon",estPrice:"€18–€28",estMonthlySales:"100–250/mo",image:"https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/2025-03-02_25808da1b7cac.webp",whyItWorks:"Lower price point + Prime shipping dominate the Amazon channel. Top listings always offer 4-6 color variants in one ASIN - boosts click-through and rank signal because Amazon weights variation depth."}],businessInspiration:[{id:"gantri",name:"Gantri",url:"https://gantri.com",location:"San Francisco, CA",scale:"Multi-designer marketplace",categories:["desk_office","decor","lighting_lamps"],theme:"platform_software",summary:"Designer-led desk-and-lighting platform: independent designers upload, Gantri prints and ships. Started with desk lamps, now expanded to desk accessories.",differentiator:"Treats 3D printing as a fashion line - drops, designer collabs, lookbook photography. Premium positioning means desk accessories sell for €60-€200 instead of competing with €15 Etsy listings."},{id:"grovemade-style",name:"Mediterranea Design",url:"https://mediterraneadesign.com",location:"Spain",scale:"Boutique studio",categories:["decor","home_organization"],theme:"premium_design",summary:"Spanish design studio making 3D-printed home and desk objects with strong material storytelling - terracotta-look PLA, wood-fibre filaments, recycled colourways.",differentiator:"Material as the brand. Same shape sold in three filament finishes commands different price points and reaches different buyer aesthetics (boho, mid-century, scandi)."},{id:"modelno",name:"Model No.",url:"https://modelno.co",location:"Oakland, CA",scale:"~$2M ARR",categories:["decor","home_organization","desk_office"],theme:"sustainability_design",summary:"Plant-based, fully recyclable 3D-printed furniture and desk accessories. Made-to-order, no inventory, every piece traceable to the bioresin batch.",differentiator:"Sustainability is the wedge - they price 30-40% above generic competitors and the eco-story is what justifies it to design-conscious buyers."}]};
 function isURL(s){return/^https?:\/\/.{3,}/i.test(s.trim());}
@@ -2131,6 +2166,9 @@ function drawRevenueChart(currentPrice){
 }
 
 function populate(data){
+  // Cache full data so other UI surfaces (Pro-insight preview, share link)
+  // can read it without threading a parameter through every function.
+  window._lastFullData=data||{};
   /* Set pendingScore/lastScore eagerly from data.score so the score reveal
      still works even if a later step in this function throws. Without this,
      a render error mid-populate would leave the pulse animation running
@@ -2705,6 +2743,37 @@ function updateOfferPanel(){
   }
   if(q("offer-lock"))q("offer-lock").style.display="none";
   if(q("skool-card"))q("skool-card").style.opacity="1";
+  populateProInsightPreview();
+}
+function populateProInsightPreview(){
+  /* One unlocked Pro insight derived from the AI response we already have.
+     Three more locked rows follow as a teaser. The unlocked one is computed
+     from the most recent populate() data on window._lastFullData (set in
+     populate). Fallback: a generic "score-pressure" line. */
+  var d=window._lastFullData||{};
+  var m=(d.market&&typeof d.market==='object')?d.market:{};
+  var sv=Number(m.searchVolume)||0;
+  var listings=Number(m.etsyListings)||0;
+  var headline='', text='';
+  if(sv && listings){
+    var ratio=sv/listings;
+    var label;
+    if(ratio>=8)label='Hot demand';
+    else if(ratio>=3)label='Healthy demand';
+    else if(ratio>=1.5)label='Balanced';
+    else if(ratio>=0.5)label='Saturated';
+    else label='Crowded';
+    headline='Demand-to-supply ratio: '+ratio.toFixed(1)+' searches per listing';
+    text='Every '+ratio.toFixed(1)+' search'+(ratio.toFixed(1)==='1.0'?'':'es')+' on Etsy returns 1 listing in this niche. <b>'+label+'</b>. Above 3 you can rank a new shop without ads; below 1 you need a personalisation, a niche angle, or a viral video to compete.';
+  } else if(lastScore!=null){
+    headline='This idea sits at score '+lastScore;
+    text='Most ideas score 40-60. The 70+ tier is the rare top 5%. The Pro plan unlocks the remaining 3 insights so you know exactly where the score is leaking and how to lift it.';
+  } else {
+    return; // nothing to show
+  }
+  if(q('pro-insight-headline'))q('pro-insight-headline').textContent=headline;
+  if(q('pro-insight-text'))q('pro-insight-text').innerHTML=text;
+  if(q('pro-insights-preview'))q('pro-insights-preview').style.display='';
 }
 
 function revealScore(){
@@ -3111,7 +3180,7 @@ function runAnalysis(){
     if(q("gate-pct"))q("gate-pct").style.color="#15803d";
     drawLoadingRing(1,"#15803d");
     var errEl=q("gate-error");if(errEl)errEl.style.display="none";
-    if(data&&data.scanId){window.lastScanId=data.scanId;if(typeof showFeedbackWidget==='function'){try{showFeedbackWidget();}catch(e){}}}
+    if(data&&data.scanId){window.lastScanId=data.scanId;if(typeof showFeedbackWidget==='function'){try{showFeedbackWidget();}catch(e){}}if(typeof showShareCard==='function'){try{showShareCard(data.scanId);}catch(e){}}}
     try{recordScanHistory(data);}catch(_){ }
     if(window.MM&&MM.track)MM.track('analyze_success',{label:isIdeaMode?'idea':'url',value:data&&typeof data.score==='number'?data.score:null,scan_id:data&&data.scanId||null});
     if(waitingForAnalysis){
@@ -3173,18 +3242,14 @@ function runAnalysis(){
     if(window.MM&&MM.track)MM.track('analyze_error',{label:msg.slice(0,80)});
   });
 
-  /* Move to email gate. Ring + scraping animation starts immediately so the
-     loading state is visible whether or not the user still has the email
-     gate in front of them. */
+  /* Move to the loading panel (step 4) regardless of email status. Soft
+     gate: every user sees the verdict immediately when analysis completes;
+     the email is requested only when they try to advance to the deeper
+     sections (step 5 -> step 6). */
   step=4;dots(4);slide(4);
-  if(localStorage.getItem('mm_gate')){
-    if(q("gate-content"))q("gate-content").style.display="none";
-    if(q("loading-overlay"))q("loading-overlay").style.display="";
-    waitingForAnalysis=true;
-  } else {
-    if(q("gate-content"))q("gate-content").style.display="";
-    if(q("loading-overlay"))q("loading-overlay").style.display="none";
-  }
+  if(q("gate-content"))q("gate-content").style.display="none";
+  if(q("loading-overlay"))q("loading-overlay").style.display="";
+  waitingForAnalysis=true;
   startLoadingAnim();
   showFooter(false);
   busy=false;
@@ -3260,7 +3325,7 @@ function reset(){
   window._fullPending=false;
   window._activePrep=null;
   document.querySelector('.phone').classList.remove('phone-active');
-  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;
+  step=0;lastURL="";lastIsURL=true;lastProductContext=null;lastImageUrl=null;qCat="";qPrice="";qExp="";qMarketplace="";qPrintTime="";qMaterial="";qSellerGoal="";qPrinterCount="";qPrinterType="";qWeeklyTime="";qActiveMarkets=[];qSocialMedia=[];qSellTo=[];qLegalFlags=[];analysisComplete=false;pendingScore=null;pendingSubScores=null;baseRevData=null;marketAvgPrice=null;lastAiCerts=null;lastScore=null;softGateActive=false;
   ideaStep=1;inputMode='url';if(window.setMode)window.setMode('url');
   document.querySelectorAll(".chip").forEach(function(c){c.classList.remove("on");});
   if(q("sell-from"))q("sell-from").value="";
@@ -3532,7 +3597,16 @@ q("btn-email").addEventListener("click",function(){
   }).catch(function(){});
   localStorage.setItem('mm_gate','1');
   try{localStorage.setItem('mm_gate_email',email);}catch(_){ }
-  if(analysisComplete){
+  if(softGateActive){
+    /* User saw the verdict on step 5, came back here for email, just
+       submitted -> advance straight to step 6, skipping the verdict
+       reveal (already done). */
+    softGateActive=false;
+    if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
+    step=6;dots(6);slide(6);showFooter(true);showBack(true);
+    setBtn2("See top competitors","",false);
+    if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);
+  } else if(analysisComplete){
     /* Analysis already done - stop the loading animation and skip straight to results */
     if(loadingRaf){cancelAnimationFrame(loadingRaf);loadingRaf=null;}
     step=5;dots(5);slide(5);showFooter(true);showBack(true);
@@ -3550,6 +3624,25 @@ q("btn2").addEventListener("click",function(){
   if(step===1){step=2;dots(2);slide(2);setBtn2("Start analysis","",false);showBack(true);return;}
   if(step===2){busy=true;showBack(false);setBtn2("Analyzing…","",true);runAnalysis();return;}
   if(step===5){
+    /* Soft email gate: free users see the verdict for free, but the
+       deeper sections (revenue, legal, roadmap) require an email. We
+       slide back to step 4 (the gate-content view) instead of advancing.
+       softGateActive tells the email-submit handler to skip step 5
+       (already seen) and jump straight to step 6 once email is in. */
+    if(!localStorage.getItem('mm_gate')){
+      softGateActive=true;
+      step=4;dots(4);slide(4);
+      if(q("loading-overlay"))q("loading-overlay").style.display="none";
+      if(q("gate-content"))q("gate-content").style.display="";
+      if(q("gate-headline"))q("gate-headline").textContent="Get the deeper analysis";
+      if(q("gate-subline"))q("gate-subline").textContent="Enter your email for the revenue model, legal check, and the next-3-steps roadmap.";
+      if(q("bl-email"))q("bl-email").textContent="Send me the deep analysis →";
+      drawLoadingRing(1,"#15803d");
+      var pctEl=q("gate-pct");if(pctEl){pctEl.textContent="";pctEl.innerHTML='<span style="font-size:32px">📨</span>';}
+      setTimeout(function(){var inp=q("email-inp");if(inp)inp.focus();},250);
+      setBtn2("","",false);showBack(true);
+      return;
+    }
     step=6;dots(6);slide(6);setBtn2("See top competitors","",false);showBack(true);
     if(baseRevData)setTimeout(function(){recalcRevenue(parseInt(q("price-slider")?q("price-slider").value:baseRevData.basePrice)||baseRevData.basePrice);},350);
     /* If the deep-dive stage 3 call is still in flight when the user advances,
@@ -3575,6 +3668,12 @@ q("btn-back").addEventListener("click",function(){
   if(busy)return;
   if(step===1){reset();return;}
   if(step===2){step=1;dots(1);slide(1);setBtn2("Continue","",false);showBack(true);return;}
+  if(step===4 && softGateActive){
+    /* Came back from step 5 for the soft gate; let them retreat to verdict. */
+    softGateActive=false;
+    step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);
+    return;
+  }
   if(step===6){step=5;dots(5);slide(5);setBtn2("How to sell it","",false);showBack(true);return;}
   if(step===7){step=6;dots(6);slide(6);setBtn2("See top competitors","",false);showBack(true);return;}
   if(step===8){step=7;dots(7);slide(7);setBtn2("Check legal status","",false);showBack(true);return;}
@@ -3703,6 +3802,46 @@ function submitFeedback(rating){
 }
 window.showFeedbackWidget=showFeedbackWidget;
 window.submitFeedback=submitFeedback;
+
+// Public scan permalink: /scan/<id>. Shown to free users since their scans
+// are public by default. Pro users opt in via account settings.
+function showShareCard(scanId){
+  if(!scanId)return;
+  var card=document.getElementById('scan-share');
+  var link=document.getElementById('scan-share-url');
+  if(!card||!link)return;
+  var url=location.origin+'/scan/'+scanId;
+  link.textContent=url.replace(/^https?:\/\//,'');
+  link.href=url;
+  card.style.display='flex';
+}
+function shareScan(evt){
+  if(evt)evt.preventDefault();
+  var scanId=window.lastScanId;
+  if(!scanId)return;
+  var url=location.origin+'/scan/'+scanId;
+  var title=document.getElementById('verdict-text');
+  var titleStr=title?title.textContent:'My 3D print scan';
+  var shareText='Score: '+(typeof lastScore==='number'?lastScore:'-')+' on Meshminds — '+titleStr;
+  if(navigator.share){
+    navigator.share({title:'Meshminds scan',text:shareText,url:url}).catch(function(){});
+    if(window.MM&&MM.track)MM.track('scan_share',{label:'native'});
+    return;
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(function(){
+      var btn=evt&&evt.currentTarget;
+      if(btn){var prev=btn.textContent;btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=prev;},1500);}
+    }).catch(function(){
+      window.open(url,'_blank','noopener');
+    });
+    if(window.MM&&MM.track)MM.track('scan_share',{label:'copy'});
+  } else {
+    window.open(url,'_blank','noopener');
+  }
+}
+window.showShareCard=showShareCard;
+window.shareScan=shareScan;
 
 /* ── Landing preview product cards ───────────────────────────── */
 (function(){

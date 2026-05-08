@@ -78,11 +78,22 @@ module.exports = async (req, res) => {
         } catch {}
       }
     }
-    const quota = await checkDailyLimit({
-      userId: _quotaUser?.id || null,
-      ipHash: _quotaIpHash,
-      isPro: _quotaIsPro,
-    });
+    // Whitelist bypass: comma-separated list of raw IPs in
+    // RATE_LIMIT_WHITELIST_IPS env. Useful for the founder's home/work IP
+    // during testing & calibration so we don't have to keep hitting upgrade
+    // prompts. Also bypasses the IP-based limit when the request comes from
+    // localhost in dev.
+    const _whitelist = (process.env.RATE_LIMIT_WHITELIST_IPS || '')
+      .split(',').map(s => s.trim()).filter(Boolean);
+    const _ipWhitelisted = _whitelist.indexOf(clientIp) !== -1
+      || clientIp === '127.0.0.1' || clientIp === '::1';
+    const quota = _ipWhitelisted
+      ? { allowed: true, used: 0, limit: -1 }
+      : await checkDailyLimit({
+          userId: _quotaUser?.id || null,
+          ipHash: _quotaIpHash,
+          isPro: _quotaIsPro,
+        });
     if (!quota.allowed) {
       const upgradeMsg = _quotaUser
         ? `You've used all ${quota.limit} free scans today. Upgrade to Pro for unlimited scans.`

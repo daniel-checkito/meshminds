@@ -805,9 +805,33 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
 
 /* ── Landing preview cards ── */
 /* landing previews stay single-column on every breakpoint to match the mobile-app feel */
+
+/* ── Pro paywall & fast-path additions ─────────────────────────────────── */
+.pro-lock-wrap{position:relative}
+.pro-lock-wrap > .pro-blur{filter:blur(4.5px);pointer-events:none;user-select:none;-webkit-user-select:none}
+.pro-lock-overlay{position:absolute;left:8px;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;padding:18px 16px;background:rgba(255,255,255,.96);backdrop-filter:blur(2px);border:1.5px solid rgba(255,92,0,.32);border-radius:13px;box-shadow:0 4px 18px rgba(0,0,0,.06);z-index:3;text-align:center}
+.pro-lock-badge{display:inline-flex;align-items:center;gap:6px;font-family:"DM Mono",monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);background:rgba(255,92,0,.1);border:1px solid rgba(255,92,0,.3);padding:4px 9px;border-radius:6px;font-weight:800}
+.pro-lock-title{font-size:14px;font-weight:800;color:var(--ink);line-height:1.3;max-width:280px}
+.pro-lock-cta{display:inline-flex;align-items:center;gap:7px;padding:11px 18px;background:var(--acc);color:#fff;font-weight:800;font-size:13px;border-radius:9px;text-decoration:none;box-shadow:0 2px 8px rgba(255,92,0,.28)}
+.personalize-banner{display:flex;align-items:center;gap:11px;margin:0 0 14px;padding:12px 14px;background:linear-gradient(135deg,#fff7ed,#fef3c7);border:1px solid rgba(255,92,0,.28);border-radius:11px;cursor:pointer;-webkit-tap-highlight-color:rgba(255,92,0,.1)}
+.personalize-banner .pb-ico{flex-shrink:0;width:32px;height:32px;border-radius:8px;background:rgba(255,92,0,.14);display:flex;align-items:center;justify-content:center;font-size:17px}
+.personalize-banner .pb-body{flex:1;min-width:0}
+.personalize-banner .pb-title{font-size:13px;font-weight:800;color:var(--ink);line-height:1.3}
+.personalize-banner .pb-sub{font-size:11.5px;color:var(--ink3);margin-top:2px;line-height:1.4}
+.personalize-banner .pb-arr{font-size:18px;color:var(--acc);font-weight:800;flex-shrink:0}
+.customize-link{display:block;text-align:center;margin-top:8px;font-size:12px;color:var(--ink3);text-decoration:underline;cursor:pointer;background:none;border:none;font-family:inherit;width:100%;padding:6px}
+.customize-link:hover{color:var(--acc)}
 </style>
 <script src="/api/public-config" defer></script>
 <script src="/mm-analytics.js" defer></script>
+<script>
+// Pro status drives whether the Pro-only result sections are blurred. Read once
+// at boot from the legacy mm_pro_token (set after Stripe checkout). The
+// lifetime / pack purchase flow updates the Supabase profile too, but the
+// validator only cares about this client-side flag.
+window.MM_IS_PRO = false;
+try { if (localStorage.getItem('mm_pro_token')) window.MM_IS_PRO = true; } catch(_) {}
+</script>
 </head>
 <body>
 <a id="pro-return-link" href="/pro/dashboard" style="display:none;position:fixed;top:12px;right:12px;z-index:200;background:var(--acc);color:#fff;font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:7px 12px;border-radius:8px;text-decoration:none;box-shadow:0 2px 8px rgba(0,0,0,.12)">★ Pro dashboard →</a>
@@ -894,6 +918,7 @@ input[type=range]#price-slider{width:100%;accent-color:var(--acc);height:4px;cur
       <span id="bl">Check this print</span>
       <svg id="ba" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
     </button>
+    <button type="button" class="customize-link" id="customize-link" onclick="window._customizeBeforeScan=true;document.getElementById('btn').click()">Customize before scanning (optional)</button>
     <button class="try-eg-btn" id="try-eg-hint" onclick="loadExample()" style="margin-top:8px">
       <span style="color:var(--ink3)">Not sure where to start?</span>
       <span style="color:var(--acc);font-weight:700">Try an example →</span>
@@ -2631,6 +2656,7 @@ function renderRoadmapSteps(){
   /* Show all steps unlocked for free users */
   list.innerHTML=steps.map(function(s,i){return stepHtml(s,i,i<steps.length-1);}).join('');
   var oldLock=q('rm-lock-block');if(oldLock)oldLock.remove();
+  try { applyProLocks(); } catch(_) {}
 }
 function buildCompetitors(competitors){
   var sec=q("competitors-section");
@@ -2662,6 +2688,7 @@ function buildCompetitors(competitors){
       +'<div class="comp-why">'+esc(c.whyItWorks)+'</div>'
       +'</div>';
   }).join('');
+  try { applyProLocks(); } catch(_) {}
 }
 function buildBusinessInspiration(list){
   var sec=q("business-inspiration-section");
@@ -2727,6 +2754,7 @@ function buildBusinessInspiration(list){
       +(b.differentiator?'<div class="biz-diff"><span>'+esc(b.differentiator)+'</span></div>':'')
       +'</div>';
   }).join('');
+  try { applyProLocks(); } catch(_) {}
 }
 function esc(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
 function buildRoadmap(){
@@ -2851,9 +2879,103 @@ function revealScore(){
       if(q("verdict-score"))q("verdict-score").textContent=subs.overall;
     },150);
   }
+  // Show the personalize-for-a-sharper-score banner only when the user took
+  // the fast path (skipped the quiz). If they already filled the quiz before
+  // scanning, there is nothing to personalize.
+  try { mountPersonalizeBanner(); } catch(_) {}
+  try { applyProLocks(); } catch(_) {}
+}
+
+// Insert a "Want a more accurate score? Answer 3 quick questions →" banner
+// above the score panel. Clicking it slides back to the quiz (step 1); after
+// the user fills it in and clicks "Start analysis", runAnalysis() re-fires
+// with the personalized weights.
+function mountPersonalizeBanner(){
+  if(!window._tookFastPath) return;        // they used the customize-first path
+  if(window._personalizedOnce) return;     // already re-scored once, no further nag
+  var anchor = document.getElementById('rn');
+  if(!anchor) return;
+  var panel = anchor.closest('.panel') || anchor.parentElement;
+  if(!panel) return;
+  var existing = document.getElementById('personalize-banner');
+  if(existing) return;
+  var b = document.createElement('div');
+  b.id = 'personalize-banner';
+  b.className = 'personalize-banner';
+  b.setAttribute('role','button');
+  b.setAttribute('tabindex','0');
+  b.innerHTML = '<div class="pb-ico">🎯</div>'
+    + '<div class="pb-body">'
+    + '<div class="pb-title">Want a more accurate score?</div>'
+    + '<div class="pb-sub">Answer 3 quick questions and we\'ll re-score with your printer setup, category and target market.</div>'
+    + '</div>'
+    + '<div class="pb-arr">→</div>';
+  b.addEventListener('click', function(){
+    if(window.MM&&MM.track)MM.track('personalize_click',{label:'after_scan'});
+    window._personalizedOnce = true;
+    var el = document.getElementById('personalize-banner');
+    if(el) el.remove();
+    // Slide back to the quiz. When the user finishes step 2 and clicks
+    // "Start analysis", btn2's existing step===2 handler fires runAnalysis().
+    step=1; dots(1); slide(1); showFooter(true); setBtn2("Continue","",false); showBack(true);
+  });
+  panel.insertBefore(b, panel.firstChild);
+}
+
+// Pro paywall: blur Pro-only result sections for free users. One inline upsell
+// per blurred block (per the spec). Idempotent - safe to call after every
+// build, and re-running won't double-wrap. Pro members skip the function.
+// `itemSelector` picks the items to consider; the locked ones (index >= keep)
+// get moved into a fresh wrapper inserted at the position of the first locked
+// item, so any siblings (titles, footers) outside the selector stay in place.
+function applyProLocks() {
+  if (window.MM_IS_PRO) return;
+  var locks = [
+    { hostId:'competitors-list',          sel:':scope > *',                                              keep:1, title:'Unlock the other 4 competitor breakdowns',         track:'lock_competitors' },
+    { hostId:'roadmap-steps',             sel:':scope > *',                                              keep:1, title:'See your full action plan (steps 2-4)',            track:'lock_roadmap' },
+    { hostId:'business-inspiration-list', sel:':scope > *',                                              keep:0, title:'See the sellers proving this niche works',         track:'lock_biz' },
+    { hostId:'cert-section',              sel:':scope > div > div[style*="border-radius:10px"]',        keep:1, title:'Per-region legal & certification deep-dive',       track:'lock_legal' }
+  ];
+  locks.forEach(function(lk){
+    var host = document.getElementById(lk.hostId);
+    if (!host) return;
+    // Already locked? Skip.
+    if (host.querySelector('.pro-lock-overlay')) return;
+    var items = host.querySelectorAll(lk.sel);
+    if (items.length <= lk.keep) return;
+    var firstLocked = items[lk.keep];
+    var parent = firstLocked.parentElement;
+    if (!parent) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'pro-lock-wrap';
+    parent.insertBefore(wrap, firstLocked);
+    var blur = document.createElement('div');
+    blur.className = 'pro-blur';
+    wrap.appendChild(blur);
+    for (var j = lk.keep; j < items.length; j++) blur.appendChild(items[j]);
+    var ov = document.createElement('div');
+    ov.className = 'pro-lock-overlay';
+    ov.innerHTML = '<div class="pro-lock-badge">🔒 Pro</div>'
+      + '<div class="pro-lock-title">' + lk.title + '</div>'
+      + '<a class="pro-lock-cta" data-stripe="lifetime" href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" target="_blank" rel="noopener" '
+      + 'onclick="if(window.MM&&MM.track)MM.track(\'' + lk.track + '\')">Unlock with Pro - €29 lifetime →</a>';
+    wrap.appendChild(ov);
+  });
+  // /api/public-config rewrites [data-stripe] hrefs on DOMContentLoaded, but
+  // we mint these anchors after the fact. Re-apply for the lock CTAs.
+  try {
+    document.querySelectorAll('.pro-lock-cta[data-stripe]').forEach(function(a){
+      var k = a.getAttribute('data-stripe');
+      var url = (k === 'pack' ? window.MM_STRIPE_PACK_URL
+              : k === 'report' ? window.MM_STRIPE_REPORT_URL
+              : window.MM_STRIPE_LIFETIME_URL);
+      if (url) a.setAttribute('href', url);
+    });
+  } catch(_) {}
 }
 
 function analyze(){
+  window._personalizedOnce=false; // fresh scan = fresh chance to show the banner
   if(inputMode==='idea'){
     var ideaText=(q("idea-name")?q("idea-name").value.trim().replace(/\s+/g,' '):"");
     var errEl=q("idea-error");
@@ -2912,6 +3034,22 @@ function analyze(){
     return;
   }
   adaptQuizForMode();
+  // Fast path (default): apply sensible defaults and run analysis immediately.
+  // The "Customize before scanning" link sets _customizeBeforeScan=true so
+  // users who want the old multi-step quiz still get it. Re-personalizing
+  // after the result is shown also routes through the legacy quiz flow.
+  if(!window._customizeBeforeScan){
+    if(!qCat)qCat='other';
+    if(!qMarketplace)qMarketplace='etsy';
+    if(!qExp)qExp='some';
+    if(!qSellerGoal)qSellerGoal='side-income';
+    if(!qSellTo||!qSellTo.length)qSellTo=['WORLDWIDE'];
+    window._tookFastPath=true;
+    runAnalysis();
+    return;
+  }
+  window._customizeBeforeScan=false;
+  window._tookFastPath=false;
   step=1;dots(1);slide(1);showFooter(true);setBtn2("Continue","",false);showBack(true);busy=false;
 }
 
@@ -3490,6 +3628,7 @@ function populateLegalCerts(){
     });
     html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a qualified legal advisor before listing.</div></div>';
     el.innerHTML=html;
+    try { applyProLocks(); } catch(_) {}
     return;
   }
 
@@ -3521,6 +3660,7 @@ function populateLegalCerts(){
   });
   html+='<div style="font-size:11px;color:var(--ink3);text-align:center;line-height:1.5;padding:4px 0 2px">Always verify requirements with a qualified legal advisor before listing.</div></div>';
   el.innerHTML=html;
+  try { applyProLocks(); } catch(_) {}
 }
 
 document.querySelectorAll(".chips").forEach(function(g){

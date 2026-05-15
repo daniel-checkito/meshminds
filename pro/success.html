@@ -109,6 +109,9 @@ body{min-height:100vh;background:#fff;font-family:"Manrope",sans-serif;display:f
       if (d.sku === 'pack_100' && h1 && sub) {
         h1.innerHTML = '100 scans<br>added.';
         sub.textContent = 'Credits attached to';
+      } else if (d.sku === 'report' && h1 && sub) {
+        h1.innerHTML = 'Report on<br>the way.';
+        sub.innerHTML = 'Check your inbox - the Notion link is in your Stripe receipt for';
       }
       if (!d.linkedToAccount && sub) {
         sub.innerHTML = sub.textContent + ' <br><span style="color:#888;font-size:12px">Sign in with this email to access your scans.</span>';

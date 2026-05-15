@@ -25,8 +25,10 @@ function issueToken(payload) {
 function classifySku(priceIds) {
   const lifetime = process.env.STRIPE_PRICE_LIFETIME || '';
   const pack = process.env.STRIPE_PRICE_PACK_100 || '';
+  const report = process.env.STRIPE_PRICE_REPORT_Q || '';
   if (lifetime && priceIds.includes(lifetime)) return 'lifetime';
   if (pack && priceIds.includes(pack)) return 'pack_100';
+  if (report && priceIds.includes(report)) return 'report';
   // Back-compat: if no env-mapping configured, treat any paid session as lifetime
   // so existing buyers don't get locked out during the rollout.
   return 'lifetime';
@@ -115,7 +117,9 @@ module.exports = async (req, res) => {
   try { userId = await findSupabaseUserIdByEmail(email); } catch {}
   if (userId) {
     if (sku === 'pack_100') await grantPack(userId, 100);
-    else await grantLifetime(userId);
+    else if (sku === 'lifetime') await grantLifetime(userId);
+    // 'report' is fulfilled out-of-band (Notion link in Stripe receipt email) -
+    // nothing to flip on the profile.
   }
 
   // Issue the legacy JWT so /pro/dashboard still works without a Supabase login.

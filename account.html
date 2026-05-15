@@ -158,7 +158,10 @@
     <div class="sec-inner">
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px">
         <div class="ideas-count" id="ideasCount">Loading…</div>
-        <button id="exportCalBtn" onclick="exportCalibrations()" style="display:none;font-size:12px;font-weight:700;padding:7px 12px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;cursor:pointer">Export calibrations for Claude</button>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button id="exportCsvBtn" onclick="exportScansCsv()" style="display:none;font-size:12px;font-weight:700;padding:7px 12px;background:var(--acc,#ff5c00);color:#fff;border:none;border-radius:8px;cursor:pointer">Export CSV</button>
+          <button id="exportCalBtn" onclick="exportCalibrations()" style="display:none;font-size:12px;font-weight:700;padding:7px 12px;background:#1a1a1a;color:#fff;border:none;border-radius:8px;cursor:pointer">Export calibrations for Claude</button>
+        </div>
       </div>
       <div id="ideasList"></div>
     </div>
@@ -241,7 +244,7 @@
             <div class="plan-name">Free</div>
             <span class="plan-badge free">Free</span>
           </div>
-          <div class="plan-detail">You're on the free plan - 50 scans/day, plus the full analysis on every scan: score &amp; verdict, live competitor research, manufacturing-method check, compliance/cert mapping (GPSR, CE, CPSC…), revenue projection tied to your printer setup, and a real-world business example. <b>Pro</b> removes the daily cap (unlimited scans &amp; idea-mode), auto-saves every scan, exports full competitor data, and unlocks the full catalogue of 847+ validated products.</div>
+          <div class="plan-detail">You're on the free plan - 2 scans/day, plus the full analysis on every scan: score &amp; verdict, live competitor research, manufacturing-method check, compliance/cert mapping (GPSR, CE, CPSC…), revenue projection tied to your printer setup, and a real-world business example. <b>Pro</b> removes the daily cap (unlimited scans &amp; idea-mode), auto-saves every scan to your history, lets you export it all to CSV, and unlocks the full catalogue of 847+ validated products.</div>
           <a href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" class="btn-upgrade" target="_blank" rel="noopener">Upgrade to Pro - $8/mo →</a>
         </div>
         <div class="billing-note">Early adopter price locked in for life · Cancel anytime</div>
@@ -392,6 +395,8 @@
       document.getElementById('hdrAvatarInitials').style.display = 'none';
     }
     if (p.isPro) document.getElementById('proBadge').style.display = '';
+    const csvBtn = document.getElementById('exportCsvBtn');
+    if (csvBtn) csvBtn.style.display = p.isPro ? '' : 'none';
   }
 
   function renderSettings() {
@@ -623,6 +628,31 @@
       if (exportBtn) exportBtn.style.display = '';
     } catch (e) {
       showToast('Failed to save calibration: ' + e.message);
+    }
+  };
+
+  window.exportScansCsv = async function() {
+    try {
+      const token = localStorage.getItem('sb_access_token') || '';
+      const res = await fetch('/api/account/export-csv', {
+        headers: token ? { 'Authorization': 'Bearer ' + token } : {},
+      });
+      if (res.status === 402) {
+        showToast('CSV export is a Pro feature — upgrade to unlock.');
+        return;
+      }
+      if (!res.ok) throw new Error('Export failed (' + res.status + ')');
+      const blob = await res.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `meshminds-scans-${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(a.href);
+      showToast('CSV downloaded');
+    } catch (e) {
+      showToast('Export failed: ' + e.message);
     }
   };
 

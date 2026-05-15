@@ -54,7 +54,7 @@ module.exports = async (req, res) => {
   const isPrepOnly = body.prepOnly === true;
   const hasPrep = body.prep && typeof body.prep === 'object';
 
-  /* Daily quota: anonymous 25/day, free logged-in 50/day, pro unlimited.
+  /* Daily quota: anonymous 1/day, free logged-in 2/day, pro unlimited.
      When stage 2 (hasPrep) is being called, quota was already charged in
      stage 1 - skip the second check. */
   let _quotaUser = null, _quotaIsPro = false;
@@ -96,8 +96,8 @@ module.exports = async (req, res) => {
         });
     if (!quota.allowed) {
       const upgradeMsg = _quotaUser
-        ? `You've used all ${quota.limit} free scans today. Upgrade to Pro for unlimited scans.`
-        : `You've used all ${quota.limit} free scans today. Sign up for a free account to get 50 scans/day, or upgrade to Pro for unlimited.`;
+        ? `You've used your ${quota.limit} free scans for today. Upgrade to Pro for unlimited scans, full history & CSV export.`
+        : `You've used your free scan for today. Create a free account for a second daily scan, or upgrade to Pro for unlimited scans, full history & CSV export.`;
       return res.status(429).json({ error: upgradeMsg, quotaExceeded: true, used: quota.used, limit: quota.limit, isLoggedIn: !!_quotaUser });
     }
   } catch { /* fail open if Supabase is unreachable */ }

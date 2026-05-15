@@ -15,6 +15,7 @@
     "api/account/update-profile.js": { "maxDuration": 10 },
     "api/account/ideas.js": { "maxDuration": 15 },
     "api/account/save-scan.js": { "maxDuration": 15 },
-    "api/account/change-password.js": { "maxDuration": 10 }
+    "api/account/change-password.js": { "maxDuration": 10 },
+    "api/account/export-csv.js": { "maxDuration": 15 }
   }
 }

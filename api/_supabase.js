@@ -15,7 +15,8 @@ function hashIp(ip) {
 // isPro = true if the user is on a pro plan (no limit).
 async function checkDailyLimit({ userId, ipHash, isPro }) {
   if (isPro) return { allowed: true, used: 0, limit: -1 };
-  const limit = userId ? 50 : 25;
+  // Free tier: 2 scans/day (anon and logged-in). Pro is unlimited.
+  const limit = userId ? 2 : 1;
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
   const filterKey = userId ? `user_id=eq.${userId}` : `ip_hash=eq.${ipHash}`;
   try {

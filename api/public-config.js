@@ -90,11 +90,16 @@ module.exports = async (req, res) => {
   }
 
   const safe = (s) => String(s).replace(/[\\'"<>\r\n]/g, '');
+  const lifetimeUrl = env.STRIPE_LIFETIME_URL || '';
+  const packUrl = env.STRIPE_PACK_URL || '';
   const body =
     `window.SUPABASE_URL='${safe(url)}';` +
     `window.SUPABASE_ANON_KEY='${safe(anonKey)}';` +
     `window.MM_USERS=${Number(users) || 0};` +
-    `window.MM_SCANS=${Number(scans) || 0};`;
+    `window.MM_SCANS=${Number(scans) || 0};` +
+    `window.MM_STRIPE_LIFETIME_URL='${safe(lifetimeUrl)}';` +
+    `window.MM_STRIPE_PACK_URL='${safe(packUrl)}';` +
+    `(function(){var f=function(){document.querySelectorAll('[data-stripe]').forEach(function(a){var k=a.getAttribute('data-stripe');var u=k==='pack'?window.MM_STRIPE_PACK_URL:window.MM_STRIPE_LIFETIME_URL;if(u)a.setAttribute('href',u);});};if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',f);}else{f();}})();`;
   res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
   res.status(200).send(body);

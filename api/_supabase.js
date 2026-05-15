@@ -32,6 +32,29 @@ async function checkDailyLimit({ userId, ipHash, isPro }) {
   }
 }
 
+// Consume one scan credit from a user's profile. Returns true if a credit was
+// consumed, false if there were none (or any error - fail closed so the daily
+// quota still applies).
+async function consumeScanCredit(userId) {
+  if (!userId) return false;
+  try {
+    const rows = await adminQuery({
+      table: 'profiles',
+      filters: `id=eq.${userId}`,
+      select: 'scan_credits',
+    });
+    const current = Number(rows?.[0]?.scan_credits || 0);
+    if (current <= 0) return false;
+    await adminQuery({
+      method: 'PATCH',
+      table: 'profiles',
+      filters: `id=eq.${userId}`,
+      body: { scan_credits: current - 1 },
+    });
+    return true;
+  } catch { return false; }
+}
+
 // Log a scan attempt for rate-limiting purposes.
 async function logUsage({ userId, ipHash, kind = 'scan' }) {
   try {
@@ -120,4 +143,4 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
 }
 
-module.exports = { getUser, adminQuery, extractToken, cors, hashIp, checkDailyLimit, logUsage };
+module.exports = { getUser, adminQuery, extractToken, cors, hashIp, checkDailyLimit, logUsage, consumeScanCredit };

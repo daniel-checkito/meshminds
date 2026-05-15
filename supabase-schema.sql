@@ -98,6 +98,13 @@ create table if not exists public.usage_log (
 create index if not exists usage_log_ip_hash_idx  on public.usage_log (ip_hash, created_at desc);
 create index if not exists usage_log_user_id_idx  on public.usage_log (user_id, created_at desc);
 
+-- 6. One-time-payment access on profiles
+-- Lifetime buyers get is_premium=true with premium_until=null (forever).
+-- Pack buyers get scan_credits += 100. Each non-Pro scan consumes one credit
+-- (when credits > 0) instead of charging the daily free-tier quota.
+alter table public.profiles
+  add column if not exists scan_credits integer not null default 0;
+
 -- ────────────────────────────────────────────────────────────────────────────
 -- Row Level Security
 -- The API uses the service-role key (server-side) which bypasses RLS, so RLS

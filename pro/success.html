@@ -97,12 +97,22 @@ body{min-height:100vh;background:#fff;font-family:"Manrope",sans-serif;display:f
   })
     .then(function(r){ return r.json(); })
     .then(function(d){
-      if (!d.ok || !d.token) {
+      if (!d.ok) {
         show('error', d.error || 'Payment verification failed.');
         return;
       }
-      localStorage.setItem('mm_pro_token', d.token);
+      if (d.token) localStorage.setItem('mm_pro_token', d.token);
       document.getElementById('member-email').textContent = d.email || 'your account';
+      // Tailor the success screen to the SKU the customer bought.
+      var h1 = document.querySelector('.success-h1');
+      var sub = document.querySelector('.success-sub');
+      if (d.sku === 'pack_100' && h1 && sub) {
+        h1.innerHTML = '100 scans<br>added.';
+        sub.textContent = 'Credits attached to';
+      }
+      if (!d.linkedToAccount && sub) {
+        sub.innerHTML = sub.textContent + ' <br><span style="color:#888;font-size:12px">Sign in with this email to access your scans.</span>';
+      }
       show('success');
     })
     .catch(function(){

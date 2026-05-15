@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
     const profiles = await adminQuery({
       table: 'profiles',
       filters: `id=eq.${user.id}`,
-      select: 'display_name,avatar_url,default_public,is_premium,premium_until,free_scans_used',
+      select: 'display_name,avatar_url,default_public,is_premium,premium_until,free_scans_used,scan_credits',
     });
     const profile = profiles?.[0] || {};
 
@@ -33,6 +33,7 @@ module.exports = async (req, res) => {
       isPro: profile.is_premium || false,
       premiumUntil: profile.premium_until || null,
       freeScansUsed: profile.free_scans_used || 0,
+      scanCredits: profile.scan_credits || 0,
       scansCount,
     });
   } catch (e) {

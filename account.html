@@ -244,10 +244,11 @@
             <div class="plan-name">Free</div>
             <span class="plan-badge free">Free</span>
           </div>
-          <div class="plan-detail">You're on the free plan - 2 scans/day, plus the full analysis on every scan: score &amp; verdict, live competitor research, manufacturing-method check, compliance/cert mapping (GPSR, CE, CPSC…), revenue projection tied to your printer setup, and a real-world business example. <b>Pro</b> removes the daily cap (unlimited scans &amp; idea-mode), auto-saves every scan to your history, lets you export it all to CSV, and unlocks the full catalogue of 847+ validated products.</div>
-          <a href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" class="btn-upgrade" target="_blank" rel="noopener">Upgrade to Pro - $8/mo →</a>
+          <div class="plan-detail" id="freePlanDetail">You're on the free plan - 2 scans/day, plus the full analysis on every scan: score &amp; verdict, live competitor research, manufacturing-method check, compliance/cert mapping (GPSR, CE, CPSC…), revenue projection tied to your printer setup, and a real-world business example. <b>Lifetime (€29)</b> removes the daily cap (unlimited scans &amp; idea-mode), auto-saves every scan to your history, lets you export it all to CSV, and unlocks the full catalogue of 847+ validated products. Or grab a <b>100-scan pack (€19)</b> if you just need a burst.</div>
+          <a data-stripe="lifetime" href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" class="btn-upgrade" target="_blank" rel="noopener">Get lifetime access - €29 →</a>
+          <a data-stripe="pack" href="https://buy.stripe.com/fZueVc7bUc1y4bV2YVcIE01" target="_blank" rel="noopener" style="display:block;margin-top:8px;text-align:center;font-size:13px;font-weight:600;color:var(--ink2);text-decoration:underline">or 100-scan pack - €19</a>
         </div>
-        <div class="billing-note">Early adopter price locked in for life · Cancel anytime</div>
+        <div class="billing-note">One-time payment · No subscription · Lifetime access</div>
       </div>
 
       <div id="billingPro" style="display:none">
@@ -287,7 +288,8 @@
     avatarUrl: 'https://w9cedwr8emsi29qt.public.blob.vercel-storage.com/daniel.jpg',
     defaultPublic: false,
     isPro: true,
-    premiumUntil: '2027-08-14T00:00:00Z',
+    premiumUntil: null,
+    scanCredits: 0,
     freeScansUsed: 47,
     scansCount: 47,
   };
@@ -423,14 +425,25 @@
     if (p.isPro) {
       document.getElementById('billingFree').style.display = 'none';
       document.getElementById('billingPro').style.display = '';
-      if (p.premiumUntil) {
-        const d = new Date(p.premiumUntil);
-        document.getElementById('billingProDetail').textContent =
-          `Pro membership active · renews ${d.toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}.`;
+      // One-time lifetime grant: premiumUntil is null. Show a clean lifetime line.
+      const detail = document.getElementById('billingProDetail');
+      if (detail) {
+        detail.textContent = p.premiumUntil
+          ? `Pro access until ${new Date(p.premiumUntil).toLocaleDateString('en-GB', {day:'numeric',month:'long',year:'numeric'})}.`
+          : 'Lifetime Pro · unlimited scans · CSV export · full catalogue.';
       }
     } else {
       document.getElementById('billingFree').style.display = '';
       document.getElementById('billingPro').style.display = 'none';
+      // Surface remaining 100-scan-pack credits if any.
+      const credits = Number(p.scanCredits || 0);
+      const freeDetail = document.getElementById('freePlanDetail');
+      if (credits > 0 && freeDetail) {
+        const note = document.createElement('div');
+        note.style.cssText = 'margin-top:10px;padding:8px 12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;font-size:13px;font-weight:600;color:#9a3412';
+        note.textContent = `You have ${credits} scan credit${credits === 1 ? '' : 's'} remaining from your 100-pack.`;
+        freeDetail.appendChild(note);
+      }
     }
   }
 

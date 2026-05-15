@@ -61,9 +61,10 @@ module.exports = async (req, res) => {
   let _quotaIpHash = '';
   if (!hasPrep) {
   try {
-    const { getUser, extractToken, hashIp, checkDailyLimit, adminQuery } = require('./_supabase');
+    const { getUser, extractToken, hashIp, checkDailyLimit, adminQuery, consumeScanCredit } = require('./_supabase');
     _quotaIpHash = hashIp(clientIp);
     const _tok = extractToken(req);
+    let _quotaHasCredits = false;
     if (_tok) {
       _quotaUser = await getUser(_tok);
       if (_quotaUser?.id) {
@@ -71,10 +72,11 @@ module.exports = async (req, res) => {
           const profiles = await adminQuery({
             table: 'profiles',
             filters: `id=eq.${_quotaUser.id}`,
-            select: 'is_premium,premium_until',
+            select: 'is_premium,premium_until,scan_credits',
           });
           const p = profiles?.[0];
           _quotaIsPro = !!(p && p.is_premium && (!p.premium_until || new Date(p.premium_until) > new Date()));
+          _quotaHasCredits = !_quotaIsPro && Number(p?.scan_credits || 0) > 0;
         } catch {}
       }
     }
@@ -87,17 +89,27 @@ module.exports = async (req, res) => {
       .split(',').map(s => s.trim()).filter(Boolean);
     const _ipWhitelisted = _whitelist.indexOf(clientIp) !== -1
       || clientIp === '127.0.0.1' || clientIp === '::1';
-    const quota = _ipWhitelisted
-      ? { allowed: true, used: 0, limit: -1 }
-      : await checkDailyLimit({
-          userId: _quotaUser?.id || null,
-          ipHash: _quotaIpHash,
-          isPro: _quotaIsPro,
-        });
+    // Order of precedence: Pro (lifetime) → scan-pack credits → daily quota.
+    let quota = { allowed: true, used: 0, limit: -1 };
+    if (_ipWhitelisted || _quotaIsPro) {
+      // unlimited
+    } else if (_quotaHasCredits) {
+      const used = await consumeScanCredit(_quotaUser.id);
+      if (!used) {
+        // Credits got drained between fetch and consume - fall back to daily.
+        quota = await checkDailyLimit({ userId: _quotaUser.id, ipHash: _quotaIpHash, isPro: false });
+      }
+    } else {
+      quota = await checkDailyLimit({
+        userId: _quotaUser?.id || null,
+        ipHash: _quotaIpHash,
+        isPro: _quotaIsPro,
+      });
+    }
     if (!quota.allowed) {
       const upgradeMsg = _quotaUser
-        ? `You've used your ${quota.limit} free scans for today. Upgrade to Pro for unlimited scans, full history & CSV export.`
-        : `You've used your free scan for today. Create a free account for a second daily scan, or upgrade to Pro for unlimited scans, full history & CSV export.`;
+        ? `You've used your ${quota.limit} free scan${quota.limit === 1 ? '' : 's'} for today. Get €29 lifetime access, or grab a €19 / 100-scan pack.`
+        : `You've used your free scan for today. Create a free account for a second daily scan, or unlock €29 lifetime / €19 100-scan pack.`;
       return res.status(429).json({ error: upgradeMsg, quotaExceeded: true, used: quota.used, limit: quota.limit, isLoggedIn: !!_quotaUser });
     }
   } catch { /* fail open if Supabase is unreachable */ }
